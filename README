@@ -1,0 +1,18 @@
+
+Required Libraries
+
+** Available as Debian packages ** 
+SDL
+SDL_net
+SDL_ttf
+SDL_image
+GL
+GLU
+ossp-uuid++
+
+
+** Required Downloads ** 
+
+Jsoncpp
+note: download and compile from: http://jsoncpp.sourceforge.net/
+
