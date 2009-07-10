@@ -43,7 +43,19 @@ namespace{
 		
 		EXPECT_EQ( 111u, temp_evt.getArgs()[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
 		EXPECT_EQ( 111u, (*(temp_evt.getArgsPtr()))[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
-		
+
+		Grids::Event temp_evt_2( temp_evt );
+
+		EXPECT_EQ( 111u, temp_evt_2.getArgs()[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
+		EXPECT_EQ( 111u, (*(temp_evt_2.getArgsPtr()))[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
+
+		Grids::Event* temp_evt_3 = new Grids::Event( temp_evt );
+		Grids::Event* temp_evt_4 = new Grids::Event( *temp_evt_3 );
+		delete temp_evt_3;
+
+		EXPECT_EQ( 111u, temp_evt_4->getArgs()[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
+		EXPECT_EQ( 111u, (*(temp_evt_4->getArgsPtr()))[ "foo" ][ "bar" ][ "lol" ][ "dongs" ].asUInt() );
+				
 	}
 
 	TEST_F(EventTest, getSetEventTypeTest){
