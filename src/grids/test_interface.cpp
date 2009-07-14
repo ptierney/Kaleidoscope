@@ -34,7 +34,7 @@ namespace{
 
 	Grids::Interface* InterfaceTest::inter = NULL;
 
-	TEST_F(InterfaceTest, ConstructorTest){
+	TEST_F(InterfaceTest, constructorTest){
 		EXPECT_STREQ( DEFAULT_SERVER, inter->getServer().c_str() );
 	}
 	
