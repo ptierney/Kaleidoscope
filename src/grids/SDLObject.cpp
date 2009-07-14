@@ -10,7 +10,7 @@ namespace Grids {
 	}
 
 	SDLObject::~SDLObject(){
-		SDL_DestroyMutex(object_mutex);
+		SDL_DestroyMutex( object_mutex );
 	}
 
 	void SDLObject::lock(){	

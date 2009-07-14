@@ -11,7 +11,7 @@ namespace Grids {
 		init();
 	}
 
-	Interface::Interface( std::string in_server ){
+	Interface::Interface(std::string in_server ){
 		server_address = in_server;
 		init();
 	}
@@ -36,11 +36,11 @@ namespace Grids {
 		delete proto;
 	}
 
-	void Interface::receiveEvent( Protocol* in_proto,  Event* in_event, void* self ){
+	void Interface::receiveEvent(Protocol* in_proto,  Event* in_event, void* self ){
 
 	}
 
-	void Interface::connectedCallback( Protocol* in_proto,  Event* in_event, void* self ){
+	void Interface::connectedCallback(Protocol* in_proto,  Event* in_event, void* self ){
 		((Interface*)self)->connected = true;
 	}
 	
@@ -48,11 +48,11 @@ namespace Grids {
 
 	} 
 	
-	GridsID Interface::requestCreateObject( GridsID object_room, Value* obj_val ){
+	GridsID Interface::requestCreateObject(GridsID object_room, Value* obj_val ){
 
 	}
 
-	void Interface::requestUpdateObject( GridsID object_id, GridsID object_room, Value* object_attr ){
+	void Interface::requestUpdateObject(GridsID object_id, GridsID object_room, Value* object_attr ){
 
 	}
 
