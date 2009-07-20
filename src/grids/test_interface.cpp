@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include <vector>
+#include <iostream>
 
 namespace{
 
@@ -18,6 +19,7 @@ namespace{
 		}
 
 		static void SetUpTestCase() {
+			std::cout << "Setting up test case" << std::endl;
 			inter = new Grids::Interface();
 		}
 		

@@ -27,13 +27,14 @@ namespace Grids {
 		proto->connectToNode( server_address.c_str() );
 
 		proto->runEventLoopThreaded();
+		std::cout << "Done Init" << std::endl;
 	}
 	
 	Interface::~Interface(){
 		proto->closeConnection();		
 		proto->stopEventLoopThread();
 		
-		delete proto;
+		delete proto;		
 	}
 
 	void Interface::receiveEvent(Protocol* in_proto,  Event* in_event, void* self ){
