@@ -16,7 +16,6 @@ namespace Grids {
 	void Protocol::setEventCallback(gevent_callback_t cb, void *userData) { eventCallback = cb; eventCallbackUserData = userData; }
 	void Protocol::setConnectedCallback(gevent_callback_t cb, void *userData) { connectedCallback = cb; connectedCallbackUserData = userData; }
 
-
 	int runEventLoopThreadEntryPoint(void *arg) {
 		Protocol *gp = (Protocol *)arg;
 		gp->runEventLoop();
@@ -29,29 +28,31 @@ namespace Grids {
 	  gp->dispatchEvent();
 	  }
 	*/
+
 	Protocol::Protocol() {
 		sock = 0;
 		finishedMutex = SDL_CreateMutex();
-		running = 0;
+		eventLoopRunningMutex = SDL_CreateMutex();
+		running = 0; // Normally has mutex, but we're not using multiple threads yet
 
 		connectedCallback = NULL;
 	}
 
 	Protocol::~Protocol() {
-
 		SDL_DestroyMutex(finishedMutex);
+		SDL_DestroyMutex(eventLoopRunningMutex);
 	}
 
 	bool Protocol::connectToNode(const char *address) {
 		IPaddress ip;
 
-		if (SDLNet_ResolveHost(&ip, (char *)address, GRIDS_PORT) == -1) {
+		if (SDLNet_ResolveHost(&ip, (char*)address, GRIDS_PORT) == -1) {
 			printf("Could not resolve hostname %s: %s\n", address, SDLNet_GetError());
 			return 0;
 		}
 
 		sock = SDLNet_TCP_Open(&ip);
-		if (! sock) {
+		if (!sock) {
 			printf("Failed to connect to host %s: %s\n", address, SDLNet_GetError());
 			return 0;
 		}
@@ -77,7 +78,7 @@ namespace Grids {
 
 	int Protocol::protocolWrite(const char *str, uint32_t len) {
 
-		if (! sock) {
+		if (!sock) {
 			std::cerr << "No socket exists but Protocol::protocolWrite was called\n";
 			return -1;
 		}
@@ -178,7 +179,7 @@ namespace Grids {
 			return;
 		}
 
-		while (! isFinished() && sock) {
+		while ( getEventLoopRunning() && !isFinished() && sock) {
 
 			socketReady = SDLNet_CheckSockets(sockSet, 1000);
 
@@ -331,6 +332,8 @@ namespace Grids {
 	int Protocol::runEventLoopThreaded() {
 		SDL_mutexP(finishedMutex);
 
+		setEventLoopRunning(true);
+		
 		eventLoopThread = SDL_CreateThread(runEventLoopThreadEntryPoint, this);
 
 		uint32_t threadId = SDL_GetThreadID(eventLoopThread);
@@ -344,9 +347,9 @@ namespace Grids {
 	void Protocol::stopEventLoopThread() {
 		setFinished(1);
 
-		if (running) {
+		if (getEventLoopRunning()) {
+			setEventLoopRunning( 0 );
 			SDL_WaitThread(eventLoopThread, NULL);
-			running = 0;
 		}
 	}
 
@@ -374,5 +377,22 @@ namespace Grids {
 		threadsFinished[threadId] = fin;
 		SDL_mutexV(finishedMutex);
 	}
+
+	bool Protocol::getEventLoopRunning(){
+	    	bool isRunning;
+	
+		SDL_mutexP( eventLoopRunningMutex );
+		isRunning = running;
+		SDL_mutexV( eventLoopRunningMutex );
+		
+		return isRunning;
+	}
+	
+	void Protocol::setEventLoopRunning( bool run ){
+		SDL_mutexP( eventLoopRunningMutex );
+		running = run;
+		SDL_mutexV( eventLoopRunningMutex );
+	}
+		
 
 } // end namespace Proto

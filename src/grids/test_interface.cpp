@@ -1,9 +1,9 @@
 
-
 #include <grids/interface.h>
 #include <grids/event.h>
 #include <grids/utility.h>
-#include <grids/test_define.h>
+#include <kaleidoscope/define.h>
+#include <kaleidoscope/device.h>
 
 #include <gtest/gtest.h>
 
@@ -19,34 +19,33 @@ namespace{
 		}
 
 		static void SetUpTestCase() {
-			std::cout << "Setting up test case" << std::endl;
-			inter = new Grids::Interface();
+			d = new Kal::Device();
 		}
 		
 		static void TearDownTestCase() {
-			
-			delete inter;
+			delete d;
 		}
 
-		static Grids::Interface* inter;
+		static Kal::Device* d;
+
 		Grids::Utility utility;
 		
 		Grids::GridsID test_room;
 	};
 
-	Grids::Interface* InterfaceTest::inter = NULL;
+	Kal::Device* InterfaceTest::d = NULL;
 
 	TEST_F(InterfaceTest, constructorTest){
-		EXPECT_STREQ( DEFAULT_SERVER, inter->getServer().c_str() );
+		EXPECT_STREQ( DEFAULT_SERVER, d->getInterface()->getServer().c_str() );
 	}
 	
 	TEST_F(InterfaceTest, requestCreateRoomTest){	
 		std::vector< Grids::GridsID > temp_rooms;
-		Grids::GridsID temp_room_id = inter->requestCreateRoom();		
+		Grids::GridsID temp_room_id = d->getInterface()->createMyRoom(CALLBACK_SECONDS);
 		
 		EXPECT_TRUE( utility.checkUUIDValidity( temp_room_id ) );		
 	
-		temp_rooms = inter->getRooms();
+		temp_rooms = d->getInterface()->getKnownRooms();
 		bool room_in_vector = false;
 		
 		for( int i = 0; i < temp_rooms.size(); i++ ){
@@ -55,23 +54,26 @@ namespace{
 		}
 
 		EXPECT_TRUE( room_in_vector );
+		EXPECT_EQ( temp_room_id, d->getInterface()->getMyRoom() );		
 		
 		test_room = temp_room_id;
 	}
 	
 	TEST_F(InterfaceTest, requestCreateObjectTest){
 		Grids::Value attr;
+		Grids::GridsID new_id;
 		Grids::Vec3D pos_temp = Grids::Vec3D( 1.1f, 2.2f, 3.3f );
 		std::string str_temp = "Foo-Bar-Lol";
 		
+		attr[ "type" ] = "SimpleVector"; 
 		attr[ "pos" ][ 0u ] = pos_temp.X;
 		attr[ "pos" ][ 1u ] = pos_temp.Y;
 		attr[ "pos" ][ 2u ] = pos_temp.Z;
 		attr[ "foo" ] = str_temp;
 
-		inter->requestCreateObject( test_room, &attr );
+		new_id = d->getInterface()->requestCreateObject( &attr );
 		
-		SUCCEED();
+		EXPECT_TRUE( d->getGridsUtility()->checkUUIDValidity( new_id ) );
 	}
 
 } // end namespace

@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include <grids/SDLObject.h>
+
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
+#include <grids/SDLObject.h>
 
 namespace Kaleidoscope {
 	class Device;

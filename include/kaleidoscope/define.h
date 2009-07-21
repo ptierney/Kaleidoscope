@@ -8,6 +8,9 @@
 
 #include <string>
 
+#define GRIDS_SERVER "block.hardchats.com"
+#define CALLBACK_SECONDS 5
+
 namespace Kaleidoscope
 {
 	typedef irr::core::vector3df Vec3D;

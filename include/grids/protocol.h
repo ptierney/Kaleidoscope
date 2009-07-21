@@ -33,6 +33,8 @@ namespace Grids {
 		void stopEventLoopThread();
 		void runEventLoop();
 		Uint32 getThreadId();
+		bool getEventLoopRunning();
+		void setEventLoopRunning(bool);
 
 		bool connectToNode(const char *address);
 		void sendProtocolInitiationString();
@@ -68,6 +70,8 @@ namespace Grids {
 		TCPsocket sock;
 		SDL_mutex *finishedMutex;
 		SDL_Thread *eventLoopThread;
+		
+		SDL_mutex *eventLoopRunningMutex;
 		bool running;
 	};
 }

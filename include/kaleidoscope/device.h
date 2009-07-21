@@ -3,9 +3,17 @@
 #pragma once
 
 #include <kaleidoscope/define.h>
-#include <grids/objectController.h>
+
+#include <vector>
+
+namespace Grids{
+	class ObjectController;
+	class Interface;
+	class Utility;
+}
 
 namespace Kaleidoscope {
+	class Room;
 
 	class Device {
 	public:
@@ -14,9 +22,13 @@ namespace Kaleidoscope {
 		~Device();
 		
 		Grids::ObjectController* getObjectController();
-		
+		Grids::Interface* getInterface();
+		Grids::Utility* getGridsUtility();
+
 	private:
 		Grids::ObjectController* object_controller;
+		Grids::Interface* interface;
+		Grids::Utility* g_utility;
 
 		void init( unsigned int, unsigned int );
 	};

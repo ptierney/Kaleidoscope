@@ -1,6 +1,7 @@
 
 #include <grids/object.h>
 #include <kaleidoscope/device.h>
+#include <grids/objectController.h>
 
 namespace Grids {
 

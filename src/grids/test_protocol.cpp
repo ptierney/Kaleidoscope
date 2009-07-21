@@ -1,15 +1,13 @@
 
-
-
-
 #include <grids/protocol.h>
 #include <grids/event.h>
-#include <grids/test_define.h>
+#include <kaleidoscope/define.h>
 
 #include <gtest/gtest.h>
 
-namespace{
+#include <string>
 
+namespace{
 
 	class ProtocolTest : public ::testing::Test {
 
@@ -112,7 +110,7 @@ namespace{
 		EXPECT_STREQ( GRIDS_CREATE_ROOM, rec_event.getEventType().c_str() );		
 		EXPECT_STREQ( GRIDS_CREATE_ROOM, rec_event.getArgs()[ "_method" ].asString().c_str() );		
 		ASSERT_GT( rec_event.getArgs()[ "id" ].asString().length(), 10 );
-		
+				
 		test_room_id = rec_event.getArgs()[ "id" ].asString();
 	}
 
