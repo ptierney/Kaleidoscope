@@ -25,7 +25,15 @@ namespace Grids
 		Grids::Value getArgs();
 		Grids::Value *getArgsPtr();
 		std::string getEventType();
-
+		
+		bool hasPosition();
+		bool hasRotation();
+		bool hasScale();
+		bool hasAttr();
+		GridsID getID();		
+		Vec3D getPosition();
+		Vec3D getRotation();
+		Vec3D getScale();
 
 	private:
 		std::string event_type;

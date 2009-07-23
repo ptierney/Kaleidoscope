@@ -4,10 +4,13 @@
 #include <kaleidoscope/define.h>
 
 #include <gtest/gtest.h>
+#include <SDL/SDL_net.h>
 
 #include <string>
+#include <iostream>
+#include <assert.h>
 
-namespace{
+namespace {
 
 	class ProtocolTest : public ::testing::Test {
 
@@ -22,6 +25,11 @@ namespace{
 		}
 
 		static void SetUpTestCase() {
+			if (SDLNet_Init() != 0) {
+				std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
+				assert( false );
+			}
+
 			proto = new Grids::Protocol();
 		}
 		
@@ -30,6 +38,8 @@ namespace{
 			proto->stopEventLoopThread();
 
 			delete proto;
+
+			SDLNet_Quit();
 		}
 	
 		static void receiveEvent( Grids::Protocol *, Grids::Event *, void *); // Grids protocol object hooks into this
@@ -145,13 +155,56 @@ namespace{
 
 		EXPECT_EQ( test_attr, rec_event.getArgs()[ "req" ][ "attr" ][ "lol" ][ "hi" ].asUInt() );
 	}
+		
+	TEST_F(ProtocolTest, createObjectWithPosition){
+		int wait_timer = 0;
+		const int wait_limit = CALLBACK_SECONDS;
+		std::string debug_string = GRIDS_CREATE_OBJECT;
+		Grids::Vec3D test_pos = Grids::Vec3D( 4.4, 5.5, 6.6 );
+		Grids::Vec3D test_rot = Grids::Vec3D( 1.23, 5.678, 4.0987 );
+		Grids::Vec3D test_scl = Grids::Vec3D( 642.1234, 66431.1266, 7993.23885 );
+		
+		Grids::Value test_m;
+		test_m[ "_method" ] = debug_string;
+		test_m[ "room_id" ] = test_room_id;
+		test_m[ "pos" ][ 0u ] = test_pos.X;
+		test_m[ "pos" ][ 1u ] = test_pos.Y;
+		test_m[ "pos" ][ 2u ] = test_pos.Z;
+		test_m[ "rot" ][ 0u ] = test_rot.X;
+		test_m[ "rot" ][ 1u ] = test_rot.Y;
+		test_m[ "rot" ][ 2u ] = test_rot.Z;		
+		test_m[ "scl" ][ 0u ] = test_scl.X;
+		test_m[ "scl" ][ 1u ] = test_scl.Y;
+		test_m[ "scl" ][ 2u ] = test_scl.Z;					
+
+		proto->sendRequest( debug_string, &test_m );
+
+		while( wait_timer < wait_limit) {
+			if( rec_bool )
+				break;
+			sleep( 1 );
+			wait_timer++;		
+		}
+
+		EXPECT_FLOAT_EQ( (double)(test_pos.X), rec_event.getArgs()[ "req" ][ "pos" ][ 0u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_pos.Y), rec_event.getArgs()[ "req" ][ "pos" ][ 1u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_pos.Z), rec_event.getArgs()[ "req" ][ "pos" ][ 2u ].asDouble() ); 
+
+		EXPECT_FLOAT_EQ( (double)(test_rot.X), rec_event.getArgs()[ "req" ][ "rot" ][ 0u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_rot.Y), rec_event.getArgs()[ "req" ][ "rot" ][ 1u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_rot.Z), rec_event.getArgs()[ "req" ][ "rot" ][ 2u ].asDouble() ); 
+
+		EXPECT_FLOAT_EQ( (double)(test_scl.X), rec_event.getArgs()[ "req" ][ "scl" ][ 0u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_scl.Y), rec_event.getArgs()[ "req" ][ "scl" ][ 1u ].asDouble() ); 
+		EXPECT_FLOAT_EQ( (double)(test_scl.Z), rec_event.getArgs()[ "req" ][ "scl" ][ 2u ].asDouble() ); 
+	}
 	
 	TEST_F(ProtocolTest, createObjectWithID ){
 		int wait_timer = 0;
 		const int wait_limit = CALLBACK_SECONDS;
 		std::string debug_string = GRIDS_CREATE_OBJECT;
 		unsigned int test_attr = 12345556u;
-		Grids::GridsID test_id = "1234-2345-1234";
+		Grids::GridsID test_id = "DAA10054-7683-11DE-BB26-3FC64C661FD7";
 		
 		Grids::Value test_m;
 		test_m[ "_method" ] = debug_string;
@@ -204,5 +257,14 @@ namespace{
 		EXPECT_EQ( test_attr, rec_event.getArgs()[ "req" ][ "attr" ][ "lol" ][ "hi" ].asUInt() );
 	}	   
 
+	TEST_F(ProtocolTest, getAllRoomsTest){
+		int wait_timer = 0;
+		const int wait_limit = CALLBACK_SECONDS;
+		std::string debug_string = GRIDS_LIST_ROOMS;		
+		
+		proto->sendRequest( GRIDS_LIST_ROOMS, NULL );
+		
+		sleep( 3 );
+	}
 
 } // end namespace

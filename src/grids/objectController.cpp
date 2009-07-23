@@ -2,6 +2,8 @@
 
 #include <grids/objectController.h>
 #include <grids/define.h>
+#include <grids/object.h>
+#include <grids/event.h>
 
 namespace Grids {
 	
@@ -25,6 +27,43 @@ namespace Grids {
 	// Returns an object's pointer given it's ID
 	Object* ObjectController::getPointerFromID( GridsID obj_id ){
 		return id_ptr_map[ obj_id ];
+	}
+
+	void ObjectController::createObject( GridsID new_id, Event* evt ){
+		if( !knownObject( new_id, evt ) )
+			createGenericObject( new_id, evt );
+	}
+	
+	bool ObjectController::knownObject( GridsID new_id, Event* evt ) {
+		std::string type = (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "type" ].asString();
+		bool found = 0;
+		
+		if( type == "Camera" ){
+			d->getOSWindow()->registerCamera( new Kal::Camera
+			found = 1;
+		}
+
+		return found;
+	}
+	
+	void ObjectController::createGenericObject( GridsID new_id, Event* evt ){
+		// Create a cube with a questionmark or something
+	}
+
+	void ObjectController::updateObjectPosition( GridsID in_id, Vec3D pos ){
+		getPointerFromID( in_id )->setLocalPosition( pos );
+	}
+
+	void ObjectController::updateObjectRotation( GridsID in_id, Vec3D rot ){
+		getPointerFromID( in_id )->setLocalRotation( rot );
+	}
+
+	void ObjectController::updateObjectScale( GridsID in_id, Vec3D scl ){
+		getPointerFromID( in_id )->setLocalScale( scl );
+	}
+
+	void ObjectController::updateObjectAttr( GridsID in_id, Event* evt ){
+		getPointerFromID( in_id )->setAttrFromValue( evt->getArgsPtr() );
 	}
 
 } // end namespace Grids

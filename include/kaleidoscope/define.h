@@ -9,7 +9,10 @@
 #include <string>
 
 #define GRIDS_SERVER "block.hardchats.com"
-#define CALLBACK_SECONDS 5
+#define DEFAULT_SERVER "block.hardchats.com"
+
+#define CALLBACK_SECONDS 10
+#define KALEIDOSCOPE_DEBUG_LEVEL 4
 
 namespace Kaleidoscope
 {

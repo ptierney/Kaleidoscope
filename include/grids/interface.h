@@ -3,9 +3,8 @@
 
 #include <grids/protocol.h>
 #include <kaleidoscope/define.h>
+#include <kaleidoscope/device.h>
 #include <kaleidoscope/room.h>
-
-#define DEFAULT_SERVER "block.hardchats.com"
 
 namespace Kaleidoscope {
 	class Device;
@@ -31,19 +30,34 @@ namespace Grids{
 		GridsID createMyRoom( int timeout );
 
 		GridsID requestCreateObject(Value* object_attr );		
-		void requestUpdateObject(GridsID object_id, Value* object_attr );
+		GridsID requestCreateObject(Value* object_attr, Vec3D pos );		
+		GridsID requestCreateObject(Value* object_attr, Vec3D pos, Vec3D rot, Vec3D scl );		
 
+		void requestUpdateAttr(GridsID object_id, Value* object_attr );
+		void requestUpdatePosition(GridsID object_id, Vec3D new_pos );
+		void requestUpdateRotation(GridsID object_id, Vec3D new_pos );
+		void requestUpdateScale(GridsID object_id, Vec3D new_pos );
+		
 		GridsID getMyRoom();
+		// Known rooms are rooms that I've created or 
+		// have been messaged as being created.
+		// Server rooms are the rooms on the server,
+		// accessed with GRIDS_LIST_ROOMS 
 		std::vector< GridsID > getKnownRooms();
+		std::vector< GridsID > getServerRooms();
+		void requestAllRooms();
+		
+		friend class Kaleidoscope::Device;
 
 	private:
 		void init();
 		void setupMutexes();
 		void parseEvent(Event*);
 		void setConnected( bool );
-		void registerNewRoom( Kal::Room* );		
-
+		void registerNewRoom( Kal::Room* );	
+			
 		std::vector< GridsID > known_rooms;		
+		std::vector< GridsID > server_rooms;
 
 		std::string server_address;
 		Protocol* proto;

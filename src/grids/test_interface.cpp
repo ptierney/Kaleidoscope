@@ -64,8 +64,9 @@ namespace{
 		Grids::GridsID new_id;
 		Grids::Vec3D pos_temp = Grids::Vec3D( 1.1f, 2.2f, 3.3f );
 		std::string str_temp = "Foo-Bar-Lol";
-		
-		attr[ "type" ] = "SimpleVector"; 
+		std::string test_type = "SimpleVector"; 		
+
+		attr[ "type" ] = test_type; 
 		attr[ "pos" ][ 0u ] = pos_temp.X;
 		attr[ "pos" ][ 1u ] = pos_temp.Y;
 		attr[ "pos" ][ 2u ] = pos_temp.Z;
@@ -74,6 +75,8 @@ namespace{
 		new_id = d->getInterface()->requestCreateObject( &attr );
 		
 		EXPECT_TRUE( d->getGridsUtility()->checkUUIDValidity( new_id ) );
+		
 	}
+	
 
 } // end namespace

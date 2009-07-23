@@ -8,4 +8,8 @@ namespace Kaleidoscope {
 
 	}
 
+	bool SpaceObject::detectSelection(){
+
+	}
+
 } // end namespace Kaleidoscope

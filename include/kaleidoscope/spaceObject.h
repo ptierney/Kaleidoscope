@@ -9,6 +9,9 @@ namespace Kaleidoscope {
 
 	public:
 		SpaceObject( Device*, Grids::Value* );
+		
+		virtual bool detectSelection();
+
 
 	};
 

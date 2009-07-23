@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <grids/object.h>
+
 #include <grids/define.h>
 #include <grids/SDLObject.h>
 
@@ -9,7 +9,9 @@
 #include <vector>
 
 namespace Grids {
-
+	class Object;
+	class Event;
+	
 	class ObjectController : public SDLObject {
 	public:
 		ObjectController();
@@ -17,6 +19,15 @@ namespace Grids {
 		void registerObject( GridsID, Object* );
 		GridsID getIDFromPointer( Object* );
 		Object* getPointerFromID( GridsID );
+
+		void createObject( GridsID, Event* );
+		bool knownObject( GridsID, Event* );	
+		void createGenericObject( GridsID, Event* );
+
+		void updateObjectPosition( GridsID, Vec3D );
+		void updateObjectRotation( GridsID, Vec3D );
+		void updateObjectScale( GridsID, Vec3D );
+		void updateObjectAttr( GridsID, Event* );		
 
 	private:		
 		std::vector< GridsID > object_ids;

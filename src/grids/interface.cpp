@@ -6,25 +6,27 @@
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/room.h>
 
+#include <SDL/SDL.h>
+#include <SDL/SDL_net.h>
+
 #include <iostream>
 
 namespace Grids {
 
 	Interface::Interface( Kal::Device* _d ){
 		server_address = DEFAULT_SERVER;
-		d = _d;
-
-		init();
+ 		d = _d;
 	}
 
 	Interface::Interface(Kal::Device* _d, std::string in_server ){
 		server_address = in_server;
 		d = _d;
-
-		init();
 	}
 		
 	void Interface::init(){
+		if (SDLNet_Init() != 0) 
+			std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
+				
 		connected = false;
 		setupMutexes();
 
@@ -40,7 +42,6 @@ namespace Grids {
 		while( !isConnected() ){
 			sleep( 1 );
 		}
-
 	}
 	
 	Interface::~Interface(){
@@ -48,6 +49,8 @@ namespace Grids {
 		proto->stopEventLoopThread();
 		
 		delete proto;		
+	
+		SDLNet_Quit();
 	}
 	
 	void Interface::setupMutexes(){
@@ -70,14 +73,23 @@ namespace Grids {
 		SDL_LockMutex( parse_event_mutex );
 
 		std::string event_type = evt->getEventType();
-		Grids::GridsID object_id = evt->getArgs()[ "id" ].asString();
+		Grids::GridsID object_id = evt->getID();
 
 		if( event_type == GRIDS_CREATE_ROOM ){
 			registerNewRoom( new Kal::Room( d, evt->getArgsPtr()) );						
 		} else if( event_type == GRIDS_CREATE_OBJECT ){
-			
+			d->getObjectController()->createObject( object_id, evt );			
 		} else if( event_type == GRIDS_UPDATE_OBJECT ){
-
+			if( evt->hasPosition() )
+				d->getObjectController()->updateObjectPosition( object_id, evt->getPosition() );
+			if( evt->hasRotation() )
+				d->getObjectController()->updateObjectRotation( object_id, evt->getRotation() );
+			if( evt->hasScale() )
+				d->getObjectController()->updateObjectScale( object_id, evt->getScale() ); 
+			if( evt->hasAttr() )
+				d->getObjectController()->updateObjectAttr( object_id, evt );
+		} else if( event_type == GRIDS_LIST_ROOMS ) {
+			// d->getUtility()->parseListRooms( evt );
 		}
 
 		SDL_UnlockMutex( parse_event_mutex );
@@ -114,12 +126,29 @@ namespace Grids {
 	// By default this creates an object in your room
 	// Overriding object creation to another room, 	
 	GridsID Interface::requestCreateObject( Value* attr ){
+		return requestCreateObject( attr, Vec3D( 0.0f, 0.0f, 0.0f ) );
+	}
+	
+	GridsID Interface::requestCreateObject( Value* attr, Vec3D pos ){
+		return requestCreateObject( attr, pos, Vec3D( 0.0f, 0.0f, 0.0f ), Vec3D( 1.0f, 1.0f, 1.0f ) );
+	}
+
+	GridsID Interface::requestCreateObject( Value* attr, Vec3D pos, Vec3D rot, Vec3D scl ){
 		GridsID new_obj_id = d->getGridsUtility()->getNewUUID();
 		
 		Grids::Value* msg = new Grids::Value();
 		(*msg)[ "_method" ] = GRIDS_CREATE_OBJECT;
 		(*msg)[ "room_id" ] = getMyRoom();
 		(*msg)[ "id" ] = new_obj_id;
+		(*msg)[ "pos" ][ 0u ] = pos.X;
+		(*msg)[ "pos" ][ 1u ] = pos.Y;
+		(*msg)[ "pos" ][ 2u ] = pos.Z;
+		(*msg)[ "rot" ][ 0u ] = rot.X;
+		(*msg)[ "rot" ][ 1u ] = rot.Y;
+		(*msg)[ "rot" ][ 2u ] = rot.Z;
+		(*msg)[ "scl" ][ 0u ] = scl.X;
+		(*msg)[ "scl" ][ 1u ] = scl.Y;
+		(*msg)[ "scl" ][ 2u ] = scl.Z;
 		(*msg)[ "attr" ] = attr;
 
 		proto->sendRequest( GRIDS_CREATE_OBJECT, msg );
@@ -129,13 +158,63 @@ namespace Grids {
 		return new_obj_id;
 	}
 
-	void Interface::requestUpdateObject(GridsID object_id, Value* object_attr ){
+	void Interface::requestUpdateAttr(GridsID object_id, Value* object_attr ){
+		Grids::Value* msg = new Grids::Value();
+		(*msg)[ "_method" ] = GRIDS_UPDATE_OBJECT;
+		(*msg)[ "room_id" ] = getMyRoom();
+		(*msg)[ "id" ] = object_id;
 
+		(*msg)[ "attr" ] = object_attr;
+	
+		proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
 	}
+	   
+	void Interface::requestUpdatePosition(GridsID object_id, Vec3D new_pos ){
+		Grids::Value* msg = new Grids::Value();
+		(*msg)[ "_method" ] = GRIDS_UPDATE_OBJECT;
+		(*msg)[ "room_id" ] = getMyRoom();
+		(*msg)[ "id" ] = object_id;
+
+		(*msg)[ "pos" ][ 0u ] = new_pos.X;
+		(*msg)[ "pos" ][ 1u ] = new_pos.Y;
+		(*msg)[ "pos" ][ 2u ] = new_pos.Z;
+	
+		proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+	}
+
+	void Interface::requestUpdateRotation(GridsID object_id, Vec3D new_rot ){
+		Grids::Value* msg = new Grids::Value();
+		(*msg)[ "_method" ] = GRIDS_UPDATE_OBJECT;
+		(*msg)[ "room_id" ] = getMyRoom();
+		(*msg)[ "id" ] = object_id;
+
+		(*msg)[ "rot" ][ 0u ] = new_rot.X;
+		(*msg)[ "rot" ][ 1u ] = new_rot.Y;
+		(*msg)[ "rot" ][ 2u ] = new_rot.Z;
+	
+		proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+	}
+	void Interface::requestUpdateScale(GridsID object_id, Vec3D new_scl ){
+		Grids::Value* msg = new Grids::Value();
+		(*msg)[ "_method" ] = GRIDS_UPDATE_OBJECT;
+		(*msg)[ "room_id" ] = getMyRoom();
+		(*msg)[ "id" ] = object_id;
+
+		(*msg)[ "scl" ][ 0u ] = new_scl.X;
+		(*msg)[ "scl" ][ 1u ] = new_scl.Y;
+		(*msg)[ "scl" ][ 2u ] = new_scl.Z;
+	
+		proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+	}
+	   
 
 	std::vector< GridsID > Interface::getKnownRooms(){
 		return known_rooms;
 	}
+
+	void Interface::requestAllRooms(){
+
+	}	
 
 	GridsID Interface::getMyRoom(){ 
 		std::string temp_room; 
@@ -169,6 +248,7 @@ namespace Grids {
 			SDL_UnlockMutex( known_rooms_mutex );
 		}
 	}
+	
 
 	bool Interface::isConnected(){
 		bool temp_con;
