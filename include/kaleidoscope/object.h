@@ -11,17 +11,19 @@ namespace Kaleidoscope {
 
 	public:
 		Object( Device*, Grids::Value* );
+
+		virtual void drawAll(Device*);		
 	
 		void show();
 		void hide();
+		bool getVisibility();		
 		 
 		virtual bool detectSelection();
 		virtual void select();
 		virtual void deselect();
-		
+
 	protected:
 		virtual void draw( Device* ) = 0;
-		virtual void drawAll(Device*);		
 
 	private:
 		bool visible;
@@ -29,7 +31,6 @@ namespace Kaleidoscope {
 	
 		SDL_mutex* visible_mutex;
 		SDL_mutex* selected_mutex;
-
 	};
 
 } // end namespace Kaleidoscope

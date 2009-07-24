@@ -64,13 +64,11 @@ namespace Grids {
 	}
 
 	void Protocol::sendProtocolInitiationString() {
-
 		std::string initString = "==Grids/1.0/JSON";
 		protocolWrite(initString);
 	}
 
 	int Protocol::protocolWrite(std::string &str) {
-
 		uint32_t len = str.size();
 
 		return protocolWrite(str.c_str(), len);

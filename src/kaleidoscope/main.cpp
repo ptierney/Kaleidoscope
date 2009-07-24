@@ -5,9 +5,11 @@
 
 int main( int argc, char **argv ) {
 
-	Kal::Kaleidoscope mk = Kal::Kaleidoscope( argc, argv );
+	Kal::Kaleidoscope* mk = new Kal::Kaleidoscope( argc, argv );
 		
-	mk.run();
+	mk->run();
+
+	delete mk;
 		
 	std::cout << "Exited Cleanly." << std::endl;
 	

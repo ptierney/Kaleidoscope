@@ -37,9 +37,9 @@ namespace Kaleidoscope {
 				abs_scl.Y,
 				abs_scl.Z );
 		
-		lock();
+		lockAttr();
 		glDrawGeometry(d);
-		unlock();		
+		unlockAttr();
 		
 		glPopMatrix();
 	}
@@ -137,7 +137,6 @@ namespace Kaleidoscope {
 		/////////////
 		// Triangles
 		////////////
-					
 					
 		if( !( attr[ "triangles" ] ) == false ) // if there are quads
 			{

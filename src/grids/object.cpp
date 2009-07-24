@@ -3,6 +3,7 @@
 #include <kaleidoscope/device.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
+#include <iostream>
 
 namespace Grids {
 
@@ -11,6 +12,9 @@ namespace Grids {
 		rotation_mutex = SDL_CreateMutex();    
 		scale_mutex = SDL_CreateMutex();
 		children_mutex = SDL_CreateMutex();
+		attr_mutex = SDL_CreateMutex();
+		
+		parent = NULL;
 
 		setID( getIDFromValue( in_value ) );
 
@@ -130,9 +134,8 @@ namespace Grids {
 		d->getInterface()->requestUpdateScale( getID(), scl );
 	}
 
-
 	Object* Object::getParent(){
-		Object* temp_parent;
+		Object* temp_parent = NULL;
 
 		lock();
 		temp_parent = parent;
@@ -160,6 +163,15 @@ namespace Grids {
 		lock();
 		parent_id = in_parent_id;
 		unlock();
+	}
+
+	std::vector< Object* > Object::getChildren(){
+		std::vector< Object* > temp_vec;		
+		SDL_LockMutex( children_mutex );
+		temp_vec = children;
+		SDL_UnlockMutex( children_mutex );
+		
+		return temp_vec;
 	}
 
 	GridsID Object::getIDFromValue( Value* val ){
@@ -195,7 +207,10 @@ namespace Grids {
 	}
 	
 	void Object::setAttr( Value* new_attr ){
-		attr = Value( new_attr );
+		if( new_attr == NULL )
+			attr = Value();
+		else
+			attr = Value( new_attr );
 	}
 	
 	void Object::setAttrFromValue( Value* new_attr ){
@@ -221,6 +236,10 @@ namespace Grids {
 		children.push_back( obj_ptr );
 		SDL_UnlockMutex( children_mutex );
 	}
+
+	void Object::lockAttr(){ SDL_LockMutex( attr_mutex ); }
+	void Object::unlockAttr(){ SDL_UnlockMutex( attr_mutex ); }
+
 
 	/////////////////////////////////////
 	// Position, Rotation, Scale should 

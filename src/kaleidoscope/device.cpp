@@ -5,6 +5,8 @@
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/settings.h>
+#include <kaleidoscope/utility.h>
+#include <kaleidoscope/renderer.h>
 
 #include <grids/objectController.h>
 #include <grids/interface.h>
@@ -13,13 +15,14 @@
 namespace Kaleidoscope {
 
 	Device::Device(){
-		createObjects( 640, 480 );
-		init( 640, 480 );	
+		createObjects( DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT );
+		init( DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT );	
 	}
 	
 	Device::Device( unsigned int sw, unsigned int sh ){
 		createObjects( sw, sh );
 		init( sw, sh );
+		loadRoom();
 	}
 
 	// Object creation is done in two passes
@@ -32,7 +35,7 @@ namespace Kaleidoscope {
 		window = new Kal::OSWindow( this, sw, sh );
 		event_controller = new Kal::EventController( this );
 
-		object_controller = new Grids::ObjectController();
+		object_controller = new Grids::ObjectController(this);
 		interface = new Grids::Interface( this );
 		g_utility = new Grids::Utility();		
 	}
@@ -41,15 +44,23 @@ namespace Kaleidoscope {
 		running = 1;
 		running_mutex = SDL_CreateMutex();
 		my_id_mutex = SDL_CreateMutex();
+		my_room_mutex = SDL_CreateMutex();
 		setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );		
 
 		// Spawns new Protocol and network listening thread
 		// Sets up SDL_net
-		interface->init();		
+		// This call will hang if there is no connection to the internet
+		interface->init();
+
+		// Rooms become children of the renderer, so this mush be created first
+		window->createRenderer(this);		
+		window->getRenderer()->prepareWindow(this);		
+
+		loadRoom();		
 		
 		// Requests a new camera from the server
 		// Creates and registers a new renderer
-		window->init();
+		window->init(this);
 	}
 
 	Device::~Device() {
@@ -70,10 +81,19 @@ namespace Kaleidoscope {
 	Settings* Device::getSettings() { return settings; }	
 
 	void Device::run() {
-		event_controller->checkEvents(this);
+		event_controller->checkEvents();
 		window->doMovement(this);
 		window->renderAll();
 	}
+
+	void Device::loadRoom(){		
+		Utility::puts( 1, "Your room:  ", getInterface()->createMyRoom( 20 ) );
+	}
+
+
+
+	/////////////////////////////////////
+	// Accessor Functions
 	
 	bool Device::getRunning() {
 		bool temp_run;
@@ -100,15 +120,11 @@ namespace Kaleidoscope {
 		
 		return temp_id;
 	}
-		
+	
 	void Device::setMyID( GridsID temp_id ){
 		SDL_LockMutex( my_id_mutex );
 		my_id = temp_id;
 		SDL_UnlockMutex( my_id_mutex );
-	
-		return temp_id;
 	}
-		
-		
 
 } // end namespace Kaleidoscope

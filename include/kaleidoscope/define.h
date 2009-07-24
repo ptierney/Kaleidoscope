@@ -14,6 +14,9 @@
 #define CALLBACK_SECONDS 10
 #define KALEIDOSCOPE_DEBUG_LEVEL 4
 
+#define DEFAULT_WINDOW_WIDTH 640
+#define DEFAULT_WINDOW_HEIGHT 480
+
 namespace Kaleidoscope
 {
 	typedef irr::core::vector3df Vec3D;

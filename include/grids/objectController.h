@@ -4,9 +4,14 @@
 
 #include <grids/define.h>
 #include <grids/SDLObject.h>
+#include <kaleidoscope/define.h>
 
 #include <map>
 #include <vector>
+
+namespace Kaleidoscope {
+	class Device;
+}
 
 namespace Grids {
 	class Object;
@@ -14,7 +19,7 @@ namespace Grids {
 	
 	class ObjectController : public SDLObject {
 	public:
-		ObjectController();
+		ObjectController(Kal::Device*);
 		
 		void registerObject( GridsID, Object* );
 		GridsID getIDFromPointer( Object* );
@@ -30,10 +35,13 @@ namespace Grids {
 		void updateObjectAttr( GridsID, Event* );		
 
 	private:		
+		void registerCamera( GridsID, Event* );
+
 		std::vector< GridsID > object_ids;
 		std::map< GridsID, Object* > id_ptr_map;
 		std::map< Object*, GridsID > ptr_id_map;
 
+		Kal::Device* d;
 	};
 
 } // end namespace Grids

@@ -76,7 +76,7 @@ namespace Grids {
 		Grids::GridsID object_id = evt->getID();
 
 		if( event_type == GRIDS_CREATE_ROOM ){
-			registerNewRoom( new Kal::Room( d, evt->getArgsPtr()) );						
+			registerNewRoom( new Kal::Room( d, evt->getArgsPtr() ) );						
 		} else if( event_type == GRIDS_CREATE_OBJECT ){
 			d->getObjectController()->createObject( object_id, evt );			
 		} else if( event_type == GRIDS_UPDATE_OBJECT ){
@@ -149,7 +149,7 @@ namespace Grids {
 		(*msg)[ "scl" ][ 0u ] = scl.X;
 		(*msg)[ "scl" ][ 1u ] = scl.Y;
 		(*msg)[ "scl" ][ 2u ] = scl.Z;
-		(*msg)[ "attr" ] = attr;
+		(*msg)[ "attr" ] = *attr;
 
 		proto->sendRequest( GRIDS_CREATE_OBJECT, msg );
 		

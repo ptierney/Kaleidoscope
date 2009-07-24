@@ -4,11 +4,15 @@
 #include <grids/define.h>
 #include <grids/object.h>
 #include <grids/event.h>
+#include <kaleidoscope/device.h>
+#include <kaleidoscope/osWindow.h>
+#include <kaleidoscope/camera.h>
+#include <kaleidoscope/renderer.h>
 
 namespace Grids {
 	
-	ObjectController::ObjectController(){
-
+	ObjectController::ObjectController( Kal::Device* d_){
+		d = d_;
 	}
 	
 	void ObjectController::registerObject( GridsID new_id, Object* new_ptr ){
@@ -39,7 +43,7 @@ namespace Grids {
 		bool found = 0;
 		
 		if( type == "Camera" ){
-			d->getOSWindow()->registerCamera( new Kal::Camera
+			registerCamera( new_id, evt );
 			found = 1;
 		}
 
@@ -48,6 +52,14 @@ namespace Grids {
 	
 	void ObjectController::createGenericObject( GridsID new_id, Event* evt ){
 		// Create a cube with a questionmark or something
+	}
+	
+	void ObjectController::registerCamera( GridsID new_id, Event* evt ){
+		if( (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == 
+		    d->getMyID() )
+			d->getOSWindow()->registerCamera( new Kal::Camera( d, evt->getArgsPtr() ) );
+		else
+			d->getOSWindow()->getRenderer()->addChild( new Kal::Camera( d, evt->getArgsPtr() ) );
 	}
 
 	void ObjectController::updateObjectPosition( GridsID in_id, Vec3D pos ){

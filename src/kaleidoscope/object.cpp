@@ -12,6 +12,24 @@ namespace Kaleidoscope {
 
 		show();
 	}
+	
+	void Object::drawAll(Device* d){
+          if( getVisibility() ){
+			std::vector< Grids::Object* > temp_children = getChildren();
+
+               for( int i = 0; i < temp_children.size(); i++ ){
+                    temp_children[i]->drawAll( d );
+               }
+               draw( d ); // draw yourself
+          }
+	}
+
+	bool Object::detectSelection(){
+
+	}
+
+	////////////////////////////
+	// Accessor functions
 
 	void Object::show(){
 		SDL_LockMutex( visible_mutex );
@@ -24,13 +42,15 @@ namespace Kaleidoscope {
 		visible = 0;
 		SDL_UnlockMutex( visible_mutex );
 	}
-	
-	void Object::drawAll(Device* d){
 
-	}
-	
-	bool Object::detectSelection(){
-
+	bool Object::getVisibility(){
+		bool temp_vis;
+		
+		SDL_LockMutex( visible_mutex );
+		temp_vis = visible;
+		SDL_UnlockMutex( visible_mutex );
+		
+		return temp_vis;
 	}
 
 	void Object::select(){

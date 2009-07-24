@@ -27,8 +27,6 @@ namespace Kaleidoscope {
 		~Device();
 
 		void run();
-		bool getRunning();
-		void setRunning( bool );
 		
 		Grids::ObjectController* getObjectController();
 		Grids::Interface* getInterface();
@@ -36,10 +34,14 @@ namespace Kaleidoscope {
 		OSWindow* getOSWindow();		
 		EventController* getEventController();
 		Settings* getSettings();
-		
-		GridsID getMyID();
-		void setMyID(GridsID);
 
+		bool getRunning();
+		void setRunning( bool );
+		GridsID getMyID();
+		GridsID getMyRoom();
+		void setMyID(GridsID);
+		void setMyRoom(GridsID);
+		
 	private:
 		Grids::ObjectController* object_controller;
 		Grids::Interface* interface;
@@ -50,12 +52,15 @@ namespace Kaleidoscope {
 
 		void createObjects( unsigned int, unsigned int );
 		void init( unsigned int, unsigned int );
+		void loadRoom();
 		
 		GridsID my_id;		
+		GridsID my_room;
 
 		bool running;
 		SDL_mutex* running_mutex;
 		SDL_mutex* my_id_mutex;
+		SDL_mutex* my_room_mutex;
 	};
 
 

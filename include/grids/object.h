@@ -6,9 +6,12 @@
 #include <grids/objectController.h>
 #include <kaleidoscope/define.h>
 #include <grids/SDLObject.h>
+#include <kaleidoscope/define.h>
+
 
 namespace Kaleidoscope {
 	class Device;
+	class Camera;	 
 }
 
 namespace Grids{
@@ -43,18 +46,22 @@ namespace Grids{
 		void unlockAttr();
 		
 		void addChild( Object* obj_ptr );
-		
-		friend class ObjectController;
 
+		virtual void drawAll( Kal::Device* ) = 0;
+		virtual bool getVisibility() = 0;		
+
+		friend class ObjectController;
+		friend class Kal::Camera;
 	protected:
 		Object* getParent();
 		GridsID getParentID();
 		void setRoom( GridsID );
 		void setParent(Object*);
 		void setParentID( GridsID );
-		Value getAttrFromValue( Value* );
+		Value* getAttrFromValue( Value* );
 		GridsID getIDFromValue( Value* );
 		
+		std::vector< Object* > getChildren();
 		std::vector< Object* > children;
 
 		Value attr;
@@ -86,6 +93,7 @@ namespace Grids{
 		SDL_mutex* rotation_mutex;
 		SDL_mutex* scale_mutex;		
 		SDL_mutex* children_mutex;		
+		SDL_mutex* attr_mutex;
 
 		////////////////////////
 		// These will be deleted

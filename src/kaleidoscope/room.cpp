@@ -8,12 +8,17 @@
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/renderer.h>
 #include <grids/interface.h>
+#include <iostream>
 
 namespace Kaleidoscope {
 
 	Room::Room( Device* d, Grids::Value* val ) : GLSpaceObject( d, val ) {
 		placeRoom( d );
+
+		lockAttr();
 		buildRoom( d );
+		unlockAttr();
+
 		d->getOSWindow()->getRenderer()->addChild( this );
 	}
 	
@@ -87,7 +92,8 @@ namespace Kaleidoscope {
 
 		float room_width = d->getSettings()->getRoomWidth();
 		int num_lines = room_width;
-		
+
+		attr = Grids::Value();		
 		// Lines Color
 		attr[ "color" ][ 0u ][ 0u ] = 1.0f;
 		attr[ "color" ][ 0u ][ 1u ] = 1.0f;
