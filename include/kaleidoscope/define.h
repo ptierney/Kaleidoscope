@@ -22,6 +22,8 @@ namespace Kaleidoscope
 	typedef irr::core::vector3df Vec3D;
 	typedef irr::core::vector2df Vec2D;
 	typedef irr::core::matrix4 Matrix4;
+	typedef irr::core::vector3df Vector3;
+	typedef irr::core::vector2df Vector2;
 	
 	typedef std::string GridsID;
 	

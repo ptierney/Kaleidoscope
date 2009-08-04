@@ -8,6 +8,7 @@
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/renderer.h>
+#include <kaleidoscope/spaceText.h>
 
 namespace Grids {
 	
@@ -38,12 +39,17 @@ namespace Grids {
 			createGenericObject( new_id, evt );
 	}
 	
+	// Thoughs: this function should be replaced by a hash.  Each object
+	// "registers" both it's name and ... is this possible?
 	bool ObjectController::knownObject( GridsID new_id, Event* evt ) {
 		std::string type = (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "type" ].asString();
 		bool found = 0;
 		
 		if( type == "Camera" ){
 			registerCamera( new_id, evt );
+			found = 1;
+		} else if( type == "SpaceText" ) {
+			new Kal::SpaceText( d, evt->getArgsPtr() );
 			found = 1;
 		}
 
@@ -76,6 +82,10 @@ namespace Grids {
 
 	void ObjectController::updateObjectAttr( GridsID in_id, Event* evt ){
 		getPointerFromID( in_id )->setAttrFromValue( evt->getArgsPtr() );
+	}
+	
+	void ObjectController::detectSelectionThreaded( Kal::Device* d ){
+
 	}
 
 } // end namespace Grids

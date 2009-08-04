@@ -67,6 +67,7 @@ namespace Kaleidoscope {
 		delete object_controller;
 		delete interface;
 		delete g_utility;
+		// Window should be one of the last objects to be destroyed, as it calls SDL_Quit()
 		delete window;
 		delete event_controller;
 		delete settings;
@@ -79,6 +80,7 @@ namespace Kaleidoscope {
 	Grids::Utility* Device::getGridsUtility(){ return g_utility; }
 	OSWindow* Device::getOSWindow() { return window; }	
 	Settings* Device::getSettings() { return settings; }	
+	EventController* Device::getEventController(){ return event_controller; }
 
 	void Device::run() {
 		event_controller->checkEvents();
@@ -89,7 +91,6 @@ namespace Kaleidoscope {
 	void Device::loadRoom(){		
 		Utility::puts( 1, "Your room:  ", getInterface()->createMyRoom( 20 ) );
 	}
-
 
 
 	/////////////////////////////////////
@@ -125,6 +126,16 @@ namespace Kaleidoscope {
 		SDL_LockMutex( my_id_mutex );
 		my_id = temp_id;
 		SDL_UnlockMutex( my_id_mutex );
+	}
+	
+	GridsID Device::getMyRoom() {
+		GridsID temp_id;
+		
+		SDL_LockMutex( my_room_mutex );
+		temp_id = my_room;
+		SDL_UnlockMutex( my_room_mutex );
+	
+		return temp_id;
 	}
 
 } // end namespace Kaleidoscope

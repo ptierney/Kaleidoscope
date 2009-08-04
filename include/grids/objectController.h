@@ -33,6 +33,8 @@ namespace Grids {
 		void updateObjectRotation( GridsID, Vec3D );
 		void updateObjectScale( GridsID, Vec3D );
 		void updateObjectAttr( GridsID, Event* );		
+		
+		void detectSelectionThreaded(Kal::Device*);
 
 	private:		
 		void registerCamera( GridsID, Event* );
