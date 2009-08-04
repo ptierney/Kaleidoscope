@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ossp/uuid++.hh>
+#include <uuid++.hh>
 #include <string>
 
 namespace Grids{
