@@ -10,17 +10,16 @@ GL
 GLU
 ossp-uuid++
 
-
 ** Required Downloads ** 
 
 Makepp
 http://makepp.sourceforge.net/
 
+** Included but not built libraries **
 Jsoncpp
 homepage: http://jsoncpp.sourceforge.net/
 svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsoncpp
 
-Jsoncpp requires Scons:
-http://www.scons.org/
 
-Jsoncpp requires Doxygen:
+** OS X ** 
+All libraries listed above must be built from source.
