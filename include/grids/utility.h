@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <uuid++.hh>
 #include <string>
 
 namespace Grids{
@@ -17,7 +16,9 @@ namespace Grids{
 		bool checkUUIDValidity( std::string );
 	
 	private:
-		uuid uuid_obj;
+		std::string cMakeUUID();
+		char hexToChar( unsigned int );
+
 	};
 
 } // end namespace Grids

@@ -9,7 +9,7 @@
 CPP := g++
 LIBTOOL := libtool
 LIBFLAGS := --mode=link
-LIBS := -lSDL -lSDL_net -lGL -lGLU -lSDL_ttf -lSDL_image -lossp-uuid++ -lgtest 
+LIBS := -lSDL -lSDL_net -lGL -lGLU -lSDL_ttf -lSDL_image -lgtest 
 
 build_kal_test : $(filter_out *kaleidoscope/main.o, $(wildcard **/*.o) )
 	$(LIBTOOL) $(LIBFLAGS) $(CPP) $(inputs) $(LIBS) $(OTHERLIBS) -o $(output) 

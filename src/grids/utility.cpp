@@ -1,18 +1,45 @@
 
-
 #include <grids/utility.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string>
 
 namespace Grids{
 
 	Utility::Utility(){
-
+	  srand( time( NULL ) );
 	}	
 
 	std::string Utility::getNewUUID(){
-		uuid_obj.make( UUID_MAKE_V4 );
-
-		return uuid_obj.string();
+	  return cMakeUUID();
 	}
+	
+  std::string Utility::cMakeUUID(){
+	std::string temp_uuid;
+	char ran_char = 'A';
+	unsigned int ran_num;
+	for( int i = 0; i < 36; i++ ){
+	  if( i == 8 || i == 13 || i == 18 || i == 23){
+		temp_uuid.push_back( '-' );
+		continue;
+	  }
+	
+	  ran_num = rand() % 16;
+	  temp_uuid.push_back( hexToChar( ran_num ) );		
+	}
+	
+	return temp_uuid;
+  }
+
+  char Utility::hexToChar( unsigned int num ){	
+	if( num < 10 ){
+	  return '0' + (char)num;
+	} else if ( num < 16 ){
+	  return 'A' + (char)(num - 10);
+	} else {
+	  return '0';
+	}
+  }
 	
 	bool Utility::checkUUIDValidity( std::string in_id ){
 		std::string temp_string;

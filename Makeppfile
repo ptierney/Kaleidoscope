@@ -8,7 +8,7 @@
 CPP := g++
 LIBTOOL := libtool
 LIBFLAGS := --mode=link
-LIBS := -lSDL -lSDL_net -lGL -lGLU -lSDL_ttf -lSDL_image -lossp-uuid++ 
+LIBS := -lSDL -lSDL_net -lGL -lGLU -lSDL_ttf -lSDL_image 
 
 
 build_kal : $(filter_out *test_*.o, $(wildcard **/*.o) )
