@@ -10,7 +10,11 @@
 #include <iostream>
 #include <assert.h>
 
+#if defined(__MACOSX__)
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_ttf.h>
+#endif
 
 namespace Kaleidoscope {
 

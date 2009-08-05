@@ -3,7 +3,11 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
+#if defined(__MACOSX__)
+#include <SDL_net/SDL_net.h>
+#else
 #include <SDL/SDL_net.h>
+#endif
 
 #include <json/writer.h>
 #include <json/reader.h>

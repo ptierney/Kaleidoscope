@@ -1,7 +1,14 @@
 
 #pragma once
 
+#include <SDL/SDL.h>
+
+#if defined(__MACOSX__)
+#include <SDL_ttf/SDL_ttf.h>
+#else
 #include <SDL/SDL_ttf.h>
+#endif
+
 #include <SDL/SDL_thread.h>
 // Included for SDL_Color
 #include <SDL/SDL_video.h>

@@ -1,0 +1,9 @@
+//
+// Prefix header for all source files of the 'Kaleidoscope' target in the 'Kaleidoscope' project
+//
+
+#include "SDL.h"
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

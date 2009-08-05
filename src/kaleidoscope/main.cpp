@@ -1,5 +1,6 @@
 
 
+#include <SDL/SDL.h>
 #include <kaleidoscope/kaleidoscope.h>
 #include <iostream>
 
@@ -15,3 +16,4 @@ int main( int argc, char **argv ) {
 	
 	return 0;
 }
+
