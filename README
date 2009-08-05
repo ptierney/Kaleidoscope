@@ -8,19 +8,15 @@ SDL_ttf
 SDL_image
 GL
 GLU
-ossp-uuid++ (NOTE: when installing from ossp uuid++ form source, be sure to configure with ./configure --with-cxx, so that c++ bindings are included
-
 
 ** Required Downloads ** 
 
 Makepp
 http://makepp.sourceforge.net/
 
+
 ** Included but not built libraries **
 Jsoncpp
 homepage: http://jsoncpp.sourceforge.net/
 svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsoncpp
 
-
-** OS X ** 
-All libraries listed above must be built from source.
