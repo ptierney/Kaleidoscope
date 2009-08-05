@@ -7,7 +7,11 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 #include <SDL/SDL_mutex.h>
-#include <SDL_net.h>
+#if defined(__MACOSX__)
+#include <SDL_net/SDL_net.h>
+#else
+#include <SDL/SDL_net.h>
+#endif
 #include <json/value.h>
 #include <grids/event.h>
 #include <grids/define.h>
