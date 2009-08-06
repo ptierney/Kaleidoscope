@@ -544,15 +544,13 @@
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
 					/Library/Frameworks/SDL.framework/Headers,
 					"$(HEADER_SEARCH_PATHS)",
-					/Users/patrick/dev/kaleidoscope/include,
+					../../include,
 					/Library/Frameworks/SDL_image.framework/Headers,
 					/Library/Frameworks/SDL_net.framework/Headers,
 					/Library/Frameworks/SDL_ttf.framework/Headers,
 				);
 				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 			};
