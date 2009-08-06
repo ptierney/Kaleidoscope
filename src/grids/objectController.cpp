@@ -61,8 +61,7 @@ namespace Grids {
 	}
 	
 	void ObjectController::registerCamera( GridsID new_id, Event* evt ){
-		if( (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == 
-		    d->getMyID() )
+		if( (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == d->getMyID() )
 			d->getOSWindow()->registerCamera( new Kal::Camera( d, evt->getArgsPtr() ) );
 		else
 			d->getOSWindow()->getRenderer()->addChild( new Kal::Camera( d, evt->getArgsPtr() ) );

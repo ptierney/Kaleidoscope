@@ -83,15 +83,16 @@ namespace Kaleidoscope {
 	EventController* Device::getEventController(){ return event_controller; }
 
 	void Device::run() {
-		event_controller->checkEvents();
-		window->doMovement(this);
+		//event_controller->checkEvents();
+		//window->doMovement(this);
 		window->renderAll();
 	}
 
 	void Device::loadRoom(){		
 		Utility::puts( 1, "Your room:  ", getInterface()->createMyRoom( 20 ) );
 	}
-
+		
+		
 
 	/////////////////////////////////////
 	// Accessor Functions

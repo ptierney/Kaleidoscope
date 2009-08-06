@@ -16,6 +16,9 @@ namespace Kaleidoscope {
 		void renderAll( Device* );
 		
 		void draw( Device* );
+		
+		void lockGL();
+		void unlockGL();
 
 		friend class OSWindow;
 		friend class Device;
@@ -47,6 +50,8 @@ namespace Kaleidoscope {
 		float Light_Ambient[4];
 		float Light_Diffuse[4];
 		float Light_Position[4];
+		
+		SDL_mutex* gl_mutex;
 
 		int current_text_mode;
 		std::string text_mode_string[4];

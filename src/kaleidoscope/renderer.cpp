@@ -10,6 +10,7 @@ namespace Kaleidoscope {
 
 	Renderer::Renderer( Device* d, Grids::Value* val ) : Object( d, val ) {
 		initVars();
+		gl_mutex = SDL_CreateMutex();
 	}
 
 	void Renderer::draw(Device* d){
@@ -78,6 +79,8 @@ namespace Kaleidoscope {
 
 	void Renderer::prepareWindow( Device* d ){
 		//buildTextures();   
+		
+		lockGL();
 
 		// Color to clear color buffer to.
 		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
@@ -103,6 +106,8 @@ namespace Kaleidoscope {
 		// A handy trick -- have surface material mirror the color.
 		glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
 		glEnable(GL_COLOR_MATERIAL);
+		
+		unlockGL();
 	}
 
 
@@ -122,6 +127,8 @@ namespace Kaleidoscope {
           filt_on = Filtering_On;
           smooth_on = Smooth_On;
           unlock();
+			
+		lockGL();
 
           if ( text_on )
                glEnable(GL_TEXTURE_2D);
@@ -164,12 +171,16 @@ namespace Kaleidoscope {
 
           // Reset to 0,0,0; no rotation, no scaling.
           glLoadIdentity();
+		
+		unlockGL();
 
 		Camera* temp_cam = d->getOSWindow()->getCamera(); 
           if( temp_cam )
 			temp_cam->callGluLookAt( d );
 
+		lockGL();
           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		unlockGL();
 	}
 	
 	void Renderer::finishRender(Device* d){
@@ -183,8 +194,9 @@ namespace Kaleidoscope {
 
 
 	// Debug Functions: DELETE
-	void Renderer::prepareText( Device * d )
-	{
+	void Renderer::prepareText( Device * d ) {
+		lockGL();
+		
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -198,15 +210,33 @@ namespace Kaleidoscope {
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
 		glEnable( GL_TEXTURE_2D );
+		
+		unlockGL();
 	}
 
-	void Renderer::finishText( Device * d )
-	{
+	void Renderer::finishText( Device * d ) {
+		lockGL();
+		
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
+		
+		unlockGL();
 	}
+	
+	/////////////////////////////////////
+	////  Thread Functions
+		
+	void Renderer::lockGL(){
+		SDL_LockMutex( gl_mutex );
+	}
+		
+	void Renderer::unlockGL(){
+		SDL_UnlockMutex( gl_mutex );
+	}
+	
+
 	
 
 

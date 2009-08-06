@@ -110,7 +110,9 @@ namespace Kaleidoscope {
 	void OSWindow::renderAll() {		
 		renderer->renderAll( d ); 
 				
+		renderer->lockGL();
 		SDL_GL_SwapBuffers();
+		renderer->unlockGL();
 	}
 
 	void OSWindow::requestCreateCamera(Device* d){

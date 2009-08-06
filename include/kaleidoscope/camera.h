@@ -26,7 +26,6 @@ namespace Kaleidoscope {
 		Vec3D getTarget();
 		Vec3D getUp();
 		Vec3D getCenterOfRotation();
-		
 		int getType();
 		
 		void draw(Device* );
@@ -40,6 +39,11 @@ namespace Kaleidoscope {
 		int getType( Device* );
 		void setType( Device* );
 		void setLook( Vec3D);
+		// These functions should be used whenever the user is accessing of of the 4 perspective functions:
+		// fov, aspect, z_near, z_far
+		void lockPerspective();
+		void unlockPerspective();
+		
 	private:
 		void parseAttrFromValue( Grids::Value* );
 		void parseAttr( Grids::Value* );
@@ -74,6 +78,7 @@ namespace Kaleidoscope {
 		SDL_mutex* up_mutex;
 		SDL_mutex* type_mutex;
 		SDL_mutex* center_mutex;
+		SDL_mutex* perspective_mutex;
 	};
 
 } // end namespace Kaleidoscope

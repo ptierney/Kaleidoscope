@@ -1,8 +1,8 @@
 
 /* Current Bugs:
- * 1. Maya camera occasionally jumps to the opposite side when zooming in
- * 2. Radeon 22 error at startup
- * 3. Rotation does not occur around the zoom center
+ *
+ * 2. Radeon 22 error / segfault at startup
+ * 
  *
  *
  */
@@ -14,6 +14,7 @@
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/eventController.h>
+#include <kaleidoscope/renderer.h>
 #include <grids/irrMath.h>
 #include <SDL/SDL_opengl.h>
 #include <iostream>
@@ -32,14 +33,17 @@ namespace Kaleidoscope {
 	}
 	
 	void Camera::setPerspective( Device* d, float fov, float aspect, float z_near, float z_far ) {
-		lock();
+		lockPerspective();
 		this->fov = fov;	
 		this->aspect = aspect;
 		this->z_near = z_near;
 		this->z_far = z_far;
-		unlock();
 
+		d->getOSWindow()->getRenderer()->lockGL();
 		gluPerspective( fov, aspect, z_near, z_far );
+		d->getOSWindow()->getRenderer()->unlockGL();
+		
+		unlockPerspective();
 	}	
 
 	void Camera::callGluLookAt( Device* d ) {
@@ -47,9 +51,11 @@ namespace Kaleidoscope {
 		Vec3D temp_pos = getPosition();
 		Vec3D temp_up = getUp();
 
+		d->getOSWindow()->getRenderer()->lockGL();
 		gluLookAt( temp_target.X, temp_target.Y, temp_target.Z,
 				 temp_pos.X, temp_pos.Y, temp_pos.Z,
 				 temp_up.X, temp_up.Y, temp_up.Z );
+		d->getOSWindow()->getRenderer()->unlockGL();
 
 	}
 	
@@ -234,7 +240,7 @@ namespace Kaleidoscope {
 		// The cached state is necessary for reading mouse wheel movements
 		Uint8 mouse_state = SDL_GetMouseState(NULL, NULL);
 		Uint8 cached_mouse_state = d->getEventController()->getMouseButton();
-		bool mouse_down = d->getEventController()->getMouseDown();
+		//bool mouse_down = d->getEventController()->getMouseDown();
 
 		if( time_diff == 0 )
 			time_diff = 1;
@@ -392,27 +398,28 @@ namespace Kaleidoscope {
 
      void Camera::resizeScene( Device * d, unsigned int new_width, unsigned int new_height )
      {
-          // Let's not core dump, no matter what.
-          if (new_height == 0)
-			new_height = 1;
-
+		 d->getOSWindow()->getRenderer()->lockGL();
           glViewport(0, 0, new_width, new_height);
 
           glMatrixMode(GL_PROJECTION);
           glLoadIdentity();
+		 
+		 d->getOSWindow()->getRenderer()->unlockGL();
 
           // NOTE: It is possible to calulate the exact (most realistic) fovy of a progmam
           // based on the viewer's distance from the screen.  See OpenGL documentation.
           // 26.0f *roughly* coresponds to a 35mm camera 50mm lens,  45.0f *roughly* coresponds to a 24mm wide angle lense.
           float fovy = 26.0f;
 
-          float aspect = (GLfloat)new_width/(GLfloat)new_height;
+          float aspecty = (GLfloat)new_width/(GLfloat)new_height;
           float zNear = 0.1f;
           float zFar = 10000.0f;
 
-          setPerspective( d, fovy, aspect, zNear, zFar );
+          setPerspective( d, fovy, aspecty, zNear, zFar );
 
+		 d->getOSWindow()->getRenderer()->lockGL();
           glMatrixMode(GL_MODELVIEW);
+		 d->getOSWindow()->getRenderer()->unlockGL();
 
           //d->getOSWindow()->setWidth( new_width );
           //d->getOSWindow()->setHeight( new_height );
@@ -485,6 +492,14 @@ namespace Kaleidoscope {
 
           return angle;
      }
+	
+	void Camera::lockPerspective(){
+		SDL_LockMutex( perspective_mutex );
+	}
+	
+	void Camera::unlockPerspective(){
+		SDL_UnlockMutex( perspective_mutex );
+	}
 
 
 
