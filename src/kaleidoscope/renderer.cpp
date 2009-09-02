@@ -9,8 +9,8 @@
 namespace Kaleidoscope {
 
 	Renderer::Renderer( Device* d, Grids::Value* val ) : Object( d, val ) {
-		initVars();
 		gl_mutex = SDL_CreateMutex();
+		initVars();
 	}
 
 	void Renderer::draw(Device* d){

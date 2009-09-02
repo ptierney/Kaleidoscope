@@ -83,8 +83,8 @@ namespace Kaleidoscope {
 	EventController* Device::getEventController(){ return event_controller; }
 
 	void Device::run() {
-		//event_controller->checkEvents();
-		//window->doMovement(this);
+		event_controller->checkEvents();
+		window->doMovement(this);
 		window->renderAll();
 	}
 

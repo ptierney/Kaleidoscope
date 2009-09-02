@@ -40,6 +40,7 @@ namespace Kaleidoscope {
 		glScalef( abs_scl.X, 
 				abs_scl.Y,
 				abs_scl.Z );
+		
 		d->getOSWindow()->getRenderer()->unlockGL();
 		
 		lockAttr();
