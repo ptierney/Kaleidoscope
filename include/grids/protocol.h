@@ -4,80 +4,67 @@
 #include <map>
 #include <string>
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
-#include <SDL/SDL_mutex.h>
-#if defined(__MACOSX__)
-#include <SDL_net/SDL_net.h>
-#else
-#include <SDL/SDL_net.h>
-#endif
+#include <QMutex>
+#include <QSize>
+#include <QThread>
+#include <QWaitCondition>
+#include <QTcpSocket>
+
 #include <json/value.h>
 #include <grids/event.h>
 #include <grids/define.h>
 
 namespace Grids {
-	const unsigned int GRIDS_PORT = 1488;
 
-	class Protocol;
-	typedef void (*gevent_callback_t)(Protocol *, Event *, void *userData);
+  class Protocol : public QThread {
+	Q_OBJECT
 
-	// class method
-	int runEventLoopThreadEntryPoint(void *);
+	  public:
+	Protocol(QObject *parent = 0);
+	~Protocol();
 
-	class Protocol {
-	public:
-		Protocol();
-		~Protocol();
+	bool connectToNode(const char *address);
+	void sendProtocolInitiationString();
+	int protocolWrite(std::string &str);
+	int protocolWrite(const char *str, uint32_t len);
+	void closeConnection();
 
-		void setEventCallback(gevent_callback_t, void *userData);
-		void setConnectedCallback(gevent_callback_t, void *userData);
+	std::string stringifyValue(Value *val);
+	void sendRequest(std::string);
+	void sendRequest(std::string, Value *args);
 
-		int runEventLoopThreaded();
-		void stopEventLoopThread();
-		void runEventLoop();
-		Uint32 getThreadId();
-		bool getEventLoopRunning();
-		void setEventLoopRunning(bool);
+	void handleMessage(std::string &msg);
+	
+	Value parseJson(std::string &msg);
+	bool sockConnected();
 
-		bool connectToNode(const char *address);
-		void sendProtocolInitiationString();
-		int protocolWrite(std::string &str);
+	int runEventLoopThreaded();
+	void stopEventLoopThread();
 
-		int protocolWrite(const char *str, uint32_t len);
+	bool getEventLoopRunning();
+	void setEventLoopRunning(bool);
 
-		void sendRequest(std::string);
-		void sendRequest(std::string, Value *args);
+	// last_event is mainly used for testing 
+	Event* last_event;
+	
+  signals:
+	void receiveEvent(Protocol*, Event*);
+	void protocolInitiated(Protocol*, Event*);
 
-		void closeConnection();
-		bool isFinished();
-		void setFinished(bool);
-		Value parseJson(std::string &msg);
+  protected:
+	void run();
 
-		std::string stringifyValue(Value *val);
+  private:
+	QTcpSocket sock;
+	QMutex finishedMutex;
+	QMutex eventLoopRunningMutex;
+	bool running;
+	
+	void endianSwap(unsigned int&);
+	quint32 byteSwap(quint32);
 
-		void handleMessage(std::string &msg);
-
-	private:
-		void dispatchEvent(Grids::Event *);
-
-		// keep track of which threads are done
-		std::map<int, bool> threadsFinished;
-
-		// callback storage
-		gevent_callback_t eventCallback;
-		gevent_callback_t connectedCallback;
-
-		void *connectedCallbackUserData;
-		void *eventCallbackUserData;
-
-		TCPsocket sock;
-		SDL_mutex *finishedMutex;
-		SDL_Thread *eventLoopThread;
-		
-		SDL_mutex *eventLoopRunningMutex;
-		bool running;
-	};
+	static const quint32 GRIDS_PORT = 1488;
+  };
 }
 
 

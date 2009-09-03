@@ -1,14 +1,6 @@
 
 #include <iostream>
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
-#if defined(__MACOSX__)
-#include <SDL_net/SDL_net.h>
-#else
-#include <SDL/SDL_net.h>
-#endif
-
 #include <json/writer.h>
 #include <json/reader.h>
 #include <json/value.h>
@@ -17,95 +9,88 @@
 #include <grids/protocol.h>
 
 namespace Grids {
-	void Protocol::setEventCallback(gevent_callback_t cb, void *userData) { eventCallback = cb; eventCallbackUserData = userData; }
-	void Protocol::setConnectedCallback(gevent_callback_t cb, void *userData) { connectedCallback = cb; connectedCallbackUserData = userData; }
 
-	int runEventLoopThreadEntryPoint(void *arg) {
-		Protocol *gp = (Protocol *)arg;
-		gp->runEventLoop();
-		return 0;
-	}
-
-	/*
-	  void *dispatchEventEntryPoint(void *arg) {
-	  Protocol *gp = (Protocol *)arg;
-	  gp->dispatchEvent();
-	  }
-	*/
-
-	Protocol::Protocol() {
-		sock = 0;
-		finishedMutex = SDL_CreateMutex();
-		eventLoopRunningMutex = SDL_CreateMutex();
+  Protocol::Protocol(QObject* parent)
+	: QThread(parent) {
 		running = 0; // Normally has mutex, but we're not using multiple threads yet
+		last_event = 0;
 
-		connectedCallback = NULL;
+  }
+
+  Protocol::~Protocol() {
+  }
+
+  bool Protocol::connectToNode(const char *address) {
+	sock.connectToHost(tr(address), GRIDS_PORT);
+
+	if (!sock.waitForConnected(5000)){
+	  printf("Failed to connect to host\n");
+	  return 0;
 	}
 
-	Protocol::~Protocol() {
-		SDL_DestroyMutex(finishedMutex);
-		SDL_DestroyMutex(eventLoopRunningMutex);
+	// hooray we are connnected! initialize protocol
+	sendProtocolInitiationString();
+
+	return 1;
+  }
+
+  void Protocol::sendProtocolInitiationString() {
+	std::string initString = "==Grids/1.0/JSON";
+	protocolWrite(initString);
+  }
+
+  int Protocol::protocolWrite(std::string &str) {
+	uint32_t len = str.size();
+
+	return protocolWrite(str.c_str(), len);
+  }
+
+  void Protocol::endianSwap(unsigned int& x)
+  {
+    x = (x>>24) | 
+	  ((x<<8) & 0x00FF0000) |
+	  ((x>>8) & 0x0000FF00) |
+	  (x<<24);
+  }
+
+  quint32 Protocol::byteSwap (quint32 nLongNumber)
+  {
+	return (((nLongNumber&0x000000FF)<<24)+((nLongNumber&0x0000FF00)<<8)+
+			((nLongNumber&0x00FF0000)>>8)+((nLongNumber&0xFF000000)>>24));
+  }
+
+  int Protocol::protocolWrite(const char *str, quint32 len) {
+	if (!sockConnected()) {
+	  std::cerr << "No socket exists but Protocol::protocolWrite was called\n";
+	  return -1;
 	}
 
-	bool Protocol::connectToNode(const char *address) {
-		IPaddress ip;
+	unsigned int outstr_len = len + 4;
+	char *outstr = (char *)malloc(outstr_len);
 
-		if (SDLNet_ResolveHost(&ip, (char*)address, GRIDS_PORT) == -1) {
-			printf("Could not resolve hostname %s: %s\n", address, SDLNet_GetError());
-			return 0;
-		}
+	// Add the length of the string to the beginning of the string
 
-		sock = SDLNet_TCP_Open(&ip);
-		if (!sock) {
-			printf("Failed to connect to host %s: %s\n", address, SDLNet_GetError());
-			return 0;
-		}
+	// If we're on LittleEndian, convert to BigEndian (Network byte order)
+	quint32 net_len = len;
+	if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
+	  endianSwap(net_len);
+	memcpy(outstr, &net_len, 4);
+	memcpy((outstr + 4), str, len);
 
-		// hooray we are connnected! initialize protocol
-		sendProtocolInitiationString();
+	unsigned int ret = sock.write(outstr, outstr_len);
+	free(outstr);
 
-		return 1;
+	if (ret != outstr_len) {
+	  printf("Error in sending\n");
+	  // It may be good to disconnect sock because it is likely invalid now.
 	}
 
-	void Protocol::sendProtocolInitiationString() {
-		std::string initString = "==Grids/1.0/JSON";
-		protocolWrite(initString);
-	}
+	return ret;
+  }
 
-	int Protocol::protocolWrite(std::string &str) {
-		uint32_t len = str.size();
-
-		return protocolWrite(str.c_str(), len);
-	}
-
-	int Protocol::protocolWrite(const char *str, uint32_t len) {
-
-		if (!sock) {
-			std::cerr << "No socket exists but Protocol::protocolWrite was called\n";
-			return -1;
-		}
-
-		unsigned int outstr_len = len + 4;
-		char *outstr = (char *)malloc(outstr_len);
-
-		SDLNet_Write32(len, outstr);
-		memcpy((outstr + 4), str, len);
-
-		int ret = SDLNet_TCP_Send(sock, outstr, outstr_len);
-		free(outstr);
-
-		if (ret != outstr_len) {
-			printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-			// It may be good to disconnect sock because it is likely invalid now.
-		}
-
-		return ret;
-	}
-
-	void Protocol::closeConnection() {
-		SDLNet_TCP_Close(sock);
-	}
-
+  void Protocol::closeConnection() {
+	sock.close();
+  }
 
 	// fast(?) version of turning a Grids::Value into a string
 	std::string Protocol::stringifyValue(Value *val) {
@@ -160,54 +145,34 @@ namespace Grids {
 	  }
 	*/
 
-	void Protocol::runEventLoop() {
-		int bytesRead, socketReady;
-		uint32_t incomingLength;
+	void Protocol::run() {
+		int socketReady;
+		qint64 bytesRead;
+		quint32 incomingLength;
 		char *buf;
 		char *bufIncoming;
+		
+		while ( getEventLoopRunning() && sockConnected()) {
 
-		setFinished(0);
+			socketReady = sock.waitForReadyRead(1000);
+			std::cerr << "socket" << std::endl;
 
-		// create a socket set consisting of our socket, so that we can poll for data
-
-		SDLNet_SocketSet sockSet = SDLNet_AllocSocketSet(1);
-
-		int numused = SDLNet_TCP_AddSocket(sockSet, sock);
-
-		if(numused == -1) {
-
-			printf("SDLNet_AddSocket: %s\n", SDLNet_GetError());
-			SDLNet_FreeSocketSet(sockSet);
-			return;
-		}
-
-		while ( getEventLoopRunning() && !isFinished() && sock) {
-
-			socketReady = SDLNet_CheckSockets(sockSet, 1000);
-
-			if (socketReady == -1) {
-
-				printf("Error in SDLNet_CheckSockets: %s\n", SDLNet_GetError());
-				//most of the time this is a system error, where perror might help.
-				perror("SDLNet_CheckSockets");
-
-				break;
-			}
-
-			if (socketReady != 1) {
-				// nothing to read
+			if (socketReady == 0) {
+				// nothing to read, or an error
 				continue;
 			}
 
 			// read in 4 byte length of message
-			bytesRead = SDLNet_TCP_Recv(sock, &incomingLength, 4);
+			// TODO: check endianness
+			bytesRead = sock.read((char*)(&incomingLength), 4);
+
+			if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
+				endianSwap(incomingLength);
 
 			if (bytesRead <= 0) {
-				std::cerr << "Socket read error " << bytesRead << ": " << SDLNet_GetError() << "\n";
-				return;
+			  std::cerr << "Socket read error\n";
+			  return;
 			}
-
-			incomingLength = SDLNet_Read32(&incomingLength);
 
 			if (bytesRead != 4) {
 				// socket broken most likely
@@ -227,20 +192,19 @@ namespace Grids {
 			// allocate space for incoming message + null byte
 			buf = (char *)malloc(incomingLength + 1);
 
-			uint32_t bytesRemaining = incomingLength;
+			quint32 bytesRemaining = incomingLength;
 			bufIncoming = buf;
 
 			do {
-				bytesRead = SDLNet_TCP_Recv(sock, bufIncoming, bytesRemaining);
+			  bytesRead = sock.read(bufIncoming, bytesRemaining);
 
 				if (bytesRead > 0) {
 					bytesRemaining -= bytesRead;
 					bufIncoming += bytesRead;
 				}
 
-			} while ((bytesRead > 0) && bytesRemaining && ! isFinished());
+			} while ((bytesRead > 0) && bytesRemaining);
 			buf[incomingLength] = '\0';
-
 
 			if (bytesRead == -1) {
 				// o snap read error
@@ -267,23 +231,20 @@ namespace Grids {
 			std::string msg = buf;
 			handleMessage(msg);		
 	   
+			std::cerr << "Freeing buff\n";
 			free(buf);
+			std::cerr << "Freed buff\n";
 		}
-
-		SDLNet_FreeSocketSet(sockSet);
 	}
 
 	void Protocol::handleMessage(std::string &msg) {
 		if (msg.size() < 2) return; // obv. bogus
 
-		std::cout << msg << "\n";
+		std::cerr << "received: " << msg << "\n";
 
 		if (msg.find("==", 0, 2) == 0) {
 			// protocol initiation message
-
-			if (connectedCallback)
-				connectedCallback(this, NULL, connectedCallbackUserData);
-
+		  emit protocolInitiated(this, NULL);
 		} else if (msg.find("--", 0, 2) == 0) {
 			// encrypted protocol message
 		} else {
@@ -294,11 +255,18 @@ namespace Grids {
 			//gridsmap_t rootMap = jsonToMap(root);
 
 			Event *evt = new Event(root["_method"].asString(), root);
-			eventCallback(this, evt, eventCallbackUserData);
+			
+			if( last_event){
+			  delete last_event;
+			  last_event = new Event(*evt);
+			} else {
+			  last_event = new Event(*evt);
+			}
+			emit receiveEvent(this, evt);
 	
-			//std::cout << "handleMessage deleting evt" << std::endl;
+			std::cout << "handleMessage deleting evt" << std::endl;
 			delete evt;
-			//std::cout << "handleMessage deleted evt" << std::endl;
+			std::cout << "handleMessage deleted evt" << std::endl;
 		}
 	}
 
@@ -319,7 +287,6 @@ namespace Grids {
 	  }
 	*/
 
-
 	Value Protocol::parseJson(std::string &msg) {
 		Grids::Value root;
 		Json::Reader reader;
@@ -331,70 +298,45 @@ namespace Grids {
 		return Value();
 	}
 
-	int Protocol::runEventLoopThreaded() {
-		SDL_mutexP(finishedMutex);
+  bool Protocol::sockConnected(){
+	return (sock.state() == QAbstractSocket::ConnectedState);
+  }
 
-		setEventLoopRunning(true);
-		
-		eventLoopThread = SDL_CreateThread(runEventLoopThreadEntryPoint, this);
 
-		uint32_t threadId = SDL_GetThreadID(eventLoopThread);
-		threadsFinished[threadId] = 0;
-
-		SDL_mutexV(finishedMutex);
-
-		return 0;
+  int Protocol::runEventLoopThreaded() {
+	if(!isRunning()){
+	  setEventLoopRunning(1);
+	  start(NormalPriority);
+	  return 0;
+	} else {
+	  return -1;
 	}
+  }
 
 	void Protocol::stopEventLoopThread() {
-		setFinished(1);
-
-		if (getEventLoopRunning()) {
+	  if(isRunning()) {
 			setEventLoopRunning( 0 );
-			SDL_WaitThread(eventLoopThread, NULL);
+			wait();
 		}
 	}
 
-	uint32_t Protocol::getThreadId() {
-		return SDL_ThreadID();
-	}
 
-	bool Protocol::isFinished() {
-		bool isFinished;
-
-		SDL_mutexP(finishedMutex);
-		isFinished = threadsFinished[getThreadId()];
-		SDL_mutexV(finishedMutex);
-
-		return isFinished;
-	}
-
-	void Protocol::setFinished(bool fin) {
-		uint32_t threadId = getThreadId();
-
-		if (! threadId)
-			return;
-
-		SDL_mutexP(finishedMutex);
-		threadsFinished[threadId] = fin;
-		SDL_mutexV(finishedMutex);
-	}
-
-	bool Protocol::getEventLoopRunning(){
-	    	bool isRunning;
+  bool Protocol::getEventLoopRunning(){
+	bool isRunning;
 	
-		SDL_mutexP( eventLoopRunningMutex );
-		isRunning = running;
-		SDL_mutexV( eventLoopRunningMutex );
+	eventLoopRunningMutex.lock();
+	isRunning = running;
+	eventLoopRunningMutex.unlock();
 		
-		return isRunning;
-	}
+	return isRunning;
+  }
 	
-	void Protocol::setEventLoopRunning( bool run ){
-		SDL_mutexP( eventLoopRunningMutex );
-		running = run;
-		SDL_mutexV( eventLoopRunningMutex );
-	}
+  void Protocol::setEventLoopRunning( bool run ){
+	eventLoopRunningMutex.lock();
+	running = run;
+	eventLoopRunningMutex.unlock();
+  }
 		
 
 } // end namespace Proto
+
