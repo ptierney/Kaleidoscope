@@ -27,7 +27,7 @@ namespace Kaleidoscope {
 		renderGui( d );
 		finishRender( d );
 	}
-
+	
 	void Renderer::initVars(){
 		Texture_On = false;
           Light_On = false;

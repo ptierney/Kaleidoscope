@@ -2,13 +2,14 @@
 
 #pragma once
 
+#include <QWidget>
 #include <iostream>
 
 namespace Kaleidoscope {
 	class Device;	
 
-	class Kaleidoscope{
-		
+	class Kaleidoscope : public QWidget{
+	Q_OBJECT
 	public:
 		Kaleidoscope( int argc, char** argv );		
 		~Kaleidoscope();

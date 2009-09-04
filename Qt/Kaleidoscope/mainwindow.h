@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtGui/QMainWindow>
+#include <grids/kaleidoscope.h>
 
 namespace Ui
 {
@@ -18,6 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Kal::Kaleidoscope kaleidoscope;
 };
 
 #endif // MAINWINDOW_H
