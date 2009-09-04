@@ -50,7 +50,7 @@ void ProtocolTest::constructorTest() {
 void ProtocolTest::connectToNodeTest() {
   int wait_timer = 0;
   const int wait_limit = CALLBACK_SECONDS;
-  QSignalSpy state_spy(&proto, SIGNAL(protocolInitiated(Protocol*, Event*)));
+  QSignalSpy state_spy(&proto, SIGNAL(protocolInitiated(Event*)));
   QVERIFY(state_spy.isValid());
   QCOMPARE(state_spy.count(), 0);
 
@@ -74,7 +74,7 @@ void ProtocolTest::createRoomTest() {
   Grids::Value test_m;
   test_m["_method"] = GRIDS_CREATE_ROOM;
 
-  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Protocol*, Event*)));
+  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Event*)));
   QVERIFY(state_spy.isValid());
   QCOMPARE(state_spy.count(), 0);
 
@@ -104,7 +104,7 @@ void ProtocolTest::createObjectTest() {
 		const int wait_limit = CALLBACK_SECONDS;
 		std::string debug_string = GRIDS_CREATE_OBJECT;
 		unsigned int test_attr = 12345556u;
-		QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Protocol*, Event*)));
+		QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Event*)));
 		QVERIFY(state_spy.isValid());
 		QCOMPARE(state_spy.count(), 0);
 
@@ -138,7 +138,7 @@ void ProtocolTest::createObjectWithPosition() {
   Grids::Vec3D test_pos = Grids::Vec3D( 4.4, 5.5, 6.6 );
   Grids::Vec3D test_rot = Grids::Vec3D( 1.23, 5.678, 4.0987 );
   Grids::Vec3D test_scl = Grids::Vec3D( 642.1234, 66431.1266, 7993.23885 );
-  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Protocol*, Event*)));
+  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Event*)));
   QVERIFY(state_spy.isValid());
   QCOMPARE(state_spy.count(), 0);
 		
@@ -183,7 +183,7 @@ void ProtocolTest::createObjectWithID(){
   std::string debug_string = GRIDS_CREATE_OBJECT;
   unsigned int test_attr = 12345556u;
   Grids::GridsID test_id = "DAA10054-7683-11DE-BB26-3FC64C661FD7";
-  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Protocol*, Event*)));
+  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Event*)));
   QVERIFY(state_spy.isValid());
   QCOMPARE(state_spy.count(), 0);
 		
@@ -210,7 +210,7 @@ void ProtocolTest::updateObjectTest(){
   const int wait_limit = CALLBACK_SECONDS;
   std::string debug_string = GRIDS_UPDATE_OBJECT;
   unsigned int test_attr = 992223u;
-  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Protocol*, Event*)));
+  QSignalSpy state_spy(&proto, SIGNAL(receiveEvent(Event*)));
   QVERIFY(state_spy.isValid());
   QCOMPARE(state_spy.count(), 0);
 
