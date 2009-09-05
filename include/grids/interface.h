@@ -12,9 +12,9 @@ namespace Kaleidoscope {
 
 namespace Grids{
 
-	class Interface {
-
-	public:
+	class Interface : QObject {
+		Q_OBJECT
+			public:
 		Interface(Kal::Device*);
 		Interface(Kal::Device*, std::string in_server);
 		~Interface();
@@ -49,9 +49,16 @@ namespace Grids{
 		
 		friend class Kaleidoscope::Device;
 
+	public slots:
+		void parseEvent(Event*);
+		void protocolInitiated(Event*);
+	
+	signals:
+		void error(int, QString);
+		void notice(int, QString);
+
 	private:
 		void init();
-		void setupMutexes();
 		void parseEvent(Event*);
 		void setConnected( bool );
 		void registerNewRoom( Kal::Room* );	
@@ -65,10 +72,10 @@ namespace Grids{
 		
 		GridsID my_room;
 		
-		SDL_mutex* my_room_mutex;	
-		SDL_mutex* known_rooms_mutex;
-		SDL_mutex* connected_mutex;
-		SDL_mutex* parse_event_mutex;
+		QMutex my_room_mutex;	
+		QMutex known_rooms_mutex;
+		QMutex connected_mutex;
+		QMutex parse_event_mutex;
 
 		Kal::Device* d;
 	};

@@ -8,9 +8,9 @@
 
 namespace Kaleidoscope {
 
-	class Camera : public Object {
+	class Camera : public Object, public QGLWidget {
 	public:
-		Camera( Device*, Grids::Value* );
+		Camera(Device*, Grids::Value*, QWidget* parent = 0);
 
 		void doMovement( Device * );
 		
@@ -74,11 +74,11 @@ namespace Kaleidoscope {
 		Vec3D target_normal;
 		Vec2D cursor_save;
 		
-		SDL_mutex* target_mutex;
-		SDL_mutex* up_mutex;
-		SDL_mutex* type_mutex;
-		SDL_mutex* center_mutex;
-		SDL_mutex* perspective_mutex;
+		QMutex target_mutex;
+		QMutex up_mutex;
+		QMutex type_mutex;
+		QMutex center_mutex;
+		QMutex perspective_mutex;
 	};
 
 } // end namespace Kaleidoscope

@@ -1,15 +1,12 @@
 
 #include <kaleidoscope/object.h>
 #include <kaleidoscope/define.h>
-
 #include <grids/object.h>
+#include <QMutexLocker lock>
 
 namespace Kaleidoscope {
 
-	Object::Object( Device* d, Grids::Value* val ) : Grids::Object( d, val ) {
-		visible_mutex = SDL_CreateMutex();
-		selected_mutex = SDL_CreateMutex();		
-
+	Object::Object(Device* d, Grids::Value* val) : Grids::Object( d, val ) {
 		show();
 	}
 	
@@ -32,37 +29,28 @@ namespace Kaleidoscope {
 	// Accessor functions
 
 	void Object::show(){
-		SDL_LockMutex( visible_mutex );
+		QMutexLocker lock(&visible_mutex);
 		visible = 1;
-		SDL_UnlockMutex( visible_mutex );
 	}
 
 	void Object::hide(){
-		SDL_LockMutex( visible_mutex );
+		QMutexLocker lock(&visible_mutex);
 		visible = 0;
-		SDL_UnlockMutex( visible_mutex );
 	}
 
 	bool Object::getVisibility(){
-		bool temp_vis;
-		
-		SDL_LockMutex( visible_mutex );
-		temp_vis = visible;
-		SDL_UnlockMutex( visible_mutex );
-		
-		return temp_vis;
+		QMutexLocker lock(&visible_mutex);
+		return visible;
 	}
 
 	void Object::select(){
-		SDL_LockMutex( selected_mutex );
+		QMuetxLocker(&selected_mutex);
 		selected = 1;
-		SDL_UnlockMutex( selected_mutex );
 	}	
 
 	void Object::deselect(){
-		SDL_LockMutex( selected_mutex );
+		QMutexLocker lock(&selected_mutex);
 		selected = 0;
-		SDL_UnlockMutex( selected_mutex );
 	}
 
 } // end namespace Kaleidoscope

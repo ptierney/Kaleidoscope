@@ -3,11 +3,10 @@
 
 
 #include <grids/define.h>
-#include <grids/SDLObject.h>
 #include <kaleidoscope/define.h>
-
 #include <map>
 #include <vector>
+#include <QMutex>
 
 namespace Kaleidoscope {
 	class Device;
@@ -17,7 +16,7 @@ namespace Grids {
 	class Object;
 	class Event;
 	
-	class ObjectController : public SDLObject {
+	class ObjectController {
 	public:
 		ObjectController(Kal::Device*);
 		
@@ -42,6 +41,8 @@ namespace Grids {
 		std::vector< GridsID > object_ids;
 		std::map< GridsID, Object* > id_ptr_map;
 		std::map< Object*, GridsID > ptr_id_map;
+		
+		QMutex map_mutex;
 
 		Kal::Device* d;
 	};

@@ -7,21 +7,19 @@
 #include <kaleidoscope/settings.h>
 #include <kaleidoscope/utility.h>
 #include <kaleidoscope/renderer.h>
-
 #include <grids/objectController.h>
 #include <grids/interface.h>
 #include <grids/utility.h>
 
 namespace Kaleidoscope {
-
-	Device::Device(){
-		createObjects( DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT );
-		init( DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT );	
-	}
 	
-	Device::Device( unsigned int sw, unsigned int sh ){
-		createObjects( sw, sh );
-		init( sw, sh );
+	Device::Device(QMainWindow* m_win){
+		main_window = m_win;
+		main_camera = 0;
+		time.start();
+
+		createObjects(m_win->size.width(), m_win->size.height());
+		init(m_win->size.width(), m_win->size.height());
 		loadRoom();
 	}
 
@@ -42,9 +40,6 @@ namespace Kaleidoscope {
 		
 	void Device::init( unsigned int sw, unsigned int sh ) {
 		running = 1;
-		running_mutex = SDL_CreateMutex();
-		my_id_mutex = SDL_CreateMutex();
-		my_room_mutex = SDL_CreateMutex();
 		setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );		
 
 		// Spawns new Protocol and network listening thread
@@ -71,8 +66,6 @@ namespace Kaleidoscope {
 		delete window;
 		delete event_controller;
 		delete settings;
-		
-		SDL_DestroyMutex( running_mutex );
 	}
 		
 	Grids::ObjectController* Device::getObjectController(){ return object_controller; }
@@ -82,61 +75,80 @@ namespace Kaleidoscope {
 	Settings* Device::getSettings() { return settings; }	
 	EventController* Device::getEventController(){ return event_controller; }
 
-	void Device::run() {
-		event_controller->checkEvents();
-		window->doMovement(this);
-		window->renderAll();
+	void Device::createMainCamera() {
+
+	}
+
+	void Device::createConsole() {
+
+	}
+
+	void Device::createNoticeWindow() {
+
+	}
+
+	void Device::createErrorWindow() {
+
 	}
 
 	void Device::loadRoom(){		
 		Utility::puts( 1, "Your room:  ", getInterface()->createMyRoom( 20 ) );
 	}
-		
-		
 
+	// The three main starting boxes
+	void Device::createMainCamera() {
+	}
+
+	void Device::createConsole() {
+		QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
+		console = new Console(dock);
+		dock->setWidget(console);
+		main_window->addDockWidget(Qt::BottomDockWidgetArea, dock);
+	}
+
+	void Device::createNoticeWindow() {
+		QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
+		noticeWindow = new NoticeWindow(dock);
+		dock->setWidget(noticeWindow);
+		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
+	}
+
+	void Device::createErrorWindow() {
+		QDockWidget *dock = new QDockWidget(tr("Errors"), main_window);
+		errorWindow = new NoticeWindow(dock);
+		dock->setWidget(errorWindow);
+		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
+	}
+	
+	int Device::getTicks() {
+		return time.elapsed();
+	}
+		
 	/////////////////////////////////////
 	// Accessor Functions
 	
 	bool Device::getRunning() {
-		bool temp_run;
-		
-		SDL_LockMutex( running_mutex );
-		temp_run = running;
-		SDL_UnlockMutex( running_mutex );
-
-		return temp_run;
+		QMutexLocker(&running_mutex);
+		return running;
 	}
 	
 	void Device::setRunning( bool new_run ){
-		SDL_LockMutex( running_mutex );
+		QMutexLocker(&running_mutex);
 		running = new_run;
-		SDL_UnlockMutex( running_mutex );
 	}
 
 	GridsID Device::getMyID(){
-		GridsID temp_id;
-		
-		SDL_LockMutex( my_id_mutex );
-		temp_id = my_id;
-		SDL_UnlockMutex( my_id_mutex );
-		
-		return temp_id;
+		QMutexLocker(&my_id_mutex);
+		return my_id;
 	}
 	
 	void Device::setMyID( GridsID temp_id ){
-		SDL_LockMutex( my_id_mutex );
+		QMutexLocker(&my_id_mutex);
 		my_id = temp_id;
-		SDL_UnlockMutex( my_id_mutex );
 	}
 	
 	GridsID Device::getMyRoom() {
-		GridsID temp_id;
-		
-		SDL_LockMutex( my_room_mutex );
-		temp_id = my_room;
-		SDL_UnlockMutex( my_room_mutex );
-	
-		return temp_id;
+		QMutexLocker(&my_room_mutex);
+		return my_room;
 	}
-
 } // end namespace Kaleidoscope

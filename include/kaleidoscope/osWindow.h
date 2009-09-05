@@ -36,7 +36,6 @@ namespace Kaleidoscope {
 
 	private:
 		void initSDL();
-		void createMutexes();
 		
 		unsigned int width;
 		unsigned int height;
@@ -48,8 +47,8 @@ namespace Kaleidoscope {
 
 		SDL_Surface* gl_screen;
 		
-		SDL_mutex* width_mutex;
-		SDL_mutex* height_mutex;
+		QMutex width_mutex;
+		QMutex height_mutex;
 		
 		Device* d;
 	};

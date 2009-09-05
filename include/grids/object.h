@@ -5,18 +5,17 @@
 #include <grids/define.h>
 #include <grids/objectController.h>
 #include <kaleidoscope/define.h>
-#include <grids/SDLObject.h>
 #include <kaleidoscope/define.h>
-
+#include <QMutex>
 
 namespace Kaleidoscope {
-	class Device;
-	class Camera;	 
+  class Device;
+  class Camera;	 
 }
 
 namespace Grids{
 
-	class Object : public SDLObject {
+	class Object {
 
 	public:
 		Object( Kal::Device*, Value* );
@@ -52,6 +51,11 @@ namespace Grids{
 
 		friend class ObjectController;
 		friend class Kal::Camera;
+
+	signals:
+		void error(int, QString);
+		void notice(int, QString);
+
 	protected:
 		Object* getParent();
 		GridsID getParentID();
@@ -89,11 +93,14 @@ namespace Grids{
 		Vec3D rotation;
 		Vec3D scale;
 		
-		SDL_mutex* position_mutex;
-		SDL_mutex* rotation_mutex;
-		SDL_mutex* scale_mutex;		
-		SDL_mutex* children_mutex;		
-		SDL_mutex* attr_mutex;
+		QMutex position_mutex;
+		QMutex rotation_mutex;
+		QMutex scale_mutex;		
+		QMutex children_mutex;		
+		QMutex attr_mutex;
+		QMutex id_mutex;
+		QMutex parent_mutex;
+		QMutex room_mutex;
 
 		////////////////////////
 		// These will be deleted

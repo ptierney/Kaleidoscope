@@ -21,29 +21,31 @@
 
 namespace Kaleidoscope {
 
-	Camera::Camera( Device* d, Grids::Value* val ) : Object( d, val ) {
-		target_mutex = SDL_CreateMutex();
-		up_mutex = SDL_CreateMutex();
-		type_mutex = SDL_CreateMutex();
-		center_mutex = SDL_CreateMutex();
-		
+	Camera::Camera(Device* d, Grids::Value* val, QWidget* parent) 
+		: Object( d, val ), QGLWidget(parent) {
 		parseAttrFromValue(val);
-		
-		last_animation_time = SDL_GetTicks();
+		last_animation_time = d->getTicks();
+	
+		// Create a dockable window in the main window, and place this 
+		// camera inside of it.  Make in the main camera if there are
+		// no other cameras already.
+		QDockWidget *dock = new QDockWidget(tr("Camera"), d->main_window);		
+		if(d->main_camera == 0)
+			d->main_camera = this;
+
+		dock->setWidget(this);
+		d->main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
 	}
 	
 	void Camera::setPerspective( Device* d, float fov, float aspect, float z_near, float z_far ) {
-		lockPerspective();
+		QMutexLocker persp_lock(&perspective_mutex);
 		this->fov = fov;	
 		this->aspect = aspect;
 		this->z_near = z_near;
 		this->z_far = z_far;
 
-		d->getOSWindow()->getRenderer()->lockGL();
+		QMutexLocker gl_lock(d->getOSWindow()->getRenderer()->getGLMutex());
 		gluPerspective( fov, aspect, z_near, z_far );
-		d->getOSWindow()->getRenderer()->unlockGL();
-		
-		unlockPerspective();
 	}	
 
 	void Camera::callGluLookAt( Device* d ) {

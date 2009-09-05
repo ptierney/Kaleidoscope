@@ -2,16 +2,16 @@
 #pragma once
 
 #include <kaleidoscope/object.h>
-#include <SDL/SDL_opengl.h>
+ #include <QGLWidget>
 
 namespace Kaleidoscope {
 	class Device;
 	
 	// Everything that should be drawn should be a child of this object
 
-	class Renderer : public Object {
+	class SpaceRenderer : public Object, public QGLWidget {
 	public:
-		Renderer( Device*, Grids::Value* );
+		SpaceRenderer( Device*, Grids::Value* );
 		
 		void renderAll( Device* );
 		
@@ -19,6 +19,7 @@ namespace Kaleidoscope {
 		
 		void lockGL();
 		void unlockGL();
+		QMutex* getGLMutex();
 
 		friend class OSWindow;
 		friend class Device;

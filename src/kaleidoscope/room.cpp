@@ -16,7 +16,7 @@ namespace Kaleidoscope {
 		placeRoom( d );
 
 		lockAttr();
-		buildRoom( d );
+		buildRoom(d);
 		unlockAttr();
 
 		d->getOSWindow()->getRenderer()->addChild( this );
@@ -287,11 +287,4 @@ namespace Kaleidoscope {
 		attr[ "lines" ][ 1u ][ "indices" ][ 11u ][ 1u ] = k + 2u;
 				
 	} // end BuildRoom
-
-
-
-
-
-
-
 } // end namespace Kaleidoscope

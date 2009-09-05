@@ -5,45 +5,38 @@
 #include <grids/objectController.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/room.h>
-
-#include <SDL/SDL.h>
-#if defined(__MACOSX__)
-#include <SDL_net/SDL_net.h>
-#else
-#include <SDL/SDL_net.h>
-#endif
-
 #include <iostream>
+#include <QTcpSocket>
+#include <QString>
 
 namespace Grids {
 
-	Interface::Interface( Kal::Device* _d ){
+	Interface::Interface( Kal::Device* _d )
+		: QObject() {
 		server_address = DEFAULT_SERVER;
  		d = _d;
 	}
 
-	Interface::Interface(Kal::Device* _d, std::string in_server ){
+	Interface::Interface(Kal::Device* _d, std::string in_server )
+		: QObject() {
 		server_address = in_server;
 		d = _d;
 	}
 		
-	void Interface::init(){
-		if (SDLNet_Init() != 0) 
-			std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
-				
-		connected = false;
-		setupMutexes();
-
+	void Interface::init(){				
+		connected = 0;
 		proto = new Protocol();
-
-		proto->setConnectedCallback( &connectedCallback, this ); 
-		proto->setEventCallback( &receiveEvent, this );
+		
+		connect(proto, SIGNAL(protocolInitiated(Event*)),
+			   this, SLOT(protocolInitiated(Event*)));
+		connect(proto, SIGNAL(receiveEvent(Event*)),
+			   this, SLOT(parseEvent(Event*)));
 	
 		proto->connectToNode( server_address.c_str() );
-
 		proto->runEventLoopThreaded();
 
 		while( !isConnected() ){
+			emit notice(4, tr("Connecting to server."));
 			sleep( 1 );
 		}
 	}
@@ -53,28 +46,14 @@ namespace Grids {
 		proto->stopEventLoopThread();
 		
 		delete proto;		
-	
-		SDLNet_Quit();
 	}
 	
-	void Interface::setupMutexes(){
-		connected_mutex = SDL_CreateMutex();
-		parse_event_mutex = SDL_CreateMutex();
-		my_room_mutex = SDL_CreateMutex();
-		known_rooms_mutex = SDL_CreateMutex();
-	}
-
-	// START: Protocol thread functions
-	void Interface::receiveEvent(Protocol* in_proto,  Event* in_event, void* self ){
-		((Interface*)self)->parseEvent( in_event );
-	}
-
-	void Interface::connectedCallback(Protocol* in_proto,  Event* in_event, void* self ){
-		((Interface*)self)->setConnected( 1 );
+	void Interface::protocolInitiated(Event* in_event){
+		setConnected(1);
 	}
 	
 	void Interface::parseEvent( Event* evt ){
-		SDL_LockMutex( parse_event_mutex );
+		QMutexLocker(&parse_event_mutex);
 
 		std::string event_type = evt->getEventType();
 		Grids::GridsID object_id = evt->getID();
@@ -95,8 +74,6 @@ namespace Grids {
 		} else if( event_type == GRIDS_LIST_ROOMS ) {
 			// d->getUtility()->parseListRooms( evt );
 		}
-
-		SDL_UnlockMutex( parse_event_mutex );
 	}
 	
 	// END: Protocol thread functions
@@ -120,6 +97,7 @@ namespace Grids {
 		while( wait_secs < timeout ){
 			if( !(getMyRoom().empty()) )
 				return getMyRoom();
+			emit notice(4, tr("Attempting to create room."));
 			sleep( 1 );
 			wait_secs++;
 		}
@@ -220,23 +198,18 @@ namespace Grids {
 
 	}	
 
-	GridsID Interface::getMyRoom(){ 
-		std::string temp_room; 
-
-		SDL_LockMutex( my_room_mutex );
-		temp_room = my_room;
-		SDL_UnlockMutex( my_room_mutex );
-
-		return temp_room;
+	GridsID Interface::getMyRoom(){
+		QMutexLocker lock(&my_room_mutex);
+		return my_room;
 	}
 
 	void Interface::registerNewRoom( Kal::Room* rm ){
 		GridsID rm_id = rm->getID();
 		
+		// Make my room the first available room
 		if( my_room.empty() ){
-			SDL_LockMutex( my_room_mutex );
+			QMutexLocker my_room_lock(&my_room_mutex);
 			my_room = rm_id;
-			SDL_UnlockMutex( my_room_mutex );
 		}
 		
 		bool in_vector = 0;
@@ -247,21 +220,15 @@ namespace Grids {
 		}
 
 		if( !in_vector){
-			SDL_LockMutex( known_rooms_mutex );
+			QMutexLocker known_lock(&known_rooms_mutex);
 			known_rooms.push_back( rm_id );
-			SDL_UnlockMutex( known_rooms_mutex );
 		}
 	}
 	
 
 	bool Interface::isConnected(){
-		bool temp_con;
-
-		SDL_LockMutex( connected_mutex );
-		temp_con = connected;
-		SDL_UnlockMutex( connected_mutex );
-		
-		return temp_con;
+		QMutexLocker lock(&connected_mutex);
+		return connected;
 	}
 		
 	std::string Interface::getServer(){
@@ -269,9 +236,8 @@ namespace Grids {
 	}
 	
 	void Interface::setConnected( bool con_stat ){
-		SDL_LockMutex( connected_mutex );
-		connected = con_stat; 
-		SDL_UnlockMutex( connected_mutex );
+		QMutexLocker lock(&connected_mutex);
+		connected = con_stat;
 	}
 
 

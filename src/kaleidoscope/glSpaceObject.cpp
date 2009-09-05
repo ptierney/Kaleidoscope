@@ -4,7 +4,7 @@
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/renderer.h>
-#include <SDL/SDL_opengl.h>
+#include <QGL>
 
 namespace Kaleidoscope {
 

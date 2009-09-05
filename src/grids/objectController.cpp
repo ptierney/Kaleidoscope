@@ -9,6 +9,8 @@
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/renderer.h>
 #include <kaleidoscope/spaceText.h>
+#include <QMutex>
+#include <QMutexLocker>
 
 namespace Grids {
 	
@@ -17,20 +19,21 @@ namespace Grids {
 	}
 	
 	void ObjectController::registerObject( GridsID new_id, Object* new_ptr ){
-		lock();
+		QMutexLocker(&map_mutex);
 		object_ids.push_back( new_id );
 		id_ptr_map[ new_id ] = new_ptr;
 		ptr_id_map[ new_ptr ] = new_id;
-		unlock();
 	}
 
 	// Returns an object's ID given it's pointer
 	GridsID ObjectController::getIDFromPointer( Object* obj_ptr ){
+		QMutexLocker(&map_mutex);
 		return ptr_id_map[ obj_ptr ];
 	}
 	
 	// Returns an object's pointer given it's ID
 	Object* ObjectController::getPointerFromID( GridsID obj_id ){
+		QMutexLocker(&map_mutex);
 		return id_ptr_map[ obj_id ];
 	}
 

@@ -10,87 +10,86 @@
 
 namespace Grids {
 
-  Protocol::Protocol(QObject* parent)
-	: QThread(parent) {
+	Protocol::Protocol(QObject* parent)
+		: QThread(parent) {
 		running = 0; // Normally has mutex, but we're not using multiple threads yet
 		last_event = 0;
-
-  }
-
-  Protocol::~Protocol() {
-  }
-
-  bool Protocol::connectToNode(const char *address) {
-	sock.connectToHost(tr(address), GRIDS_PORT);
-
-	if (!sock.waitForConnected(5000)){
-	  printf("Failed to connect to host\n");
-	  return 0;
 	}
 
-	// hooray we are connnected! initialize protocol
-	sendProtocolInitiationString();
-
-	return 1;
-  }
-
-  void Protocol::sendProtocolInitiationString() {
-	std::string initString = "==Grids/1.0/JSON";
-	protocolWrite(initString);
-  }
-
-  int Protocol::protocolWrite(std::string &str) {
-	uint32_t len = str.size();
-
-	return protocolWrite(str.c_str(), len);
-  }
-
-  void Protocol::endianSwap(unsigned int& x)
-  {
-    x = (x>>24) | 
-	  ((x<<8) & 0x00FF0000) |
-	  ((x>>8) & 0x0000FF00) |
-	  (x<<24);
-  }
-
-  quint32 Protocol::byteSwap (quint32 nLongNumber)
-  {
-	return (((nLongNumber&0x000000FF)<<24)+((nLongNumber&0x0000FF00)<<8)+
-			((nLongNumber&0x00FF0000)>>8)+((nLongNumber&0xFF000000)>>24));
-  }
-
-  int Protocol::protocolWrite(const char *str, quint32 len) {
-	if (!sockConnected()) {
-	  std::cerr << "No socket exists but Protocol::protocolWrite was called\n";
-	  return -1;
+	Protocol::~Protocol() {
 	}
 
-	unsigned int outstr_len = len + 4;
-	char *outstr = (char *)malloc(outstr_len);
+	bool Protocol::connectToNode(const char *address) {
+		sock.connectToHost(tr(address), GRIDS_PORT);
 
-	// Add the length of the string to the beginning of the string
+		if (!sock.waitForConnected(5000)){
+			printf("Failed to connect to host\n");
+			return 0;
+		}
 
-	// If we're on LittleEndian, convert to BigEndian (Network byte order)
-	quint32 net_len = len;
-	if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
-	  endianSwap(net_len);
-	memcpy(outstr, &net_len, 4);
-	memcpy((outstr + 4), str, len);
+		// hooray we are connnected! initialize protocol
+		sendProtocolInitiationString();
 
-	unsigned int ret = sock.write(outstr, outstr_len);
-	free(outstr);
-
-	if (ret != outstr_len) {
-	  printf("Error in sending\n");
-	  // It may be good to disconnect sock because it is likely invalid now.
+		return 1;
 	}
 
-	return ret;
-  }
+	void Protocol::sendProtocolInitiationString() {
+		std::string initString = "==Grids/1.0/JSON";
+		protocolWrite(initString);
+	}
 
-  void Protocol::closeConnection() {
-	sock.close();
-  }
+	int Protocol::protocolWrite(std::string &str) {
+		uint32_t len = str.size();
+
+		return protocolWrite(str.c_str(), len);
+	}
+
+	void Protocol::endianSwap(unsigned int& x)
+	{
+		x = (x>>24) | 
+			((x<<8) & 0x00FF0000) |
+			((x>>8) & 0x0000FF00) |
+			(x<<24);
+	}
+
+	quint32 Protocol::byteSwap (quint32 nLongNumber)
+	{
+		return (((nLongNumber&0x000000FF)<<24)+((nLongNumber&0x0000FF00)<<8)+
+			   ((nLongNumber&0x00FF0000)>>8)+((nLongNumber&0xFF000000)>>24));
+	}
+
+	int Protocol::protocolWrite(const char *str, quint32 len) {
+		if (!sockConnected()) {
+			std::cerr << "No socket exists but Protocol::protocolWrite was called\n";
+			return -1;
+		}
+
+		unsigned int outstr_len = len + 4;
+		char *outstr = (char *)malloc(outstr_len);
+
+		// Add the length of the string to the beginning of the string
+
+		// If we're on LittleEndian, convert to BigEndian (Network byte order)
+		quint32 net_len = len;
+		if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
+			endianSwap(net_len);
+		memcpy(outstr, &net_len, 4);
+		memcpy((outstr + 4), str, len);
+
+		unsigned int ret = sock.write(outstr, outstr_len);
+		free(outstr);
+
+		if (ret != outstr_len) {
+			printf("Error in sending\n");
+			// It may be good to disconnect sock because it is likely invalid now.
+		}
+
+		return ret;
+	}
+
+	void Protocol::closeConnection() {
+		sock.close();
+	}
 
 	// fast(?) version of turning a Grids::Value into a string
 	std::string Protocol::stringifyValue(Value *val) {
@@ -170,8 +169,8 @@ namespace Grids {
 				endianSwap(incomingLength);
 
 			if (bytesRead <= 0) {
-			  std::cerr << "Socket read error\n";
-			  return;
+				std::cerr << "Socket read error\n";
+				return;
 			}
 
 			if (bytesRead != 4) {
@@ -196,7 +195,7 @@ namespace Grids {
 			bufIncoming = buf;
 
 			do {
-			  bytesRead = sock.read(bufIncoming, bytesRemaining);
+				bytesRead = sock.read(bufIncoming, bytesRemaining);
 
 				if (bytesRead > 0) {
 					bytesRemaining -= bytesRead;
@@ -244,7 +243,7 @@ namespace Grids {
 
 		if (msg.find("==", 0, 2) == 0) {
 			// protocol initiation message
-		  emit protocolInitiated(this, NULL);
+			emit protocolInitiated(NULL);
 		} else if (msg.find("--", 0, 2) == 0) {
 			// encrypted protocol message
 		} else {
@@ -257,12 +256,12 @@ namespace Grids {
 			Event *evt = new Event(root["_method"].asString(), root);
 			
 			if( last_event){
-			  delete last_event;
-			  last_event = new Event(*evt);
+				delete last_event;
+				last_event = new Event(*evt);
 			} else {
-			  last_event = new Event(*evt);
+				last_event = new Event(*evt);
 			}
-			emit receiveEvent(this, evt);
+			emit receiveEvent(evt);
 	
 			std::cout << "handleMessage deleting evt" << std::endl;
 			delete evt;
@@ -298,44 +297,44 @@ namespace Grids {
 		return Value();
 	}
 
-  bool Protocol::sockConnected(){
-	return (sock.state() == QAbstractSocket::ConnectedState);
-  }
-
-
-  int Protocol::runEventLoopThreaded() {
-	if(!isRunning()){
-	  setEventLoopRunning(1);
-	  start(NormalPriority);
-	  return 0;
-	} else {
-	  return -1;
+	bool Protocol::sockConnected(){
+		return (sock.state() == QAbstractSocket::ConnectedState);
 	}
-  }
+
+
+	int Protocol::runEventLoopThreaded() {
+		if(!isRunning()){
+			setEventLoopRunning(1);
+			start(NormalPriority);
+			return 0;
+		} else {
+			return -1;
+		}
+	}
 
 	void Protocol::stopEventLoopThread() {
-	  if(isRunning()) {
+		if(isRunning()) {
 			setEventLoopRunning( 0 );
 			wait();
 		}
 	}
 
 
-  bool Protocol::getEventLoopRunning(){
-	bool isRunning;
+	bool Protocol::getEventLoopRunning(){
+		bool isRunning;
 	
-	eventLoopRunningMutex.lock();
-	isRunning = running;
-	eventLoopRunningMutex.unlock();
+		eventLoopRunningMutex.lock();
+		isRunning = running;
+		eventLoopRunningMutex.unlock();
 		
-	return isRunning;
-  }
+		return isRunning;
+	}
 	
-  void Protocol::setEventLoopRunning( bool run ){
-	eventLoopRunningMutex.lock();
-	running = run;
-	eventLoopRunningMutex.unlock();
-  }
+	void Protocol::setEventLoopRunning( bool run ){
+		eventLoopRunningMutex.lock();
+		running = run;
+		eventLoopRunningMutex.unlock();
+	}
 		
 
 } // end namespace Proto

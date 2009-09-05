@@ -9,7 +9,6 @@
 namespace Kaleidoscope {
 
 	Renderer::Renderer( Device* d, Grids::Value* val ) : Object( d, val ) {
-		gl_mutex = SDL_CreateMutex();
 		initVars();
 	}
 
@@ -229,13 +228,16 @@ namespace Kaleidoscope {
 	////  Thread Functions
 		
 	void Renderer::lockGL(){
-		SDL_LockMutex( gl_mutex );
+		gl_mutex.lock();
 	}
 		
 	void Renderer::unlockGL(){
-		SDL_UnlockMutex( gl_mutex );
+		gl_mutex.unlock();
 	}
 	
+	QMutex* Renderer::getGLMutex(){
+		return &gl_mutex;
+	}
 
 	
 
