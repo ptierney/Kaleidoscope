@@ -1,5 +1,4 @@
 
-
 #include <grids/objectController.h>
 #include <grids/define.h>
 #include <grids/object.h>
@@ -14,7 +13,8 @@
 
 namespace Grids {
 	
-	ObjectController::ObjectController( Kal::Device* d_){
+	ObjectController::ObjectController(Kal::Device* d_, QWidget* parent)
+		: QWidget(parent) {
 		d = d_;
 	}
 	
@@ -64,14 +64,11 @@ namespace Grids {
 	}
 	
 	void ObjectController::registerCamera( GridsID new_id, Event* evt ){
-		if( (*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == d->getMyID() )
-			d->getOSWindow()->registerCamera( new Kal::Camera( d, evt->getArgsPtr() ) );
-		else
-			d->getOSWindow()->getRenderer()->addChild( new Kal::Camera( d, evt->getArgsPtr() ) );
+		d->registerCamera(evt);
 	}
 
 	void ObjectController::updateObjectPosition( GridsID in_id, Vec3D pos ){
-		getPointerFromID( in_id )->setLocalPosition( pos );
+		getPointerFromID( in_id )->setLocalPosition(pos);
 	}
 
 	void ObjectController::updateObjectRotation( GridsID in_id, Vec3D rot ){
@@ -85,8 +82,12 @@ namespace Grids {
 	void ObjectController::updateObjectAttr( GridsID in_id, Event* evt ){
 		getPointerFromID( in_id )->setAttrFromValue( evt->getArgsPtr() );
 	}
+
+	void ObjectController::mouseReleasedEvent(QMouseEvent* event) {
+		detectSelectionThreaded(event->x(), event->y());
+	}
 	
-	void ObjectController::detectSelectionThreaded( Kal::Device* d ){
+	void ObjectController::detectSelectionThreaded(int mouse_x, int mouse_y){
 
 	}
 

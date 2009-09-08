@@ -1,33 +1,22 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
+#include <QWidget>
 
 namespace Kaleidoscope {
 	class Device;
 
-	class EventController {
+	class EventController : public QWidget {
+		Q_OBJECT
+
 	public:
-		EventController(Device*);
+		EventController(Device*, QWidget* parent = 0);
+
+	protected:
+		keyPressEvent(QKeyEvent*);
 		
-		void checkEvents( );
-
-		Uint8 getMouseButton();
-		bool getMouseDown();
-
 	private:
-		void parseKeyDown( int );
-
 		Device* d;
-		SDL_Event event;
-
-		int down_x;
-		int down_y;
-		int mouse_button;
-		bool mouse_down;
-	
-		SDL_mutex* mouse_button_mutex;
-		SDL_mutex* mouse_down_mutex;
 	};
 
 } // end namespace Kaleidoscope

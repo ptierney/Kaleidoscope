@@ -12,50 +12,41 @@
 #include <grids/utility.h>
 
 namespace Kaleidoscope {
-	
-	Device::Device(QMainWindow* m_win){
+	Device::Device(QMainWindow* m_win) {
 		main_window = m_win;
 		main_camera = 0;
 		time.start();
+		
+		// NoticeWindow & ErrorWindow must be created before any Grids::Objects,
+		// as all Grids::Objects require them to be created
+		createNoticeWindow();
+		createErrorWindow();
 
-		createObjects(m_win->size.width(), m_win->size.height());
-		init(m_win->size.width(), m_win->size.height());
-		loadRoom();
+		createObjects();
+		init();
 	}
 
-	// Object creation is done in two passes
-	// The first pass creates the objects and stores them in the Device class
-	// The second pass calls any init functions that spawn threads
-	void Device::createObjects(unsigned int sw, unsigned int sh ) {
+	void Device::createObjects(){
+		// Settings stores / loads the user data
 		settings = new Settings();
-		// Inits SDL
-		// Spawns new window
-		window = new Kal::OSWindow( this, sw, sh );
-		event_controller = new Kal::EventController( this );
 
-		object_controller = new Grids::ObjectController(this);
-		interface = new Grids::Interface( this );
-		g_utility = new Grids::Utility();		
+		// Derived from QWidget, handles misc. key presses
+		event_controller = new Kal::EventController(this, main_window);
+
+		object_controller = new Grids::ObjectController(this, main_window);
+		// Creates the protocol, connects to the server
+		interface = new Grids::Interface(this, main_window);
+		g_utility = new Grids::Utility();
 	}
 		
 	void Device::init( unsigned int sw, unsigned int sh ) {
 		running = 1;
 		setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );		
 
-		// Spawns new Protocol and network listening thread
-		// Sets up SDL_net
-		// This call will hang if there is no connection to the internet
-		interface->init();
-
-		// Rooms become children of the renderer, so this mush be created first
-		window->createRenderer(this);		
-		window->getRenderer()->prepareWindow(this);		
-
-		loadRoom();		
-		
 		// Requests a new camera from the server
 		// Creates and registers a new renderer
-		window->init(this);
+		requestCreateCamera();
+		loadRoom();
 	}
 
 	Device::~Device() {
@@ -71,32 +62,30 @@ namespace Kaleidoscope {
 	Grids::ObjectController* Device::getObjectController(){ return object_controller; }
 	Grids::Interface* Device::getInterface(){ return interface; }	
 	Grids::Utility* Device::getGridsUtility(){ return g_utility; }
-	OSWindow* Device::getOSWindow() { return window; }	
 	Settings* Device::getSettings() { return settings; }	
 	EventController* Device::getEventController(){ return event_controller; }
-
-	void Device::createMainCamera() {
-
-	}
-
-	void Device::createConsole() {
-
-	}
-
-	void Device::createNoticeWindow() {
-
-	}
-
-	void Device::createErrorWindow() {
-
-	}
+	NoticeWindow* getNoticeWindow() { return noticeWindow; }
+	NoticeWindow* getErrorWindow() { return errorWindow; }
 
 	void Device::loadRoom(){		
 		Utility::puts( 1, "Your room:  ", getInterface()->createMyRoom( 20 ) );
 	}
 
-	// The three main starting boxes
-	void Device::createMainCamera() {
+	// The four main starting boxes: camera, notices, errors, console
+	// 
+
+	// Create a new camera, and if it belongs to us, register it as the main 
+	// camera.
+	void Device::registerCamera(Grids::Event* event) {
+		QDockWidget *dock = new QDockWidget(tr("Camera"), main_window);
+		Camera* temp_camera = new Camera(this, event->getArgsPtr(), dock);
+
+		if((*(evt->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == d->getMyID()) {
+			main_camera = temp_camera;
+		}
+
+		dock->setWidget(temp_camera);
+		main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
 	}
 
 	void Device::createConsole() {
@@ -122,6 +111,30 @@ namespace Kaleidoscope {
 	
 	int Device::getTicks() {
 		return time.elapsed();
+	}
+
+	void Device::requestCreateCamera(){
+		Vec3D start_pos = Vec3D( 10.0f, 30.0f, 35.0f );
+		Vec3D start_rot = Vec3D( 1.0f, -1.0f, 0.0f );
+		Vec3D start_scl = Vec3D( 1.0f, 1.0f, 1.0f );
+		
+		Grids::Value* cam_val = new Grids::Value();
+		
+		(*cam_val)[ "type" ] = "Camera";
+		(*cam_val)[ "parent" ] = getMyID();
+		(*cam_val)[ "camera_type" ] = FPS;
+		(*cam_val)[ "rotate_speed" ] = 30.0f;
+		(*cam_val)[ "translate_speed" ] = 0.01f;
+		(*cam_val)[ "target" ][ 0u ] = -1.0f;
+		(*cam_val)[ "target" ][ 1u ] = -1.0f;
+		(*cam_val)[ "target" ][ 2u ] = -1.0f;
+		(*cam_val)[ "up" ][ 0u ] = 0.0f;
+		(*cam_val)[ "up" ][ 1u ] = 1.0f;
+		(*cam_val)[ "up" ][ 2u ] = 0.0f;
+		
+		interface->requestCreateObject( cam_val, start_pos, start_rot, start_scl );
+
+		delete cam_val;
 	}
 		
 	/////////////////////////////////////

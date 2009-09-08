@@ -3,14 +3,12 @@
 
 #include <kaleidoscope/define.h>
 
-#include <grids/SDLObject.h>
-
 namespace Kaleidoscope {
 	class Device;
 
-	class CursorController : public Grids::SDLObject {
+	class CursorController {
 	public:
-		CursorController( Device* );
+		CursorController(Device*, QWidget*);
 
 		// 0.5f, 0.5f sets the cursor the the center of the window
 		void setPosition( float, float );
@@ -25,6 +23,8 @@ namespace Kaleidoscope {
 		int mouse_y;
 		
 		Device* d;
+		QWidget* widget;
 	};
 
 } // end namespace Kaleidoscope
+

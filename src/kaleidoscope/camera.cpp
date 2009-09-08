@@ -1,13 +1,4 @@
 
-/* Current Bugs:
- *
- * 2. Radeon 22 error / segfault at startup
- * 
- *
- *
- */
-
-
 #include <kaleidoscope/camera.h>
 #include <grids/object.h>
 #include <kaleidoscope/device.h>
@@ -16,15 +7,18 @@
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/renderer.h>
 #include <grids/irrMath.h>
-#include <SDL/SDL_opengl.h>
 #include <iostream>
+#include <QGL>
 
 namespace Kaleidoscope {
 
 	Camera::Camera(Device* d, Grids::Value* val, QWidget* parent) 
-		: Object( d, val ), QGLWidget(parent) {
+		: Object(d, val), QGLWidget(parent) {
 		parseAttrFromValue(val);
 		last_animation_time = d->getTicks();
+		mouse_pressed = false;
+		
+		controller = new CursorController(d, this);
 	
 		// Create a dockable window in the main window, and place this 
 		// camera inside of it.  Make in the main camera if there are
@@ -36,29 +30,38 @@ namespace Kaleidoscope {
 		dock->setWidget(this);
 		d->main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
 	}
-	
-	void Camera::setPerspective( Device* d, float fov, float aspect, float z_near, float z_far ) {
+
+	// This is the main loop of the program, similar to Processing's 
+	// draw() function.
+	void Camera::paintEvent(QPaintEvent* event) {
+
+		// Makes this context the current OpenGL rendering context.
+		makeCurrent();
+		
+		d->getRenderer()->prepareRender();
+		// PrepGL
+	}
+		
+	void Camera::setPerspective(Device* d, float fov, float aspect, float z_near, float z_far) {
 		QMutexLocker persp_lock(&perspective_mutex);
 		this->fov = fov;	
 		this->aspect = aspect;
 		this->z_near = z_near;
 		this->z_far = z_far;
 
-		QMutexLocker gl_lock(d->getOSWindow()->getRenderer()->getGLMutex());
-		gluPerspective( fov, aspect, z_near, z_far );
+		QMutexLocker gl_lock(d->getRenderer()->getGLMutex());
+		gluPerspective(fov, aspect, z_near, z_far);
 	}	
 
-	void Camera::callGluLookAt( Device* d ) {
+	void Camera::callGluLookAt(Device* d) {
 		Vec3D temp_target = getTarget();
 		Vec3D temp_pos = getPosition();
 		Vec3D temp_up = getUp();
 
-		d->getOSWindow()->getRenderer()->lockGL();
+		QMutexLocker lock(d->getRenderer()->getGLMutex());
 		gluLookAt( temp_target.X, temp_target.Y, temp_target.Z,
 				 temp_pos.X, temp_pos.Y, temp_pos.Z,
 				 temp_up.X, temp_up.Y, temp_up.Z );
-		d->getOSWindow()->getRenderer()->unlockGL();
-
 	}
 	
 	void Camera::parseAttrFromValue( Grids::Value* val ){
@@ -81,9 +84,9 @@ namespace Kaleidoscope {
 		
 		type = (*val)[ "camera_type" ].asInt();
 		if( type == FPS )
-			SDL_ShowCursor( 0 );
+			d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
 		else if( type == MAYA )
-			SDL_ShowCursor( 1 );
+			d->app->setOverrideCursor(QCursor(Qt::ArrowCursor));
 
 		rotate_speed = (*val)[ "rotate_speed" ].asDouble();
 		translate_speed = (*val)[ "translate_speed" ].asDouble();		
@@ -126,46 +129,60 @@ namespace Kaleidoscope {
 	}
 	 
 	int Camera::getType() {
-		int temp_type;
-		
-		SDL_LockMutex( type_mutex );
-		temp_type = type;
-		SDL_UnlockMutex( type_mutex );
-		
-		return temp_type;
+		QMutexLocker lock(&type_mutex);		
+		return type;
 	}
 	
 	void Camera::setType( int in_type ) {
-		SDL_LockMutex( type_mutex );
+		QMutexLocker lock(&type_mutex);
 		type = in_type;
-		SDL_UnlockMutex( type_mutex );
 	}
 	
 	void Camera::setCenterOfRotation( Vec3D vec ){
-		SDL_LockMutex( center_mutex);
+		QMutexLocker lock(&center_mutex);
 		center_of_rotation = vec;
-		SDL_UnlockMutex( center_mutex );	
 	}
 	
-	Vec3D Camera::getCenterOfRotation( ) {
-		Vec3D vec;
-		SDL_LockMutex( center_mutex );
-		vec = center_of_rotation;
-		SDL_UnlockMutex( center_mutex );
-
-		return vec;
+	Vec3D Camera::getCenterOfRotation() {
+		QMutexLocker lock(&center_mutex);
+		return center_of_rotation;
 	}
 
-	void Camera::doMovement( Device* d ){
-		if( getType() == FPS )
-			doMovementFPS( d );
-		else if( getType() == MAYA )
-			doMovementMaya( d );
+	void Camera::keyPressEvent(QKeyEvent* event) {
+		if(event->key() == Qt::Key_Tab)
+			swapCameraType();
+
+		doMovement(event, NULL, NULL);
+	}
+	
+	void Camera::mouseMoveEvent(QMouseEvent* event) {
+		doMovement(NULL, event, NULL);
+	}
+	
+	void Camera::mousePressEvent(QMouseEvent* event) {
+		mouse_pressed = true;
+		doMovement(NULL, event, NULL);
 	}
 
-	void Camera::doMovementFPS( Device* d ){
+	void Camera::mouseReleasedEvent(QMouseEvent* event) {
+		mouse_pressed = false;
+		doMovement(NULL, event, NULL);
+	}
+	
+	void Camera::wheelEvent(QWheelEvent* event) {
+		doMovement(NULL, NULL, event);
+	}
+
+	void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event) {
+		if(getType() == FPS)
+			doMovementFPS(k_event, m_event);
+		else if(getType() == MAYA)
+			doMovementMaya(k_event, m_event);
+	}
+
+	void Camera::doMovementFPS(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
 		// get the current time
-		int now = SDL_GetTicks(); 
+		int now = d->getTicks();
 		int time_diff =  now - last_animation_time;
 		last_animation_time = now;
 
@@ -178,18 +195,20 @@ namespace Kaleidoscope {
 		temp_rotation.X *= -1.0f;
 		temp_rotation.Y *= -1.0f;
 		
-		setTarget( Vec3D( 0.0f, 0.0f, 1.0f) );
+		setTarget(Vec3D(0.0f, 0.0f, 1.0f));
 		
-		Vec2D cursorpos = d->getOSWindow()->getCursorController()->getRelativePosition();
-		
-		if( cursorpos != Vec2D( 0.5f, 0.5f ) ) {
-			temp_rotation.Y += ( 0.5f - cursorpos.X) * rotate_speed * time_diff;
-			temp_rotation.X -= ( 0.5f - cursorpos.Y) * rotate_speed * time_diff;
+		if(m_event) {
+			Vec2D cursorpos = controller->getRelativePosition(m_event);
+
+			if( cursorpos != Vec2D( 0.5f, 0.5f ) ) {
+				temp_rotation.Y += ( 0.5f - cursorpos.X) * rotate_speed * time_diff;
+				temp_rotation.X -= ( 0.5f - cursorpos.Y) * rotate_speed * time_diff;
 						
-			d->getOSWindow()->getCursorController()->setPosition( 0.5f, 0.5f );
+				controller->setPosition( 0.5f, 0.5f );
 			
-			if( temp_rotation.X > max_vertical_angle) temp_rotation.X = max_vertical_angle;
-			if( temp_rotation.X < -max_vertical_angle) temp_rotation.X = -max_vertical_angle;
+				if( temp_rotation.X > max_vertical_angle) temp_rotation.X = max_vertical_angle;
+				if( temp_rotation.X < -max_vertical_angle) temp_rotation.X = -max_vertical_angle;
+			}
 		}
 			
 		Matrix4 mat = Matrix4();
@@ -203,28 +222,27 @@ namespace Kaleidoscope {
 		
 		setTarget( temp_irr_target );
 		
-		Uint8* keys;		
-		keys = SDL_GetKeyState( NULL );
-		
-		if( keys[SDLK_UP] ) {
-			setLocalPosition( getLocalPosition() - getTarget() * ( time_diff * move_speed ) );				
-		}
-		else if( keys[SDLK_DOWN] ){
-			setLocalPosition( getLocalPosition() + getTarget() * ( time_diff * move_speed ) );
-		}
+		if(k_event){		
+			if(k_event->key() == Qt::Key_Up) {
+				setLocalPosition( getLocalPosition() - getTarget() * ( time_diff * move_speed ) );				
+			}
+			else if(k_event->key() == Qt::Key_Down){
+				setLocalPosition( getLocalPosition() + getTarget() * ( time_diff * move_speed ) );
+			}
 			
-		Vec3D strafevect = getTarget();
-		strafevect = strafevect.crossProduct( getUp() );
-		strafevect.normalize();
+			Vec3D strafevect = getTarget();
+			strafevect = strafevect.crossProduct( getUp() );
+			strafevect.normalize();
 			
-		if( keys[SDLK_LEFT] ){
-			setLocalPosition( getLocalPosition() + strafevect * ( time_diff * move_speed ) );
-		}
-		else if(  keys[SDLK_RIGHT] ){
-			setLocalPosition( getLocalPosition() - strafevect * ( time_diff * move_speed ) );	
+			if(k_event->key() == Qt::Key_Left){
+				setLocalPosition( getLocalPosition() + strafevect * ( time_diff * move_speed ) );
+			}
+			else if(k_event->key() == Qt::Key_Right){
+				setLocalPosition( getLocalPosition() - strafevect * ( time_diff * move_speed ) );	
+			}
 		}
 		
-		setTarget( getTarget() + getLocalPosition() );		
+		setTarget(getTarget() + getLocalPosition());		
 
 		temp_rotation.X *= -1.0f;
 		temp_rotation.Y *= -1.0f;
@@ -234,54 +252,33 @@ namespace Kaleidoscope {
 		target_normal = ( getLocalPosition() - getTarget() ).normalize();
 	}
 
-	void Camera::doMovementMaya( Device* d ) {
-		int now = SDL_GetTicks(); // get the current time
+	void Camera::doMovementMaya(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
+		int now = d->getTicks(); // get the current time
 		int time_diff =  now - last_animation_time;
 		last_animation_time = now;
 				
-		// The cached state is necessary for reading mouse wheel movements
-		Uint8 mouse_state = SDL_GetMouseState(NULL, NULL);
-		Uint8 cached_mouse_state = d->getEventController()->getMouseButton();
-		//bool mouse_down = d->getEventController()->getMouseDown();
-
 		if( time_diff == 0 )
 			time_diff = 1;
 		
-		if( (cached_mouse_state & SDL_BUTTON( SDL_BUTTON_WHEELUP ) ) || (cached_mouse_state & SDL_BUTTON( SDL_BUTTON_WHEELDOWN ) ) ||
-		    cached_mouse_state == SDL_BUTTON_WHEELUP || cached_mouse_state == SDL_BUTTON_WHEELDOWN ) {
-			//std::cout << "wheel\n";
+		if(w_event) {
 			Vec3D zoom_vector;
 			Vec3D position_difference;
 			Vec3D target_difference;
 			
-			if( zoom_type == ZOOM_FORWARD ) {
+			// Move the camera in the direction that you are facing
+			if(zoom_type == ZOOM_FORWARD) {
 				Vec3D normal_target = getTarget();
 				normal_target.normalize();
-				
-				if( cached_mouse_state == SDL_BUTTON_WHEELUP ) {
-					zoom_vector = normal_target * ( time_diff * zoom_speed * -1.0f  );
-				}
-				else {
-					zoom_vector = normal_target * ( time_diff * zoom_speed );
-				}
 
+				zoom_vector = normal_target * (time_diff * zoom_speed * w_event->delta());
 				setLocalPosition( getLocalPosition() + zoom_vector );
 				setTarget( getTarget() + zoom_vector );				
 			}
-			else if( zoom_type == ZOOM_CENTER ) {
+			else if(zoom_type == ZOOM_CENTER) {
 				position_difference = getLocalPosition() - getCenterOfRotation();
 				target_difference = getTarget() - getCenterOfRotation();
 				
-				float scale_amount;
-				
-				// Zoom Closer				
-				if( cached_mouse_state == SDL_BUTTON_WHEELUP ) {
-					scale_amount = 1.0f + time_diff * zoom_speed * -1.0f ;
-				}
-				// Zoom Out
-				else if( cached_mouse_state == SDL_BUTTON_WHEELDOWN ) {
-					scale_amount = 1.0f + time_diff * zoom_speed;
-				}
+				float scale_amount = 1.0f + time_diff * zoom_speed * -1.0f * w_event->delta() ;
 				
 				position_difference *= scale_amount;
 				target_difference *= scale_amount;
@@ -299,25 +296,24 @@ namespace Kaleidoscope {
 		
 		// SDL poll event		
 		//NOTE: The mouse cursor should be hidden when the mouse is dragged
-		Vec2D cursor_pos = d->getOSWindow()->getCursorController()->getRelativePosition();
+		Vec2D cursor_pos = controller->getRelativePosition();
 		
-		if( cursor_pos != Vec2D( 0.5f, 0.5f ) ) {
+		if(m_event) {
 			//  TRANSLATION
-			if( mouse_state & SDL_BUTTON( SDL_BUTTON_RIGHT ) ) {				
+			if(m_event->button() == Qt::RightButton) {
 				if( !translating ) {
 					// This allows the mouse to hover around and click on items.  Then, when the 
 					// mouse is pressed, the view changes.
 					cursor_save = cursor_pos;
-					d->getOSWindow()->getCursorController()->setToCenter();
+					controller->setToCenter();
 					
 					translating = true;
-					SDL_ShowCursor( 0 );
+					controller->hideCursor();
 				}
 				else {
 					//std::cout << "Difference "<< SDL_GetTicks() << std::endl;
 					float offset_x = ( cursor_pos.X - 0.5f ) * time_diff;
 					float offset_y = ( cursor_pos.Y - 0.5f ) * time_diff;
-						
 						
 					Vec3D strafe_vector = getTarget().crossProduct( getUp() );
 					Vec3D elevation_vector = getTarget().crossProduct( strafe_vector );
@@ -337,18 +333,18 @@ namespace Kaleidoscope {
 					//setUp( getUp() + translate_amount );
 					setCenterOfRotation( getCenterOfRotation() + translate_amount );
 						
-					d->getOSWindow()->getCursorController()->setToCenter();
+					controller->setToCenter();
 				}
 			}
 			// ROTATION 
-			else if( mouse_state & SDL_BUTTON( SDL_BUTTON_LEFT ) ) {
+			else if(m_event->button() == Qt::LeftButton) {
 				if( !rotating ){
 					cursor_save = cursor_pos;
-					d->getOSWindow()->getCursorController()->setToCenter();
+					controller->setToCenter();
 										
 					rotating = true;
 					
-					SDL_ShowCursor( 0 );
+					controller->hideCursor();
 				}
 				else {
 					float offset_x = (cursor_pos.Y - 0.5f) * time_diff * rotate_speed * -0.1f ;
@@ -371,25 +367,21 @@ namespace Kaleidoscope {
 					setLocalPosition( getLocalPosition() + getCenterOfRotation() );
 					setTarget( getTarget() + getCenterOfRotation() );
 
-					d->getOSWindow()->getCursorController()->setToCenter();
+					controller->setToCenter();
 				} // end d->Rotating == true
 			} 
 		}
 		else {
-			/*
-			if( !( (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT) ) ||
-				  (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT) ) ) ) {	
-			*/
-			if( !( d->getEventController()->getMouseDown() ) ) {
+			if(!mouse_pressed) {
 				if( translating || rotating || zooming ) {
-					d->getOSWindow()->getCursorController()->setPosition( cursor_save.X, cursor_save.Y );
+					controller->setPosition( cursor_save.X, cursor_save.Y );
 				}
 								
 				translating = false;
 				rotating = false;
 				zooming = false;
 								
-				SDL_ShowCursor( 1 );
+				controller->showCursor();
 			}
 		} 
 	}
@@ -400,13 +392,13 @@ namespace Kaleidoscope {
 
      void Camera::resizeScene( Device * d, unsigned int new_width, unsigned int new_height )
      {
-		 d->getOSWindow()->getRenderer()->lockGL();
+		d->getOSWindow()->getRenderer()->lockGL();
           glViewport(0, 0, new_width, new_height);
 
           glMatrixMode(GL_PROJECTION);
           glLoadIdentity();
 		 
-		 d->getOSWindow()->getRenderer()->unlockGL();
+		d->getOSWindow()->getRenderer()->unlockGL();
 
           // NOTE: It is possible to calulate the exact (most realistic) fovy of a progmam
           // based on the viewer's distance from the screen.  See OpenGL documentation.
@@ -419,9 +411,9 @@ namespace Kaleidoscope {
 
           setPerspective( d, fovy, aspecty, zNear, zFar );
 
-		 d->getOSWindow()->getRenderer()->lockGL();
+		d->getOSWindow()->getRenderer()->lockGL();
           glMatrixMode(GL_MODELVIEW);
-		 d->getOSWindow()->getRenderer()->unlockGL();
+		d->getOSWindow()->getRenderer()->unlockGL();
 
           //d->getOSWindow()->setWidth( new_width );
           //d->getOSWindow()->setHeight( new_height );
@@ -459,7 +451,7 @@ namespace Kaleidoscope {
 	// I think this should be the global position, I'll have to
 	// test it to find out.
 	void Camera::lookAtPoint( Vec3D vec ){
-          setLook(vec - getLocalPosition() );
+          setLook(vec - getLocalPosition());
      }
 
      void Camera::setLook( Vec3D vec ){
@@ -496,44 +488,34 @@ namespace Kaleidoscope {
      }
 	
 	void Camera::lockPerspective(){
-		SDL_LockMutex( perspective_mutex );
+		perspective_mutex.lock();
 	}
 	
 	void Camera::unlockPerspective(){
-		SDL_UnlockMutex( perspective_mutex );
+		perspective_mutex.unlock();
 	}
-
-
-
-
-
-
-
 
 	//////////////////////////////
 	// Accessor functions
-		
-	void Camera::setTarget( Vec3D vec ){ SDL_LockMutex( target_mutex ); target = vec; SDL_UnlockMutex( target_mutex ); }
-	void Camera::setUp( Vec3D vec ){ SDL_LockMutex( up_mutex ); up = vec; SDL_UnlockMutex( up_mutex ); }
+
+	void Camera::setTarget( Vec3D vec ){ 
+		QMutexLocker lock(&target_mutex); 
+		target = vec;
+	}
+
+	void Camera::setUp( Vec3D vec ){ 
+		QMutexLocker lock(&up_mutex); 
+		up = vec;
+	}
 	
 	Vec3D Camera::getTarget(){
-		Vec3D temp_vec;
-		
-		SDL_LockMutex( target_mutex );
-		temp_vec = target;
-		SDL_UnlockMutex( target_mutex );
-		return temp_vec;
+		QMutexLocker lock(&target_mutex);
+		return target;
 	}
 	    
 	Vec3D Camera::getUp() {
-		Vec3D temp_vec;
-		
-		SDL_LockMutex( up_mutex );
-		temp_vec = up;
-		SDL_UnlockMutex( up_mutex );
-		
-		return temp_vec;
+		QMutexLocker lock(&up_mutex);
+		return up;
 	}
-
 
 } // end namespace Kaleidoscope

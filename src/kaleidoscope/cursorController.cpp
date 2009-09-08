@@ -2,56 +2,50 @@
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/device.h>
-
-#include <grids/SDLObject.h>
-
-#include <SDL/SDL.h>
+#include <QWidget>
 
 namespace Kaleidoscope
 {
-	CursorController::CursorController( Device* dvc ) : Grids::SDLObject() {
-		d = dvc;		
+	CursorController::CursorController(Device* dvc, QWidget* wid) {
+		d = dvc;
+		widget = wid;
 	}	
 
 	void CursorController::setPosition( float xScale, float yScale ) {
-		SDL_WarpMouse( (int)( xScale * d->getOSWindow()->getWidth() ), 
-					(int)(  yScale * d->getOSWindow()->getHeight() ) );
+		widget->cursor().setPos(widget->mapToGlobal(QPoint((int)(xScale*widget->width()),
+												 (int)(yScale*widget->height()))));
 	}
 	
-	void CursorController::setToCenter( ) {
+	void CursorController::setToCenter() {
 		setPosition( 0.5f, 0.5f );
 	}
 	
-	int CursorController::getMouseX(){
-		int temp_x;
-		lock();
-		temp_x = mouse_x;
-		unlock();
-		
-		return temp_x;
+	int CursorController::getMouseX() {
+		return widget->mapFromGlobal(QPoint(widget->cursor()->pos()->x(),
+									 widget->cursor()->pos()->y()))->x();
 	}
 
-	int CursorController::getMouseY(){
-		int temp_y;
-		lock();
-		temp_y = mouse_y;
-		unlock();
-		
-		return temp_y;
+	int CursorController::getMouseY() {
+		return widget->mapFromGlobal(QPoint(widget->cursor()->pos()->x(),
+									 widget->cursor()->pos()->y()))->y();
 	}
 	
-	Vec2D CursorController::getRelativePosition( ) {
-		int x, y;
-		SDL_GetMouseState( &x, &y );
-			
-		lock();
-		mouse_x = x;
-		mouse_y = y;
-		unlock();
-							
-		return Vec2D( (float)( x ) / (float) d->getOSWindow()->getWidth(), 
-				    (float)( y ) / (float) d->getOSWindow()->getHeight() );	
+	Vec2D CursorController::getRelativePosition() {
+		return Vec2D((float)getMouseX() / (float) widget->width(),
+				   (float)getMouseY() / (float) widget->height());
 	}
-
+	
+	Vec2D CursorController::getRelativePosition(QMouseEvent* event){
+		return Vec2D((float)event->x() / (float)widget->width(),
+				   (float)event->y() / (float)widget->height());
+	}
+	
+	void CursorController::hideCursor() {
+		d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
+	}
+	
+	void CursorController::showCursor() {
+		d->app->setOverrideCursor(QCursor(Qt::ArrowCursor));
+	}
 
 } // end namespace Kaleidoscope

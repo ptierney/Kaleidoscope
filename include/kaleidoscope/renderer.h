@@ -2,7 +2,7 @@
 #pragma once
 
 #include <kaleidoscope/object.h>
- #include <QGLWidget>
+#include <QGLWidget>
 
 namespace Kaleidoscope {
 	class Device;
@@ -10,6 +10,7 @@ namespace Kaleidoscope {
 	// Everything that should be drawn should be a child of this object
 
 	class SpaceRenderer : public Object, public QGLWidget {
+		Q_OBJECT
 	public:
 		SpaceRenderer( Device*, Grids::Value* );
 		
@@ -23,6 +24,7 @@ namespace Kaleidoscope {
 
 		friend class OSWindow;
 		friend class Device;
+
 	private:
 		void prepareWindow( Device* );
 		void prepareRender(Device*);
@@ -52,7 +54,8 @@ namespace Kaleidoscope {
 		float Light_Diffuse[4];
 		float Light_Position[4];
 		
-		SDL_mutex* gl_mutex;
+		QMutex gl_mutex;
+		QMutex gl_settings_mutex;
 
 		int current_text_mode;
 		std::string text_mode_string[4];

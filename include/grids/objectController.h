@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
 #include <map>
@@ -16,11 +15,12 @@ namespace Grids {
 	class Object;
 	class Event;
 	
-	class ObjectController {
+	class ObjectController : QWidget {
+		Q_OBJECT
 	public:
-		ObjectController(Kal::Device*);
+		ObjectController(Kal::Device*, QWidget* parent = 0);
 		
-		void registerObject( GridsID, Object* );
+		void registerObject(GridsID, Object*);
 		GridsID getIDFromPointer( Object* );
 		Object* getPointerFromID( GridsID );
 
@@ -33,7 +33,10 @@ namespace Grids {
 		void updateObjectScale( GridsID, Vec3D );
 		void updateObjectAttr( GridsID, Event* );		
 		
-		void detectSelectionThreaded(Kal::Device*);
+		void detectSelectionThreaded(int, int);
+	
+	protected:
+		void mouseReleasedEvent(QMouseEvent*);
 
 	private:		
 		void registerCamera( GridsID, Event* );

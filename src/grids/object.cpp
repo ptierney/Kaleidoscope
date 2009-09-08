@@ -17,6 +17,12 @@ namespace Grids {
 
 		setInitialPositions( in_value );
 		setAttrFromValue( in_value );
+		
+		d->getNoticeWindow()->connect(this, SIGNAL(notice(int, QString)),
+								d->getNoticeWindow(), SLOT(addNotice(int, QString)));
+
+		d->getErrorWindow()->connect(this, SIGNAL(error(int, QString)),
+							    d->getErrorWindow(), SLOT(addNotice(int, QString)));
 	}
 
 	GridsID Object::getID() {
@@ -29,7 +35,7 @@ namespace Grids {
 		return obj_room;
 	}
 
-	Vec3D Object::getPosition( ){
+	Vec3D Object::getPosition(){
 		Vec3D parents_position = Vec3D();			
 
 		Object* temp_parent = getParent();
@@ -40,7 +46,7 @@ namespace Grids {
 		return getLocalPosition() + parents_position;
 	}
 
-	Vec3D Object::getScale(  ){
+	Vec3D Object::getScale(){
 		Vec3D parents_scale = Vec3D(1.f, 1.f, 1.f);
 		
 		if( parent )
@@ -49,7 +55,7 @@ namespace Grids {
 		return getLocalScale() * parents_scale;
 	}
 
-	Vec3D Object::getRotation( ){
+	Vec3D Object::getRotation(){
 		Vec3D parents_rot = Vec3D(0.f, 0.f, 0.f);
 		
 		if(parent)

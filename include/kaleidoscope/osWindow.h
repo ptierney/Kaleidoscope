@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
 #include <vector>
 
 namespace Kaleidoscope {

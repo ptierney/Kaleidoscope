@@ -13,7 +13,7 @@ class Kaleidoscope : public QMainWindow {
     Q_OBJECT
 
 public:
-    Kaleidoscope(QWidget *parent = 0);
+    Kaleidoscope(QApplication* ap, QWidget *parent = 0);
     ~Kaleidoscope();
 
     QSize sizeHint() const;

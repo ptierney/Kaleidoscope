@@ -1,15 +1,13 @@
 #include "kaleidoscope.h"
 #include "ui_kaleidoscope.h"
 
-Kaleidoscope::Kaleidoscope(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::Kaleidoscope)
-{
+Kaleidoscope::Kaleidoscope(QApplication* ap, QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::Kaleidoscope) {
     ui->setupUi(this);
-    d = new Kal::Device(this);
+    d = new Kal::Device(ap, this);
 }
 
-Kaleidoscope::~Kaleidoscope()
-{
+Kaleidoscope::~Kaleidoscope() {
     delete d;
     delete ui;
 }

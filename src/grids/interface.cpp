@@ -11,18 +11,24 @@
 
 namespace Grids {
 
-	Interface::Interface( Kal::Device* _d )
-		: QObject() {
+	Interface::Interface(Kal::Device* _d, QObject* parent)
+		: QObject(parent) {
 		server_address = DEFAULT_SERVER;
  		d = _d;
+		
+		init();
 	}
 
-	Interface::Interface(Kal::Device* _d, std::string in_server )
-		: QObject() {
+	Interface::Interface(Kal::Device* _d, std::string in_server, QObject* parent)
+		: QObject(parent) {
 		server_address = in_server;
 		d = _d;
-	}
 		
+		init();
+	}
+
+	// Spawns new Protocol and network listening thread
+	// This call will hang if there is no connection to the internet
 	void Interface::init(){				
 		connected = 0;
 		proto = new Protocol();
@@ -188,7 +194,6 @@ namespace Grids {
 	
 		proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
 	}
-	   
 
 	std::vector< GridsID > Interface::getKnownRooms(){
 		return known_rooms;

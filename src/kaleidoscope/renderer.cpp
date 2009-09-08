@@ -1,5 +1,4 @@
 
-
 #include <kaleidoscope/renderer.h>
 #include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/camera.h>
@@ -8,11 +7,11 @@
 
 namespace Kaleidoscope {
 
-	Renderer::Renderer( Device* d, Grids::Value* val ) : Object( d, val ) {
+	SpaceRenderer::Renderer(Grids::Value* val) {
 		initVars();
 	}
 
-	void Renderer::draw(Device* d){
+	void SpaceRenderer::draw(){
 		/*glBegin( GL_LINES );
 		glColor4f( 1.f, 1.f, 1.f, 1.f );
 		glVertex3f( 0.f, 0.f, 0.f );
@@ -20,14 +19,14 @@ namespace Kaleidoscope {
 		glEnd();*/
 	}
 
-	void Renderer::renderAll(Device* d) {
+	void SpaceRenderer::renderAll() {
 		prepareRender( d );
 		drawAll( d );
 		renderGui( d );
 		finishRender( d );
 	}
 	
-	void Renderer::initVars(){
+	void SpaceRenderer::initVars(){
 		Texture_On = false;
           Light_On = false;
           Alpha_Add = false;
@@ -39,7 +38,7 @@ namespace Kaleidoscope {
           loadTextModes();
 	}
 
-	void Renderer::loadLights(){
+	void SpaceRenderer::loadLights(){
           Light_Ambient[0] =  0.1f;
           Light_Ambient[1] =  0.1f;
           Light_Ambient[2] =  0.1f;
@@ -56,7 +55,7 @@ namespace Kaleidoscope {
           Light_Position[3] = 1.0f;
 	}
 
-	void Renderer::loadTextModes(){
+	void SpaceRenderer::loadTextModes(){
           current_text_mode = 2;
           text_mode_string[0] = "GL_DECAL";
           text_mode_string[1] = "GL_MODULATE";
@@ -69,16 +68,14 @@ namespace Kaleidoscope {
           text_modes[3] = GL_REPLACE;
 	}
 
-	void Renderer::setTextureOn( bool in_bool ) { lock(); Texture_On = in_bool; unlock(); }
-	void Renderer::setLightOn( bool in_bool ) { lock(); Light_On = in_bool; unlock(); }
-	void Renderer::setAlphaAdd( bool in_bool ) { lock(); Alpha_Add = in_bool; unlock(); }
-	void Renderer::setBlendOn( bool in_bool ) { lock(); Blend_On = in_bool; unlock(); }
-	void Renderer::setFilteringOn( bool in_bool ) { lock(); Filtering_On = in_bool; unlock(); }
-	void Renderer::setSmoothOn( bool in_bool ) { lock(); Smooth_On = in_bool; unlock(); }
+	void SpaceRenderer::setTextureOn( bool in_bool ) { lock(); Texture_On = in_bool; unlock(); }
+	void SpaceRenderer::setLightOn( bool in_bool ) { lock(); Light_On = in_bool; unlock(); }
+	void SpaceRenderer::setAlphaAdd( bool in_bool ) { lock(); Alpha_Add = in_bool; unlock(); }
+	void SpaceRenderer::setBlendOn( bool in_bool ) { lock(); Blend_On = in_bool; unlock(); }
+	void SpaceRenderer::setFilteringOn( bool in_bool ) { lock(); Filtering_On = in_bool; unlock(); }
+	void SpaceRenderer::setSmoothOn( bool in_bool ) { lock(); Smooth_On = in_bool; unlock(); }
 
-	void Renderer::prepareWindow( Device* d ){
-		//buildTextures();   
-		
+	void SpaceRenderer::prepareWindow( Device* d ){
 		lockGL();
 
 		// Color to clear color buffer to.
@@ -110,7 +107,7 @@ namespace Kaleidoscope {
 	}
 
 
-	void Renderer::prepareRender( Device* d ) {
+	void SpaceRenderer::prepareRender() {
           bool text_on;
           bool light_on;
           bool al_on;
@@ -118,14 +115,16 @@ namespace Kaleidoscope {
           bool filt_on;
           bool smooth_on;
 
-		lock();
+		gl_settings_mutex.lock();
+
           text_on = Texture_On;
           light_on = Light_On;
           al_on = Alpha_Add;
           blend_on = Blend_On;
           filt_on = Filtering_On;
           smooth_on = Smooth_On;
-          unlock();
+
+          gl_settings_mutex.unlock();
 			
 		lockGL();
 
@@ -182,18 +181,18 @@ namespace Kaleidoscope {
 		unlockGL();
 	}
 	
-	void Renderer::finishRender(Device* d){
+	void SpaceRenderer::finishRender(){
 		// Nothing here
 	}
 
-	void Renderer::renderGui( Device* d ){
+	void SpaceRenderer::renderGui(){
 		//prepareText(d);
 		//finishText(d);
 	}
 
 
 	// Debug Functions: DELETE
-	void Renderer::prepareText( Device * d ) {
+	void SpaceRenderer::prepareText() {
 		lockGL();
 		
 		glMatrixMode(GL_PROJECTION);
@@ -213,7 +212,7 @@ namespace Kaleidoscope {
 		unlockGL();
 	}
 
-	void Renderer::finishText( Device * d ) {
+	void SpaceRenderer::finishText( Device * d ) {
 		lockGL();
 		
 		glPopMatrix();
@@ -227,19 +226,16 @@ namespace Kaleidoscope {
 	/////////////////////////////////////
 	////  Thread Functions
 		
-	void Renderer::lockGL(){
+	void SpaceRenderer::lockGL(){
 		gl_mutex.lock();
 	}
 		
-	void Renderer::unlockGL(){
+	void SpaceRenderer::unlockGL(){
 		gl_mutex.unlock();
 	}
 	
-	QMutex* Renderer::getGLMutex(){
+	QMutex* SpaceRenderer::getGLMutex(){
 		return &gl_mutex;
 	}
-
-	
-
 
 } // end namespace Kaleidoscope

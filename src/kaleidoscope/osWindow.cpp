@@ -10,12 +10,6 @@
 #include <iostream>
 #include <assert.h>
 
-#if defined(__MACOSX__)
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL/SDL_ttf.h>
-#endif
-
 namespace Kaleidoscope {
 
 	OSWindow::OSWindow( Device* d, unsigned int width, unsigned int height ){
@@ -44,8 +38,6 @@ namespace Kaleidoscope {
 	}
 	
 	void OSWindow::createMutexes( ){
-		width_mutex = SDL_CreateMutex();
-		height_mutex = SDL_CreateMutex();
 	}
 	
 	unsigned int OSWindow::getWidth() { unsigned int temp_w;  SDL_LockMutex( width_mutex ); temp_w = width; SDL_UnlockMutex( width_mutex ); return temp_w; }
@@ -66,41 +58,6 @@ namespace Kaleidoscope {
 	
 	Renderer* OSWindow::getRenderer() { return renderer; }
 
-	void OSWindow::initSDL(){
-		if ( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0 ) {
-			std::cerr << "Unable to init SDL: " << SDL_GetError() << std::endl;
-			assert( false );
-		}
-
-		// Don't set color bit sizes (SDL_GL_RED_SIZE, etc)
-		// Mac OS X will always use 8-8-8-8 ARGB for 32-bit screens and
-		// 5-5-5 RGB for 16-bit screens
-		// Request a 16-bit depth buffer (without this, there is no depth buffer)
-		int value = 16;
-		SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, value);
-
-		// Request double-buffered OpenGL
-		// The fact that windows are double-buffered on Mac OS X has no effect
-		// on OpenGL double buffering.
-		value = 1;
-		SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, value);
-
-		// SDL_Surface * temp_surface = SDL_LoadBMP( "change_room.bmp" );
-		// SDL_WM_SetIcon( temp_surface, NULL );
-		SDL_WM_SetCaption( "Grids", "Kaleidoscope" );
-
-		//The surface returned is freed by SDL_Quit() and should not be freed by the caller. 
-		// 0 automatically selects the best availible BPP
-		// SDL_HWSURFACE : use hardware rendering
-		gl_screen = SDL_SetVideoMode( width, height, 0, SDL_OPENGL | SDL_HWSURFACE );
-
-		if ( gl_screen  == NULL ) {
-			std::cerr << "Unable to create window: " << SDL_GetError() << std::endl;
-			assert( false );
-		}
-		
-		TTF_Init();
-	}
 	
 	void OSWindow::doMovement(Device* d) {
 		if( current_camera >= 0 )
