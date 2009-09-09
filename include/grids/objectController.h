@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <QMutex>
+#include <QWidget>
 
 namespace Kaleidoscope {
 	class Device;

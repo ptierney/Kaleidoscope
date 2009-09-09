@@ -7,11 +7,13 @@
 
 namespace Kaleidoscope {
 
-	SpaceRenderer::Renderer(Grids::Value* val) {
+	SpaceRenderer::Renderer(Device* dev, Grids::Value* val)
+		: Object(dev, val) {
+		d = dev;
 		initVars();
 	}
 
-	void SpaceRenderer::draw(){
+	void SpaceRenderer::draw() {
 		/*glBegin( GL_LINES );
 		glColor4f( 1.f, 1.f, 1.f, 1.f );
 		glVertex3f( 0.f, 0.f, 0.f );
@@ -20,10 +22,10 @@ namespace Kaleidoscope {
 	}
 
 	void SpaceRenderer::renderAll() {
-		prepareRender( d );
-		drawAll( d );
-		renderGui( d );
-		finishRender( d );
+		prepareRender();
+		drawAll();
+		renderGui();
+		finishRender();
 	}
 	
 	void SpaceRenderer::initVars(){
@@ -68,12 +70,35 @@ namespace Kaleidoscope {
           text_modes[3] = GL_REPLACE;
 	}
 
-	void SpaceRenderer::setTextureOn( bool in_bool ) { lock(); Texture_On = in_bool; unlock(); }
-	void SpaceRenderer::setLightOn( bool in_bool ) { lock(); Light_On = in_bool; unlock(); }
-	void SpaceRenderer::setAlphaAdd( bool in_bool ) { lock(); Alpha_Add = in_bool; unlock(); }
-	void SpaceRenderer::setBlendOn( bool in_bool ) { lock(); Blend_On = in_bool; unlock(); }
-	void SpaceRenderer::setFilteringOn( bool in_bool ) { lock(); Filtering_On = in_bool; unlock(); }
-	void SpaceRenderer::setSmoothOn( bool in_bool ) { lock(); Smooth_On = in_bool; unlock(); }
+	void SpaceRenderer::setTextureOn( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Texture_On = in_bool; 
+	}
+
+	void SpaceRenderer::setLightOn( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Light_On = in_bool; 
+	}
+
+	void SpaceRenderer::setAlphaAdd( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Alpha_Add = in_bool; 
+	}
+
+	void SpaceRenderer::setBlendOn( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Blend_On = in_bool; 
+	}
+
+	void SpaceRenderer::setFilteringOn( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Filtering_On = in_bool; 
+	}
+
+	void SpaceRenderer::setSmoothOn( bool in_bool ) { 
+		QMutexLocker lock(&gl_settings_mutex);
+		Smooth_On = in_bool; 
+	}
 
 	void SpaceRenderer::prepareWindow( Device* d ){
 		lockGL();

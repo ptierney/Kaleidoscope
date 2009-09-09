@@ -6,6 +6,8 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <QCursor>
+#include <QTime>
+#include <QMutex>
 
 namespace Grids{
 	class ObjectController;
@@ -19,6 +21,9 @@ namespace Kaleidoscope {
 	class EventController;
 	class Camera;
 	class Settings;
+	class NoticeWindow;
+	class Console;
+	class Renderer;
 
 	class Device {
 	public:
@@ -30,6 +35,8 @@ namespace Kaleidoscope {
 		Grids::Utility* getGridsUtility();
 		EventController* getEventController();
 		Settings* getSettings();
+                Renderer* getRenderer();
+		Renderer* renderer;
 
 		bool getRunning();
 		void setRunning( bool );
@@ -53,7 +60,6 @@ namespace Kaleidoscope {
 		// The renderer is the current OpenGL means of displaying the world
 		// on the computer screen.
 		Camera* main_camera;
-		Renderer* renderer;
 		QApplication* app;
 
 	private:

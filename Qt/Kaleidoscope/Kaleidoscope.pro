@@ -26,7 +26,13 @@ SOURCES += main.cpp \
     ../../src/grids/objectController.cpp \
     ../../src/grids/object.cpp \
     ../../src/grids/interface.cpp \
+    ../../src/grids/event.cpp \
+    ../../src/grids/protocol.cpp \
+    ../../src/grids/objectController.cpp \
+    ../../src/grids/object.cpp \
+    ../../src/grids/interface.cpp \
     ../../src/grids/event.cpp
+INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
     ../../include/kaleidoscope/room.h \
@@ -38,5 +44,26 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/define.h \
     ../../include/kaleidoscope/cursorController.h \
     ../../include/kaleidoscope/console.h \
-    ../../include/kaleidoscope/camera.h
+    ../../include/kaleidoscope/camera.h \
+    ../../include/grids/vector3d.h \
+    ../../include/grids/vector2d.h \
+    ../../include/grids/utility.h \
+    ../../include/grids/rect.h \
+    ../../include/grids/protocol.h \
+    ../../include/grids/position2d.h \
+    ../../include/grids/plane3d.h \
+    ../../include/grids/objectController.h \
+    ../../include/grids/object.h \
+    ../../include/grids/matrix4.h \
+    ../../include/grids/line3d.h \
+    ../../include/grids/irrTypes.h \
+    ../../include/grids/irrString.h \
+    ../../include/grids/irrMath.h \
+    ../../include/grids/IrrCompileConfig.h \
+    ../../include/grids/irrAllocator.h \
+    ../../include/grids/interface.h \
+    ../../include/grids/event.h \
+    ../../include/grids/dimension2d.h \
+    ../../include/grids/define.h \
+    ../../include/grids/aabbox3d.h
 FORMS += kaleidoscope.ui

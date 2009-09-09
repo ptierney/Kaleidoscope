@@ -59,7 +59,6 @@ namespace Grids{
 
 	private:
 		void init();
-		void parseEvent(Event*);
 		void setConnected( bool );
 		void registerNewRoom( Kal::Room* );	
 			

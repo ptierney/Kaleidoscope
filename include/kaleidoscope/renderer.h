@@ -8,11 +8,12 @@ namespace Kaleidoscope {
 	class Device;
 	
 	// Everything that should be drawn should be a child of this object
+	// Maybe this should be split into a placeholder (GridsParent) and 
+	// a strictly OpenGL drawer.
+	class SpaceRenderer : public Object {
 
-	class SpaceRenderer : public Object, public QGLWidget {
-		Q_OBJECT
 	public:
-		SpaceRenderer( Device*, Grids::Value* );
+		SpaceRenderer(Device*, Grids::Value*);	
 		
 		void renderAll( Device* );
 		
@@ -56,6 +57,8 @@ namespace Kaleidoscope {
 		
 		QMutex gl_mutex;
 		QMutex gl_settings_mutex;
+
+		Device* d;
 
 		int current_text_mode;
 		std::string text_mode_string[4];

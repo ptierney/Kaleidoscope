@@ -2,10 +2,8 @@
 #include <kaleidoscope/room.h>
 #include <kaleidoscope/glSpaceObject.h>
 #include <grids/define.h>
-#include <kaleidoscope/utility.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/settings.h>
-#include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/renderer.h>
 #include <grids/interface.h>
 #include <iostream>
@@ -19,7 +17,7 @@ namespace Kaleidoscope {
 		buildRoom(d);
 		unlockAttr();
 
-		d->getOSWindow()->getRenderer()->addChild( this );
+                d->getRenderer()->addChild( this );
 	}
 	
 	void Room::draw( Device* d ){

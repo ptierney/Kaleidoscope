@@ -7,6 +7,8 @@
 #include <kaleidoscope/settings.h>
 #include <kaleidoscope/utility.h>
 #include <kaleidoscope/renderer.h>
+#include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/console.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
 #include <grids/utility.h>
@@ -135,6 +137,23 @@ namespace Kaleidoscope {
 		interface->requestCreateObject( cam_val, start_pos, start_rot, start_scl );
 
 		delete cam_val;
+	}
+
+	void Device::CreateSpaceRenderer(){
+		Grids::Value* ren = new Grids::Value();
+
+		(*ren)[ "id" ] = d->getGridsUtility()->getNewUUID();
+		(*ren)[ "req" ][ "pos" ][ 0u ] = 0.0f;
+		(*ren)[ "req" ][ "pos" ][ 1u ] = 0.0f;
+		(*ren)[ "req" ][ "pos" ][ 2u ] = 0.0f;
+		(*ren)[ "req" ][ "rot" ][ 0u ] = 0.0f;
+		(*ren)[ "req" ][ "rot" ][ 1u ] = 0.0f;
+		(*ren)[ "req" ][ "rot" ][ 2u ] = 0.0f;
+		(*ren)[ "req" ][ "scl" ][ 0u ] = 1.0f;
+		(*ren)[ "req" ][ "scl" ][ 1u ] = 1.0f;
+		(*ren)[ "req" ][ "scl" ][ 2u ] = 1.0f;
+		
+		renderer = new SpaceRenderer(this, ren);
 	}
 		
 	/////////////////////////////////////
