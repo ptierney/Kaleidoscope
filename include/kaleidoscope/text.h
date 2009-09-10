@@ -9,18 +9,18 @@ namespace Kaleidoscope {
 
 	class Text {
 	public:
-		std::string getText();
+                //std::string getText();
 
 	protected:
 		Text();
 		~Text();
 
-		bool loadFont( std::string name, unsigned int point_size );
+                //bool loadFont( std::string name, unsigned int point_size );
 
-		unsigned int getFontSizeFromAttr( Grids::Value* );
-		std::string getTextFromAttr( Grids::Value* );
+                //unsigned int getFontSizeFromAttr( Grids::Value* );
+                //std::string getTextFromAttr( Grids::Value* );
 		
-		void setText( std::string );
+                //void setText( std::string );
 
 		//void drawScreenText( Device* ); 
 
@@ -28,14 +28,14 @@ namespace Kaleidoscope {
 		//void finishScreenText( Device* );
 
 		// camX, camY, camZ,  objPosX, Y, Z
-		void billboardSphericalBegin( float, float, float, float, float, float );
-		void billboardEnd();
+                //void billboardSphericalBegin( float, float, float, float, float, float );
+                //void billboardEnd();
 
-		void clearText( Device *, int, int );
+                //void clearText( Device *, int, int );
 
 
 	private: 
-		std::string text;
+                //std::string text;
 		
 	};
 

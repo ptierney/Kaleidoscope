@@ -1,46 +1,45 @@
 
 #include <kaleidoscope/spaceText.h>
 #include <kaleidoscope/device.h>
-#include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/camera.h>
-#include <kaleidoscope/renderer.h>
-#include <kaleidoscope/osWindow.h>
+#include <kaleidoscope/spaceRenderer.h>
 #include <grids/interface.h>
 
 namespace Kaleidoscope {
 
-	SpaceText::SpaceText( Device* d, Grids::Value* val ) : SpaceObject( d, val ) {
-		// Get font name and point size from attr
+//	SpaceText::SpaceText( Device* d, Grids::Value* val ) : SpaceObject( d, val ) {
+  //  SpaceText::SpaceText() {
+    // Get font name and point size from attr
 		// load font with loadFont
-		Grids::Value* attr = getAttrFromValue( val );
+                //Grids::Value* attr = getAttrFromValue( val );
 		
 		// loadFont MUST be called before set text
-		loadFont( "media/Helvetica LT 55 Roman.ttf", getFontSizeFromAttr( attr ) );
-		setText( getTextFromAttr( attr ) );
+                //loadFont( "media/Helvetica LT 55 Roman.ttf", getFontSizeFromAttr( attr ) );
+                //setText( getTextFromAttr( attr ) );
 		
 		//Get my room, add this as a child to the room
-		Grids::Object* temp_room = d->getObjectController()->getPointerFromID( d->getMyRoom() );
-		if( temp_room )
-			temp_room->addChild( this ); 
-		else
-			d->getOSWindow()->getRenderer()->addChild( this );
-	}
-
+                //Grids::Object* temp_room = d->getObjectController()->getPointerFromID( d->getMyRoom() );
+                //if( temp_room )
+                //	temp_room->addChild( this );
+                //else
+                 //       d->getRenderer()->addChild( this );
+        //}
+/*
 	void SpaceText::draw( Device* d ){
-		prepareSpaceText();
-		drawSpaceText( d );
-		finishSpaceText();
+                //prepareSpaceText();
+                //drawSpaceText( d );
+                //finishSpaceText();
 	}
 
 	// This text floats in 3D space, though always faces the camera.  Billboarded text.
 	void SpaceText::drawSpaceText( Device * d ){
 		int temp_x;
 		int temp_y;
-		SDL_Surface * text_surface;
 		float temp_scalar;
-		Vec3D cam_position = d->getOSWindow()->getCamera()->getPosition();
+                Vec3D cam_position = d->getCamera()->getPosition();
 		Vec3D text_position = getPosition();
 		Vec3D text_scale = getScale();
+                GLuint texture;
 
 		float cam_x = cam_position.X;
 		float cam_y = cam_position.Y;
@@ -50,14 +49,14 @@ namespace Kaleidoscope {
 		float pos_y = text_position.Y;
 		float pos_z = text_position.Z;
 
-		temp_x = text_surface->w;
-		temp_y = text_surface->h;
+                temp_x = 0;
+                temp_y = 0;
 
 		glGenTextures( 1, &texture );
 		glBindTexture( GL_TEXTURE_2D, texture );
 
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, text_surface->w, text_surface->h, 0, GL_RGBA,
-				    GL_UNSIGNED_BYTE, text_surface->pixels );
+                //glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, text_surface->w, text_surface->h, 0, GL_RGBA,
+                //		    GL_UNSIGNED_BYTE, text_surface->pixels );
 
 		glColor4f( 1.0f, 1.0f, 1.0f, 0.75f );
 
@@ -115,5 +114,5 @@ namespace Kaleidoscope {
 	
 		return d->getInterface()->requestCreateObject( &attr, position, Vector3(0.f, 0.f, 0.f), Vector3( 1.f, 1.f, 1.f )  ); 
 	}
-
+*/
 } // end namespace  Kaleidoscope

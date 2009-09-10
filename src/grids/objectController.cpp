@@ -1,7 +1,7 @@
 
 #include <grids/objectController.h>
 #include <grids/define.h>
-#include <grids/object.h>
+#include <grids/gObject.h>
 #include <grids/event.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
@@ -51,10 +51,10 @@ namespace Grids {
 		if( type == "Camera" ){
 			registerCamera( new_id, evt );
 			found = 1;
-		} else if( type == "SpaceText" ) {
+                } /*else if( type == "SpaceText" ) {
 			new Kal::SpaceText( d, evt->getArgsPtr() );
 			found = 1;
-		}
+                }*/
 
 		return found;
 	}

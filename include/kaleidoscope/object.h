@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <grids/object.h> 
+#include <grids/gObject.h>
 #include <QMutex>
 
 namespace Kaleidoscope {

@@ -1,5 +1,5 @@
 
-#include <grids/object.h>
+#include <grids/gObject.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <grids/objectController.h>

@@ -1,8 +1,9 @@
 
 #include <kaleidoscope/object.h>
 #include <kaleidoscope/define.h>
-#include <grids/object.h>
-#include <QMutexLocker lock>
+#include <grids/gObject.h>
+#include <QMutex>
+#include <QMutexLocker>
 
 namespace Kaleidoscope {
 
@@ -44,7 +45,7 @@ namespace Kaleidoscope {
 	}
 
 	void Object::select(){
-		QMuetxLocker(&selected_mutex);
+                QMutexLocker lock(&selected_mutex);
 		selected = 1;
 	}	
 

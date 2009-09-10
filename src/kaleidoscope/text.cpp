@@ -2,22 +2,21 @@
 #include <kaleidoscope/text.h>
 #include <kaleidoscope/define.h>
 #include <kaleidoscope/device.h>
-#include <kaleidoscope/utility.h>
 #include <iostream>
 
 namespace Kaleidoscope {
 
 	Text::Text() {
 		// TTF_Init() called in OSWindow constructor, after setting up SDL
-		text_surface = 0;
-		text_font = 0;
+                //text_surface = 0;
+                //text_font = 0;
 
-		glGenTextures( 1, &texture );
+                //glGenTextures( 1, &texture );
 	}
 	
 	Text::~Text() {
 	}
-	
+        /*
 	bool Text::loadFont( std::string font, unsigned int point_size ){
 		if( text_font ){
 			text_font = 0;
@@ -118,5 +117,6 @@ namespace Kaleidoscope {
 	std::string Text::getText(){
 		return text;
 	}
+        */
 
 } // end namespace Kaleidoscope

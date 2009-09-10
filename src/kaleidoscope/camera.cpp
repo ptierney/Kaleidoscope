@@ -1,6 +1,6 @@
 
 #include <kaleidoscope/camera.h>
-#include <grids/object.h>
+#include <grids/gObject.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/eventController.h>
@@ -148,6 +148,22 @@ namespace Kaleidoscope {
 		return center_of_rotation;
 	}
 
+        void Camera::mouseMoved(QMouseEvent* event){
+
+        }
+
+        void Camera::keyboardPressed(QKeyEvent* event) {
+
+        }
+
+        void Camera::keyboardReleased(QKeyEvent* event) {
+
+        }
+
+        void Camera::updatePosition(Vec3D new_pos, Vec3D new_rot, Vec3D new_tar) {
+
+        }
+
 	void Camera::keyPressEvent(QKeyEvent* event) {
 		if(event->key() == Qt::Key_Tab)
 			swapCameraType();
@@ -158,7 +174,7 @@ namespace Kaleidoscope {
 	void Camera::mouseMoveEvent(QMouseEvent* event) {
 		doMovement(NULL, event, NULL);
 	}
-	
+
 	void Camera::mousePressEvent(QMouseEvent* event) {
 		mouse_pressed = true;
 		doMovement(NULL, event, NULL);
@@ -172,6 +188,7 @@ namespace Kaleidoscope {
 	void Camera::wheelEvent(QWheelEvent* event) {
 		doMovement(NULL, NULL, event);
 	}
+
 
         void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
 		if(getType() == FPS)

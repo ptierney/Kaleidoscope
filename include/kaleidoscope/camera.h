@@ -40,7 +40,7 @@ namespace Kaleidoscope {
 		// The primary camera, uses the first 3 slots exclusively
 		void mouseMoved(QMouseEvent *event);
 		void keyboardPressed(QKeyEvent * event);
-		void keyboardReseased(QKeyEvent * event);
+                void keyboardReleased(QKeyEvent * event);
 		// This slot is used for cameras that display other people on the network's view
 		void updatePosition(Vec3D, Vec3D, Vec3D);
 

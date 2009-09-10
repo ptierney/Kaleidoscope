@@ -24,10 +24,17 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/camera.cpp \
     ../../src/grids/protocol.cpp \
     ../../src/grids/objectController.cpp \
-    ../../src/grids/object.cpp \
     ../../src/grids/interface.cpp \
     ../../src/grids/event.cpp \
-    ../../src/kaleidoscope/spaceRenderer.cpp
+    ../../src/kaleidoscope/spaceRenderer.cpp \
+    ../../src/grids/gObject.cpp \
+    ../../src/json/json_writer.cpp \
+    ../../src/json/json_value.cpp \
+    ../../src/json/json_reader.cpp \
+    ../../src/grids/utility.cpp \
+    ../../src/kaleidoscope/spaceObject.cpp \
+    ../../src/kaleidoscope/spaceText.cpp \
+    ../../src/kaleidoscope/text.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -49,7 +56,6 @@ HEADERS += kaleidoscope.h \
     ../../include/grids/position2d.h \
     ../../include/grids/plane3d.h \
     ../../include/grids/objectController.h \
-    ../../include/grids/object.h \
     ../../include/grids/matrix4.h \
     ../../include/grids/line3d.h \
     ../../include/grids/irrTypes.h \
@@ -62,5 +68,17 @@ HEADERS += kaleidoscope.h \
     ../../include/grids/dimension2d.h \
     ../../include/grids/define.h \
     ../../include/grids/aabbox3d.h \
-    ../../include/kaleidoscope/spaceRenderer.h
+    ../../include/kaleidoscope/spaceRenderer.h \
+    ../../include/grids/gObject.h \
+    ../../include/json/writer.h \
+    ../../include/json/value.h \
+    ../../include/json/reader.h \
+    ../../include/json/json.h \
+    ../../include/json/forwards.h \
+    ../../include/json/config.h \
+    ../../include/json/autolink.h \
+    ../../src/json/json_batchallocator.h \
+    ../../include/kaleidoscope/spaceObject.h \
+    ../../include/kaleidoscope/spaceText.h \
+    ../../include/kaleidoscope/text.h
 FORMS += kaleidoscope.ui
