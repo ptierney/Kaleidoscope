@@ -21,10 +21,7 @@ namespace Kaleidoscope {
 	}
 
 	void SpaceRenderer::renderAll() {
-		prepareRender();
                 drawAll(d);
-		renderGui();
-		finishRender();
 	}
 	
 	void SpaceRenderer::initVars(){
@@ -131,7 +128,7 @@ namespace Kaleidoscope {
 	}
 
 
-	void SpaceRenderer::prepareRender() {
+        void SpaceRenderer::prepareRender1() {
           bool text_on;
           bool light_on;
           bool al_on;
@@ -139,7 +136,7 @@ namespace Kaleidoscope {
           bool filt_on;
           bool smooth_on;
 
-		gl_settings_mutex.lock();
+        gl_settings_mutex.lock();
 
           text_on = Texture_On;
           light_on = Light_On;
@@ -193,17 +190,15 @@ namespace Kaleidoscope {
 
           // Reset to 0,0,0; no rotation, no scaling.
           glLoadIdentity();
-		
-		unlockGL();
-
-                Camera* temp_cam = d->getCamera();
-          if( temp_cam )
-			temp_cam->callGluLookAt( d );
-
-		lockGL();
-          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		unlockGL();
 	}
+
+        void SpaceRenderer::prepareRender2(){
+                        lockGL();
+          glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                unlockGL();
+
+        }
 	
 	void SpaceRenderer::finishRender(){
 		// Nothing here

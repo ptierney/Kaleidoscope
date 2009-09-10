@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 #include <grids/define.h>
 #include <grids/objectController.h>
 #include <kaleidoscope/define.h>

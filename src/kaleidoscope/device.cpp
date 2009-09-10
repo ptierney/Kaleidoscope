@@ -11,10 +11,12 @@
 #include <grids/interface.h>
 #include <grids/utility.h>
 #include <grids/event.h>
+#include <iostream>
 #include <QDockWidget>
 
 namespace Kaleidoscope {
-        Device::Device(QApplication* in_app, QMainWindow* m_win) {
+        Device::Device(QApplication* in_app, QMainWindow* m_win)
+        : QObject(m_win) {
 		main_window = m_win;
                 app = in_app;
 		main_camera = 0;
@@ -24,9 +26,12 @@ namespace Kaleidoscope {
 		// as all Grids::Objects require them to be created
 		createNoticeWindow();
 		createErrorWindow();
+                // Show the main window so we can read notices as the program connects.
+                m_win->show();
 
-		createObjects();
-		init();
+                createObjects();
+
+                setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );
 	}
 
 	void Device::createObjects(){
@@ -35,29 +40,28 @@ namespace Kaleidoscope {
 
 		// Derived from QWidget, handles misc. key presses
 		event_controller = new Kal::EventController(this, main_window);
-
 		object_controller = new Grids::ObjectController(this, main_window);
-		// Creates the protocol, connects to the server
-		interface = new Grids::Interface(this, main_window);
-		g_utility = new Grids::Utility();
+                g_utility = new Grids::Utility();
+
+                createSpaceRenderer();
 	}
 		
         void Device::init() {
-		running = 1;
-		setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );		
-
-		// Requests a new camera from the server
-		// Creates and registers a new renderer
-		requestCreateCamera();
-		loadRoom();
+            // Creates the protocol, connects to the server
+                interface = new Grids::Interface(this, main_window);
+                std::cerr << "Created Interface\n";
 	}
 
+        void Device::gridsConnectionEstablished() {
+
+                std::cerr << "Loading room\n";
+                loadRoom();
+        }
+
 	Device::~Device() {
-		delete object_controller;
-		delete interface;
+            // Most of the created devices are deleted by Qt
 		delete g_utility;
 		// Window should be one of the last objects to be destroyed, as it calls SDL_Quit()
-		delete event_controller;
 		delete settings;
 	}
 		
@@ -72,7 +76,16 @@ namespace Kaleidoscope {
         Camera* Device::getCamera() { return main_camera; }
 
 	void Device::loadRoom(){		
-                getInterface()->createMyRoom(20);
+                getInterface()->createMyRoom();
+        }
+
+        void Device::myRoomCreated(GridsID rm) {
+            getNoticeWindow()->addNotice(4, tr("Your room created"));
+
+                     std::cerr << "Requesting create camera\n";
+                // Requests a new camera from the server
+                // Creates and registers a new rendere
+                requestCreateCamera();
         }
 
 	// The four main starting boxes: camera, notices, errors, console
@@ -80,34 +93,34 @@ namespace Kaleidoscope {
 
 	// Create a new camera, and if it belongs to us, register it as the main 
 	// camera.
-	void Device::registerCamera(Grids::Event* event) {
-                QDockWidget *dock = new QDockWidget(QString("Camera"), main_window);
-		Camera* temp_camera = new Camera(this, event->getArgsPtr(), dock);
+        void Device::registerCamera(Grids::Value* val) {
+            QDockWidget *dock = new QDockWidget(tr("Camera"), main_window);
+            Camera* cam = new Camera(this, val, dock);
+            dock->setWidget(cam);
+            main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
 
-                if((*(event->getArgsPtr()))[ "req" ][ "attr" ][ "parent" ].asString() == getMyID()) {
-			main_camera = temp_camera;
-		}
-
-		dock->setWidget(temp_camera);
-		main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+            if(main_camera == 0)
+                main_camera = cam;
 	}
 
 	void Device::createConsole() {
-                QDockWidget *dock = new QDockWidget(QString("Console"), main_window);
+                QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
+                dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		console = new Console(dock);
 		dock->setWidget(console);
 		main_window->addDockWidget(Qt::BottomDockWidgetArea, dock);
 	}
 
 	void Device::createNoticeWindow() {
-                QDockWidget *dock = new QDockWidget(QString("Notices"), main_window);
+                QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
+                dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		noticeWindow = new NoticeWindow(dock);
 		dock->setWidget(noticeWindow);
 		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
 	}
 
 	void Device::createErrorWindow() {
-                QDockWidget *dock = new QDockWidget(QString("Errors"), main_window);
+                QDockWidget *dock = new QDockWidget(tr("Errors"), main_window);
 		errorWindow = new NoticeWindow(dock);
 		dock->setWidget(errorWindow);
 		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
@@ -136,9 +149,9 @@ namespace Kaleidoscope {
 		
 		(*cam_val)[ "type" ] = "Camera";
 		(*cam_val)[ "parent" ] = getMyID();
-		(*cam_val)[ "camera_type" ] = FPS;
-		(*cam_val)[ "rotate_speed" ] = 30.0f;
-		(*cam_val)[ "translate_speed" ] = 0.01f;
+                (*cam_val)[ "camera_type" ] = MAYA;
+                (*cam_val)[ "rotate_speed" ] = .3f;
+                (*cam_val)[ "translate_speed" ] = 0.001f;
 		(*cam_val)[ "target" ][ 0u ] = -1.0f;
 		(*cam_val)[ "target" ][ 1u ] = -1.0f;
 		(*cam_val)[ "target" ][ 2u ] = -1.0f;
@@ -189,6 +202,7 @@ namespace Kaleidoscope {
 	void Device::setMyID( GridsID temp_id ){
                 QMutexLocker lock(&my_id_mutex);
 		my_id = temp_id;
+                getNoticeWindow()->addNotice(4, tr("ID set to")+tr(temp_id.c_str()));
 	}
 	
 	GridsID Device::getMyRoom() {

@@ -12,11 +12,10 @@ namespace Kaleidoscope
 	}	
 
 	void CursorController::setPosition( float xScale, float yScale ) {
-		widget->cursor().setPos(widget->mapToGlobal(QPoint((int)(xScale*widget->width()),
-												 (int)(yScale*widget->height()))));
+            widget->cursor().setPos(widget->mapToGlobal(QPoint((int)(xScale*(widget->width())), (int)(yScale*(widget->height())))));
 	}
 	
-	void CursorController::setToCenter() {
+        void CursorController::setToCenter() {
 		setPosition( 0.5f, 0.5f );
 	}
 	
@@ -41,11 +40,11 @@ namespace Kaleidoscope
 	}
 	
 	void CursorController::hideCursor() {
-		d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
+                d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
 	}
 	
 	void CursorController::showCursor() {
-		d->app->setOverrideCursor(QCursor(Qt::ArrowCursor));
+                d->app->restoreOverrideCursor();
 	}
 
 } // end namespace Kaleidoscope

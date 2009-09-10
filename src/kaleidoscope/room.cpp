@@ -21,6 +21,7 @@ namespace Kaleidoscope {
 	}
 	
 	void Room::draw( Device* d ){
+            //std::cerr << "Draw\n";
 		glDraw( d );
 	}
 	

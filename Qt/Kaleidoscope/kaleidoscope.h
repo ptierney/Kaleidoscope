@@ -19,10 +19,18 @@ public:
     ~Kaleidoscope();
 
     QSize sizeHint() const;
+    void createActions();
+    void createMenus();
+
+private slots:
+    void init();
 
 private:
     Ui::Kaleidoscope *ui;
     Kal::Device* d;
+
+    QAction* initAct;
+    QMenu* gridsMenu;
 };
 
 } // end namespace Kaleidoscope

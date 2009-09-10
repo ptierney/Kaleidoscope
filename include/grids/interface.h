@@ -27,7 +27,7 @@ namespace Grids{
 		bool isConnected();
 		
 		void requestCreateRoom();
-		GridsID createMyRoom( int timeout );
+                void createMyRoom();
 
 		GridsID requestCreateObject(Value* object_attr );		
 		GridsID requestCreateObject(Value* object_attr, Vec3D pos );		
@@ -56,6 +56,8 @@ namespace Grids{
 	signals:
 		void error(int, QString);
 		void notice(int, QString);
+                void gridsConnectionEstablished();
+                void myRoomCreated(GridsID);
 
 	private:
 		void init();

@@ -28,33 +28,37 @@ namespace Grids {
 
 	// Spawns new Protocol and network listening thread
 	// This call will hang if there is no connection to the internet
-	void Interface::init(){				
+        void Interface::init(){
+            connect(this, SIGNAL(gridsConnectionEstablished()),
+                    d, SLOT(gridsConnectionEstablished()));
+
+            connect(this, SIGNAL(myRoomCreated(GridsID)),
+                    d, SLOT(myRoomCreated(GridsID)));
+
 		connected = 0;
-		proto = new Protocol();
+                proto = new Protocol(this);
+                std::cerr << "Created Protocol\n";
 		
 		connect(proto, SIGNAL(protocolInitiated(Event*)),
 			   this, SLOT(protocolInitiated(Event*)));
 		connect(proto, SIGNAL(receiveEvent(Event*)),
 			   this, SLOT(parseEvent(Event*)));
+
+                proto->runEventLoopThreaded();
+                std::cerr << "Running Event Loop\n";
 	
 		proto->connectToNode( server_address.c_str() );
-		proto->runEventLoopThreaded();
-
-		while( !isConnected() ){
-			emit notice(4, tr("Connecting to server."));
-			sleep( 1 );
-		}
+                std::cerr << "Connected to Node\n";
 	}
 	
 	Interface::~Interface(){
 		proto->closeConnection();		
-		proto->stopEventLoopThread();
-		
-		delete proto;		
+		proto->stopEventLoopThread();		
 	}
 	
 	void Interface::protocolInitiated(Event* in_event){
 		setConnected(1);
+                emit gridsConnectionEstablished();
 	}
 	
 	void Interface::parseEvent( Event* evt ){
@@ -90,24 +94,11 @@ namespace Grids {
 		proto->sendRequest( GRIDS_CREATE_ROOM, &msg );			
 	} 
 	
-	GridsID Interface::createMyRoom( int timeout ) {
-		if( !(getMyRoom().empty()) ){
-			return getMyRoom();
-		}
-		
+        void Interface::createMyRoom() {
+                if(!(getMyRoom().empty()))
+                    return;
+
 		requestCreateRoom();
-		
-		int wait_secs = 0;
-		
-		while( wait_secs < timeout ){
-			if( !(getMyRoom().empty()) )
-				return getMyRoom();
-			emit notice(4, tr("Attempting to create room."));
-			sleep( 1 );
-			wait_secs++;
-		}
-		
-		return std::string();
 	}
 
 	// By default this creates an object in your room
@@ -209,11 +200,13 @@ namespace Grids {
 
 	void Interface::registerNewRoom( Kal::Room* rm ){
 		GridsID rm_id = rm->getID();
+                bool my_room_created = 0;
 		
 		// Make my room the first available room
 		if( my_room.empty() ){
 			QMutexLocker my_room_lock(&my_room_mutex);
 			my_room = rm_id;
+                        my_room_created = 1;
 		}
 		
 		bool in_vector = 0;
@@ -227,6 +220,9 @@ namespace Grids {
 			QMutexLocker known_lock(&known_rooms_mutex);
 			known_rooms.push_back( rm_id );
 		}
+
+                if(my_room_created)
+                    emit myRoomCreated(rm_id);
 	}
 	
 

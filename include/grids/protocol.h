@@ -44,6 +44,9 @@ namespace Grids {
 
 		// last_event is mainly used for testing 
 		Event* last_event;
+
+        public slots:
+                void gridsRead();
 	
 	signals:
 		void receiveEvent(Event*);
@@ -53,7 +56,7 @@ namespace Grids {
 		void run();
 
 	private:
-		QTcpSocket sock;
+                QTcpSocket* sock;
 		QMutex finishedMutex;
 		QMutex eventLoopRunningMutex;
 		bool running;

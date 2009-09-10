@@ -14,15 +14,21 @@ namespace Grids {
 		: QThread(parent) {
 		running = 0; // Normally has mutex, but we're not using multiple threads yet
 		last_event = 0;
+
+                sock = new QTcpSocket(this);
+
+                 connect(sock, SIGNAL(readyRead()),
+                        this, SLOT(gridsRead()));
 	}
 
 	Protocol::~Protocol() {
+            delete sock;
 	}
 
 	bool Protocol::connectToNode(const char *address) {
-		sock.connectToHost(tr(address), GRIDS_PORT);
+		sock->connectToHost(tr(address), GRIDS_PORT);
 
-		if (!sock.waitForConnected(5000)){
+		if (!sock->waitForConnected(5000)){
 			printf("Failed to connect to host\n");
 			return 0;
 		}
@@ -76,7 +82,7 @@ namespace Grids {
 		memcpy(outstr, &net_len, 4);
 		memcpy((outstr + 4), str, len);
 
-		unsigned int ret = sock.write(outstr, outstr_len);
+		unsigned int ret = sock->write(outstr, outstr_len);
 		free(outstr);
 
 		if (ret != outstr_len) {
@@ -88,7 +94,7 @@ namespace Grids {
 	}
 
 	void Protocol::closeConnection() {
-		sock.close();
+		sock->close();
 	}
 
 	// fast(?) version of turning a Grids::Value into a string
@@ -144,97 +150,94 @@ namespace Grids {
 	  }
 	*/
 
-	void Protocol::run() {
+	void Protocol::gridsRead() {
+            std::cerr << "gridsRead\n";
 		int socketReady;
 		qint64 bytesRead;
 		quint32 incomingLength;
 		char *buf;
 		char *bufIncoming;
 		
-		while ( getEventLoopRunning() && sockConnected()) {
+		// Wait for more data if we don't have the length
+		if(sock->bytesAvailable() < 4)
+			return;
 
-			socketReady = sock.waitForReadyRead(1000);
-			std::cerr << "socket" << std::endl;
+		bytesRead = sock->read((char*)(&incomingLength), 4);
 
-			if (socketReady == 0) {
-				// nothing to read, or an error
-				continue;
-			}
+		if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
+			endianSwap(incomingLength);
 
-			// read in 4 byte length of message
-			// TODO: check endianness
-			bytesRead = sock.read((char*)(&incomingLength), 4);
-
-			if( QSysInfo::ByteOrder == QSysInfo::LittleEndian)
-				endianSwap(incomingLength);
-
-			if (bytesRead <= 0) {
-				std::cerr << "Socket read error\n";
-				return;
-			}
-
-			if (bytesRead != 4) {
-				// socket broken most likely
-				std::cerr << "failed to read from socket\n";
-				// break;
-				continue;
-			}
-
-			if (incomingLength > 1024 * 1024 * 1024) {
-				// not going to read in more than a gig, f that
-				std::cerr << "Got incoming message size: " << incomingLength << ". Skipping\n";
-				continue;
-			}
-
-			// TODO: run in seperate thread
-
-			// allocate space for incoming message + null byte
-			buf = (char *)malloc(incomingLength + 1);
-
-			quint32 bytesRemaining = incomingLength;
-			bufIncoming = buf;
-
-			do {
-				bytesRead = sock.read(bufIncoming, bytesRemaining);
-
-				if (bytesRead > 0) {
-					bytesRemaining -= bytesRead;
-					bufIncoming += bytesRead;
-				}
-
-			} while ((bytesRead > 0) && bytesRemaining);
-			buf[incomingLength] = '\0';
-
-			if (bytesRead == -1) {
-				// o snap read error
-				std::cerr << "Socket read error: " << bytesRead << "\n";
-				free(buf);
-				break;
-			}
-
-			if (bytesRead == 0) {
-				// not chill
-				std::cerr << "Didn't read any data when expecting message of " << incomingLength << " bytes\n";
-				free(buf);
-				continue;
-			}
-
-			if (bytesRead != incomingLength) {
-				std::cerr << "Only read " << bytesRead << " bytes when expecting message of "
-						<< incomingLength << " bytes\n";
-				free(buf);
-				continue;
-			}
-
-			// TODO: run in seperate thread
-			std::string msg = buf;
-			handleMessage(msg);		
-	   
-			std::cerr << "Freeing buff\n";
-			free(buf);
-			std::cerr << "Freed buff\n";
+		if (bytesRead <= 0) {
+			std::cerr << "Socket read error\n";
+			return;
 		}
+
+		if (bytesRead != 4) {
+			// socket broken most likely
+			std::cerr << "failed to read from socket\n";
+			// break;
+                        return;
+		}
+
+		if (incomingLength > 1024 * 1024 * 1024) {
+			// not going to read in more than a gig, f that
+			std::cerr << "Got incoming message size: " << incomingLength << ". Skipping\n";
+			return;
+		}
+
+		// TODO: run in seperate thread
+
+		// allocate space for incoming message + null byte
+		buf = (char *)malloc(incomingLength + 1);
+
+		quint32 bytesRemaining = incomingLength;
+		bufIncoming = buf;
+
+		do {
+			bytesRead = sock->read(bufIncoming, bytesRemaining);
+
+			if (bytesRead > 0) {
+				bytesRemaining -= bytesRead;
+				bufIncoming += bytesRead;
+			}
+
+		} while ((bytesRead > 0) && bytesRemaining);
+		buf[incomingLength] = '\0';
+
+		if (bytesRead == -1) {
+			// o snap read error
+			std::cerr << "Socket read error: " << bytesRead << "\n";
+			free(buf);
+                        return;
+		}
+
+		if (bytesRead == 0) {
+			// not chill
+			std::cerr << "Didn't read any data when expecting message of " << incomingLength << " bytes\n";
+			free(buf);
+                        return;
+		}
+
+		if (bytesRead != incomingLength) {
+			std::cerr << "Only read " << bytesRead << " bytes when expecting message of "
+					<< incomingLength << " bytes\n";
+			free(buf);
+                        return;
+		}
+
+		// TODO: run in seperate thread
+		std::string msg = buf;
+		handleMessage(msg);
+
+		std::cerr << "Freeing buff\n";
+		free(buf);
+		std::cerr << "Freed buff\n";
+
 	}
+
+	void Protocol::run() {
+            exec();
+        }
 
 	void Protocol::handleMessage(std::string &msg) {
 		if (msg.size() < 2) return; // obv. bogus
@@ -243,7 +246,8 @@ namespace Grids {
 
 		if (msg.find("==", 0, 2) == 0) {
 			// protocol initiation message
-			emit protocolInitiated(NULL);
+                    std::cerr << "Grids session initiated\n";
+                    emit protocolInitiated(NULL);
 		} else if (msg.find("--", 0, 2) == 0) {
 			// encrypted protocol message
 		} else {
@@ -298,13 +302,12 @@ namespace Grids {
 	}
 
 	bool Protocol::sockConnected(){
-		return (sock.state() == QAbstractSocket::ConnectedState);
+		return (sock->state() == QAbstractSocket::ConnectedState);
 	}
 
 
 	int Protocol::runEventLoopThreaded() {
 		if(!isRunning()){
-			setEventLoopRunning(1);
 			start(NormalPriority);
 			return 0;
 		} else {
@@ -313,10 +316,8 @@ namespace Grids {
 	}
 
 	void Protocol::stopEventLoopThread() {
-		if(isRunning()) {
-			setEventLoopRunning( 0 );
-			wait();
-		}
+                if(isRunning())
+                        quit();
 	}
 
 

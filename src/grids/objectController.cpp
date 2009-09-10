@@ -49,7 +49,7 @@ namespace Grids {
 		bool found = 0;
 		
 		if( type == "Camera" ){
-			registerCamera( new_id, evt );
+                        d->registerCamera(evt->getArgsPtr());
 			found = 1;
                 } /*else if( type == "SpaceText" ) {
 			new Kal::SpaceText( d, evt->getArgsPtr() );
@@ -64,7 +64,8 @@ namespace Grids {
 	}
 	
 	void ObjectController::registerCamera( GridsID new_id, Event* evt ){
-		d->registerCamera(evt);
+            // Each camera is created inside of a new window, therefore the device must
+            // create the camera.
 	}
 
 	void ObjectController::updateObjectPosition( GridsID in_id, Vec3D pos ){

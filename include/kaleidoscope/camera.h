@@ -5,6 +5,7 @@
 #include <grids/define.h>
 #include <kaleidoscope/object.h>
 #include <QGLWidget>
+#include <QTimer>
 
 namespace Kaleidoscope {
         class CursorController;
@@ -14,14 +15,16 @@ namespace Kaleidoscope {
 
 	public:
 		Camera(Device*, Grids::Value*, QWidget* parent = 0);
+                ~Camera();
+                QSize sizeHint() const;
 
 		void doMovement(QKeyEvent*, QMouseEvent*, QWheelEvent*);
 		
 		// Changes the camera from FPS to Maya and vice versa
 		void swapCameraType();
 
-		void setPerspective( Device*, float, float, float, float );
-		void callGluLookAt(Device*);
+                void setPerspective(float, float, float, float );
+                void callGluLookAt();
 		void setTarget( Vec3D );
 		void setUp( Vec3D );
 		void setType( int );
@@ -31,10 +34,13 @@ namespace Kaleidoscope {
 		Vec3D getCenterOfRotation();
 		int getType();
 		
-		void draw(Device* );
+                void draw(Device*);
 		
-		void resizeScene(Device*, unsigned int new_width, unsigned int new_height);
+                void resizeScene(unsigned int new_width, unsigned int new_height);
 		void lookAtPoint( Vec3D );
+
+                void initializeGL();
+                void resizeGL(int, int);
 
 	public slots:
 		// The primary camera, uses the first 3 slots exclusively
@@ -59,7 +65,7 @@ namespace Kaleidoscope {
 		void paintEvent(QPaintEvent*);		
 		void keyPressEvent(QKeyEvent*);
                 void mousePressEvent(QMouseEvent*);
-                void mouseReleasedEvent(QMouseEvent*);
+                void mouseReleaseEvent(QMouseEvent*);
 		void mouseMoveEvent(QMouseEvent*);
 		void wheelEvent(QWheelEvent*);
 		
@@ -84,6 +90,7 @@ namespace Kaleidoscope {
 		float z_far;				
 		int last_animation_time;
 		bool mouse_pressed;
+                int mouse_button;
 
 		bool translating;
 		bool rotating;
@@ -95,6 +102,8 @@ namespace Kaleidoscope {
 		Vec3D center_of_rotation;
 		Vec3D target_normal;
 		Vec2D cursor_save;
+
+                QTimer animation_timer;
 
                 QMutex angle_mutex;
                 QMutex speed_mutex;

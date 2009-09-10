@@ -2,12 +2,14 @@
 #pragma once
 
 #include <kaleidoscope/define.h>
+#include <grids/define.h>
 #include <vector>
 #include <QMainWindow>
 #include <QApplication>
 #include <QCursor>
 #include <QTime>
 #include <QMutex>
+#include <QObject>
 
 namespace Grids{
 	class ObjectController;
@@ -25,11 +27,14 @@ namespace Kaleidoscope {
 	class Console;
         class SpaceRenderer;
 
-	class Device {
+        class Device : public QObject {
+            Q_OBJECT
+
 	public:
-		Device(QApplication*, QMainWindow*);
+                Device(QApplication*, QMainWindow*);
 		~Device();
-		
+
+                void init();
 		Grids::ObjectController* getObjectController();
 		Grids::Interface* getInterface();
 		Grids::Utility* getGridsUtility();
@@ -38,7 +43,7 @@ namespace Kaleidoscope {
                 SpaceRenderer* getRenderer();
                 SpaceRenderer* renderer;
                 Camera* getCamera();
-                void registerCamera(Grids::Event*);
+                void registerCamera(Grids::Value*);
 
 		bool getRunning();
 		void setRunning( bool );
@@ -67,6 +72,10 @@ namespace Kaleidoscope {
 		Camera* main_camera;
 		QApplication* app;
 
+        public slots:
+                void gridsConnectionEstablished();
+                void myRoomCreated(GridsID);
+
 	private:
 		Grids::ObjectController* object_controller;
 		Grids::Interface* interface;
@@ -79,7 +88,7 @@ namespace Kaleidoscope {
 		NoticeWindow* errorWindow;
 
                 void createObjects();
-                void init();
+
 		void loadRoom();
                 void requestCreateCamera();
 		// The three main starting boxes

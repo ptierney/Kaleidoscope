@@ -80,5 +80,6 @@ HEADERS += kaleidoscope.h \
     ../../src/json/json_batchallocator.h \
     ../../include/kaleidoscope/spaceObject.h \
     ../../include/kaleidoscope/spaceText.h \
-    ../../include/kaleidoscope/text.h
+    ../../include/kaleidoscope/text.h \
+    ui_kaleidoscope.h
 FORMS += kaleidoscope.ui

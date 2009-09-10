@@ -24,27 +24,28 @@ namespace Kaleidoscope {
 		void unlockGL();
 		QMutex* getGLMutex();
 
+                void prepareWindow();
+                void prepareRender1();
+                void prepareRender2();
+                void finishRender();
+
+                void setTextureOn( bool );
+                void setLightOn( bool );
+                void setAlphaAdd( bool );
+                void setBlendOn( bool );
+                void setFilteringOn( bool );
+                void setSmoothOn( bool );
+
 		friend class Camera;
 		friend class Device;
 
 	private:
-		void prepareWindow();
-		void prepareRender();
-		void finishRender();
-
 		//void resizeScene(Device*, unsigned int new_width, unsigned int new_height);
 		void renderGui();
 
 		void initVars();
 		void loadLights();
 		void loadTextModes();
-		
-		void setTextureOn( bool );
-		void setLightOn( bool );
-		void setAlphaAdd( bool );
-		void setBlendOn( bool );
-		void setFilteringOn( bool );
-		void setSmoothOn( bool );
 
 		bool Texture_On;
                 bool Light_On;
