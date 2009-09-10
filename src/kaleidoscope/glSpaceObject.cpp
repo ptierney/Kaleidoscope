@@ -2,9 +2,8 @@
 #include <kaleidoscope/glSpaceObject.h>
 #include <kaleidoscope/spaceObject.h>
 #include <kaleidoscope/device.h>
-#include <kaleidoscope/osWindow.h>
-#include <kaleidoscope/renderer.h>
-#include <QGL>
+#include <kaleidoscope/spaceRenderer.h>
+#include <QtOpenGL>
 
 namespace Kaleidoscope {
 
@@ -21,8 +20,7 @@ namespace Kaleidoscope {
 	}
 
 	void GLSpaceObject::glDraw( Device* d ){
-
-		d->getOSWindow()->getRenderer()->lockGL();
+                d->getRenderer()->lockGL();
 		glPushMatrix();
 
 		Vec3D abs_pos = getPosition();
@@ -41,19 +39,19 @@ namespace Kaleidoscope {
 				abs_scl.Y,
 				abs_scl.Z );
 		
-		d->getOSWindow()->getRenderer()->unlockGL();
+                d->getRenderer()->unlockGL();
 		
 		lockAttr();
 		glDrawGeometry(d);
 		unlockAttr();
 		
-		d->getOSWindow()->getRenderer()->lockGL();
+                d->getRenderer()->lockGL();
 		glPopMatrix();
-		d->getOSWindow()->getRenderer()->unlockGL();
+                d->getRenderer()->unlockGL();
 	}
 
 	void GLSpaceObject::glDrawGeometry( Device* d ){
-		d->getOSWindow()->getRenderer()->lockGL();
+                d->getRenderer()->lockGL();
 		
 		// Draw Room Lines
 		if( !( attr[ "lines" ] ) == false )
@@ -193,7 +191,7 @@ namespace Kaleidoscope {
 				glEnd();						
 			} // end if Triangles exists	
 		
-		d->getOSWindow()->getRenderer()->unlockGL();
+                d->getRenderer()->unlockGL();
 	}
 
 } // end namespace Kaleidoscope

@@ -1,8 +1,8 @@
 
 #include <kaleidoscope/cursorController.h>
-#include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/device.h>
 #include <QWidget>
+#include <QMouseEvent>
 
 namespace Kaleidoscope
 {
@@ -21,13 +21,13 @@ namespace Kaleidoscope
 	}
 	
 	int CursorController::getMouseX() {
-		return widget->mapFromGlobal(QPoint(widget->cursor()->pos()->x(),
-									 widget->cursor()->pos()->y()))->x();
+                return widget->mapFromGlobal(QPoint(widget->cursor().pos().x(),
+                                                                         widget->cursor().pos().y())).x();
 	}
 
 	int CursorController::getMouseY() {
-		return widget->mapFromGlobal(QPoint(widget->cursor()->pos()->x(),
-									 widget->cursor()->pos()->y()))->y();
+                return widget->mapFromGlobal(QPoint(widget->cursor().pos().x(),
+                                                                         widget->cursor().pos().y())).y();
 	}
 	
 	Vec2D CursorController::getRelativePosition() {

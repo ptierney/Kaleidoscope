@@ -4,7 +4,7 @@
 #include <grids/define.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/settings.h>
-#include <kaleidoscope/renderer.h>
+#include <kaleidoscope/spaceRenderer.h>
 #include <grids/interface.h>
 #include <iostream>
 

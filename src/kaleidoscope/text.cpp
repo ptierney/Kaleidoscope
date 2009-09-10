@@ -9,7 +9,6 @@ namespace Kaleidoscope {
 
 	Text::Text() {
 		// TTF_Init() called in OSWindow constructor, after setting up SDL
-		text_mutex = SDL_CreateMutex();
 		text_surface = 0;
 		text_font = 0;
 
@@ -17,20 +16,13 @@ namespace Kaleidoscope {
 	}
 	
 	Text::~Text() {
-		// TTF_Quit() called in OSWindow destructor
-		if( text_font )
-			TTF_CloseFont( text_font );
 	}
 	
 	bool Text::loadFont( std::string font, unsigned int point_size ){
 		if( text_font ){
-			TTF_CloseFont( text_font );
 			text_font = 0;
 		}
 		
-		text_font = TTF_OpenFont( font.c_str(), point_size );
-		text_font ? Utility::puts( 2, "Loaded font from: ", font ) : Utility::puts( 0, "Could not load font from: ", font ); 
-
 		return text_font ? 1 : 0;
 	}
 
@@ -120,57 +112,11 @@ namespace Kaleidoscope {
 	}
 
 	void Text::setText( std::string new_text ){
-		if( text_surface )
-			SDL_FreeSurface( text_surface );
-		
-		text_surface = 0;
-		text_surface = createSDLTextSurface( new_text, text_font );
-		
-		if( text_surface )
-			text = new_text;
+
 	}
 
 	std::string Text::getText(){
 		return text;
 	}
-
-	SDL_Surface* Text::createSDLTextSurface( std::string in_string, TTF_Font* in_font ){
-		SDL_Surface * new_text_surface_1 = TTF_RenderText_Blended( in_font, in_string.c_str(), text_color );
-
-		// Power of 2 optimization 		
-		int x = 1;
-		while(x < new_text_surface_1->w){
-			x*=2;
-		}
-
-		int y = 1;
-		while(y < new_text_surface_1->h){
-			y*=2;
-		}
-
-		#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-				Uint32 rmask = 0xff000000;
-				Uint32 gmask = 0x00ff0000;
-				Uint32 bmask = 0x0000ff00;
-				Uint32 amask = 0x000000ff;
-		#else
-				Uint32 rmask = 0x000000ff;
-				Uint32 gmask = 0x0000ff00;
-				Uint32 bmask = 0x00ff0000;
-				Uint32 amask = 0xff000000;
-		#endif
-
-		SDL_Surface * new_text_surface_2 = SDL_CreateRGBSurface( SDL_HWSURFACE, x, y, 32, rmask, gmask, bmask, amask);
-		// SDL_HWSURFACE -- create the text in video memory
-		// SDL_SWSURFACE -- create the text in system memory
-
-		SDL_SetAlpha( new_text_surface_1, 0, 0);
-
-		SDL_BlitSurface(new_text_surface_1, 0, new_text_surface_2, 0);
-		//SDL_FreeSurface( new_text_surface_1 );
-		SDL_FreeSurface( new_text_surface_2 );
-		return new_text_surface_1;
-	}
-
 
 } // end namespace Kaleidoscope

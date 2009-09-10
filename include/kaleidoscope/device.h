@@ -13,17 +13,17 @@ namespace Grids{
 	class ObjectController;
 	class Interface;
 	class Utility;
+        class Event;
 }
 
 namespace Kaleidoscope {
 	class Room;
-	class OSWindow;
 	class EventController;
 	class Camera;
 	class Settings;
 	class NoticeWindow;
 	class Console;
-	class Renderer;
+        class SpaceRenderer;
 
 	class Device {
 	public:
@@ -35,8 +35,10 @@ namespace Kaleidoscope {
 		Grids::Utility* getGridsUtility();
 		EventController* getEventController();
 		Settings* getSettings();
-                Renderer* getRenderer();
-		Renderer* renderer;
+                SpaceRenderer* getRenderer();
+                SpaceRenderer* renderer;
+                Camera* getCamera();
+                void registerCamera(Grids::Event*);
 
 		bool getRunning();
 		void setRunning( bool );
@@ -46,7 +48,10 @@ namespace Kaleidoscope {
 		void setMyRoom(GridsID);
 		int getTicks();
 		NoticeWindow* getNoticeWindow();
-		NoticeWindow* getErrowWindow();
+                NoticeWindow* getErrorWindow();
+                void registerNotice(QObject*);
+                void registerError(QObject*);
+                void createSpaceRenderer();
 
 		QMainWindow* main_window;
 		// Cameras vs Renderers:
@@ -73,9 +78,10 @@ namespace Kaleidoscope {
 		NoticeWindow* noticeWindow;
 		NoticeWindow* errorWindow;
 
-		void createObjects( unsigned int, unsigned int );
-		void init( unsigned int, unsigned int );
+                void createObjects();
+                void init();
 		void loadRoom();
+                void requestCreateCamera();
 		// The three main starting boxes
 		void createMainCamera();
 		void createConsole();

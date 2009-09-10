@@ -8,12 +8,11 @@ namespace Kaleidoscope {
 
 	class EventController : public QWidget {
 		Q_OBJECT
-
 	public:
 		EventController(Device*, QWidget* parent = 0);
 
 	protected:
-		keyPressEvent(QKeyEvent*);
+                void keyPressEvent(QKeyEvent*);
 		
 	private:
 		Device* d;

@@ -27,11 +27,7 @@ SOURCES += main.cpp \
     ../../src/grids/object.cpp \
     ../../src/grids/interface.cpp \
     ../../src/grids/event.cpp \
-    ../../src/grids/protocol.cpp \
-    ../../src/grids/objectController.cpp \
-    ../../src/grids/object.cpp \
-    ../../src/grids/interface.cpp \
-    ../../src/grids/event.cpp
+    ../../src/kaleidoscope/spaceRenderer.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -65,5 +61,6 @@ HEADERS += kaleidoscope.h \
     ../../include/grids/event.h \
     ../../include/grids/dimension2d.h \
     ../../include/grids/define.h \
-    ../../include/grids/aabbox3d.h
+    ../../include/grids/aabbox3d.h \
+    ../../include/kaleidoscope/spaceRenderer.h
 FORMS += kaleidoscope.ui

@@ -12,11 +12,11 @@ namespace Kaleidoscope {
 
 namespace Grids{
 
-	class Interface : QObject {
+        class Interface : public QObject {
 		Q_OBJECT
 			public:
-		Interface(Kal::Device*, QObject* parent = 0);
-		Interface(Kal::Device*, std::string in_server, QWidget* parent = 0);
+                Interface(Kal::Device*, QObject* parent = 0);
+                Interface(Kal::Device*, std::string in_server, QObject* parent = 0);
 		~Interface();
 				
 		std::string getServer();

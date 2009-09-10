@@ -2,6 +2,7 @@
 #pragma once
 
 #include <kaleidoscope/object.h>
+#include <kaleidoscope/camera.h>
 #include <QGLWidget>
 
 namespace Kaleidoscope {
@@ -15,23 +16,24 @@ namespace Kaleidoscope {
 	public:
 		SpaceRenderer(Device*, Grids::Value*);	
 		
-		void renderAll( Device* );
+		void renderAll();
 		
-		void draw( Device* );
+                void draw(Device*);
 		
 		void lockGL();
 		void unlockGL();
 		QMutex* getGLMutex();
 
-		friend class OSWindow;
+		friend class Camera;
 		friend class Device;
 
 	private:
-		void prepareWindow( Device* );
-		void prepareRender(Device*);
-		void finishRender(Device*);
+		void prepareWindow();
+		void prepareRender();
+		void finishRender();
+
 		//void resizeScene(Device*, unsigned int new_width, unsigned int new_height);
-		void renderGui( Device* );		
+		void renderGui();
 
 		void initVars();
 		void loadLights();
@@ -45,11 +47,11 @@ namespace Kaleidoscope {
 		void setSmoothOn( bool );
 
 		bool Texture_On;
-          bool Light_On;
-          bool Alpha_Add;
-          bool Blend_On;
-          bool Filtering_On;
-          bool Smooth_On;
+                bool Light_On;
+                bool Alpha_Add;
+                bool Blend_On;
+                bool Filtering_On;
+                bool Smooth_On;
 		
 		float Light_Ambient[4];
 		float Light_Diffuse[4];
@@ -62,11 +64,11 @@ namespace Kaleidoscope {
 
 		int current_text_mode;
 		std::string text_mode_string[4];
-          GLint text_modes[4];
+                GLint text_modes[4];
 
 		// Debug Functions
-		void prepareText( Device* );
-		void finishText( Device* );
+                void prepareText();
+                void finishText();
 	};
 
 } // end namespace Kaleidoscope

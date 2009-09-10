@@ -2,6 +2,8 @@
 #pragma once
 
 #include <kaleidoscope/define.h>
+#include <QWidget>
+#include <QMouseEvent>
 
 namespace Kaleidoscope {
 	class Device;
@@ -15,8 +17,11 @@ namespace Kaleidoscope {
 		void setToCenter();
 		
 		Vec2D getRelativePosition();
+                Vec2D getRelativePosition(QMouseEvent*);
 		int getMouseX();
 		int getMouseY();
+                void hideCursor();
+                void showCursor();
 
 	private:	
 		int mouse_x;

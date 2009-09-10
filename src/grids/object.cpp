@@ -1,6 +1,7 @@
 
 #include <grids/object.h>
 #include <kaleidoscope/device.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
 #include <iostream>
@@ -17,12 +18,6 @@ namespace Grids {
 
 		setInitialPositions( in_value );
 		setAttrFromValue( in_value );
-		
-		d->getNoticeWindow()->connect(this, SIGNAL(notice(int, QString)),
-								d->getNoticeWindow(), SLOT(addNotice(int, QString)));
-
-		d->getErrorWindow()->connect(this, SIGNAL(error(int, QString)),
-							    d->getErrorWindow(), SLOT(addNotice(int, QString)));
 	}
 
 	GridsID Object::getID() {
@@ -31,7 +26,7 @@ namespace Grids {
 	}
 	
 	GridsID Object::getRoom() {
-		QMuteLocker lock(&id_mutex);
+                QMutexLocker lock(&id_mutex);
 		return obj_room;
 	}
 
@@ -40,7 +35,7 @@ namespace Grids {
 
 		Object* temp_parent = getParent();
 				
-		if( temp_parent )
+                if(temp_parent)
 			parents_position = temp_parent->getPosition( );
 				
 		return getLocalPosition() + parents_position;

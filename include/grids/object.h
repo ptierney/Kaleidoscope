@@ -11,6 +11,7 @@
 namespace Kaleidoscope {
   class Device;
   class Camera;	 
+  class NoticeWindow;
 }
 
 namespace Grids{

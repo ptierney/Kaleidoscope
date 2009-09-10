@@ -1,5 +1,4 @@
 
-
 #include <grids/interface.h>
 #include <grids/utility.h>
 #include <grids/objectController.h>
@@ -59,7 +58,7 @@ namespace Grids {
 	}
 	
 	void Interface::parseEvent( Event* evt ){
-		QMutexLocker(&parse_event_mutex);
+                QMutexLocker lock(&parse_event_mutex);
 
 		std::string event_type = evt->getEventType();
 		Grids::GridsID object_id = evt->getID();

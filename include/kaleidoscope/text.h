@@ -1,18 +1,6 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
-
-#if defined(__MACOSX__)
-#include <SDL_ttf/SDL_ttf.h>
-#else
-#include <SDL/SDL_ttf.h>
-#endif
-
-#include <SDL/SDL_thread.h>
-// Included for SDL_Color
-#include <SDL/SDL_video.h>
-#include <SDL/SDL_opengl.h>
 #include <string>
 #include <grids/define.h>
 
@@ -44,15 +32,9 @@ namespace Kaleidoscope {
 		void billboardEnd();
 
 		void clearText( Device *, int, int );
-		SDL_Surface* createSDLTextSurface( std::string in_string, TTF_Font* in_font );		
 
-		SDL_Surface* text_surface;
-		TTF_Font* text_font;
-		GLuint texture;
-		SDL_Color text_color;
 
-	private:
-		SDL_mutex* text_mutex; 
+	private: 
 		std::string text;
 		
 	};

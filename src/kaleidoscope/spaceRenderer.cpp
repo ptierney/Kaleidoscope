@@ -1,19 +1,18 @@
 
-#include <kaleidoscope/renderer.h>
-#include <kaleidoscope/osWindow.h>
+#include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/device.h>
 #include <iostream>
 
 namespace Kaleidoscope {
 
-	SpaceRenderer::Renderer(Device* dev, Grids::Value* val)
+        SpaceRenderer::SpaceRenderer(Device* dev, Grids::Value* val)
 		: Object(dev, val) {
 		d = dev;
 		initVars();
 	}
 
-	void SpaceRenderer::draw() {
+        void SpaceRenderer::draw(Device* in_d) {
 		/*glBegin( GL_LINES );
 		glColor4f( 1.f, 1.f, 1.f, 1.f );
 		glVertex3f( 0.f, 0.f, 0.f );
@@ -23,7 +22,7 @@ namespace Kaleidoscope {
 
 	void SpaceRenderer::renderAll() {
 		prepareRender();
-		drawAll();
+                drawAll(d);
 		renderGui();
 		finishRender();
 	}
@@ -100,7 +99,7 @@ namespace Kaleidoscope {
 		Smooth_On = in_bool; 
 	}
 
-	void SpaceRenderer::prepareWindow( Device* d ){
+        void SpaceRenderer::prepareWindow(){
 		lockGL();
 
 		// Color to clear color buffer to.
@@ -197,7 +196,7 @@ namespace Kaleidoscope {
 		
 		unlockGL();
 
-		Camera* temp_cam = d->getOSWindow()->getCamera(); 
+                Camera* temp_cam = d->getCamera();
           if( temp_cam )
 			temp_cam->callGluLookAt( d );
 
@@ -237,7 +236,7 @@ namespace Kaleidoscope {
 		unlockGL();
 	}
 
-	void SpaceRenderer::finishText( Device * d ) {
+        void SpaceRenderer::finishText() {
 		lockGL();
 		
 		glPopMatrix();

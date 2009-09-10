@@ -2,13 +2,12 @@
 #include <kaleidoscope/camera.h>
 #include <grids/object.h>
 #include <kaleidoscope/device.h>
-#include <kaleidoscope/osWindow.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/eventController.h>
-#include <kaleidoscope/renderer.h>
+#include <kaleidoscope/spaceRenderer.h>
 #include <grids/irrMath.h>
 #include <iostream>
-#include <QGL>
+#include <QtOpenGL>
 
 namespace Kaleidoscope {
 
@@ -69,8 +68,6 @@ namespace Kaleidoscope {
 	}
 	
 	void Camera::parseAttr( Grids::Value* val ){
-		lock();
-
 		Vec3D temp_target = Vec3D( (*val)[ "target" ][ 0u ].asDouble(), 
 							  (*val)[ "target" ][ 1u ].asDouble(),
 							  (*val)[ "target" ][ 2u ].asDouble() ).normalize() + getPosition();
@@ -82,24 +79,26 @@ namespace Kaleidoscope {
 				    (*val)[ "up" ][ 1u ].asDouble(),
 				    (*val)[ "up" ][ 2u ].asDouble() ) );
 		
+                QMutexLocker type_lock(&type_mutex);
 		type = (*val)[ "camera_type" ].asInt();
 		if( type == FPS )
 			d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
 		else if( type == MAYA )
 			d->app->setOverrideCursor(QCursor(Qt::ArrowCursor));
+                zoom_type = ZOOM_CENTER;
 
+                QMutexLocker speed_lock(&speed_mutex);
 		rotate_speed = (*val)[ "rotate_speed" ].asDouble();
 		translate_speed = (*val)[ "translate_speed" ].asDouble();		
 		move_speed = 1.0f; 
+                zoom_speed = 0.06f;
+                QMutexLocker angle_lock(&angle_mutex);
 		max_vertical_angle = 89.0f;
-		zoom_speed = 0.06f;
+                QMutexLocker cen_lock(&center_mutex);
 		center_of_rotation = Vec3D( 0.0f, 0.0f, 0.0f );
-		zoom_type = ZOOM_CENTER;
 
 		translating = false;
 		rotating = false;
-
-		unlock();
 	}
 
 	void Camera::swapCameraType( ){
@@ -124,7 +123,7 @@ namespace Kaleidoscope {
 			//temp_target += getPosition();
 			//setTarget( temp_target ); 
 			lookAtPoint( getCenterOfRotation() );
-			SDL_ShowCursor( 0 );
+                        d->app->setOverrideCursor(QCursor(Qt::BlankCursor));
 		}
 	}
 	 
@@ -137,7 +136,8 @@ namespace Kaleidoscope {
 		QMutexLocker lock(&type_mutex);
 		type = in_type;
 	}
-	
+
+
 	void Camera::setCenterOfRotation( Vec3D vec ){
 		QMutexLocker lock(&center_mutex);
 		center_of_rotation = vec;
@@ -173,11 +173,11 @@ namespace Kaleidoscope {
 		doMovement(NULL, NULL, event);
 	}
 
-	void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event) {
+        void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
 		if(getType() == FPS)
-			doMovementFPS(k_event, m_event);
+                        doMovementFPS(k_event, m_event, w_event);
 		else if(getType() == MAYA)
-			doMovementMaya(k_event, m_event);
+                        doMovementMaya(k_event, m_event, w_event);
 	}
 
 	void Camera::doMovementFPS(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
@@ -392,13 +392,13 @@ namespace Kaleidoscope {
 
      void Camera::resizeScene( Device * d, unsigned int new_width, unsigned int new_height )
      {
-		d->getOSWindow()->getRenderer()->lockGL();
+        d->getRenderer()->lockGL();
           glViewport(0, 0, new_width, new_height);
 
           glMatrixMode(GL_PROJECTION);
           glLoadIdentity();
 		 
-		d->getOSWindow()->getRenderer()->unlockGL();
+                d->getRenderer()->unlockGL();
 
           // NOTE: It is possible to calulate the exact (most realistic) fovy of a progmam
           // based on the viewer's distance from the screen.  See OpenGL documentation.
@@ -411,9 +411,9 @@ namespace Kaleidoscope {
 
           setPerspective( d, fovy, aspecty, zNear, zFar );
 
-		d->getOSWindow()->getRenderer()->lockGL();
+                d->getRenderer()->lockGL();
           glMatrixMode(GL_MODELVIEW);
-		d->getOSWindow()->getRenderer()->unlockGL();
+                d->getRenderer()->unlockGL();
 
           //d->getOSWindow()->setWidth( new_width );
           //d->getOSWindow()->setHeight( new_height );

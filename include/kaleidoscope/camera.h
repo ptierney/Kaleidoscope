@@ -4,10 +4,12 @@
 #include <kaleidoscope/define.h>
 #include <grids/define.h>
 #include <kaleidoscope/object.h>
+#include <QGLWidget>
 
 namespace Kaleidoscope {
+        class CursorController;
 
-	class Camera : public Object, public QGLWidget {
+        class Camera : public QGLWidget, public Object {
 		Q_OBJECT
 
 	public:
@@ -56,6 +58,8 @@ namespace Kaleidoscope {
 
 		void paintEvent(QPaintEvent*);		
 		void keyPressEvent(QKeyEvent*);
+                void mousePressEvent(QMouseEvent*);
+                void mouseReleasedEvent(QMouseEvent*);
 		void mouseMoveEvent(QMouseEvent*);
 		void wheelEvent(QWheelEvent*);
 		
@@ -91,7 +95,9 @@ namespace Kaleidoscope {
 		Vec3D center_of_rotation;
 		Vec3D target_normal;
 		Vec2D cursor_save;
-		
+
+                QMutex angle_mutex;
+                QMutex speed_mutex;
 		QMutex target_mutex;
 		QMutex up_mutex;
 		QMutex type_mutex;

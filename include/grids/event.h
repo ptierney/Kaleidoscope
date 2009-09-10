@@ -38,7 +38,6 @@ namespace Grids
 	private:
 		std::string event_type;
 		Grids::Value args;
-
 	};
 
 }
