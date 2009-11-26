@@ -61,7 +61,7 @@ void ProtocolTest::connectToNodeTest() {
 	if( state_spy.count() > 0 )
 	  break;
 
-	sleep( 1 );
+        QTest::qSleep(1000);
 	wait_timer++;		
   }
 
@@ -83,7 +83,7 @@ void ProtocolTest::createRoomTest() {
   while( wait_timer < wait_limit) {
 	if( state_spy.count() > 0 )
 	  break;
-	sleep( 1 );
+        QTest::qSleep(1000);
 	wait_timer++;
   }
 
@@ -118,7 +118,7 @@ void ProtocolTest::createObjectTest() {
 		while( wait_timer < wait_limit) {
 		  if( state_spy.count() > 0 )
 				break;
-			sleep( 1 );
+                        QTest::qSleep(1000);
 			wait_timer++;		
 		}
 		
@@ -160,7 +160,7 @@ void ProtocolTest::createObjectWithPosition() {
   while( wait_timer < wait_limit) {
 	if(state_spy.count() > 0)
 	  break;
-	sleep( 1 );
+        QTest::qSleep(1000);
 	wait_timer++;		
   }
 
@@ -198,7 +198,7 @@ void ProtocolTest::createObjectWithID(){
   while( wait_timer < wait_limit) {
 	if( state_spy.count() > 0 )
 	  break;
-	sleep( 1 );
+        QTest::qSleep(1000);
 	wait_timer++;		
   }
 		
@@ -226,7 +226,7 @@ void ProtocolTest::updateObjectTest(){
   while( wait_timer < wait_limit) {
 	if(state_spy.count() > 0)
 	  break;
-	sleep( 1 );
+        QTest::qSleep(1000);
 	wait_timer++;		
   }
 		

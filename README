@@ -1,4 +1,9 @@
 
+Installing Grids Node
+
+Note: run lib/GridsMem, lib/GridsReg before running the main make make install
+
+
 Required Libraries
 
 ** Available as Debian packages ** 
