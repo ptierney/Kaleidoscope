@@ -104,16 +104,16 @@ namespace Kaleidoscope {
 	}
 
 	void Device::createConsole() {
-                QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
-                dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
+		QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
+		dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		console = new Console(dock);
 		dock->setWidget(console);
 		main_window->addDockWidget(Qt::BottomDockWidgetArea, dock);
 	}
 
 	void Device::createNoticeWindow() {
-                QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
-                dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
+		QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
+		dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		noticeWindow = new NoticeWindow(dock);
 		dock->setWidget(noticeWindow);
 		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);

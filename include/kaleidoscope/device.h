@@ -30,20 +30,20 @@ namespace Kaleidoscope {
         class Device : public QObject {
             Q_OBJECT
 
-	public:
-                Device(QApplication*, QMainWindow*);
-		~Device();
+			  public:
+		   Device(QApplication*, QMainWindow*);
+		   ~Device();
 
-                void init();
-		Grids::ObjectController* getObjectController();
-		Grids::Interface* getInterface();
-		Grids::Utility* getGridsUtility();
-		EventController* getEventController();
-		Settings* getSettings();
-                SpaceRenderer* getRenderer();
-                SpaceRenderer* renderer;
-                Camera* getCamera();
-                void registerCamera(Grids::Value*);
+		   void init();
+		   Grids::ObjectController* getObjectController();
+		   Grids::Interface* getInterface();
+		   Grids::Utility* getGridsUtility();
+		   EventController* getEventController();
+		   Settings* getSettings();
+		   SpaceRenderer* getRenderer();
+		   SpaceRenderer* renderer;
+		   Camera* getCamera();
+		   void registerCamera(Grids::Value*);
 
 		bool getRunning();
 		void setRunning( bool );
@@ -53,10 +53,10 @@ namespace Kaleidoscope {
 		void setMyRoom(GridsID);
 		int getTicks();
 		NoticeWindow* getNoticeWindow();
-                NoticeWindow* getErrorWindow();
-                void registerNotice(QObject*);
-                void registerError(QObject*);
-                void createSpaceRenderer();
+		NoticeWindow* getErrorWindow();
+		void registerNotice(QObject*);
+		void registerError(QObject*);
+		void createSpaceRenderer();
 
 		QMainWindow* main_window;
 		// Cameras vs Renderers:
