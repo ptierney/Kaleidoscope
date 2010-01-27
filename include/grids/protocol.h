@@ -30,6 +30,7 @@ namespace Grids {
 		std::string stringifyValue(Value *val);
 		void sendRequest(std::string);
 		void sendRequest(std::string, Value *args);
+		void sendRequestLoopback(std::string, Value *args);
 
 		void handleMessage(std::string &msg);
 	
@@ -51,6 +52,7 @@ namespace Grids {
 	signals:
 		void receiveEvent(Event*);
 		void protocolInitiated(Event*);
+		void rawData(QString);
 
 	protected:
 		void run();

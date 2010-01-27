@@ -4,6 +4,7 @@
 #include <grids/objectController.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/room.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <iostream>
 #include <QTcpSocket>
 #include <QString>
@@ -28,41 +29,47 @@ namespace Grids {
 
 	// Spawns new Protocol and network listening thread
 	// This call will hang if there is no connection to the internet
-        void Interface::init(){
-            connect(this, SIGNAL(gridsConnectionEstablished()),
-                    d, SLOT(gridsConnectionEstablished()));
+	void Interface::init(){
+		connect(this, SIGNAL(gridsConnectionEstablished()),
+			   d, SLOT(gridsConnectionEstablished()));
 
-            connect(this, SIGNAL(myRoomCreated(GridsID)),
-                    d, SLOT(myRoomCreated(GridsID)));
+		connect(this, SIGNAL(myRoomCreated(GridsID)),
+			   d, SLOT(myRoomCreated(GridsID)));
 
 		connected = 0;
-                proto = new Protocol(this);
-                std::cerr << "Created Protocol\n";
+		proto = new Protocol(this);
+		d->getNoticeWindow()->write(0, tr("Created Protocol"));
 		
 		connect(proto, SIGNAL(protocolInitiated(Event*)),
 			   this, SLOT(protocolInitiated(Event*)));
 		connect(proto, SIGNAL(receiveEvent(Event*)),
 			   this, SLOT(parseEvent(Event*)));
+		connect(proto, SIGNAL( rawData(QString)),
+			   this, SLOT( rawReceive(QString)));
 
-                proto->runEventLoopThreaded();
-                std::cerr << "Running Event Loop\n";
-	
 		proto->connectToNode( server_address.c_str() );
-                std::cerr << "Connected to Node\n";
+		d->getNoticeWindow()->write(7, tr("Connected to Node"));
+
+		proto->runEventLoopThreaded();
+		d->getNoticeWindow()->write(0, tr("Running Event Loop"));
 	}
 	
 	Interface::~Interface(){
 		proto->closeConnection();		
 		proto->stopEventLoopThread();		
 	}
+
+	void Interface::rawReceive(QString raw_data){
+		d->getNoticeWindow()->write(1, tr("rec] ") + raw_data);
+	}
 	
 	void Interface::protocolInitiated(Event* in_event){
 		setConnected(1);
-                emit gridsConnectionEstablished();
+		emit gridsConnectionEstablished();
 	}
 	
 	void Interface::parseEvent( Event* evt ){
-                QMutexLocker lock(&parse_event_mutex);
+		QMutexLocker lock(&parse_event_mutex);
 
 		std::string event_type = evt->getEventType();
 		Grids::GridsID object_id = evt->getID();
@@ -90,13 +97,13 @@ namespace Grids {
 	void Interface::requestCreateRoom(){
 		Grids::Value msg;
 		msg["_method"] = GRIDS_CREATE_ROOM;
-				
+
 		proto->sendRequest( GRIDS_CREATE_ROOM, &msg );			
 	} 
 	
-        void Interface::createMyRoom() {
-                if(!(getMyRoom().empty()))
-                    return;
+	void Interface::createMyRoom() {
+		if(!(getMyRoom().empty()))
+			return;
 
 		requestCreateRoom();
 	}
@@ -200,13 +207,13 @@ namespace Grids {
 
 	void Interface::registerNewRoom( Kal::Room* rm ){
 		GridsID rm_id = rm->getID();
-                bool my_room_created = 0;
+		bool my_room_created = 0;
 		
 		// Make my room the first available room
 		if( my_room.empty() ){
 			QMutexLocker my_room_lock(&my_room_mutex);
 			my_room = rm_id;
-                        my_room_created = 1;
+			my_room_created = 1;
 		}
 		
 		bool in_vector = 0;
@@ -221,8 +228,8 @@ namespace Grids {
 			known_rooms.push_back( rm_id );
 		}
 
-                if(my_room_created)
-                    emit myRoomCreated(rm_id);
+		if(my_room_created)
+			emit myRoomCreated(rm_id);
 	}
 	
 

@@ -21,6 +21,7 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/device.cpp \
     ../../src/kaleidoscope/cursorController.cpp \
     ../../src/kaleidoscope/console.cpp \
+    ../../src/kaleidoscope/consoleWindow.cpp \
     ../../src/kaleidoscope/camera.cpp \
     ../../src/grids/protocol.cpp \
     ../../src/grids/objectController.cpp \
@@ -47,6 +48,7 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/define.h \
     ../../include/kaleidoscope/cursorController.h \
     ../../include/kaleidoscope/console.h \
+    ../../include/kaleidoscope/consoleWindow.h \
     ../../include/kaleidoscope/camera.h \
     ../../include/grids/vector3d.h \
     ../../include/grids/vector2d.h \

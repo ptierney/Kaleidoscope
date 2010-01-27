@@ -22,7 +22,8 @@ public:
     void createActions();
     void createMenus();
 
-private slots:
+
+   private slots:
     void init();
 
 private:

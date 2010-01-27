@@ -27,8 +27,12 @@ namespace Grids{
 		bool isConnected();
 		
 		void requestCreateRoom();
-                void createMyRoom();
+		void createMyRoom();
 
+		/* These functions are used to create objects in the world,
+		   with either a default position, a specific position, or position + rotation + scale 
+		   These functions create a GridsID for the object, and returns it so you know how to find the 
+		   object when it is finally created */
 		GridsID requestCreateObject(Value* object_attr );		
 		GridsID requestCreateObject(Value* object_attr, Vec3D pos );		
 		GridsID requestCreateObject(Value* object_attr, Vec3D pos, Vec3D rot, Vec3D scl );		
@@ -51,7 +55,12 @@ namespace Grids{
 
 	public slots:
 		void parseEvent(Event*);
+
+		/* Called when protocol receives the correct init string */
 		void protocolInitiated(Event*);
+
+		/* Slot to pass the raw data received from Grids */
+		void rawReceive(QString);
 	
 	signals:
 		void error(int, QString);

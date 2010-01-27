@@ -15,10 +15,10 @@ namespace Grids {
 		running = 0; // Normally has mutex, but we're not using multiple threads yet
 		last_event = 0;
 
-                sock = new QTcpSocket(this);
+		sock = new QTcpSocket(this);
 
-                 connect(sock, SIGNAL(readyRead()),
-                        this, SLOT(gridsRead()));
+		connect(sock, SIGNAL(readyRead()),
+			   this, SLOT(gridsRead()));
 	}
 
 	Protocol::~Protocol() {
@@ -40,7 +40,7 @@ namespace Grids {
 	}
 
 	void Protocol::sendProtocolInitiationString() {
-		std::string initString = "==Grids/1.0/JSON";
+		std::string initString = "++Grids/1.0/JSON/patrick";
 		protocolWrite(initString);
 	}
 
@@ -108,6 +108,11 @@ namespace Grids {
 	}
 
 	void Protocol::sendRequest(std::string evt, Value *args) {
+		
+		/* Debugging loopback */
+		//sendRequestLoopback( evt, args);
+		//return;
+		
 		if (evt.empty())
 			return;
 
@@ -128,6 +133,27 @@ namespace Grids {
 
 		if (createdVal)
 			delete args;
+	}
+
+
+	void Protocol::sendRequestLoopback( std::string evt, Value* args) {
+		if (evt.empty())
+			return;
+
+		bool createdVal = 0;
+
+		if (args == NULL) {
+			args = new Value();
+
+			createdVal = 1;
+		}
+
+		const static std::string methodkey = "_method";
+		(*args)[methodkey] = evt;
+
+		std::string valueStr = stringifyValue(args);
+		
+		handleMessage(valueStr);
 	}
 
 	/*
@@ -243,6 +269,7 @@ namespace Grids {
 		if (msg.size() < 2) return; // obv. bogus
 
 		std::cerr << "received: " << msg << "\n";
+		emit rawData( tr(msg.c_str()) );
 
 		if (msg.find("==", 0, 2) == 0) {
 			// protocol initiation message

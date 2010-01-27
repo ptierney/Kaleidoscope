@@ -5,16 +5,20 @@
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/spaceRenderer.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <grids/irrMath.h>
 #include <iostream>
 #include <QtOpenGL>
 #include <QtGlobal>
+
 
 namespace Kaleidoscope {
 
 	Camera::Camera(Device* d, Grids::Value* val, QWidget* parent) 
 		: Object(d, val), QGLWidget(parent) {
                 this->d = d;
+			 d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
+
 		parseAttrFromValue(val);
 		last_animation_time = d->getTicks();
 		mouse_pressed = false;
@@ -359,7 +363,7 @@ namespace Kaleidoscope {
                                         controller->setPosition( cursor_save.X, cursor_save.Y );
                                 }
 
-                                std::cerr << "Clearing\n";
+                                //std::cerr << "Clearing\n";
                                 translating = false;
                                 rotating = false;
                                 zooming = false;
@@ -419,7 +423,7 @@ namespace Kaleidoscope {
 					controller->hideCursor();
 				}
 				else {
-                                    std::cerr << "Rotating\n";
+					// std::cerr << "Rotating\n";
 					float offset_x = (cursor_pos.Y - 0.5f) * time_diff * rotate_speed * -0.1f ;
 					float offset_y = (cursor_pos.X - 0.5f) * time_diff * rotate_speed * -0.1f ;
 

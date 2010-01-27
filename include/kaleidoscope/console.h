@@ -1,16 +1,37 @@
 
-
+#pragma once
 
 #include <QWidget>
 
 namespace Kaleidoscope {
 
-	class Console : public QWidget {
-		Q_OBJECT
-	
-		public:
-		// The parent will almost always be the Kaleidoscope::Device
-		Console(QWidget* parent);
+	class Device;
+	class ConsoleWindow;
 
+	class Console : public QObject {
+	Q_OBJECT	
+
+	public:
+	Console(Device* d, QWidget* window_parent) ;
+
+	ConsoleWindow* getConsoleWindow();
+
+	public slots:
+	// This is called by the Console Window when the enter or return key is pressed
+	void newInput();
+	
+	signals:
+	void clearLine();
+	void connectToServer();
+	void disconnectFromServer();
+	void createRoom();
+	void createObject();
+
+	private:
+		Device* d;
+		ConsoleWindow* console_window;
+
+		void parseInput(QString);
 	};
+
 } // end namespace Kaleidoscope

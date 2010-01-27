@@ -8,8 +8,8 @@
 
 #include <string>
 
-#define GRIDS_SERVER "block.hardchats.com"
-#define DEFAULT_SERVER "block.hardchats.com"
+#define GRIDS_SERVER "mmmii.net"
+#define DEFAULT_SERVER "mmmii.net"
 
 #define CALLBACK_SECONDS 10
 #define KALEIDOSCOPE_DEBUG_LEVEL 4

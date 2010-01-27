@@ -49,12 +49,12 @@ namespace Grids {
 		bool found = 0;
 		
 		if( type == "Camera" ){
-                        d->registerCamera(evt->getArgsPtr());
+			d->registerCamera(evt->getArgsPtr());
 			found = 1;
-                } /*else if( type == "SpaceText" ) {
-			new Kal::SpaceText( d, evt->getArgsPtr() );
-			found = 1;
-                }*/
+		} /*else if( type == "SpaceText" ) {
+		    new Kal::SpaceText( d, evt->getArgsPtr() );
+		    found = 1;
+		    }*/
 
 		return found;
 	}

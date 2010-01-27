@@ -25,8 +25,8 @@ void Kaleidoscope::init() {
 }
 
 void Kaleidoscope::createActions() {
-    initAct = new QAction(tr("&Init"),this);
-    connect(initAct, SIGNAL(triggered()), this, SLOT(init()));
+	//initAct = new QAction(tr("&Init"),this);
+	//connect(initAct, SIGNAL(triggered()), this, SLOT(init()));
 }
 
 void Kaleidoscope::createMenus() {
