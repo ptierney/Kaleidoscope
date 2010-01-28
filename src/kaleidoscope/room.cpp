@@ -13,11 +13,14 @@ namespace Kaleidoscope {
 	Room::Room( Device* d, Grids::Value* val ) : GLSpaceObject( d, val ) {
 		placeRoom( d );
 
+		/* This object derives from Grids::Object, and has a setAttr(Grids::Value*) method
+		   that deals with multithreading issues.
+		   In actuality, this should append the geometry to attr */
 		lockAttr();
 		buildRoom(d);
 		unlockAttr();
 
-                d->getRenderer()->addChild( this );
+		d->getRenderer()->addChild( this );
 	}
 	
 	void Room::draw( Device* d ){

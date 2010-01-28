@@ -51,9 +51,9 @@ namespace Kaleidoscope {
 	}
 
 	void GLSpaceObject::glDrawGeometry( Device* d ){
-                d->getRenderer()->lockGL();
+		d->getRenderer()->lockGL();
 		
-		// Draw Room Lines
+		// Draw Lines
 		if( !( attr[ "lines" ] ) == false )
 			{
 				glBegin( GL_LINES );
@@ -191,7 +191,7 @@ namespace Kaleidoscope {
 				glEnd();						
 			} // end if Triangles exists	
 		
-                d->getRenderer()->unlockGL();
+		d->getRenderer()->unlockGL();
 	}
 
 } // end namespace Kaleidoscope

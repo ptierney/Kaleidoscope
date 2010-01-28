@@ -3,6 +3,8 @@
 #include <kaleidoscope/consoleWindow.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/device.h>
+#include <kaleidoscope/camera.h>
+#include <kaleidoscope/cursorController.h>
 
 
 namespace Kaleidoscope {
@@ -41,6 +43,10 @@ namespace Kaleidoscope {
 		   lower == tr("conect to server") ){
 			connectToServer();
 		}
+		else if(lower == tr("exit") ||
+			   lower == tr("quit") ){
+			// TODO: Add
+		}
 		else if(lower == tr("create room") ){
 			createRoom();
 		} 
@@ -51,8 +57,13 @@ namespace Kaleidoscope {
 			   lower == tr("disconnect from server") ){
 			disconnectFromServer();
 		}
+		else if(lower == tr("center") ){
+			testCursorCenter();
+		}
 	}
-	
-	
+
+	void Console::testCursorCenter() {
+		d->getCamera()->controller->setPosition(.5f, .5f);
+	}	
 
 } // end namespace Kaleidoscope

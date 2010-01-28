@@ -16,66 +16,67 @@ namespace Kaleidoscope {
 
 	Camera::Camera(Device* d, Grids::Value* val, QWidget* parent) 
 		: Object(d, val), QGLWidget(parent) {
-                this->d = d;
-			 d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
+		this->d = d;
+
+		d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
 
 		parseAttrFromValue(val);
 		last_animation_time = d->getTicks();
 		mouse_pressed = false;
 		
-		controller = new CursorController(d, this);
+		controller = new CursorController(d, parent);
 	
 		// Create a dockable window in the main window, and place this 
 		// camera inside of it.  Make in the main camera if there are
 		// no other cameras already.
-                //QDockWidget *dock = new QDockWidget(tr("Camera"), d->main_window);
-                //dock->setWidget(this);
-                //d->main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
-                //((QGLWidget*)this)->setParent(dock, Qt::Widget);
+		//QDockWidget *dock = new QDockWidget(tr("Camera"), d->main_window);
+		//dock->setWidget(this);
+		//d->main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+		//((QGLWidget*)this)->setParent(dock, Qt::Widget);
 
-                //d->registerCamera(this);
+		//d->registerCamera(this);
 
-                animation_timer.setSingleShot(false);
-                connect(&animation_timer, SIGNAL(timeout()),
-                        this, SLOT(update()));
-                animation_timer.start(25);
+		animation_timer.setSingleShot(false);
+		connect(&animation_timer, SIGNAL(timeout()),
+			   this, SLOT(update()));
+		animation_timer.start(25);
 
-                setMouseTracking(1);
+		setMouseTracking(1);
 	}
 
-        Camera::~Camera(){
-            delete controller;
-        }
+	Camera::~Camera(){
+		delete controller;
+	}
 
-        QSize  Camera::sizeHint() const {
-            return QSize(DEFAULT_WINDOW_WIDTH - DEFAULT_SIDEBAR_WIDTH,DEFAULT_WINDOW_HEIGHT);
-        }
+	QSize  Camera::sizeHint() const {
+		return QSize(DEFAULT_WINDOW_WIDTH - DEFAULT_SIDEBAR_WIDTH,DEFAULT_WINDOW_HEIGHT);
+	}
 
-        void Camera::initializeGL() {
-            resizeScene(size().width(), size().height());
-            d->getRenderer()->prepareWindow();
-            //updateGL();
-        }
+	void Camera::initializeGL() {
+		resizeScene(size().width(), size().height());
+		d->getRenderer()->prepareWindow();
+		//updateGL();
+	}
 
-        void Camera::resizeGL(int width, int height){
-            resizeScene(width, height);
-        }
+	void Camera::resizeGL(int width, int height){
+		resizeScene(width, height);
+	}
 
 	// This is the main loop of the program, similar to Processing's 
 	// draw() function.
 	void Camera::paintEvent(QPaintEvent* event) {
-            //std::cerr << "PaintEvent\n";
+		//std::cerr << "PaintEvent\n";
 		// Makes this context the current OpenGL rendering context.
 		makeCurrent();
 		
-                d->getRenderer()->prepareRender1();
-                callGluLookAt();
-                d->getRenderer()->prepareRender2();
+		d->getRenderer()->prepareRender1();
+		callGluLookAt();
+		d->getRenderer()->prepareRender2();
 
-                d->getRenderer()->drawAll(d);
+		d->getRenderer()->drawAll(d);
 	}
 		
-        void Camera::setPerspective(float fov, float aspect, float z_near, float z_far) {
+	void Camera::setPerspective(float fov, float aspect, float z_near, float z_far) {
 		QMutexLocker persp_lock(&perspective_mutex);
 		this->fov = fov;	
 		this->aspect = aspect;
@@ -86,7 +87,7 @@ namespace Kaleidoscope {
 		gluPerspective(fov, aspect, z_near, z_far);
 	}	
 
-        void Camera::callGluLookAt() {
+	void Camera::callGluLookAt() {
 		Vec3D temp_target = getTarget();
 		Vec3D temp_pos = getPosition();
 		Vec3D temp_up = getUp();
@@ -105,6 +106,7 @@ namespace Kaleidoscope {
 		Vec3D temp_target = Vec3D( (*val)[ "target" ][ 0u ].asDouble(), 
 							  (*val)[ "target" ][ 1u ].asDouble(),
 							  (*val)[ "target" ][ 2u ].asDouble() ).normalize() + getPosition();
+
 		temp_target.normalize();
 		temp_target *= -1.0f;		
 		setTarget( temp_target );
@@ -113,22 +115,22 @@ namespace Kaleidoscope {
 				    (*val)[ "up" ][ 1u ].asDouble(),
 				    (*val)[ "up" ][ 2u ].asDouble() ) );
 		
-                QMutexLocker type_lock(&type_mutex);
+		QMutexLocker type_lock(&type_mutex);
 		type = (*val)[ "camera_type" ].asInt();
 		if( type == FPS )
-                        controller->hideCursor();
+			controller->hideCursor();
 		else if( type == MAYA )
-                        controller->showCursor();
-                zoom_type = ZOOM_CENTER;
+			controller->showCursor();
+		zoom_type = ZOOM_CENTER;
 
-                QMutexLocker speed_lock(&speed_mutex);
+		QMutexLocker speed_lock(&speed_mutex);
 		rotate_speed = (*val)[ "rotate_speed" ].asDouble();
 		translate_speed = (*val)[ "translate_speed" ].asDouble();		
-		move_speed = 1.0f; 
-                zoom_speed = 0.000006f;
-                QMutexLocker angle_lock(&angle_mutex);
+		move_speed = 0.1f; 
+		zoom_speed = 0.000006f;
+		QMutexLocker angle_lock(&angle_mutex);
 		max_vertical_angle = 89.0f;
-                QMutexLocker cen_lock(&center_mutex);
+		QMutexLocker cen_lock(&center_mutex);
 		center_of_rotation = Vec3D( 0.0f, 0.0f, 0.0f );
 
 		translating = false;
@@ -144,11 +146,11 @@ namespace Kaleidoscope {
 			//setCenterOfRotation( getLocalPosition() + new_center );
 			setCenterOfRotation( Vec3D( 0.f, 0.f, 0.f ) );
 			/*Vec3D temp_target = getPosition() - getCenterOfRotation();
-			temp_target.normalize();
-			temp_target += getPosition();
-			setTarget( temp_target );*/ 
+			  temp_target.normalize();
+			  temp_target += getPosition();
+			  setTarget( temp_target );*/ 
 			lookAtPoint( getCenterOfRotation() );
-                        controller->showCursor();
+			controller->showCursor();
 		}
 		else if ( getType() == MAYA ) {									
 			setType( FPS );
@@ -158,8 +160,7 @@ namespace Kaleidoscope {
 			//temp_target += getPosition();
 			//setTarget( temp_target ); 
 			lookAtPoint( getCenterOfRotation() );
-                        controller->hideCursor();
-
+			controller->hideCursor();
 		}
 	}
 	 
@@ -184,21 +185,21 @@ namespace Kaleidoscope {
 		return center_of_rotation;
 	}
 
-        void Camera::mouseMoved(QMouseEvent* event){
+	void Camera::mouseMoved(QMouseEvent* event){
 
-        }
+	}
 
-        void Camera::keyboardPressed(QKeyEvent* event) {
+	void Camera::keyboardPressed(QKeyEvent* event) {
 
-        }
+	}
 
-        void Camera::keyboardReleased(QKeyEvent* event) {
+	void Camera::keyboardReleased(QKeyEvent* event) {
 
-        }
+	}
 
-        void Camera::updatePosition(Vec3D new_pos, Vec3D new_rot, Vec3D new_tar) {
+	void Camera::updatePosition(Vec3D new_pos, Vec3D new_rot, Vec3D new_tar) {
 
-        }
+	}
 
 	void Camera::keyPressEvent(QKeyEvent* event) {
 		if(event->key() == Qt::Key_Tab)
@@ -212,13 +213,13 @@ namespace Kaleidoscope {
 	}
 
 	void Camera::mousePressEvent(QMouseEvent* event) {
-            std::cerr << "Mouse Press\n";
+		std::cerr << "Mouse Press\n";
 		mouse_pressed = true;
 		doMovement(NULL, event, NULL);
 	}
 
-        void Camera::mouseReleaseEvent(QMouseEvent* event) {
-            std::cerr << "Mouse Up\n";
+	void Camera::mouseReleaseEvent(QMouseEvent* event) {
+		std::cerr << "Mouse Up\n";
 		mouse_pressed = false;
 		doMovement(NULL, event, NULL);
 	}
@@ -228,13 +229,13 @@ namespace Kaleidoscope {
 	}
 
 
-        void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
+	void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
 		if(getType() == FPS)
-                        doMovementFPS(k_event, m_event, w_event);
+			doMovementFPS(k_event, m_event, w_event);
 		else if(getType() == MAYA)
-                        doMovementMaya(k_event, m_event, w_event);
+			doMovementMaya(k_event, m_event, w_event);
 
-                updateGL();
+		updateGL();
 	}
 
 	void Camera::doMovementFPS(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
@@ -318,7 +319,7 @@ namespace Kaleidoscope {
 			time_diff = 1;
 		
 		if(w_event) {
-                    std::cerr << "Zooming/n";
+
 			Vec3D zoom_vector;
 			Vec3D position_difference;
 			Vec3D target_difference;
@@ -348,32 +349,31 @@ namespace Kaleidoscope {
 				temp_tar.normalize();
 				setTarget( getLocalPosition() + temp_tar );
 				
-                                lookAtPoint( getCenterOfRotation() );
+				lookAtPoint( getCenterOfRotation() );
 			}
 		}
 		
-		// SDL poll event		
 		//NOTE: The mouse cursor should be hidden when the mouse is dragged
 		Vec2D cursor_pos = controller->getRelativePosition();
 		
 		if(m_event) {
-                    // If the mouse was moved, but no buttons were pressed, do nothing
-                    if(!mouse_pressed) {
-                                if( translating || rotating || zooming ) {
-                                        controller->setPosition( cursor_save.X, cursor_save.Y );
-                                }
+			// If the mouse was moved, but no buttons were pressed, do nothing
+			if(!mouse_pressed) {
+				if( translating || rotating || zooming ) {
+					//controller->setPosition( cursor_save.X, cursor_save.Y );
+				}
 
-                                //std::cerr << "Clearing\n";
-                                translating = false;
-                                rotating = false;
-                                zooming = false;
+				translating = false;
+				rotating = false;
+				zooming = false;
 
-                                mouse_button = 0;
+				mouse_button = 0;
 
-                                controller->showCursor();
-                        }
+				controller->showCursor();
+			}
+
 			//  TRANSLATION
-                        else if( mouse_button == Qt::RightButton || m_event->button() == Qt::RightButton) {
+			else if( mouse_button == Qt::RightButton || m_event->button() == Qt::RightButton) {
 				if( !translating ) {
 					// This allows the mouse to hover around and click on items.  Then, when the 
 					// mouse is pressed, the view changes.
@@ -381,7 +381,7 @@ namespace Kaleidoscope {
 					controller->setToCenter();
 					
 					translating = true;
-                                        mouse_button = m_event->button();
+					mouse_button = m_event->button();
 					controller->hideCursor();
 				}
 				else {
@@ -410,20 +410,22 @@ namespace Kaleidoscope {
 					controller->setToCenter();
 				}
 			}
+
 			// ROTATION 
-                        else if(mouse_button == Qt::LeftButton || m_event->button() == Qt::LeftButton) {
+			else if(mouse_button == Qt::LeftButton || m_event->button() == Qt::LeftButton) {
+
+				/* If we're not rotating, then save the cursor position, so we know 
+				   where to move it back to. */
 				if( !rotating ){
-                                    std::cerr << "Setting\n";
 					cursor_save = cursor_pos;
 					controller->setToCenter();
 										
 					rotating = true;
-                                        mouse_button = Qt::LeftButton;
+					mouse_button = Qt::LeftButton;
 					
 					controller->hideCursor();
 				}
 				else {
-					// std::cerr << "Rotating\n";
 					float offset_x = (cursor_pos.Y - 0.5f) * time_diff * rotate_speed * -0.1f ;
 					float offset_y = (cursor_pos.X - 0.5f) * time_diff * rotate_speed * -0.1f ;
 
@@ -444,7 +446,7 @@ namespace Kaleidoscope {
 					setLocalPosition( getLocalPosition() + getCenterOfRotation() );
 					setTarget( getTarget() + getCenterOfRotation() );
 
-                                        controller->setToCenter();
+					//controller->setToCenter();
 				} // end d->Rotating == true
 			} 
 		}
@@ -457,15 +459,15 @@ namespace Kaleidoscope {
 
      void Camera::resizeScene(unsigned int width, unsigned int height )
      {
-         // Get the minimum of the two new values
-         int side = qMin(width, height);
-        d->getRenderer()->lockGL();
+		// Get the minimum of the two new values
+		int side = qMin(width, height);
+		d->getRenderer()->lockGL();
           glViewport((width - side) / 2, (height - side) / 2, side, side);
 
           glMatrixMode(GL_PROJECTION);
           glLoadIdentity();
 		 
-                d->getRenderer()->unlockGL();
+		d->getRenderer()->unlockGL();
 
           // NOTE: It is possible to calulate the exact (most realistic) fovy of a progmam
           // based on the viewer's distance from the screen.  See OpenGL documentation.
@@ -478,9 +480,9 @@ namespace Kaleidoscope {
 
           setPerspective(fovy, aspecty, zNear, zFar);
 
-                d->getRenderer()->lockGL();
+		d->getRenderer()->lockGL();
           glMatrixMode(GL_MODELVIEW);
-                d->getRenderer()->unlockGL();
+		d->getRenderer()->unlockGL();
 
           //d->getOSWindow()->setWidth( new_width );
           //d->getOSWindow()->setHeight( new_height );
@@ -501,17 +503,17 @@ namespace Kaleidoscope {
 		double co = cos(theta);
 		
 		float xx = (float) (axis.X
-				* (ux + vy + wz)
-				+ (in_vector.X * (axis.Y * axis.Y + axis.Z * axis.Z) - axis.X * (vy + wz))
-				* co + (-wy + vz) * si);
+						* (ux + vy + wz)
+						+ (in_vector.X * (axis.Y * axis.Y + axis.Z * axis.Z) - axis.X * (vy + wz))
+						* co + (-wy + vz) * si);
 		float yy = (float) (axis.Y
-				* (ux + vy + wz)
-				+ (in_vector.Y * (axis.X * axis.X + axis.Z * axis.Z) - axis.Y * (ux + wz))
-				* co + (wx - uz) * si);
+						* (ux + vy + wz)
+						+ (in_vector.Y * (axis.X * axis.X + axis.Z * axis.Z) - axis.Y * (ux + wz))
+						* co + (wx - uz) * si);
 		float zz = (float) (axis.Z
-				* (ux + vy + wz)
-				+ (in_vector.Z * (axis.X * axis.X + axis.Y * axis.Y) - axis.Z * (ux + vy))
-				* co + (-vx + uy) * si);
+						* (ux + vy + wz)
+						+ (in_vector.Z * (axis.X * axis.X + axis.Y * axis.Y) - axis.Z * (ux + vy))
+						* co + (-vx + uy) * si);
 		return Vec3D(xx, yy, zz);  
 	}
 

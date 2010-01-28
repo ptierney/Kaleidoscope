@@ -12,7 +12,19 @@ namespace Kaleidoscope
 	}	
 
 	void CursorController::setPosition( float xScale, float yScale ) {
-            widget->cursor().setPos(widget->mapToGlobal(QPoint((int)(xScale*(widget->width())), (int)(yScale*(widget->height())))));
+		int wid_wid = widget->width();
+		int wid_hei = widget->height();
+		
+		QPoint wid_center_point = QPoint( (int)(xScale*(widget->width())), 
+								(int)(yScale*(widget->height())));
+
+		QPoint global_pnt = widget->mapToGlobal( wid_center_point);
+
+		int new_x = global_pnt.x();
+		int new_y = global_pnt.y();
+
+		widget->cursor().setPos(new_x, new_y);
+		//widget->cursor().setPos(100, 100);
 	}
 	
         void CursorController::setToCenter() {

@@ -11,6 +11,7 @@ namespace Kaleidoscope {
 	public:
 		Room( Device*, Grids::Value* );
 
+		/* Create and drow required by GLSpaceObject */
 		void draw( Device* );
 		void create( Device*, Grids::Value* );
 

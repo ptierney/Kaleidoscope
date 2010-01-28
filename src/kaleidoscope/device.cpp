@@ -102,17 +102,19 @@ namespace Kaleidoscope {
 	// Create a new camera, and if it belongs to us, register it as the main 
 	// camera.
         void Device::registerCamera(Grids::Value* val) {
-            QDockWidget *dock = new QDockWidget(tr("Camera"), main_window);
+		   QDockWidget *dock = new QDockWidget(tr("Camera"), main_window);
             Camera* cam = new Camera(this, val, dock);
             dock->setWidget(cam);
             main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
-
+		  //main_window->setCentralWidget(cam);
+		
             if(main_camera == 0)
                 main_camera = cam;
 	}
 
 	void Device::createConsole() {
 		QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
+		dock->setFloating(1);
 		dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		console = new Console(this, dock);
 		dock->setWidget(console->getConsoleWindow());
@@ -121,6 +123,7 @@ namespace Kaleidoscope {
 
 	void Device::createNoticeWindow() {
 		QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
+		dock->setFloating(1);
 		dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
 		noticeWindow = new NoticeWindow(dock);
 		dock->setWidget(noticeWindow);
@@ -128,7 +131,8 @@ namespace Kaleidoscope {
 	}
 
 	void Device::createErrorWindow() {
-                QDockWidget *dock = new QDockWidget(tr("Errors"), main_window);
+		QDockWidget *dock = new QDockWidget(tr("Errors"), main_window);
+		dock->setFloating(1);
 		errorWindow = new NoticeWindow(dock);
 		dock->setWidget(errorWindow);
 		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);

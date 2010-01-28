@@ -32,6 +32,9 @@ namespace Kaleidoscope {
 		ConsoleWindow* console_window;
 
 		void parseInput(QString);
+
+		/* TEST FUNCTIONS */
+		void testCursorCenter();
 	};
 
 } // end namespace Kaleidoscope

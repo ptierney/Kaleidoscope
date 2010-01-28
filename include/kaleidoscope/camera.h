@@ -42,6 +42,9 @@ namespace Kaleidoscope {
                 void initializeGL();
                 void resizeGL(int, int);
 
+			 // Temp move back
+		CursorController* controller;
+
 	public slots:
 		// The primary camera, uses the first 3 slots exclusively
 		void mouseMoved(QMouseEvent *event);
@@ -76,7 +79,6 @@ namespace Kaleidoscope {
 		Vec3D findRotationFromVector( Vec3D );
 
 		Device* d;
-		CursorController* controller;
 		int type;
 		int zoom_type;
 		float rotate_speed;
