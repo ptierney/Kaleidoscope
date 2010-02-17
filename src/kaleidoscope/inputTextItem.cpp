@@ -6,6 +6,7 @@
 #include <kaleidoscope/define.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <grids/utility.h>
 #include <grids/interface.h>
 
@@ -32,8 +33,9 @@ namespace Kaleidoscope {
     }
 
     void InputTextItem::gridsCreate(Device *dev, Grids::Event *evt) {
+        dev->getNoticeWindow()->write(tr("Creating input text"));
         dev->getScene()->addInputTextItem(evt->getArgsPtr(), evt->getPosition());
-    }
+   }
 
     QVariant InputTextItem::itemChange(GraphicsItemChange change,
                          const QVariant &value)

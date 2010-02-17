@@ -13,7 +13,7 @@ namespace Grids{
 		std::string getNewUUID();
 		
 		bool checkUUIDValidity( std::string );
-	
+
 	private:
 		std::string cMakeUUID();
 		char hexToChar( unsigned int );

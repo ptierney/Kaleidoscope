@@ -5,6 +5,7 @@
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/cursorController.h>
+#include <grids/interface.h>
 
 
 namespace Kaleidoscope {
@@ -48,7 +49,9 @@ namespace Kaleidoscope {
                         d->quit();
 		}
 		else if(lower == tr("create room") ){
-			createRoom();
+                    d->getInterface()->createMyRoom();
+
+                        //createRoom();
 		} 
 		else if(lower == tr("create object") ){
 			createObject();

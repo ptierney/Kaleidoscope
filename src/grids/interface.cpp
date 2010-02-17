@@ -60,7 +60,7 @@ namespace Grids {
 	}
 
 	void Interface::rawReceive(QString raw_data){
-		d->getNoticeWindow()->write(1, tr("rec] ") + raw_data);
+            d->getNoticeWindow()->write(1, tr("rec>> ") + raw_data);
 	}
 	
 	void Interface::protocolInitiated(Event* in_event){
@@ -88,7 +88,7 @@ namespace Grids {
 			if( evt->hasAttr() )
 				d->getObjectController()->updateObjectAttr( object_id, evt );
 		} else if( event_type == GRIDS_LIST_ROOMS ) {
-			// d->getUtility()->parseListRooms( evt );
+                    d->receiveRoomList( evt );
 		}
 	}
 	
@@ -107,6 +107,10 @@ namespace Grids {
 
 		requestCreateRoom();
 	}
+
+        void Interface::setMyRoom(GridsID new_room) {
+            my_room = new_room;
+        }
 
 	// By default this creates an object in your room
 	// Overriding object creation to another room, 	
@@ -197,7 +201,10 @@ namespace Grids {
 	}
 
 	void Interface::requestAllRooms(){
+            Grids::Value* msg = new Grids::Value();
+            (*msg)["_method"] = GRIDS_LIST_ROOMS;
 
+            proto->sendRequest( GRIDS_LIST_ROOMS, msg );
 	}	
 
 	GridsID Interface::getMyRoom(){

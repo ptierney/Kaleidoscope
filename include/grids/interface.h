@@ -50,6 +50,8 @@ namespace Grids{
 		std::vector< GridsID > getKnownRooms();
 		std::vector< GridsID > getServerRooms();
 		void requestAllRooms();
+
+                void setMyRoom(GridsID);
 		
 		friend class Kaleidoscope::Device;
 

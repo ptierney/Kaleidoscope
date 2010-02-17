@@ -5,6 +5,7 @@
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
 
+
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 class QMenu;
@@ -15,6 +16,7 @@ class QGraphicsTextItem;
 class QColor;
 QT_END_NAMESPACE
 
+
 namespace Kaleidoscope {
     class InputTextItem;
     class Device;
@@ -23,29 +25,39 @@ namespace Kaleidoscope {
         Q_OBJECT
 
     public:
-           Scene2D(Device*, QObject* parent = 0);
 
-           void addInputTextItem(Grids::Value*, Vec3D);
+        Scene2D(Device*, QObject* parent = 0);
 
-           /*void setFont(const QFont &font);*/
+        void addInputTextItem(Grids::Value*, Vec3D);
 
-       public slots:
-           void editorLostFocus(InputTextItem *item);
+        QFont font() const
+        { return myFont; }
+        QColor textColor() const
+        { return myTextColor; }
 
-       signals:
-           void textInserted(QGraphicsTextItem *item);
-           void itemSelected(QGraphicsItem *item);
+        void setTextColor(const QColor &color);
+        void setFont(const QFont &font);  
 
-       protected:
-           void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-           void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-           void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    public slots:
+        void editorLostFocus(InputTextItem *item);
+
+    signals:
+        void textInserted(QGraphicsTextItem *item);
+        void itemSelected(QGraphicsItem *item);
+
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
 
     private:
-           Device* d;
-           InputTextItem* textItem;
-           QFont myFont;
-};
+        Device* d;
+        InputTextItem* textItem;
+        QColor myTextColor;
+        QFont myFont;
+
+    };
 
 }
 
