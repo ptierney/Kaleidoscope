@@ -30,8 +30,10 @@ void Kaleidoscope::createActions() {
 }
 
 void Kaleidoscope::createMenus() {
+    /*
     gridsMenu = menuBar()->addMenu(tr("&Grids"));
     gridsMenu->addAction(initAct);
+    */
 }
 
 } // end namespace Kaleidoscope
