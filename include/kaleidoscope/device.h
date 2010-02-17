@@ -26,6 +26,7 @@ namespace Kaleidoscope {
 	class NoticeWindow;
 	class Console;
         class SpaceRenderer;
+        class Scene2D;
 
         class Device : public QObject {
             Q_OBJECT
@@ -45,6 +46,7 @@ namespace Kaleidoscope {
 		   Camera* getCamera();
 		   void registerCamera(Grids::Value*);
 
+                void quit();
 		bool getRunning();
 		void setRunning( bool );
 		GridsID getMyID();
@@ -54,6 +56,7 @@ namespace Kaleidoscope {
 		int getTicks();
 		NoticeWindow* getNoticeWindow();
 		NoticeWindow* getErrorWindow();
+                Scene2D* getScene();
 		void registerNotice(QObject*);
 		void registerError(QObject*);
 		void createSpaceRenderer();
@@ -86,6 +89,7 @@ namespace Kaleidoscope {
 		Console* console;
 		NoticeWindow* noticeWindow;
 		NoticeWindow* errorWindow;
+                Scene2D* scene;
 
                 void createObjects();
 
@@ -96,6 +100,8 @@ namespace Kaleidoscope {
 		void createConsole();
 		void createNoticeWindow();
 		void createErrorWindow();
+                /* The scene is the area you draw on. */
+                void createScene();
 		
 		QTime time;	
 		GridsID my_id;		

@@ -1,10 +1,10 @@
 /********************************************************************************
-** Form generated from reading ui file 'kaleidoscope.ui'
+** Form generated from reading UI file 'kaleidoscope.ui'
 **
-** Created: Thu Sep 10 03:10:14 2009
-**      by: Qt User Interface Compiler version 4.5.2
+** Created: Wed Feb 17 04:00:32 2010
+**      by: Qt User Interface Compiler version 4.6.2
 **
-** WARNING! All changes made in this file will be lost when recompiling ui file!
+** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
 #ifndef UI_KALEIDOSCOPE_H
@@ -35,20 +35,20 @@ public:
     {
         if (Kaleidoscope->objectName().isEmpty())
             Kaleidoscope->setObjectName(QString::fromUtf8("Kaleidoscope"));
-        Kaleidoscope->resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-        //centralWidget = new QWidget(Kaleidoscope);
-        //centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        //Kaleidoscope->setCentralWidget(centralWidget);
-        //menuBar = new QMenuBar(Kaleidoscope);
-        //menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        //menuBar->setGeometry(QRect(0, 0, 1000, 22));
-        //Kaleidoscope->setMenuBar(menuBar);
-        //mainToolBar = new QToolBar(Kaleidoscope);
-        //mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        //Kaleidoscope->addToolBar(Qt::TopToolBarArea, mainToolBar);
-        //statusBar = new QStatusBar(Kaleidoscope);
-        //statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        //Kaleidoscope->setStatusBar(statusBar);
+        Kaleidoscope->resize(1000, 526);
+        centralWidget = new QWidget(Kaleidoscope);
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        Kaleidoscope->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(Kaleidoscope);
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1000, 22));
+        Kaleidoscope->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(Kaleidoscope);
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        Kaleidoscope->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        statusBar = new QStatusBar(Kaleidoscope);
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        Kaleidoscope->setStatusBar(statusBar);
 
         retranslateUi(Kaleidoscope);
 
@@ -58,7 +58,6 @@ public:
     void retranslateUi(QMainWindow *Kaleidoscope)
     {
         Kaleidoscope->setWindowTitle(QApplication::translate("Kaleidoscope", "Kaleidoscope", 0, QApplication::UnicodeUTF8));
-        Q_UNUSED(Kaleidoscope);
     } // retranslateUi
 
 };

@@ -45,7 +45,7 @@ namespace Kaleidoscope {
 		}
 		else if(lower == tr("exit") ||
 			   lower == tr("quit") ){
-			// TODO: Add
+                        d->quit();
 		}
 		else if(lower == tr("create room") ){
 			createRoom();
@@ -57,13 +57,7 @@ namespace Kaleidoscope {
 			   lower == tr("disconnect from server") ){
 			disconnectFromServer();
 		}
-		else if(lower == tr("center") ){
-			testCursorCenter();
-		}
-	}
 
-	void Console::testCursorCenter() {
-		d->getCamera()->controller->setPosition(.5f, .5f);
 	}	
 
 } // end namespace Kaleidoscope

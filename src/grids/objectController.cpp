@@ -3,10 +3,12 @@
 #include <grids/define.h>
 #include <grids/gObject.h>
 #include <grids/event.h>
+#include <kaleidoscope/define.h>
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
+#include <kaleidoscope/inputTextItem.h>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QMouseEvent>
@@ -51,7 +53,12 @@ namespace Grids {
 		if( type == "Camera" ){
 			d->registerCamera(evt->getArgsPtr());
 			found = 1;
-		} /*else if( type == "SpaceText" ) {
+                    } else if( type == "InputText") {
+                        Kal::InputTextItem::gridsCreate(d, evt);
+                        found = 1;
+                    }
+
+                /*else if( type == "SpaceText" ) {
 		    new Kal::SpaceText( d, evt->getArgsPtr() );
 		    found = 1;
 		    }*/

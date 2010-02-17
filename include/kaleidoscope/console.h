@@ -33,8 +33,6 @@ namespace Kaleidoscope {
 
 		void parseInput(QString);
 
-		/* TEST FUNCTIONS */
-		void testCursorCenter();
 	};
 
 } // end namespace Kaleidoscope

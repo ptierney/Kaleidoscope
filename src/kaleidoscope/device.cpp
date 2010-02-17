@@ -6,14 +6,16 @@
 #include <kaleidoscope/settings.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/noticeWindow.h>
-#include <kaleidoscope/console.h>
 #include <kaleidoscope/consoleWindow.h>
+#include <kaleidoscope/console.h>
+#include <kaleidoscope/scene2d.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
 #include <grids/utility.h>
 #include <grids/event.h>
 #include <iostream>
 #include <QDockWidget>
+#include <QGraphicsView>
 
 namespace Kaleidoscope {
 	Device::Device(QApplication* in_app, QMainWindow* m_win)
@@ -28,6 +30,7 @@ namespace Kaleidoscope {
 		createNoticeWindow();
 		createErrorWindow();
 		createConsole();
+                createScene();
 		// Show the main window so we can read notices as the program connects.
 		m_win->show();
 	
@@ -61,6 +64,10 @@ namespace Kaleidoscope {
 		getNoticeWindow()->write(0, tr("Created Interface"));
 	}
 
+        void Device::quit() {
+         app->exit(0);
+        }
+
 	void Device::gridsConnectionEstablished() {
 		getNoticeWindow()->write(0, tr("Loading room / creating room"));
 		loadRoom();
@@ -80,6 +87,7 @@ namespace Kaleidoscope {
 	EventController* Device::getEventController(){ return event_controller; }
 	NoticeWindow* Device::getNoticeWindow() { return noticeWindow; }
 	NoticeWindow* Device::getErrorWindow() { return errorWindow; }
+        Scene2D* Device::getScene() { return scene; }
 	SpaceRenderer* Device::getRenderer() { return renderer; }
 	Camera* Device::getCamera() { return main_camera; }
 
@@ -137,6 +145,16 @@ namespace Kaleidoscope {
 		dock->setWidget(errorWindow);
 		main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
 	}
+
+        void Device::createScene() {
+            QDockWidget *dock = new QDockWidget(tr("Scene"), main_window);
+            dock->setFloating(0);
+            scene = new Scene2D(this, dock);
+            QGraphicsView* view = new QGraphicsView(scene);
+            dock->setWidget(view);
+            main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+        }
 
 	void Device::registerNotice(QObject* object) {
 		noticeWindow->connect(object, SIGNAL(notice(int, QString)),

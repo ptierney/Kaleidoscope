@@ -12,6 +12,7 @@ namespace Kaleidoscope {
 	public:
 		Object(Device*, Grids::Value*);
 
+
 		virtual void drawAll(Device*);		
 	
 		void show();
@@ -23,6 +24,7 @@ namespace Kaleidoscope {
 		virtual void deselect();
 
 	protected:
+                /* Pure virtual function. */
 		virtual void draw(Device*) = 0;
 
 	private:
