@@ -15,6 +15,10 @@ namespace Kaleidoscope {
         myTextColor = Qt::black;
     }
 
+    QSize Scene2D::sizeHint() const {
+          return QSize(DEFAULT_WINDOW_WIDTH - DEFAULT_SIDEBAR_WIDTH,DEFAULT_WINDOW_HEIGHT);
+     }
+
     void Scene2D::addInputTextItem(Grids::Value* val, Vec3D item_pos) {
 
         textItem = new InputTextItem(d, val);

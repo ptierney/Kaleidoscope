@@ -122,7 +122,7 @@ namespace Kaleidoscope {
 
     void Device::createConsole() {
         QDockWidget *dock = new QDockWidget(tr("Console"), main_window);
-        dock->setFloating(1);
+        dock->setFloating(0);
         dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
         console = new Console(this, dock);
         dock->setWidget(console->getConsoleWindow());
@@ -131,7 +131,7 @@ namespace Kaleidoscope {
 
     void Device::createNoticeWindow() {
         QDockWidget *dock = new QDockWidget(tr("Notices"), main_window);
-        dock->setFloating(1);
+        dock->setFloating(0);
         dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
         noticeWindow = new NoticeWindow(dock);
         dock->setWidget(noticeWindow);
@@ -140,19 +140,24 @@ namespace Kaleidoscope {
 
     void Device::createErrorWindow() {
         QDockWidget *dock = new QDockWidget(tr("Errors"), main_window);
-        dock->setFloating(1);
+        dock->setFloating(0);
         errorWindow = new NoticeWindow(dock);
         dock->setWidget(errorWindow);
         main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
     }
 
     void Device::createScene() {
+        /*
         QDockWidget *dock = new QDockWidget(tr("Scene"), main_window);
         dock->setFloating(0);
-        scene = new Scene2D(this, dock);
+        */
+        scene = new Scene2D(this, main_window);
         QGraphicsView* view = new QGraphicsView(scene);
+        /*
         dock->setWidget(view);
         main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+        */
+        main_window->setCentralWidget(view);
     }
 
     void Device::registerNotice(QObject* object) {

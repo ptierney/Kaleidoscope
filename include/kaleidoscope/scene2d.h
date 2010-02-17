@@ -27,6 +27,7 @@ namespace Kaleidoscope {
     public:
 
         Scene2D(Device*, QObject* parent = 0);
+        QSize sizeHint() const;
 
         void addInputTextItem(Grids::Value*, Vec3D);
 
