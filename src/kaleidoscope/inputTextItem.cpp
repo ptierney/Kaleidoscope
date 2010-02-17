@@ -20,6 +20,15 @@ namespace Kaleidoscope {
 
         setFlag(QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemIsSelectable);
+        setFlag(QGraphicsItem::ItemIsFocusable);
+
+        setCursor(Qt::IBeamCursor);
+
+        /* If I created this item, select it. */
+        if(d->myChild(getParentID())){
+            setSelected(1);
+            setFocus(Qt::OtherFocusReason);
+        }
     }
 
     GridsID InputTextItem::requestCreate( Device* device, Vec3D start_pos) {

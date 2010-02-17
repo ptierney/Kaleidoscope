@@ -76,6 +76,9 @@ namespace Kaleidoscope {
         Camera* main_camera;
         QApplication* app;
 
+        /* Returns true of the item is a [sweet] child of mine. */
+        bool myChild(GridsID);
+
     public slots:
         void gridsConnectionEstablished();
         void myRoomCreated(GridsID);

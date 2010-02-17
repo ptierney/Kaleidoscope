@@ -186,6 +186,9 @@ namespace Kaleidoscope {
         getInterface()->setMyRoom(new_room);
     }
 
+    bool Device::myChild(GridsID test_id) {
+        return test_id == getMyID();
+    }
 
     int Device::getTicks() {
         return time.elapsed();

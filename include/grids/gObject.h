@@ -64,6 +64,7 @@ namespace Grids{
 		void setParentID( GridsID );
 		Value* getAttrFromValue( Value* );
 		GridsID getIDFromValue( Value* );
+                GridsID getParentFromValue( Value* );
 		
 		std::vector< Object* > getChildren();
 		std::vector< Object* > children;

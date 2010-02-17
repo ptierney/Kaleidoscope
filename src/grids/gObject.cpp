@@ -13,6 +13,7 @@ namespace Grids {
 		parent = NULL;
 
 		setID( getIDFromValue( in_value ) );
+                setParentID( getParentFromValue( in_value) );
 
 		d->getObjectController()->registerObject(getID(), this); 
 
@@ -130,6 +131,10 @@ namespace Grids {
 	GridsID Object::getIDFromValue( Value* val ){
 		return (*val)[ "id" ].asString();
 	}
+
+        GridsID Object::getParentFromValue( Value* val ){
+            return (*(getAttrFromValue(val)))["parent"].asString();
+        }
 
 	void Object::setInitialPositions( Value* val ){
 		if( !( (*val)[ "req" ][ "pos" ].empty() ) ) {
