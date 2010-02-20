@@ -53,6 +53,9 @@ namespace Grids{
 
         void setMyRoom(GridsID);
 
+        /* Read events from the protocol event queue. */
+        void collectEvents();
+
         friend class Kaleidoscope::Device;
 
     public slots:

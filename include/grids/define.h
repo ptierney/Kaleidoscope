@@ -4,9 +4,11 @@
 #include <string>
 #include <map>
 #include <iterator>
+#include <queue>
 
 #include <grids/vector3d.h>
 #include <grids/vector2d.h>
+
 
 #include <json/value.h>
 
@@ -24,6 +26,8 @@ namespace Grids {
 	typedef irr::core::vector2df Vec2D;
 	typedef irr::core::vector3df Vector3;
 	typedef irr::core::vector2df Vector2;
+
+        /* EventQueue typedef is in event.h */
 
 	typedef std::string GridsID;
 	

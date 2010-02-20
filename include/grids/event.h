@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <queue>
 
 #include <grids/define.h>
 
@@ -40,6 +41,7 @@ namespace Grids
 		Grids::Value args;
 	};
 
+        typedef std::queue<Event*> EventQueue;
 }
 
 

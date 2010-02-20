@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <queue>
 #include <json/value.h>
 #include <grids/event.h>
 #include <grids/define.h>
@@ -46,6 +47,10 @@ namespace Grids {
         // last_event is mainly used for testing
         Event* last_event;
 
+        /* Lock the queue mutex, copy the event queue,
+           delete the original queue, return the copy, unlock. */
+        EventQueue getEvents();
+
     public slots:
         void gridsRead();
 	
@@ -61,10 +66,16 @@ namespace Grids {
         QTcpSocket* sock;
         QMutex finishedMutex;
         QMutex eventLoopRunningMutex;
+        QMutex event_queue_mutex;
         bool running;
 	
         void endianSwap(unsigned int&);
         quint32 byteSwap(quint32);
+
+        /* Add an event to the event queue, locking the mutex as necessary. */
+        void pushEvent(Event*);
+
+        EventQueue event_queue;
 
         std::string my_name;
 

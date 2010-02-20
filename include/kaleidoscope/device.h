@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QCursor>
 #include <QTime>
+#include <QTimer>
 #include <QMutex>
 #include <QObject>
 
@@ -79,9 +80,13 @@ namespace Kaleidoscope {
         /* Returns true of the item is a [sweet] child of mine. */
         bool myChild(GridsID);
 
+    protected:
+        void timerEvent(QTimerEvent *event);
+
     public slots:
         void gridsConnectionEstablished();
         void myRoomCreated(GridsID);
+        void deviceUpdate();
 
     private:
         Grids::ObjectController* object_controller;
@@ -108,6 +113,7 @@ namespace Kaleidoscope {
         void createScene();
 
         QTime time;
+        QTimer *timer;
         GridsID my_id;
         GridsID my_room;
 

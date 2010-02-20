@@ -294,11 +294,15 @@ namespace Grids {
             } else {
                 last_event = new Event(*evt);
             }
-            emit receiveEvent(evt);
 
-            std::cout << "handleMessage deleting evt" << std::endl;
-            delete evt;
-            std::cout << "handleMessage deleted evt" << std::endl;
+            pushEvent(evt);
+
+            /* These events will be deleted by the interface, after
+               it parses them in another thread. */
+
+            //std::cout << "handleMessage deleting evt" << std::endl;
+            //delete evt;
+            //std::cout << "handleMessage deleted evt" << std::endl;
         }
     }
 
@@ -332,6 +336,27 @@ namespace Grids {
 
     bool Protocol::sockConnected(){
         return (sock->state() == QAbstractSocket::ConnectedState);
+    }
+
+
+    /* Lock the queue mutex, copy the event queue,
+       delete the original queue, return the copy, unlock. */
+    EventQueue Protocol::getEvents() {
+        QMutexLocker lock(&event_queue_mutex);
+
+        EventQueue temp_queue(event_queue);
+
+        while(!event_queue.empty()) {
+            event_queue.pop();
+        }
+
+        return temp_queue;
+    }
+
+    void Protocol::pushEvent(Event *new_event) {
+        QMutexLocker lock(&event_queue_mutex);
+
+        event_queue.push(new_event);
     }
 
 

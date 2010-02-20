@@ -69,6 +69,19 @@ namespace Grids {
         emit gridsConnectionEstablished();
     }
 
+    void Interface::collectEvents() {
+        EventQueue temp_queue = proto->getEvents();
+
+        while(!temp_queue.empty()){
+            Event *temp_event = temp_queue.front();
+
+            parseEvent(temp_event);
+
+            delete temp_event;
+            temp_queue.pop();
+        }
+    }
+
     void Interface::parseEvent( Event* evt ){
         QMutexLocker lock(&parse_event_mutex);
 
