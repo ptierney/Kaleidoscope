@@ -102,6 +102,10 @@ namespace Grids {
 		d->getInterface()->requestUpdateScale( getID(), scl );
 	}
 
+        void Object::updateAttr(Event* evt) {
+            setAttrFromValue( evt->getArgsPtr() );
+        }
+
 	// TODO: This is NOT threadsafe!!
 	Object* Object::getParent(){
 		QMutexLocker lock(&parent_mutex);		

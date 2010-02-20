@@ -58,6 +58,8 @@ namespace Grids{
 
         friend class Kaleidoscope::Device;
 
+        void printVal(Value*);
+
     public slots:
         void parseEvent(Event*);
 

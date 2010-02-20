@@ -34,7 +34,7 @@ namespace Kaleidoscope {
         textItem->setDefaultTextColor(myTextColor);
         /*textItem->setPos(mouseEvent->scenePos());*/
         textItem->setPos(QPointF(item_pos.X, item_pos.Y));
-        textItem->setPlainText(tr("This is a test"));
+        //textItem->setPlainText(tr("This is a test"));
         /*emit textInserted(textItem);*/
     }
 

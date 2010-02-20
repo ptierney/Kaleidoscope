@@ -47,6 +47,9 @@ namespace Grids {
     }
 
     int Protocol::protocolWrite(std::string &str) {
+        /* Different objects may try to write at the same time. */
+        QMutexLocker write_lock(&proto_write_mutex);
+
         uint32_t len = str.size();
 
         return protocolWrite(str.c_str(), len);

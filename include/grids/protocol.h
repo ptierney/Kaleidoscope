@@ -67,6 +67,7 @@ namespace Grids {
         QMutex finishedMutex;
         QMutex eventLoopRunningMutex;
         QMutex event_queue_mutex;
+        QMutex proto_write_mutex;
         bool running;
 	
         void endianSwap(unsigned int&);

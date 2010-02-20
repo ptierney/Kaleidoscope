@@ -36,6 +36,8 @@ namespace Grids{
 		virtual void updateScale( Kal::Device*, Vec3D );
 		virtual void updateRotation( Kal::Device*, Vec3D );
 
+                virtual void updateAttr(Event*);
+
 		// attr is a Grids::Value that holds all the information
 		// specific to the particular object.
 		// This information should exist in a shared state between the

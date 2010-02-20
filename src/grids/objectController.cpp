@@ -88,7 +88,7 @@ namespace Grids {
 	}
 
 	void ObjectController::updateObjectAttr( GridsID in_id, Event* evt ){
-		getPointerFromID( in_id )->setAttrFromValue( evt->getArgsPtr() );
+                getPointerFromID( in_id )->updateAttr(evt);
 	}
 
 	void ObjectController::mouseReleasedEvent(QMouseEvent* event) {

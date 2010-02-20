@@ -24,8 +24,7 @@ namespace Kaleidoscope {
         setFlag(QGraphicsItem::ItemIsFocusable);
         setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 
-        /* A segfault keeps on happening here. */
-        //setCursor(Qt::IBeamCursor);
+        setCursor(Qt::IBeamCursor);
 
         /* If I created this item, select it and add a cursor. */
         if(d->myChild(getParentID())){
@@ -43,6 +42,8 @@ namespace Kaleidoscope {
         (*create_val)["id"] = device->getGridsUtility()->getNewUUID();
 
         return device->getInterface()->requestCreateObject( create_val, start_pos);
+
+        delete create_val;
     }
 
     void InputTextItem::gridsCreate(Device *dev, Grids::Event *evt) {
@@ -99,6 +100,12 @@ namespace Kaleidoscope {
 
     void InputTextItem::mousePressEvent(QGraphicsSceneMouseEvent *event){
         position_change = pos();
+
+        if(hasFocus()){
+            if (textInteractionFlags() == Qt::NoTextInteraction)
+                setTextInteractionFlags(Qt::TextEditorInteraction);
+        }
+
         QGraphicsTextItem::mousePressEvent(event);
     }
 
@@ -108,6 +115,55 @@ namespace Kaleidoscope {
             updatePosition(d, Vec3D(pos().x(), pos().y(), zValue()));
         }
         QGraphicsTextItem::mouseReleaseEvent(event);
+    }
+
+    void InputTextItem::keyPressEvent(QKeyEvent* event) {
+        /*
+        if(textInteractionFlags() == Qt::TextEditorInteraction) {
+            d->getNoticeWindow()->write(event->text());
+            updateText(event->text());
+        }
+        */
+
+        if(hasFocus()){
+            d->getNoticeWindow()->write(event->text());
+
+            updateText(toPlainText());
+        }
+
+        QGraphicsTextItem::keyPressEvent(event);
+    }
+
+    void InputTextItem::updateText(QString new_text) {
+        Grids::Value *temp_attr = new Grids::Value();
+
+        (*temp_attr)["text"] = new_text.toStdString();
+        (*temp_attr)["writer"] = d->getMyID();
+
+        d->getInterface()->printVal(temp_attr);
+
+        d->getInterface()->requestUpdateAttr(getID(), temp_attr);
+
+        delete temp_attr;
+    }
+
+    void InputTextItem::updateAttr(Grids::Event *evt) {
+        
+        if((*(evt->getArgsPtr()))["req"]["attr"].empty()){
+            d->getNoticeWindow()->write(tr("Received empty update attr"));
+            return;
+        }
+
+        GridsID writer_id = (*(evt->getArgsPtr()))["req"]["attr"]["writer"].asString();
+
+        /* If the update was made by someone else, update the text. */
+        if(d->getMyID() != writer_id ) {
+            std::string new_args_text = (*(evt->getArgsPtr()))["req"]["attr"]["text"].asString();
+            QString new_text = tr(new_args_text.c_str());
+            /*d->getNoticeWindow()->write(tr("new text>> ") + new_text);*/
+
+            setPlainText(new_text);
+        }
     }
 
     /* Required function */

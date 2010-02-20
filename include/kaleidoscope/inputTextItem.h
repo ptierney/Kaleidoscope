@@ -35,6 +35,13 @@ namespace Kaleidoscope {
         int type() const
             { return Type; }
 
+        void updateText(QString new_text);
+
+        /* Overlead the updateAttr function from Grids::Object.
+           If this is not overloaded, the original updateAttr will clear
+           the old attr. */
+        void updateAttr(Grids::Event*);
+
     signals:
         void lostFocus(InputTextItem *item);
         void selectedChange(QGraphicsItem *item);
@@ -47,6 +54,7 @@ namespace Kaleidoscope {
 
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void keyPressEvent(QKeyEvent* event);
 
     private:
         Device* d;

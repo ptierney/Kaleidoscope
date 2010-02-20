@@ -173,7 +173,7 @@ namespace Grids {
         (*msg)[ "room_id" ] = getMyRoom();
         (*msg)[ "id" ] = object_id;
 
-        (*msg)[ "attr" ] = object_attr;
+        (*msg)[ "attr" ] = *object_attr;
 	
         proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
     }
@@ -282,6 +282,10 @@ namespace Grids {
                 delete temp_val;
             }
         }
+    }
+
+    void Interface::printVal(Value* val) {
+        d->getNoticeWindow()->write(tr("sending>> ") + tr( (*val).toStyledString().c_str() ));
     }
 
     bool Interface::isConnected(){
