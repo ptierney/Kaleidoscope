@@ -116,6 +116,7 @@ namespace Kaleidoscope {
         QTimer *timer;
         GridsID my_id;
         GridsID my_room;
+        bool connected;
 
         bool running;
         QMutex running_mutex;

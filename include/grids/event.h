@@ -26,6 +26,8 @@ namespace Grids
 		Grids::Value getArgs();
 		Grids::Value *getArgsPtr();
 		std::string getEventType();
+
+                std::string getStyledString();
 		
 		bool hasPosition();
 		bool hasRotation();

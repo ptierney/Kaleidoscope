@@ -23,6 +23,7 @@ namespace Kaleidoscope {
         main_window = m_win;
         app = in_app;
         main_camera = 0;
+        connected = 0;
         time.start();
 
         /* Set up the main update loop. */
@@ -87,19 +88,33 @@ namespace Kaleidoscope {
 
     /* This is the main event loop. */
     void Device::timerEvent(QTimerEvent *event) {
+
+        if(connected == false && interface->isConnected() == true) {
+            connected = true;
+            getNoticeWindow()->write(tr("Connected!"));
+            getNoticeWindow()->write(0, tr("Loading room / creating room"));
+            loadRoom();
+        }
+
         /*getNoticeWindow()->write(tr("update"));*/
         interface->collectEvents();
     }
 
     void Device::gridsConnectionEstablished() {
+        /*
         getNoticeWindow()->write(0, tr("Loading room / creating room"));
+        */
         loadRoom();
     }
 
     Device::~Device() {
-        // Most of the created devices are deleted by Qt
+        /* Any Qt derived object is destroyed by Qt */
+        /*
+         */
+        /* If I delete the interface here, it closes down the
+           protocol thread. */
+        delete interface;
         delete g_utility;
-        // Window should be one of the last objects to be destroyed, as it calls SDL_Quit()
         delete settings;
     }
 
@@ -120,8 +135,7 @@ namespace Kaleidoscope {
 
     void Device::myRoomCreated(GridsID rm) {
         getNoticeWindow()->addNotice(4, tr("Your room created"));
-
-        std::cerr << "Requesting create camera\n";
+        getNoticeWindow()->addNotice(4, tr("Requesting a camera from the server."));
 
         /* Requests a new camera from the server. */
         requestCreateCamera();
