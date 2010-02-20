@@ -1,0 +1,27 @@
+
+Installing Grids Node
+
+Note: run lib/GridsMem, lib/GridsReg before running the main make make install
+
+
+Required Libraries
+
+** Available as Debian packages ** 
+SDL
+SDL_net
+SDL_ttf
+SDL_image
+GL
+GLU
+
+** Required Downloads ** 
+
+Makepp
+http://makepp.sourceforge.net/
+
+
+** Included but not built libraries **
+Jsoncpp
+homepage: http://jsoncpp.sourceforge.net/
+svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsoncpp
+
