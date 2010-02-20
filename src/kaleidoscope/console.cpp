@@ -50,7 +50,6 @@ namespace Kaleidoscope {
 		}
 		else if(lower == tr("create room") ){
                     d->getInterface()->createMyRoom();
-
                         //createRoom();
 		} 
 		else if(lower == tr("create object") ){

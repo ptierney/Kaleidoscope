@@ -71,11 +71,11 @@ namespace Grids{
 
 		Value attr;
 
- 		// These functions are called by the ObjectController
-		// When it receives a message GRIDS_UPDATE_OBJECT
-		void setLocalPosition( Vec3D );
-		void setLocalRotation( Vec3D );
-		void setLocalScale( Vec3D );
+                /* These functions are called by the ObjectController
+                 * When it receives a message GRIDS_UPDATE_OBJECT */
+                virtual void setLocalPosition( Vec3D );
+                virtual void setLocalRotation( Vec3D );
+                virtual void setLocalScale( Vec3D );
 
 	private:
 		void setAttr( Value* );

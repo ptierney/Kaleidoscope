@@ -99,8 +99,8 @@ namespace Kaleidoscope {
         getNoticeWindow()->addNotice(4, tr("Your room created"));
 
         std::cerr << "Requesting create camera\n";
-        // Requests a new camera from the server
-        // Creates and registers a new rendere
+
+        /* Requests a new camera from the server. */
         requestCreateCamera();
     }
 
@@ -170,16 +170,6 @@ namespace Kaleidoscope {
                              errorWindow, SLOT(addNotice(int,QString)));
     }
 
-    void Device::receiveRoomList(Grids::Event* evt) {
-        Grids::Value* args = evt->getArgsPtr();
-
-        if( (*args)["rooms"][0u].empty() )
-            return;
-
-        setMyRoom((*args)["rooms"][0u].asString());
-        getNoticeWindow()->write(tr("Loaded a room"));
-        getNoticeWindow()->write(tr((*args)["rooms"][0u].asString().c_str()));
-    }
 
     void Device::setMyRoom(GridsID new_room) {
         my_room = new_room;

@@ -60,7 +60,7 @@ namespace Kaleidoscope {
         void registerNotice(QObject*);
         void registerError(QObject*);
         void createSpaceRenderer();
-        void receiveRoomList(Grids::Event*);
+
 
         QMainWindow* main_window;
         // Cameras vs Renderers:

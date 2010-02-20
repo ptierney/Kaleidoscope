@@ -30,6 +30,8 @@ namespace Kaleidoscope {
         /* Required functions from Kal::Object */
         void draw(Device*);
 
+        void setLocalPosition(Vec3D);
+
         int type() const
             { return Type; }
 
@@ -39,12 +41,19 @@ namespace Kaleidoscope {
 
     protected:
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+        void focusInEvent(QFocusEvent *event);
         void focusOutEvent(QFocusEvent *event);
-        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);    
 
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     private:
         Device* d;
+
+        QPointF position_change;
+        QMutex input_text_item_mutex;
+        QMutex focus_mutex;
     };
 }
 
