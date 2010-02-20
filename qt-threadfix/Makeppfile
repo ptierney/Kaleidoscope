@@ -1,0 +1,17 @@
+
+# Top level Makeppfile for Grids
+# Is there a way to not have to recompile the json library for each platform?
+# Maybe just embedding the c++ code into grids, since it doesn't really do much.  
+# -L/usr/local/lib 
+# Otr should be installed standard on Debian / Ubuntu
+
+CPP := g++
+LIBTOOL := libtool
+LIBFLAGS := --mode=link
+LIBS :=  -lGL -lGLU -lSDL -lSDL_net -lSDL_ttf -lSDL_image 
+
+
+build_kal : $(filter_out *test_*.o, $(wildcard **/*.o) )
+	$(LIBTOOL) $(LIBFLAGS) $(CPP) $(inputs) $(LIBS) $(OTHERLIBS) -o $(output) 
+
+
