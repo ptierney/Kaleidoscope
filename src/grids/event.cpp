@@ -45,6 +45,10 @@ namespace Grids
 	std::string Event::getEventType()	{
 		return event_type;
 	}
+
+        std::string Event::getStyledString() {
+            return args.toStyledString();
+        }
 	
 	GridsID Event::getID() {
 		return args[ "id" ].asString();

@@ -179,7 +179,7 @@ namespace Grids {
 	*/
 
     void Protocol::gridsRead() {
-        std::cerr << "gridsRead\n";
+        /*std::cerr << "gridsRead\n";*/
         int socketReady;
         qint64 bytesRead;
         quint32 incomingLength;
@@ -257,9 +257,9 @@ namespace Grids {
         std::string msg = buf;
         handleMessage(msg);
 
-        std::cerr << "Freeing buff\n";
+        /*std::cerr << "Freeing buff\n";*/
         free(buf);
-        std::cerr << "Freed buff\n";
+        /*std::cerr << "Freed buff\n"; */
 
     }
 
@@ -270,8 +270,11 @@ namespace Grids {
     void Protocol::handleMessage(std::string &msg) {
         if (msg.size() < 2) return; // obv. bogus
 
-        std::cerr << "received: " << msg << "\n";
+        /*std::cerr << "received: " << msg << "\n";*/
+        /* I most objects in Qt are not thread safe,
+           so all messages must go through device in a queue
         emit rawData( tr(msg.c_str()) );
+        */
 
         if (msg.find("==", 0, 2) == 0) {
             // protocol initiation message

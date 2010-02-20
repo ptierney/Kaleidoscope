@@ -31,8 +31,10 @@ namespace Grids {
     // Spawns new Protocol and network listening thread
     // This call will hang if there is no connection to the internet
     void Interface::init(){
+        /* This isn't threadafe, so it's got to go.
         connect(this, SIGNAL(gridsConnectionEstablished()),
                 d, SLOT(gridsConnectionEstablished()));
+        */
 
         connect(this, SIGNAL(myRoomCreated(GridsID)),
                 d, SLOT(myRoomCreated(GridsID)));
@@ -45,8 +47,11 @@ namespace Grids {
                 this, SLOT(protocolInitiated(Event*)));
         connect(proto, SIGNAL(receiveEvent(Event*)),
                 this, SLOT(parseEvent(Event*)));
+        /* Events should not be send directly through signals / slots,
+           all events must go through the Event-queue
         connect(proto, SIGNAL( rawData(QString)),
                 this, SLOT( rawReceive(QString)));
+        */
 
         proto->connectToNode( server_address.c_str() );
         d->getNoticeWindow()->write(7, tr("Connected to Node"));
@@ -66,7 +71,7 @@ namespace Grids {
 
     void Interface::protocolInitiated(Event* in_event){
         setConnected(1);
-        emit gridsConnectionEstablished();
+        /*emit gridsConnectionEstablished();*/
     }
 
     void Interface::collectEvents() {
@@ -75,6 +80,7 @@ namespace Grids {
         while(!temp_queue.empty()){
             Event *temp_event = temp_queue.front();
 
+            d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
             parseEvent(temp_event);
 
             delete temp_event;
@@ -108,7 +114,7 @@ namespace Grids {
 
     // END: Protocol thread functions
 
-    void Interface::requestCreateRoom(){
+    void Interface::requestCreateRoom() {
         Grids::Value msg;
         msg["_method"] = GRIDS_CREATE_ROOM;
 
