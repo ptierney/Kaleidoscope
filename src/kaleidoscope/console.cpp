@@ -5,6 +5,7 @@
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/cursorController.h>
+#include <kaleidoscope/genericNodeItem.h>
 #include <grids/interface.h>
 
 
@@ -55,6 +56,9 @@ namespace Kaleidoscope {
 		else if(lower == tr("create object") ){
 			createObject();
 		}
+                else if(lower == tr("generic node")) {
+                    GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0));
+                }
 		else if(lower == tr("disconnect") || 
 			   lower == tr("disconnect from server") ){
 			disconnectFromServer();

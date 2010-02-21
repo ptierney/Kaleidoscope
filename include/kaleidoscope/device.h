@@ -28,6 +28,7 @@ namespace Kaleidoscope {
     class Console;
     class SpaceRenderer;
     class Scene2D;
+    class View2D;
 
     class Device : public QObject {
         Q_OBJECT
@@ -99,6 +100,7 @@ namespace Kaleidoscope {
         NoticeWindow* noticeWindow;
         NoticeWindow* errorWindow;
         Scene2D* scene;
+        View2D* view2D;
 
         void createObjects();
 

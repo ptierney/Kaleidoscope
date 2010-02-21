@@ -9,6 +9,7 @@
 #include <kaleidoscope/consoleWindow.h>
 #include <kaleidoscope/console.h>
 #include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
 #include <grids/utility.h>
@@ -188,12 +189,14 @@ namespace Kaleidoscope {
         dock->setFloating(0);
         */
         scene = new Scene2D(this, main_window);
-        QGraphicsView* view = new QGraphicsView(scene);
+        //QGraphicsView* view = new QGraphicsView(scene);
+        view2D = new View2D(scene);
+
         /*
         dock->setWidget(view);
         main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
         */
-        main_window->setCentralWidget(view);
+        main_window->setCentralWidget(view2D);
     }
 
     void Device::registerNotice(QObject* object) {

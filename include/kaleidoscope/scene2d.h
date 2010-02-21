@@ -2,6 +2,7 @@
 #define SCENE2D_H
 
 #include <QGraphicsScene>
+
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
 
@@ -14,6 +15,7 @@ class QGraphicsLineItem;
 class QFont;
 class QGraphicsTextItem;
 class QColor;
+class QWheelEvent;
 QT_END_NAMESPACE
 
 
@@ -30,6 +32,7 @@ namespace Kaleidoscope {
         QSize sizeHint() const;
 
         void addInputTextItem(Grids::Value*, Vec3D);
+        void addGenericNodeItem(Grids::Value*, Vec3D);
 
         QFont font() const
         { return myFont; }
@@ -37,7 +40,7 @@ namespace Kaleidoscope {
         { return myTextColor; }
 
         void setTextColor(const QColor &color);
-        void setFont(const QFont &font);  
+        void setFont(const QFont &font);
 
     public slots:
         void editorLostFocus(InputTextItem *item);
@@ -50,7 +53,9 @@ namespace Kaleidoscope {
         void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+        void wheelEvent(QWheelEvent *event);
 
+        void scaleView(qreal scaleFactor);
 
     private:
         Device* d;

@@ -30,8 +30,6 @@ namespace Kaleidoscope {
         /* Required functions from Kal::Object */
         void draw(Device*);
 
-        void setLocalPosition(Vec3D);
-
         int type() const
             { return Type; }
 
@@ -41,6 +39,8 @@ namespace Kaleidoscope {
            If this is not overloaded, the original updateAttr will clear
            the old attr. */
         void updateAttr(Grids::Event*);
+
+        void setLocalPosition(Vec3D);
 
     signals:
         void lostFocus(InputTextItem *item);
@@ -56,12 +56,20 @@ namespace Kaleidoscope {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         void keyPressEvent(QKeyEvent* event);
 
+
+
     private:
         Device* d;
 
         QPointF position_change;
         QMutex input_text_item_mutex;
         QMutex focus_mutex;
+
+        //const QColor text_color = QColor(6,68,193,200);
+        static const int text_color_r = 6;
+        static const int text_color_g = 68;
+        static const int text_color_b = 193;
+        static const int text_color_a = 200;
     };
 }
 

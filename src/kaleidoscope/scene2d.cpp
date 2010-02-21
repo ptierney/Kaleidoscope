@@ -7,10 +7,14 @@
 #include <kaleidoscope/noticeWindow.h>
 #include <QTextCursor>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+#include <QWheelEvent>
+
+#include <math.h>
 
 namespace Kaleidoscope {
 
-    Scene2D::Scene2D(Device* d, QObject* parent) : QGraphicsScene(parent) {  
+    Scene2D::Scene2D(Device* d, QObject* parent) : QGraphicsScene(parent) {
         this->d = d;
         myTextColor = Qt::black;
     }
@@ -21,21 +25,10 @@ namespace Kaleidoscope {
 
     void Scene2D::addInputTextItem(Grids::Value* val, Vec3D item_pos) {
 
-        textItem = new InputTextItem(d, val);
-        /*textItem->setFont(myFont);*/
-        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-        /* Set the stack order.  This should be adjusted. */
-        textItem->setZValue(item_pos.Z);
-        connect(textItem, SIGNAL(lostFocus(InputTextItem*)),
-                this, SLOT(editorLostFocus(InputTextItem*)));
-        connect(textItem, SIGNAL(selectedChange(QGraphicsItem*)),
-                this, SIGNAL(itemSelected(QGraphicsItem*)));
-        addItem(textItem);
-        textItem->setDefaultTextColor(myTextColor);
-        /*textItem->setPos(mouseEvent->scenePos());*/
-        textItem->setPos(QPointF(item_pos.X, item_pos.Y));
-        //textItem->setPlainText(tr("This is a test"));
-        /*emit textInserted(textItem);*/
+    }
+
+    void Scene2D::addGenericNodeItem(Grids::Value *val, Vec3D item_pos) {
+
     }
 
     void Scene2D::editorLostFocus(InputTextItem *item) {
@@ -72,6 +65,21 @@ namespace Kaleidoscope {
 
     void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
         QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    }
+
+    /* Allow for a somewhat primative zoom. */
+    void Scene2D::wheelEvent(QWheelEvent *event) {
+        scaleView(pow((double)2, -event->delta() / 240.0));
+    }
+
+    void Scene2D::scaleView(qreal scale_factor) {
+        /* TODO: swich display from a QGraphicsScene to a QGraphicsView
+        qreal factor = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
+        if (factor < 0.07 || factor > 100)
+            return;
+
+        scale(scale_factor, scale_factor);
+        */
     }
 
     void Scene2D::setFont(const QFont &font) {

@@ -48,7 +48,31 @@ namespace Kaleidoscope {
 
     void InputTextItem::gridsCreate(Device *dev, Grids::Event *evt) {
         dev->getNoticeWindow()->write(tr("Creating input text"));
-        dev->getScene()->addInputTextItem(evt->getArgsPtr(), evt->getPosition());
+        /*dev->getScene()->addInputTextItem(evt->getArgsPtr(), evt->getPosition()); */
+
+        Scene2D *scene = dev->getScene();
+        Grids::Value *val = evt->getArgsPtr();
+        Vec3D item_pos = evt->getPosition();
+
+        InputTextItem *text_item = new InputTextItem(dev, val);
+        /*text_item->setFont(myFont);*/
+        text_item->setTextInteractionFlags(Qt::TextEditorInteraction);
+        /* Set the stack order.  This should be adjusted. */
+        text_item->setZValue(item_pos.Z);
+        connect(text_item, SIGNAL(lostFocus(InputTextItem*)),
+                scene, SLOT(editorLostFocus(InputTextItem*)));
+        connect(text_item, SIGNAL(selectedChange(QGraphicsItem*)),
+                scene, SIGNAL(itemSelected(QGraphicsItem*)));
+        scene->addItem(text_item);
+        text_item->setDefaultTextColor(QColor(text_color_r,
+                                              text_color_g,
+                                              text_color_b,
+                                              text_color_a) );
+
+        /*text_item->setPos(mouseEvent->scenePos());*/
+        text_item->setPos(QPointF(item_pos.X, item_pos.Y));
+        //text_item->setPlainText(tr("This is a test"));
+        /*emit textInserted(textItem);*/
    }
 
     /* Part of the object has changed.  Broadcast a message to Grids that lets
@@ -74,6 +98,7 @@ namespace Kaleidoscope {
 
     void InputTextItem::setLocalPosition(Vec3D new_pos){
         setPos(new_pos.X, new_pos.Y);
+        Grids::Object::setLocalPosition(new_pos);
     }
 
     void InputTextItem::focusInEvent(QFocusEvent* event) {

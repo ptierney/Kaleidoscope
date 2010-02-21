@@ -37,7 +37,9 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/spaceText.cpp \
     ../../src/kaleidoscope/text.cpp \
     ../../src/kaleidoscope/inputTextItem.cpp \
-    ../../src/kaleidoscope/scene2d.cpp
+    ../../src/kaleidoscope/scene2d.cpp \
+    ../../src/kaleidoscope/genericNodeItem.cpp \
+    ../../src/kaleidoscope/view2d.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -87,5 +89,7 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/text.h \
     ui_kaleidoscope.h \
     ../../include/kaleidoscope/inputTextItem.h \
-    ../../include/kaleidoscope/scene2d.h
+    ../../include/kaleidoscope/scene2d.h \
+    ../../include/kaleidoscope/genericNodeItem.h \
+    ../../include/kaleidoscope/view2d.h
 FORMS += kaleidoscope.ui
