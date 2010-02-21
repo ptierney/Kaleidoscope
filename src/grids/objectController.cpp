@@ -9,6 +9,7 @@
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
 #include <kaleidoscope/inputTextItem.h>
+#include <kaleidoscope/genericNodeItem.h>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QMouseEvent>
@@ -55,6 +56,9 @@ namespace Grids {
 			found = 1;
                     } else if( type == "InputText") {
                         Kal::InputTextItem::gridsCreate(d, evt);
+                        found = 1;
+                    } else if( type == "GenericNode") {
+                        Kal::GenericNodeItem::gridsCreate(d, evt);
                         found = 1;
                     }
 

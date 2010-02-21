@@ -20,6 +20,8 @@ namespace Kaleidoscope {
         :  QGraphicsItem(parent, scene), Object(d, val) {
         this->d = d;
         setFlag(ItemIsMovable);
+
+        d->getNoticeWindow()->write(QObject::tr("Creating generic node"));
     }
 
     void GenericNodeItem::draw(Device* d) {
@@ -39,7 +41,7 @@ namespace Kaleidoscope {
     }
 
     void GenericNodeItem::gridsCreate(Device* dev, Grids::Event *evt) {
-        dev->getNoticeWindow()->write(tr("Creating generic node"));
+        dev->getNoticeWindow()->write(QObject::tr("Creating generic node"));
         //dev->getScene()->addGenericNodeItem(evt->getArgsPtr(), evt->getPosition());
 
         Scene2D* scene = dev->getScene();
@@ -65,7 +67,7 @@ namespace Kaleidoscope {
     }
 
     void GenericNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-        d->getNoticeWindow()->write("Paint");
+        //d->getNoticeWindow()->write("Paint");
         painter->setPen(Qt::NoPen);
         painter->setBrush(Qt::darkGray);
         painter->drawEllipse(-7, -7, 20, 20);

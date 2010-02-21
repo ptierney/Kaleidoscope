@@ -66,7 +66,7 @@ namespace Grids {
     }
 
     void Interface::rawReceive(QString raw_data){
-        d->getNoticeWindow()->write(1, tr("rec>> ") + raw_data);
+        //d->getNoticeWindow()->write(1, tr("rec>> ") + raw_data);
     }
 
     void Interface::protocolInitiated(Event* in_event){
@@ -80,7 +80,8 @@ namespace Grids {
         while(!temp_queue.empty()){
             Event *temp_event = temp_queue.front();
 
-            d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
+            //d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
+            d->getNoticeWindow()->writeEvent(0, temp_event);
             parseEvent(temp_event);
 
             delete temp_event;
@@ -285,7 +286,8 @@ namespace Grids {
     }
 
     void Interface::printVal(Value* val) {
-        d->getNoticeWindow()->write(tr("sending>> ") + tr( (*val).toStyledString().c_str() ));
+        //d->getNoticeWindow()->write(tr("sending>> ") + tr( (*val).toStyledString().c_str() ));
+        d->getNoticeWindow()->writeValue(0, val);
     }
 
     bool Interface::isConnected(){

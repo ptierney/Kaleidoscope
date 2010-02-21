@@ -11,8 +11,8 @@ namespace Kaleidoscope {
     /* Not that this item inherits from both QGraphicsItem and QObject.
        It should probably derive from a more appropriate graphics object,
        that incude QObject. */
-    class GenericNodeItem : public QObject, public QGraphicsItem, public Object {
-        Q_OBJECT
+    class GenericNodeItem : public QGraphicsItem, public Object {
+       // Q_OBJECT
 
     public:
         GenericNodeItem(Device*, Grids::Value*, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);

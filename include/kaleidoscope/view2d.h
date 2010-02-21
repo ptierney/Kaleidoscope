@@ -15,6 +15,8 @@ namespace Kaleidoscope {
     protected:
         void wheelEvent(QWheelEvent *event);
         void scaleView(qreal scaleFactor);
+
+        void drawBackground(QPainter *painter, const QRectF &rect);
     };
 }
 

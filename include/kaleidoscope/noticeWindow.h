@@ -3,6 +3,12 @@
 
 #include <QListWidget>
 
+#include <grids/define.h>
+
+namespace Grids {
+    class Event;
+}
+
 namespace Kaleidoscope {
 
 	class NoticeWindow : public QListWidget {
@@ -15,6 +21,9 @@ namespace Kaleidoscope {
 		/* Display a notice */
 		void write( const QString &);
 		void write( int priority, const QString & message);
+                void writeValue(int priority, Grids::Value*);
+                void writeEvent(int priority, Grids::Event*);
+
 		void addNotice( const QString & message);
 		void addNotice( int priority, const QString & message);
 
