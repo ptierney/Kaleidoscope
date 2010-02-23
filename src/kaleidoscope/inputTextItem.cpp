@@ -22,6 +22,12 @@ namespace Kaleidoscope {
 
         d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
 
+        text_color = QColor( (*(getAttrFromValue(val)))["text_color"][0u].asInt(),
+                             (*(getAttrFromValue(val)))["text_color"][1u].asInt(),
+                             (*(getAttrFromValue(val)))["text_color"][2u].asInt(),
+                             (*(getAttrFromValue(val)))["text_color"][3u].asInt() );
+
+
         setFlag(QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemIsSelectable);
         setFlag(QGraphicsItem::ItemIsFocusable);
@@ -42,6 +48,11 @@ namespace Kaleidoscope {
 
         (*create_val)["type"] = "InputText";
         (*create_val)["parent"] = device->getMyID();
+        (*create_val)["text_color"][0u] = qrand() % 256;
+        (*create_val)["text_color"][1u] = qrand() % 256;
+        (*create_val)["text_color"][2u] = qrand() % 256;
+        (*create_val)["text_color"][3u] = 255;
+
         (*create_val)["id"] = device->getGridsUtility()->getNewUUID();
 
         return device->getInterface()->requestCreateObject( create_val, start_pos);
@@ -67,10 +78,7 @@ namespace Kaleidoscope {
         connect(text_item, SIGNAL(selectedChange(QGraphicsItem*)),
                 scene, SIGNAL(itemSelected(QGraphicsItem*)));
         scene->addItem(text_item);
-        text_item->setDefaultTextColor(QColor(text_color_r,
-                                              text_color_g,
-                                              text_color_b,
-                                              text_color_a) );
+        text_item->setDefaultTextColor(text_item->getTextColor() );
 
         /*text_item->setPos(mouseEvent->scenePos());*/
         text_item->setPos(QPointF(item_pos.X, item_pos.Y));
@@ -186,6 +194,10 @@ namespace Kaleidoscope {
 
             setPlainText(new_text);
         }
+    }
+
+    QColor InputTextItem::getTextColor() {
+        return text_color;
     }
 
 

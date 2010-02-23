@@ -20,6 +20,8 @@
 #include <QDockWidget>
 #include <QGraphicsView>
 
+#include <time.h>
+
 namespace Kaleidoscope {
     Device::Device(QApplication* in_app, QMainWindow* m_win)
         : QObject(m_win) {
@@ -27,7 +29,9 @@ namespace Kaleidoscope {
         app = in_app;
         main_camera = 0;
         connected = 0;
-        time.start();
+        qtime.start();
+        qsrand ( time(NULL) );
+
 
         /* Set up the main update loop. */
         /* Fuck QT why doesn't this work?
@@ -221,7 +225,7 @@ namespace Kaleidoscope {
     }
 
     int Device::getTicks() {
-        return time.elapsed();
+        return qtime.elapsed();
     }
 
     void Device::requestCreateCamera(){

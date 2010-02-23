@@ -116,7 +116,7 @@ namespace Kaleidoscope {
         /* The scene is the area you draw on. */
         void createScene();
 
-        QTime time;
+        QTime qtime;
         QTimer *timer;
         GridsID my_id;
         GridsID my_room;

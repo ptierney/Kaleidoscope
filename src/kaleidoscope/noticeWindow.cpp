@@ -12,7 +12,7 @@ namespace Kaleidoscope {
 		: QListWidget(parent) {
 		
 		/* Display everything at the moment */
-                current_priority = 0;
+                current_priority = 5;
 	}
 
 	void NoticeWindow::setPriority( int new_priority) {

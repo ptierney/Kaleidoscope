@@ -43,6 +43,8 @@ namespace Kaleidoscope {
         /* Overload Grids::Object function */
         void setLocalPosition(Vec3D);
 
+        QColor getTextColor();
+
     signals:
         void lostFocus(InputTextItem *item);
         void selectedChange(QGraphicsItem *item);
@@ -71,6 +73,8 @@ namespace Kaleidoscope {
         static const int text_color_g = 68;
         static const int text_color_b = 193;
         static const int text_color_a = 200;
+
+        QColor text_color;
     };
 }
 
