@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 use strict;
+use warnings;
 
 # Command-line interface to the Grids client
+
 
 # Temp library loader while Grids is still in development
 use FindBin;
@@ -30,6 +32,9 @@ $client->register_hooks(
 						'Room.CreateObject' => \&create_object_cb,
 						'Room.UpdateObject' => \&update_object_cb,
 						'Room.ListObjects' => \&list_objects_cb,
+						qr/.*/ => \&anything_cb,
+						'Connected' => \&anything_cb,
+						'ProtocolEstablished' => \&anything_cb,
 						);
 
 my $con = Grids::Console->new(
@@ -43,7 +48,18 @@ my $con = Grids::Console->new(
 							  },
 							  );
 
+# Stores the UUID of the room you send create objects in
+my $room;
+
+$client->register_hook(qr/.*/ => \&anything_cb);
+$client->register_hook(qr/.*/, sub { $con->print("LOL HI"); });
+
 run();
+
+
+sub anything_cb {
+	$con->print("Anything");
+}
 
 sub connect {
 	$client->connect($address);
@@ -59,6 +75,24 @@ sub request_list_rooms {
 
 sub create_id {
     $con->interactively_generate_identity;
+}
+
+sub parse_create_object {
+	my ($c, $evt) = @_;
+
+	my $args = $evt->args;
+}
+
+sub parse_update_object {
+	my ($c, $evt) = @_;
+
+	my $args = $evt->args;
+}
+
+sub create_generic_node {
+	my ($c, $evt) = @_;
+
+	my $args = $evt->args;
 }
 
 sub run {
