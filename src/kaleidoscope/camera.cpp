@@ -1,12 +1,13 @@
 
 #include <kaleidoscope/camera.h>
 #include <grids/gObject.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/device.h>
 #include <grids/irrMath.h>
+
 #include <iostream>
 #include <QtOpenGL>
 #include <QtGlobal>

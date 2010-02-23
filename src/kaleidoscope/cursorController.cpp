@@ -1,6 +1,7 @@
 
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/device.h>
+
 #include <QWidget>
 #include <QMouseEvent>
 

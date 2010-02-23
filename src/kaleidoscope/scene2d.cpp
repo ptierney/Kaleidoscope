@@ -3,8 +3,9 @@
 
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/inputTextItem.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/device.h>
+
 #include <QTextCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsScene>

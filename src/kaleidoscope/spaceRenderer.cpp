@@ -2,6 +2,7 @@
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/device.h>
+
 #include <iostream>
 
 namespace Kaleidoscope {

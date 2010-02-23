@@ -2,11 +2,11 @@
 #include <kaleidoscope/console.h>
 #include <kaleidoscope/consoleWindow.h>
 #include <kaleidoscope/noticeWindow.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/genericNodeItem.h>
 #include <grids/interface.h>
+#include <kaleidoscope/device.h>
 
 
 namespace Kaleidoscope {

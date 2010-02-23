@@ -1,11 +1,14 @@
 
 #include <grids/gObject.h>
-#include <kaleidoscope/device.h>
+#include <grids/event.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <grids/objectController.h>
 #include <grids/interface.h>
-#include <iostream>
+#include <kaleidoscope/device.h>
+
 #include <QMutexLocker>
+
+#include <iostream>
 
 namespace Grids {
 

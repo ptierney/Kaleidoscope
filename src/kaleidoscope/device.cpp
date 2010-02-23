@@ -1,19 +1,21 @@
 
 #include <kaleidoscope/device.h>
+#include <kaleidoscope/settings.h>
 #include <kaleidoscope/room.h>
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/camera.h>
-#include <kaleidoscope/settings.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/consoleWindow.h>
 #include <kaleidoscope/console.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/view2d.h>
-#include <grids/objectController.h>
+
 #include <grids/interface.h>
+#include <grids/objectController.h>
 #include <grids/utility.h>
 #include <grids/event.h>
+
 #include <iostream>
 #include <QDockWidget>
 #include <QGraphicsView>
@@ -73,7 +75,7 @@ namespace Kaleidoscope {
     void Device::init() {
         getNoticeWindow()->write(0, tr("Initializing..."));
         // Creates the protocol, connects to the server
-        interface = new Grids::Interface(this, main_window);
+        g_interface = new Grids::Interface(this, main_window);
         getNoticeWindow()->write(0, tr("Created Interface"));
     }
     void Device::quit() {
@@ -84,13 +86,13 @@ namespace Kaleidoscope {
     void Device::deviceUpdate() {
         getNoticeWindow()->write(tr("update"));
         std::cout << "Update" << std::endl;
-        interface->collectEvents();
+        getInterface()->collectEvents();
     }
 
     /* This is the main event loop. */
     void Device::timerEvent(QTimerEvent *event) {
 
-        if(connected == false && interface->isConnected() == true) {
+        if(connected == false && getInterface()->isConnected() == true) {
             connected = true;
             getNoticeWindow()->write(tr("Connected!"));
             getNoticeWindow()->write(0, tr("Loading room / creating room"));
@@ -98,7 +100,7 @@ namespace Kaleidoscope {
         }
 
         /*getNoticeWindow()->write(tr("update"));*/
-        interface->collectEvents();
+        getInterface()->collectEvents();
     }
 
     void Device::gridsConnectionEstablished() {
@@ -114,13 +116,13 @@ namespace Kaleidoscope {
          */
         /* If I delete the interface here, it closes down the
            protocol thread. */
-        delete interface;
+        delete g_interface;
         delete g_utility;
         delete settings;
     }
 
     Grids::ObjectController* Device::getObjectController(){ return object_controller; }
-    Grids::Interface* Device::getInterface(){ return interface; }
+    Grids::Interface* Device::getInterface(){ return g_interface; }
     Grids::Utility* Device::getGridsUtility(){ return g_utility; }
     Settings* Device::getSettings() { return settings; }
     EventController* Device::getEventController(){ return event_controller; }
@@ -241,7 +243,7 @@ namespace Kaleidoscope {
         (*cam_val)[ "up" ][ 1u ] = 1.0f;
         (*cam_val)[ "up" ][ 2u ] = 0.0f;
 
-        interface->requestCreateObject( cam_val, start_pos, start_rot, start_scl );
+        getInterface()->requestCreateObject( cam_val, start_pos, start_rot, start_scl );
 
         delete cam_val;
     }

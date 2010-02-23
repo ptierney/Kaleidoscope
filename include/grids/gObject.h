@@ -2,10 +2,10 @@
 #pragma once
 
 #include <grids/define.h>
-#include <grids/objectController.h>
 #include <kaleidoscope/define.h>
-#include <kaleidoscope/define.h>
+
 #include <QMutex>
+#include <QString>
 
 namespace Kaleidoscope {
   class Device;
@@ -14,6 +14,8 @@ namespace Kaleidoscope {
 }
 
 namespace Grids{
+    class ObjectControler;
+    class Event;
 
 	class Object {
 
@@ -53,10 +55,11 @@ namespace Grids{
 
 		friend class ObjectController;
 		friend class Kal::Camera;
-
+/*
 	signals:
 		void error(int, QString);
 		void notice(int, QString);
+                */
 
 	protected:
 		Object* getParent();

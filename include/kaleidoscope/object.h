@@ -2,6 +2,7 @@
 #pragma once
 
 #include <grids/gObject.h>
+
 #include <QMutex>
 
 namespace Kaleidoscope {

@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <kaleidoscope/spaceObject.h>
-#include <kaleidoscope/text.h>
+//#include <kaleidoscope/spaceObject.h>
+//#include <kaleidoscope/text.h>
 #include <string>
 #include <QtOpenGL>
 

@@ -1,6 +1,4 @@
 
-
-
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -10,11 +8,13 @@
 #include <QRect>
 
 #include <kaleidoscope/genericNodeItem.h>
-#include <kaleidoscope/device.h>
+#include <grids/utility.h>
+#include <grids/event.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/scene2d.h>
-#include <grids/utility.h>
 #include <grids/interface.h>
+#include <kaleidoscope/device.h>
+
 
 namespace Kaleidoscope {
 

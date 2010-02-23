@@ -1,8 +1,9 @@
 
 #include <kaleidoscope/glSpaceObject.h>
 #include <kaleidoscope/spaceObject.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/spaceRenderer.h>
+#include <kaleidoscope/device.h>
+
 #include <QtOpenGL>
 
 namespace Kaleidoscope {

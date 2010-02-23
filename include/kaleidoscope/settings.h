@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
+        class Device;
 
 	// This ideally could be serialized / written to disk,
 	// so that settings can be read back at a later time.

@@ -2,11 +2,12 @@
 #pragma once
 
 #include <kaleidoscope/object.h>
-#include <kaleidoscope/camera.h>
+
 #include <QGLWidget>
 
 namespace Kaleidoscope {
 	class Device;
+        class Camera;
 	
 	// Everything that should be drawn should be a child of this object
 	// Maybe this should be split into a placeholder (GridsParent) and 

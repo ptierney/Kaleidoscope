@@ -1,16 +1,18 @@
 
 #include <grids/objectController.h>
 #include <grids/define.h>
+#include <kaleidoscope/define.h>
+
 #include <grids/gObject.h>
 #include <grids/event.h>
-#include <kaleidoscope/define.h>
-#include <kaleidoscope/device.h>
+#include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
 #include <kaleidoscope/inputTextItem.h>
-#include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/device.h>
+
 #include <QMutex>
 #include <QMutexLocker>
 #include <QMouseEvent>

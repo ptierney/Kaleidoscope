@@ -1,6 +1,7 @@
 
 
 #include <kaleidoscope/consoleWindow.h>
+
 #include <QLineEdit>
 
 

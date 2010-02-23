@@ -2,9 +2,11 @@
 #include <grids/interface.h>
 #include <grids/utility.h>
 #include <grids/objectController.h>
-#include <kaleidoscope/device.h>
+#include <grids/protocol.h>
 #include <kaleidoscope/room.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/device.h>
+
 #include <iostream>
 #include <algorithm>
 #include <QTcpSocket>

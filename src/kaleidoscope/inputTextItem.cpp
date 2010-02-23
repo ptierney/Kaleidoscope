@@ -1,15 +1,16 @@
 
-#include <QtGui>
 
 #include <kaleidoscope/inputTextItem.h>
-#include <kaleidoscope/object.h>
 #include <kaleidoscope/define.h>
-#include <kaleidoscope/device.h>
-#include <kaleidoscope/scene2d.h>
-#include <kaleidoscope/noticeWindow.h>
 #include <grids/utility.h>
+#include <grids/event.h>
+#include <kaleidoscope/object.h>
+#include <kaleidoscope/scene2d.h>
 #include <grids/interface.h>
+#include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/device.h>
 
+#include <QtGui>
 
 namespace Kaleidoscope {
 

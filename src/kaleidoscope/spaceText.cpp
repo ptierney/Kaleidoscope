@@ -1,9 +1,9 @@
 
 #include <kaleidoscope/spaceText.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <grids/interface.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 

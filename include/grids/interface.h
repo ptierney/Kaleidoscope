@@ -1,22 +1,28 @@
 
 #pragma once
 
-#include <grids/protocol.h>
 #include <kaleidoscope/define.h>
-#include <kaleidoscope/device.h>
-#include <kaleidoscope/room.h>
+#include <grids/define.h>
+
+#include <QObject>
+#include <QMutex>
 
 namespace Kaleidoscope {
     class Device;
+    class Room;
 }
 
 namespace Grids{
 
+    class Protocol;
+    class Event;
+
+
     class Interface : public QObject {
         Q_OBJECT
     public:
-        Interface(Kal::Device*, QObject* parent = 0);
-        Interface(Kal::Device*, std::string in_server, QObject* parent = 0);
+        Interface(Kaleidoscope::Device*, QObject* parent = 0);
+        Interface(Kaleidoscope::Device*, std::string in_server, QObject* parent = 0);
         ~Interface();
 
         std::string getServer();
@@ -78,7 +84,7 @@ namespace Grids{
     private:
         void init();
         void setConnected( bool );
-        void registerNewRoom( Kal::Room* );
+        void registerNewRoom( Kaleidoscope::Room* );
         void receiveRoomList(Event*);
 
         std::vector< GridsID > known_rooms;
@@ -95,7 +101,7 @@ namespace Grids{
         QMutex connected_mutex;
         QMutex parse_event_mutex;
 
-        Kal::Device* d;
+        Kaleidoscope::Device* d;
     };
 
 

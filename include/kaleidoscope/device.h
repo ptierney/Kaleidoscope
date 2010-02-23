@@ -3,7 +3,7 @@
 
 #include <kaleidoscope/define.h>
 #include <grids/define.h>
-#include <vector>
+
 #include <QMainWindow>
 #include <QApplication>
 #include <QCursor>
@@ -11,6 +11,8 @@
 #include <QTimer>
 #include <QMutex>
 #include <QObject>
+
+#include <vector>
 
 namespace Grids{
     class ObjectController;
@@ -91,7 +93,7 @@ namespace Kaleidoscope {
 
     private:
         Grids::ObjectController* object_controller;
-        Grids::Interface* interface;
+        Grids::Interface* g_interface;
         Grids::Utility* g_utility;
 
         EventController* event_controller;

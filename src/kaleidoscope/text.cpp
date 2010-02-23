@@ -2,6 +2,7 @@
 #include <kaleidoscope/text.h>
 #include <kaleidoscope/define.h>
 #include <kaleidoscope/device.h>
+
 #include <iostream>
 
 namespace Kaleidoscope {

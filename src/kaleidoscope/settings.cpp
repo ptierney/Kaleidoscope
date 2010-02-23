@@ -1,6 +1,7 @@
 
 #include <kaleidoscope/settings.h>
 
+
 namespace Kaleidoscope {
 	
 	Settings::Settings(){

@@ -1,11 +1,14 @@
 
 #include <kaleidoscope/room.h>
-#include <kaleidoscope/glSpaceObject.h>
 #include <grids/define.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/settings.h>
+#include <kaleidoscope/glSpaceObject.h>
+
 #include <kaleidoscope/spaceRenderer.h>
 #include <grids/interface.h>
+#include <grids/objectController.h>
+#include <kaleidoscope/device.h>
+
 #include <iostream>
 
 namespace Kaleidoscope {

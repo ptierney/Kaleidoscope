@@ -1,10 +1,10 @@
 
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/camera.h>
-#include <kaleidoscope/device.h>
 #include <kaleidoscope/spaceText.h>
 #include <grids/interface.h>
 #include <grids/objectController.h>
+#include <kaleidoscope/device.h>
 #include <iostream>
 #include <QKeyEvent>
 
