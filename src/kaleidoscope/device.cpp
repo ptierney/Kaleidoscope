@@ -50,7 +50,8 @@ namespace Kaleidoscope {
 
         createObjects();
 
-        setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );
+        //setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );
+        setMyID( getGridsUtility()->getNewUUID() );
 
         init();
     }
@@ -75,7 +76,6 @@ namespace Kaleidoscope {
         interface = new Grids::Interface(this, main_window);
         getNoticeWindow()->write(0, tr("Created Interface"));
     }
-
     void Device::quit() {
         app->exit(0);
     }
@@ -135,11 +135,11 @@ namespace Kaleidoscope {
     }
 
     void Device::myRoomCreated(GridsID rm) {
-        getNoticeWindow()->addNotice(4, tr("Your room created"));
-        getNoticeWindow()->addNotice(4, tr("Requesting a camera from the server."));
+        //getNoticeWindow()->addNotice(4, tr("Your room created"));
+        //getNoticeWindow()->addNotice(4, tr("Requesting a camera from the server."));
 
         /* Requests a new camera from the server. */
-        requestCreateCamera();
+        //requestCreateCamera();
     }
 
     // The four main starting boxes: camera, notices, errors, console
@@ -246,6 +246,8 @@ namespace Kaleidoscope {
         delete cam_val;
     }
 
+	/* TODO: fix this so it fits into either broadcast or no broadcast 
+	   standard. */
     void Device::createSpaceRenderer(){
         Grids::Value* ren = new Grids::Value();
 

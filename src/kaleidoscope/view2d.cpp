@@ -49,7 +49,7 @@ namespace Kaleidoscope {
     }
 
     void View2D::wheelEvent(QWheelEvent *event) {
-        scaleView(pow((double)2, -event->delta() / 240.0));
+        scaleView(pow((double)2, event->delta() / 240.0));
     }
 
     void View2D::scaleView(qreal scale_factor) {

@@ -40,6 +40,7 @@ namespace Kaleidoscope {
            the old attr. */
         void updateAttr(Grids::Event*);
 
+        /* Overload Grids::Object function */
         void setLocalPosition(Vec3D);
 
     signals:

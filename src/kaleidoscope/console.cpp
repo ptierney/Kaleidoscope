@@ -53,11 +53,14 @@ namespace Kaleidoscope {
                     d->getInterface()->createMyRoom();
                         //createRoom();
 		} 
+                else if(lower == tr("join room")) {
+                    d->getInterface()->requestAllRooms();
+                }
 		else if(lower == tr("create object") ){
 			createObject();
 		}
                 else if(lower == tr("generic node")) {
-                    GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0));
+                    GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0), "Generic Node");
                 }
 		else if(lower == tr("disconnect") || 
 			   lower == tr("disconnect from server") ){

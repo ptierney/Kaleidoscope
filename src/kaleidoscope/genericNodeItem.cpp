@@ -5,6 +5,9 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include <QSvgRenderer>
+#include <QGraphicsSvgItem>
+#include <QRect>
 
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/device.h>
@@ -17,23 +20,55 @@ namespace Kaleidoscope {
 
     GenericNodeItem::GenericNodeItem(Device* d, Grids::Value* val,
                                      QGraphicsItem *parent, QGraphicsScene *scene)
-        :  QGraphicsItem(parent, scene), Object(d, val) {
+        :  QGraphicsObject(parent), Object(d, val) {
         this->d = d;
         setFlag(ItemIsMovable);
+        rect_boarder = 1.f;
+        line_thickness = 0.6f;
+        fill_color_r = 60; fill_color_g = 68; fill_color_b = 132;
+        text_r = 226; text_g = 224; text_b = 211;
+        fill_color_a = 255;
+        text_a = 255;
 
         d->getNoticeWindow()->write(QObject::tr("Creating generic node"));
+
+        /* From the docs:
+           Note that setting QSvgRenderer on a QGraphicsSvgItem doesn't make the item take
+           ownership of the renderer, therefore if using setSharedRenderer() method one has
+           to make sure that the lifetime of the QSvgRenderer object will be at least as
+           long as that of the QGraphicsSvgItem.
+           */
+        /* TODO: find a way to delete renderer, move it to the descructor? */
+        /*
+        QSvgRenderer *renderer = new QSvgRenderer(QLatin1String("../../media/rect.svg"));
+        svg_item = new QGraphicsSvgItem(this);
+        svg_item->setSharedRenderer(renderer);
+        */
+
+        std::string attr_text = getTextFromAttr(getAttrFromValue(val));
+
+        text_item = new QGraphicsTextItem(this);
+        text_item->setPlainText(tr(attr_text.c_str()));
+
+        /* Set text magenta. */
+        text_item->setDefaultTextColor(QColor(text_r, text_g, text_b, text_a));
+    }
+
+    std::string GenericNodeItem::getTextFromAttr(Grids::Value* attr){
+        return (*attr)["text"].asString();
     }
 
     void GenericNodeItem::draw(Device* d) {
 
     }
 
-    GridsID GenericNodeItem::requestCreate(Device *dev, Vec3D position){
+    GridsID GenericNodeItem::requestCreate(Device *dev, Vec3D position, std::string text){
         Grids::Value* create_val = new Grids::Value();
 
         (*create_val)["type"] = "GenericNode";
         (*create_val)["parent"] = dev->getMyID();
         (*create_val)["id"] = dev->getGridsUtility()->getNewUUID();
+        (*create_val)["text"] = text;
 
         return dev->getInterface()->requestCreateObject(create_val, position);
 
@@ -56,8 +91,7 @@ namespace Kaleidoscope {
 
     /* TODO: Remove magic numbers. */
     QRectF GenericNodeItem::boundingRect() const {
-        return QRectF(BOUNDMIN, BOUNDMIN,
-                      BOUNDMAX, BOUNDMAX);
+        return text_item->boundingRect();
     }
 
     QPainterPath GenericNodeItem::shape() const {
@@ -66,26 +100,17 @@ namespace Kaleidoscope {
         return path;
     }
 
+    /* Get these Magic Numbers the fuck out! */
     void GenericNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
         //d->getNoticeWindow()->write("Paint");
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(Qt::darkGray);
-        painter->drawEllipse(-7, -7, 20, 20);
+        float x1 = text_item->boundingRect().left() - rect_boarder;
+        float y1 = text_item->boundingRect().top() - rect_boarder;
+        float x2 = text_item->boundingRect().right() + rect_boarder;
+        float y2 = text_item->boundingRect().bottom() + rect_boarder;
 
-        QRadialGradient gradient(-3, -3, 10);
-        if (option->state & QStyle::State_Sunken) {
-            gradient.setCenter(3, 3);
-            gradient.setFocalPoint(3, 3);
-            gradient.setColorAt(1, QColor(Qt::yellow).light(120));
-            gradient.setColorAt(0, QColor(Qt::darkYellow).light(120));
-        } else {
-            gradient.setColorAt(0, Qt::yellow);
-            gradient.setColorAt(1, Qt::darkYellow);
-        }
-
-        painter->setBrush(gradient);
-        painter->setPen(QPen(Qt::black, 0));
-        painter->drawEllipse(-10, -10, 20, 20);
+        painter->setBrush(QColor(fill_color_r, fill_color_g, fill_color_b, fill_color_a));
+        painter->setPen(QPen(Qt::black, line_thickness));
+        painter->drawRect(x1, y1, x2, y2);
     }
 
     void GenericNodeItem::setLocalPosition(Vec3D vec) {

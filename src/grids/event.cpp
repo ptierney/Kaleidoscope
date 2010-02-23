@@ -55,37 +55,37 @@ namespace Grids
 	}
 	
 	bool Event::hasPosition(){
-		return !( args[ "req" ][ "pos" ].empty() );
+		return !( args[ "pos" ].empty() );
 	}
 	
 	bool Event::hasRotation() {
-		return !( args[ "req" ][ "rot" ].empty() );
+		return !( args[ "rot" ].empty() );
 	}
 
 	bool Event::hasScale() {
-		return !( args[ "req" ][ "scl" ].empty() );
+		return !( args[ "scl" ].empty() );
 	}
 	
 	bool Event::hasAttr() {
-		return !( args[ "req" ][ "attr" ].empty() );
+		return !( args[ "attr" ].empty() );
 	}
 	
 	Vec3D Event::getPosition() {
-		return Vec3D( args[ "req" ][ "pos" ][ 0u ].asDouble(),
-				    args[ "req" ][ "pos" ][ 1u ].asDouble(),
-				    args[ "req" ][ "pos" ][ 2u ].asDouble() );
+		return Vec3D( args[ "pos" ][ 0u ].asDouble(),
+				    args[ "pos" ][ 1u ].asDouble(),
+				    args[ "pos" ][ 2u ].asDouble() );
 	}
 
 	Vec3D Event::getRotation() {
-		return Vec3D( args[ "req" ][ "rot" ][ 0u ].asDouble(),
-				    args[ "req" ][ "rot" ][ 1u ].asDouble(),
-				    args[ "req" ][ "rot" ][ 2u ].asDouble() );
+		return Vec3D( args[ "rot" ][ 0u ].asDouble(),
+				    args[ "rot" ][ 1u ].asDouble(),
+				    args[ "rot" ][ 2u ].asDouble() );
 	}
 
 	Vec3D Event::getScale() {
-		return Vec3D( args[ "req" ][ "scl" ][ 0u ].asDouble(),
-				    args[ "req" ][ "scl" ][ 1u ].asDouble(),
-				    args[ "req" ][ "scl" ][ 2u ].asDouble() );
+		return Vec3D( args[ "scl" ][ 0u ].asDouble(),
+				    args[ "scl" ][ 1u ].asDouble(),
+				    args[ "scl" ][ 2u ].asDouble() );
 	}
 			
 

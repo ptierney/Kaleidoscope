@@ -29,8 +29,9 @@ namespace Grids {
         void closeConnection();
 
         std::string stringifyValue(Value *val);
-        void sendRequest(std::string);
-        void sendRequest(std::string, Value *args);
+        /* Sends a request to the server. int = BROADCAST or LOCAL. */
+        void sendRequest(std::string, int);
+        void sendRequest(std::string, Value *args, int);
         void sendRequestLoopback(std::string, Value *args);
 
         void handleMessage(std::string &msg);

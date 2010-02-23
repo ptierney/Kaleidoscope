@@ -19,6 +19,8 @@ namespace Kaleidoscope {
 
         this->d = d;
 
+        d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
+
         setFlag(QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemIsSelectable);
         setFlag(QGraphicsItem::ItemIsFocusable);
@@ -96,6 +98,7 @@ namespace Kaleidoscope {
         //return QGraphicsItem::itemChange(change, value);
     }
 
+    /* Overload Grids::Object */
     void InputTextItem::setLocalPosition(Vec3D new_pos){
         setPos(new_pos.X, new_pos.Y);
         Grids::Object::setLocalPosition(new_pos);
@@ -143,20 +146,13 @@ namespace Kaleidoscope {
     }
 
     void InputTextItem::keyPressEvent(QKeyEvent* event) {
-        /*
-        if(textInteractionFlags() == Qt::TextEditorInteraction) {
-            d->getNoticeWindow()->write(event->text());
-            updateText(event->text());
-        }
-        */
+        /* Process the event so that toPlainText() returns the actual value of the item. */
+        QGraphicsTextItem::keyPressEvent(event);
 
         if(hasFocus()){
-            d->getNoticeWindow()->write(event->text());
-
+            /*d->getNoticeWindow()->write(event->text());*/
             updateText(toPlainText());
-        }
-
-        QGraphicsTextItem::keyPressEvent(event);
+        }   
     }
 
     void InputTextItem::updateText(QString new_text) {
@@ -174,22 +170,23 @@ namespace Kaleidoscope {
 
     void InputTextItem::updateAttr(Grids::Event *evt) {
         
-        if((*(evt->getArgsPtr()))["req"]["attr"].empty()){
+        if((*(evt->getArgsPtr()))["attr"].empty()){
             d->getNoticeWindow()->write(tr("Received empty update attr"));
             return;
         }
 
-        GridsID writer_id = (*(evt->getArgsPtr()))["req"]["attr"]["writer"].asString();
+        GridsID writer_id = (*(evt->getArgsPtr()))["attr"]["writer"].asString();
 
         /* If the update was made by someone else, update the text. */
         if(d->getMyID() != writer_id ) {
-            std::string new_args_text = (*(evt->getArgsPtr()))["req"]["attr"]["text"].asString();
+            std::string new_args_text = (*(evt->getArgsPtr()))["attr"]["text"].asString();
             QString new_text = tr(new_args_text.c_str());
             /*d->getNoticeWindow()->write(tr("new text>> ") + new_text);*/
 
             setPlainText(new_text);
         }
     }
+
 
     /* Required function */
     void InputTextItem::draw( Device* d ){

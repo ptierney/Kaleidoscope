@@ -90,10 +90,14 @@ namespace Grids {
     }
 
     void Interface::parseEvent( Event* evt ){
+        d->getNoticeWindow()->write(0, "Parsing Event");
+
         QMutexLocker lock(&parse_event_mutex);
 
         std::string event_type = evt->getEventType();
         Grids::GridsID object_id = evt->getID();
+
+        d->getNoticeWindow()->write(0, tr(event_type.c_str()));
 
         if( event_type == GRIDS_CREATE_ROOM ){
             registerNewRoom( new Kal::Room( d, evt->getArgsPtr() ) );
@@ -119,7 +123,7 @@ namespace Grids {
         Grids::Value msg;
         msg["_method"] = GRIDS_CREATE_ROOM;
 
-        proto->sendRequest( GRIDS_CREATE_ROOM, &msg );
+        proto->sendRequest( GRIDS_CREATE_ROOM, &msg, LOCAL );
     }
 
     void Interface::createMyRoom() {
@@ -161,7 +165,7 @@ namespace Grids {
         (*msg)[ "scl" ][ 2u ] = scl.Z;
         (*msg)[ "attr" ] = *attr;
 
-        proto->sendRequest( GRIDS_CREATE_OBJECT, msg );
+        proto->sendRequest( GRIDS_CREATE_OBJECT, msg, BROADCAST );
 
         delete msg;
 
@@ -176,7 +180,7 @@ namespace Grids {
 
         (*msg)[ "attr" ] = *object_attr;
 	
-        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg, BROADCAST );
     }
 
     void Interface::requestUpdatePosition(GridsID object_id, Vec3D new_pos ){
@@ -189,7 +193,7 @@ namespace Grids {
         (*msg)[ "pos" ][ 1u ] = new_pos.Y;
         (*msg)[ "pos" ][ 2u ] = new_pos.Z;
 	
-        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg, BROADCAST );
     }
 
     void Interface::requestUpdateRotation(GridsID object_id, Vec3D new_rot ){
@@ -202,7 +206,7 @@ namespace Grids {
         (*msg)[ "rot" ][ 1u ] = new_rot.Y;
         (*msg)[ "rot" ][ 2u ] = new_rot.Z;
 	
-        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg, BROADCAST );
     }
     void Interface::requestUpdateScale(GridsID object_id, Vec3D new_scl ){
         Grids::Value* msg = new Grids::Value();
@@ -214,7 +218,7 @@ namespace Grids {
         (*msg)[ "scl" ][ 1u ] = new_scl.Y;
         (*msg)[ "scl" ][ 2u ] = new_scl.Z;
 	
-        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg );
+        proto->sendRequest( GRIDS_UPDATE_OBJECT, msg, BROADCAST );
     }
 
     std::vector< GridsID > Interface::getKnownRooms(){
@@ -225,7 +229,7 @@ namespace Grids {
         Grids::Value* msg = new Grids::Value();
         (*msg)["_method"] = GRIDS_LIST_ROOMS;
 
-        proto->sendRequest( GRIDS_LIST_ROOMS, msg );
+        proto->sendRequest( GRIDS_LIST_ROOMS, msg, LOCAL );
     }
 
     GridsID Interface::getMyRoom(){

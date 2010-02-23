@@ -41,8 +41,10 @@ namespace Grids {
     }
 
     void Protocol::sendProtocolInitiationString() {
-        std::string initString = "++Grids/1.0/JSON/name=";
+        /* Make sure the name is in quotes, atm. */
+        std::string initString = "++Grids/1.0/JSON/name=\"";
         initString += my_name;
+        initString += "\"";
         protocolWrite(initString);
     }
 
@@ -108,11 +110,11 @@ namespace Grids {
         return writer->write(*val);
     }
 
-    void Protocol::sendRequest(std::string evt) {
-        sendRequest(evt, NULL);
+    void Protocol::sendRequest(std::string evt, int broadcast) {
+        sendRequest(evt, NULL, broadcast);
     }
 
-    void Protocol::sendRequest(std::string evt, Value *args) {
+    void Protocol::sendRequest(std::string evt, Value *args, int broadcast) {
 
         /* Debugging loopback */
         //sendRequestLoopback( evt, args);
@@ -131,6 +133,9 @@ namespace Grids {
 
         const static std::string methodkey = "_method";
         (*args)[methodkey] = evt;
+
+        const static std::string broadcastkey = "_broadcast";
+        (*args)[broadcastkey] = broadcast;
 
         std::string valueStr = stringifyValue(args);
 

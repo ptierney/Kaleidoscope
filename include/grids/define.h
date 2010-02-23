@@ -33,6 +33,9 @@ namespace Grids {
 	
 	typedef Json::Value Value;
 
+        const int BROADCAST = 1;
+        const int LOCAL = 0;
+
 }
 
 

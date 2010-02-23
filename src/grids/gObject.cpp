@@ -141,27 +141,27 @@ namespace Grids {
         }
 
 	void Object::setInitialPositions( Value* val ){
-		if( !( (*val)[ "req" ][ "pos" ].empty() ) ) {
-			setLocalPosition( Vec3D( (*val)[ "req" ][ "pos" ][ 0u ].asDouble(),
-								(*val)[ "req" ][ "pos" ][ 1u ].asDouble(),
-								(*val)[ "req" ][ "pos" ][ 2u ].asDouble() ) );
+		if( !( (*val)[ "pos" ].empty() ) ) {
+			setLocalPosition( Vec3D( (*val)[ "pos" ][ 0u ].asDouble(),
+								(*val)[ "pos" ][ 1u ].asDouble(),
+								(*val)[ "pos" ][ 2u ].asDouble() ) );
  		}
 
-		if( !( (*val)[ "req" ][ "rot" ].empty() ) ) {
-			setLocalRotation( Vec3D( (*val)[ "req" ][ "rot" ][ 0u ].asDouble(),
-								(*val)[ "req" ][ "rot" ][ 1u ].asDouble(),
-								(*val)[ "req" ][ "rot" ][ 2u ].asDouble() ) );
+		if( !( (*val)[ "rot" ].empty() ) ) {
+			setLocalRotation( Vec3D( (*val)[ "rot" ][ 0u ].asDouble(),
+								(*val)[ "rot" ][ 1u ].asDouble(),
+								(*val)[ "rot" ][ 2u ].asDouble() ) );
 		}
 
-		if( !( (*val)[ "req" ][ "scl" ].empty() ) ) {
-			setLocalScale( Vec3D( (*val)[ "req" ][ "scl" ][ 0u ].asDouble(),
-							  (*val)[ "req" ][ "scl" ][ 1u ].asDouble(),
-							  (*val)[ "req" ][ "scl" ][ 2u ].asDouble() ) );
+		if( !( (*val)[ "scl" ].empty() ) ) {
+			setLocalScale( Vec3D( (*val)[ "scl" ][ 0u ].asDouble(),
+							  (*val)[ "scl" ][ 1u ].asDouble(),
+							  (*val)[ "scl" ][ 2u ].asDouble() ) );
 		}
 	}
 
 	Value* Object::getAttrFromValue( Value* val ){
-		return &((*val)[ "req" ][ "attr" ]);
+		return &((*val)[ "attr" ]);
 	}
 
 	Value* Object::getAttr(){
@@ -178,7 +178,7 @@ namespace Grids {
 	}
 	
 	void Object::setAttrFromValue( Value* new_attr ){
-		setAttr( &((*new_attr)[ "req" ][ "attr" ]) );
+		setAttr( &((*new_attr)[ "attr" ]) );
 	}
 
 	//Private:
