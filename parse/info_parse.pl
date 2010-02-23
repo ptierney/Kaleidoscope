@@ -9,6 +9,7 @@ use lib "$FindBin::Bin/../../grids-platform/lib";
 
 use Grids::Client;
 use Grids::Identity;
+use Grids::Console;
 use Grids::Conf;
 
 use Carp qw (croak);
@@ -16,32 +17,89 @@ use Getopt::Long;
 use Data::Dumper;
 
 my $id = Grids::Identity->new();
-my $client = Grids::Client->new(id => $id, transport_class => 'Loop', debug => 1);
+my $client = Grids::Client->new(id => $id, use_encryption => 0, debug => 1);
+#my $address = Grids::Address::TCP->new( address => 'elcerrito.ath.cx');
+my $address = Grids::Address::TCP->new( address => '127.0.0.1' );
 
-#$client->register_hook('Authentication.Login', \&login_hook);
-#$client->register_hook('Services.List', \&client_service_list);
-#$client->register_hook('Storage.List', \&client_storage_list);
+# Refer to Grids::Node::Hooks.. for hooks
+$client->register_hooks(
+						'Authentication.Login' => \&connected_cb,
+						'Broadcast.Event' => \&broadcast_cb,
+						'Room.Create' => \&room_create_cb,
+						'Room.List' => \&list_rooms_cb,
+						'Room.CreateObject' => \&create_object_cb,
+						'Room.UpdateObject' => \&update_object_cb,
+						'Room.ListObjects' => \&list_objects_cb,
+						);
 
-#my $login_good = 0;
+my $con = Grids::Console->new(
+							  title => "Parser",
+							  prompt => "Parser>",
+							  handlers => {
+								  newid => \&create_id,
+								  connect => \&connect,
+								  login => \&login,
+								  listrooms => \&request_list_rooms,
+							  },
+							  );
 
-#$login_good = 1;
-$client->login;
+run();
 
-# Get session token
-$client->session_token;
+sub connect {
+	$client->connect($address);
+}
 
-sub grids_write {
+sub login {
+	$client->dispatch_event('Authentication.Login');
+}
+
+sub request_list_rooms {
+	$client->dispatch_event('Room.List');
+}
+
+sub create_id {
+    $con->interactively_generate_identity;
+}
+
+sub run {
+	$con->run;
+}
+
+sub connected_cb {
+	$con->print("CONNECTED CALL BACK");
+}
+
+sub broadcast_cb {
+	print "BROADCAST CALL BACK\n";
+}
+
+sub room_create_cb {
+	print "ROOM CREATE CALL BACK\n";
+}
+
+sub list_rooms_cb {
+	$con->print("LIST ROOMS CALL BACK");
+}
+
+sub create_object_cb {
+
+}
+
+sub update_object_cb {
+
+}
+
+sub list_objects_cb {
+
 }
 
 sub login_hook {
 	my($c, $evt) = @_;
 
-	my args = $evt->args;
+	my $args = $evt->args;
 #login successful	
 	if($args->{success} == 1) {
 		print "LOGIN!!!\n";
 	}
-
 }
-
 
