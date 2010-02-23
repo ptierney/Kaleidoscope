@@ -55,6 +55,7 @@ $client->register_hook(qr/.*/, sub { $con->print("LOL HI"); });
 
 run();
 
+
 sub anything_cb {
 	$con->print("Anything");
 }
