@@ -13,9 +13,9 @@
 # include "json_batchallocator.h"
 #endif // #ifndef JSON_USE_SIMPLE_INTERNAL_ALLOCATOR
 
-#define JSON_ASSERT_UNREACHABLE assert( false )
-#define JSON_ASSERT( condition ) assert( condition );  // @todo <= change this into an exception throw
-#define JSON_ASSERT_MESSAGE( condition, message ) if (!( condition )) throw std::runtime_error( message );
+#define JSON_ASSERT_UNREACHABLE ( false )
+#define JSON_ASSERT( condition ) ( condition );  // @todo <= change this into an exception throw
+#define JSON_ASSERT_MESSAGE( condition, message ) if (!( condition )) (std::cerr << message );
 
 namespace Json {
 

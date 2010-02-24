@@ -1,6 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-09-04T01:51:13
 # -------------------------------------------------
+CONFIG += static
+CXXFLAGS+=-fexceptions
 QT += network \
     opengl \
     svg \
