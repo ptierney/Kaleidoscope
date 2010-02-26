@@ -4,12 +4,7 @@
 CONFIG += static
 CXXFLAGS+=-fexceptions
 QT += network \
-    opengl \
-    svg \
-    webkit \
-    xml \
-    xmlpatterns \
-    phonon
+    opengl
 TARGET = Kaleidoscope
 TEMPLATE = app
 SOURCES += main.cpp \

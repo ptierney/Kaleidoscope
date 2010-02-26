@@ -1,4 +1,5 @@
 
+
 #include <kaleidoscope/glSpaceObject.h>
 #include <kaleidoscope/spaceObject.h>
 #include <kaleidoscope/spaceRenderer.h>
@@ -21,7 +22,7 @@ namespace Kaleidoscope {
 	}
 
 	void GLSpaceObject::glDraw( Device* d ){
-                d->getRenderer()->lockGL();
+                ////d->getRenderer()->lockGL();
 		glPushMatrix();
 
 		Vec3D abs_pos = getPosition();
@@ -40,19 +41,19 @@ namespace Kaleidoscope {
 				abs_scl.Y,
 				abs_scl.Z );
 		
-                d->getRenderer()->unlockGL();
+                //d->getRenderer()->unlockGL();
 		
 		lockAttr();
 		glDrawGeometry(d);
 		unlockAttr();
 		
-                d->getRenderer()->lockGL();
+                //d->getRenderer()->lockGL();
 		glPopMatrix();
-                d->getRenderer()->unlockGL();
+                //d->getRenderer()->unlockGL();
 	}
 
 	void GLSpaceObject::glDrawGeometry( Device* d ){
-		d->getRenderer()->lockGL();
+                //d->getRenderer()->lockGL();
 		
 		// Draw Lines
 		if( !( attr[ "lines" ] ) == false )
@@ -192,7 +193,7 @@ namespace Kaleidoscope {
 				glEnd();						
 			} // end if Triangles exists	
 		
-		d->getRenderer()->unlockGL();
+                //d->getRenderer()->unlockGL();
 	}
 
 } // end namespace Kaleidoscope

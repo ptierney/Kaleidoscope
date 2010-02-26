@@ -25,7 +25,7 @@ namespace Kaleidoscope {
 		unlockAttr();
                 */
 
-        d->getRenderer()->addChild( this );
+        //d->getRenderer()->addChild( this );
     }
 
     void Room::draw( Device* d ){

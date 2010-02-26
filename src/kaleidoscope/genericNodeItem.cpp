@@ -3,8 +3,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
-#include <QSvgRenderer>
-#include <QGraphicsSvgItem>
 #include <QRect>
 
 #include <kaleidoscope/genericNodeItem.h>

@@ -1,7 +1,10 @@
 
 #pragma once
 
+#ifdef __COMMENT_GL_WIDGET__
+
 #include <kaleidoscope/object.h>
+
 
 #include <QGLWidget>
 
@@ -74,3 +77,5 @@ namespace Kaleidoscope {
 	};
 
 } // end namespace Kaleidoscope
+
+#endif

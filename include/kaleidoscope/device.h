@@ -28,7 +28,6 @@ namespace Kaleidoscope {
     class Settings;
     class NoticeWindow;
     class Console;
-    class SpaceRenderer;
     class Scene2D;
     class View2D;
 
@@ -45,8 +44,6 @@ namespace Kaleidoscope {
         Grids::Utility* getGridsUtility();
         EventController* getEventController();
         Settings* getSettings();
-        SpaceRenderer* getRenderer();
-        SpaceRenderer* renderer;
         Camera* getCamera();
         void registerCamera(Grids::Value*);
 

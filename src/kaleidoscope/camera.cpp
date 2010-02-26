@@ -37,7 +37,7 @@ namespace Kaleidoscope {
 		d->getRenderer()->prepareRender2();
                 */
 
-		d->getRenderer()->drawAll(d);
+                //d->getRenderer()->drawAll(d);
 	}
 	
 	void Camera::parseAttrFromValue( Grids::Value* val ){

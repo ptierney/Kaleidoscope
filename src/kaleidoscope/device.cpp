@@ -73,7 +73,6 @@ namespace Kaleidoscope {
         object_controller = new Grids::ObjectController(this, main_window);
         g_utility = new Grids::Utility();
 
-        createSpaceRenderer();
     }
 
     void Device::init() {
@@ -133,7 +132,6 @@ namespace Kaleidoscope {
     NoticeWindow* Device::getNoticeWindow() { return noticeWindow; }
     NoticeWindow* Device::getErrorWindow() { return errorWindow; }
     Scene2D* Device::getScene() { return scene; }
-    SpaceRenderer* Device::getRenderer() { return renderer; }
     Camera* Device::getCamera() { return main_camera; }
 
     void Device::loadRoom(){
@@ -254,6 +252,7 @@ namespace Kaleidoscope {
 
 	/* TODO: fix this so it fits into either broadcast or no broadcast 
 	   standard. */
+    /*
     void Device::createSpaceRenderer(){
         Grids::Value* ren = new Grids::Value();
 
@@ -270,6 +269,7 @@ namespace Kaleidoscope {
 
         renderer = new SpaceRenderer(this, ren);
     }
+    */
 
     /////////////////////////////////////
     // Accessor Functions

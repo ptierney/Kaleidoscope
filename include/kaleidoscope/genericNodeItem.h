@@ -3,7 +3,6 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
-#include <QGraphicsSvgItem>
 
 #include <kaleidoscope/define.h>
 #include <kaleidoscope/object.h>
@@ -46,7 +45,6 @@ namespace Kaleidoscope {
 
         Device* d;
 
-        QGraphicsSvgItem *svg_item;
         QGraphicsTextItem *text_item;
 
         float rect_boarder;
