@@ -17,6 +17,9 @@ namespace Kaleidoscope {
 
 	void NoticeWindow::setPriority( int new_priority) {
 		current_priority = new_priority;
+                QString int_str;
+                int_str.setNum(new_priority);
+                write(tr("Notice Window Priority = ") + int_str );
 	}
 
 	void NoticeWindow::write(const QString & message) {

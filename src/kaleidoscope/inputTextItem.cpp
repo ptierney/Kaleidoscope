@@ -18,6 +18,10 @@ namespace Kaleidoscope {
                                  QGraphicsItem *parent, QGraphicsScene *scene ) :
     QGraphicsTextItem(parent, scene), Object(d, val) {
 
+        /* Only send text information once per second. */
+        /* Sending key data as fast as the user typed it crashed my server. */
+        key_delay = 1000;
+
         this->d = d;
 
         d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
@@ -41,6 +45,10 @@ namespace Kaleidoscope {
             setSelected(1);
             setFocus(Qt::OtherFocusReason);
         }
+
+        /* This sets up an loop. */
+        startTimer(0);
+        keys_unsent = 0;
     }
 
     GridsID InputTextItem::requestCreate( Device* device, Vec3D start_pos) {
@@ -107,6 +115,14 @@ namespace Kaleidoscope {
         //return QGraphicsItem::itemChange(change, value);
     }
 
+     void InputTextItem::timerEvent(QTimerEvent *event) {
+         /* Check the milliseconds that have elapsed between presses. */
+         if(keys_unsent && key_timer.elapsed() > key_delay){
+             keys_unsent = false;
+             updateText(toPlainText());
+         }
+     }
+
     /* Overload Grids::Object */
     void InputTextItem::setLocalPosition(Vec3D new_pos){
         setPos(new_pos.X, new_pos.Y);
@@ -158,9 +174,10 @@ namespace Kaleidoscope {
         /* Process the event so that toPlainText() returns the actual value of the item. */
         QGraphicsTextItem::keyPressEvent(event);
 
-        if(hasFocus()){
+        if(hasFocus() && keys_unsent == false){
             /*d->getNoticeWindow()->write(event->text());*/
-            updateText(toPlainText());
+            keys_unsent = true;
+            key_timer.start();
         }   
     }
 

@@ -11,62 +11,69 @@
 
 namespace Kaleidoscope {
 
-	Console::Console(Device* d, QWidget* window_parent){
-		this->d = d;
+    Console::Console(Device* d, QWidget* window_parent){
+        this->d = d;
 	
-		console_window = new ConsoleWindow(window_parent);
-		
-		// link returnPressed with newInput
+        console_window = new ConsoleWindow(window_parent);
 
-		QObject::connect(console_window, SIGNAL( returnPressed() ),
-					  this, SLOT(newInput() ) );
+        // link returnPressed with newInput
 
-		QObject::connect(this, SIGNAL( clearLine() ),
-					  console_window, SLOT( clear() ));
-	}
-	
-	ConsoleWindow* Console::getConsoleWindow() {
-		return console_window;
-	}
-	
-	void Console::newInput() {		
-		QString input_text = console_window->text();
-		
-		d->getNoticeWindow()->write(tr("> ") + input_text);		
-		clearLine();
+        QObject::connect(console_window, SIGNAL( returnPressed() ),
+                         this, SLOT(newInput() ) );
 
-		parseInput(input_text);
-	}
-	
-	void Console::parseInput(QString input){
-		QString lower = input.toLower();
+        QObject::connect(this, SIGNAL( clearLine() ),
+                         console_window, SLOT( clear() ));
+    }
 
-		if(lower == tr("connect") ||
-		   lower == tr("conect to server") ){
-			connectToServer();
-		}
-		else if(lower == tr("exit") ||
-			   lower == tr("quit") ){
-                        d->quit();
-		}
-		else if(lower == tr("create room") ){
-                    d->getInterface()->createMyRoom();
-                        //createRoom();
-		} 
-                else if(lower == tr("join room")) {
-                    d->getInterface()->requestAllRooms();
-                }
-		else if(lower == tr("create object") ){
-			createObject();
-		}
-                else if(lower == tr("generic node")) {
-                    GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0), "Generic Node");
-                }
-		else if(lower == tr("disconnect") || 
-			   lower == tr("disconnect from server") ){
-			disconnectFromServer();
-		}
+    ConsoleWindow* Console::getConsoleWindow() {
+        return console_window;
+    }
 
-	}	
+    void Console::newInput() {
+        QString input_text = console_window->text();
 
+        d->getNoticeWindow()->write(tr("> ") + input_text);
+        clearLine();
+
+        parseInput(input_text);
+    }
+
+    void Console::parseInput(QString input){
+        QString lower = input.toLower();
+        QStringList input_parse = lower.split(tr(" "));
+        QString first = input_parse[0];
+        QString second;
+        if(input_parse.length() > 1)
+            second = input_parse[1];
+
+        if(lower == tr("connect") ||
+           lower == tr("conect to server") ){
+            connectToServer();
+        } else if(lower == tr("exit") ||
+                  lower == tr("quit") ){
+            d->quit();
+        } else if(lower == tr("create room") ){
+            d->getInterface()->createMyRoom();
+            //createRoom();
+        } else if(lower == tr("join room")) {
+            d->getInterface()->requestAllRooms();
+        } else if(first == tr("create")) {
+            if(second == tr("node")) {
+                GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0), "Generic Node");
+            }
+        } else if(first == tr("notify")) {
+            d->getNoticeWindow()->setPriority(second.toInt());
+        } else if(first == tr("get")) {
+            if(second == tr("myroom")){
+                d->getNoticeWindow()->write(10, tr("Your room = ") + tr(d->getMyRoom().c_str()));
+            } else if(second == tr("myid")) {
+                d->getNoticeWindow()->write(10, tr("Your id = ") + tr(d->getMyID().c_str()));
+            }
+        } else if(first == tr("request")) {
+            if(second == tr("allrooms")) {
+                d->getInterface()->requestAllRooms();
+            }
+        }
+
+    }
 } // end namespace Kaleidoscope

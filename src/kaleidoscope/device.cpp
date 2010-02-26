@@ -102,7 +102,7 @@ namespace Kaleidoscope {
             loadRoom();
         }
 
-        /*getNoticeWindow()->write(tr("update"));*/
+        //getNoticeWindow()->write(tr("update"));
         getInterface()->collectEvents();
     }
 
@@ -188,18 +188,10 @@ namespace Kaleidoscope {
     }
 
     void Device::createScene() {
-        /*
-        QDockWidget *dock = new QDockWidget(tr("Scene"), main_window);
-        dock->setFloating(0);
-        */
+
         scene = new Scene2D(this, main_window);
-        //QGraphicsView* view = new QGraphicsView(scene);
         view2D = new View2D(scene);
 
-        /*
-        dock->setWidget(view);
-        main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
-        */
         main_window->setCentralWidget(view2D);
     }
 
@@ -250,27 +242,6 @@ namespace Kaleidoscope {
         delete cam_val;
     }
 
-	/* TODO: fix this so it fits into either broadcast or no broadcast 
-	   standard. */
-    /*
-    void Device::createSpaceRenderer(){
-        Grids::Value* ren = new Grids::Value();
-
-        (*ren)[ "id" ] = getGridsUtility()->getNewUUID();
-        (*ren)[ "req" ][ "pos" ][ 0u ] = 0.0f;
-        (*ren)[ "req" ][ "pos" ][ 1u ] = 0.0f;
-        (*ren)[ "req" ][ "pos" ][ 2u ] = 0.0f;
-        (*ren)[ "req" ][ "rot" ][ 0u ] = 0.0f;
-        (*ren)[ "req" ][ "rot" ][ 1u ] = 0.0f;
-        (*ren)[ "req" ][ "rot" ][ 2u ] = 0.0f;
-        (*ren)[ "req" ][ "scl" ][ 0u ] = 1.0f;
-        (*ren)[ "req" ][ "scl" ][ 1u ] = 1.0f;
-        (*ren)[ "req" ][ "scl" ][ 2u ] = 1.0f;
-
-        renderer = new SpaceRenderer(this, ren);
-    }
-    */
-
     /////////////////////////////////////
     // Accessor Functions
 
@@ -296,7 +267,6 @@ namespace Kaleidoscope {
     }
 
     GridsID Device::getMyRoom() {
-        QMutexLocker lock(&my_room_mutex);
-        return my_room;
+        return getInterface()->getMyRoom();
     }
 } // end namespace Kaleidoscope

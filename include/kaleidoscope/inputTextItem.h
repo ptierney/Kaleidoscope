@@ -3,6 +3,7 @@
 
 #include <QGraphicsTextItem>
 #include <QPen>
+#include <QTime>
 
 #include <kaleidoscope/define.h>
 #include <kaleidoscope/object.h>
@@ -59,7 +60,7 @@ namespace Kaleidoscope {
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         void keyPressEvent(QKeyEvent* event);
 
-
+        void timerEvent(QTimerEvent *);
 
     private:
         Device* d;
@@ -75,6 +76,10 @@ namespace Kaleidoscope {
         static const int text_color_a = 200;
 
         QColor text_color;
+
+        QTime key_timer;
+        bool keys_unsent;
+        int key_delay;
     };
 }
 

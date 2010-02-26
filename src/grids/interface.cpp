@@ -56,7 +56,7 @@ namespace Grids {
         */
 
         proto->connectToNode( server_address.c_str() );
-        d->getNoticeWindow()->write(7, tr("Connected to Node"));
+        d->getNoticeWindow()->write(7, tr("Opened network connection to server"));
 
         proto->runEventLoopThreaded();
         d->getNoticeWindow()->write(0, tr("Running Event Loop"));
@@ -77,12 +77,14 @@ namespace Grids {
     }
 
     void Interface::collectEvents() {
+
         EventQueue temp_queue = proto->getEvents();
 
         while(!temp_queue.empty()){
             Event *temp_event = temp_queue.front();
 
             //d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
+            d->getNoticeWindow()->write(0, tr("Collected event"));
             d->getNoticeWindow()->writeEvent(0, temp_event);
             parseEvent(temp_event);
 
@@ -92,17 +94,24 @@ namespace Grids {
     }
 
     void Interface::parseEvent( Event* evt ){
-        d->getNoticeWindow()->write(0, "Parsing Event");
-
         QMutexLocker lock(&parse_event_mutex);
+
+        /* Check for the success bounceback. Use this to determine if a message
+         * was received by the server. */
+        if((*(evt->getArgsPtr()))["req"].empty() == false){
+            return;
+        }
+
+        d->getNoticeWindow()->write(0, "Parsing Event");
 
         std::string event_type = evt->getEventType();
         Grids::GridsID object_id = evt->getID();
 
-        d->getNoticeWindow()->write(0, tr(event_type.c_str()));
+        d->getNoticeWindow()->write(0, tr("Event type = ") + tr(event_type.c_str()));
 
         if( event_type == GRIDS_CREATE_ROOM ){
-            registerNewRoom( new Kal::Room( d, evt->getArgsPtr() ) );
+            //registerNewRoom( new Kal::Room( d, evt->getArgsPtr() ) );
+            registerCreateRoom(evt);
         } else if( event_type == GRIDS_LIST_ROOMS ) {
             receiveRoomList( evt );
         } else if( event_type == GRIDS_CREATE_OBJECT ){
@@ -239,8 +248,15 @@ namespace Grids {
         return my_room;
     }
 
-    void Interface::registerNewRoom( Kal::Room* rm ){
-        GridsID rm_id = rm->getID();
+    void Interface::registerCreateRoom(Event* evt) {
+        /* register new room evt->["id"] */
+        GridsID new_room_id = (*(evt->getArgsPtr()))["id"].asString();
+        d->getNoticeWindow()->write(5, tr("Room created with id = ") + tr(new_room_id.c_str()));
+        registerNewRoom( new_room_id );
+    }
+
+    void Interface::registerNewRoom(GridsID new_id){
+        GridsID rm_id = new_id;
         bool my_room_created = 0;
 
         // Make my room the first available room
@@ -248,6 +264,8 @@ namespace Grids {
             QMutexLocker my_room_lock(&my_room_mutex);
             my_room = rm_id;
             my_room_created = 1;
+
+            d->getNoticeWindow()->write(5, tr("Your room set to: ") + tr(my_room.c_str()));
         }
 
         bool in_vector = 0;
@@ -280,13 +298,7 @@ namespace Grids {
             result = find(known_rooms.begin(), known_rooms.end(), room_id );
 
             if( result == known_rooms.end() ) { /* did not find room. */
-                /* Create fake Grids::Value* */
-                Value* temp_val = new Value();
-                (*temp_val)["id"] = room_id;
-
-                registerNewRoom(new Kal::Room(d, temp_val));
-
-                delete temp_val;
+                registerNewRoom(room_id);
             }
         }
     }

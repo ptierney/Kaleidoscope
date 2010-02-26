@@ -84,7 +84,9 @@ namespace Grids{
     private:
         void init();
         void setConnected( bool );
-        void registerNewRoom( Kaleidoscope::Room* );
+        //void registerNewRoom( Kaleidoscope::Room* );
+        void registerCreateRoom(Event*);
+        void registerNewRoom(GridsID);
         void receiveRoomList(Event*);
 
         std::vector< GridsID > known_rooms;
