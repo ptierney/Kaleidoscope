@@ -66,6 +66,8 @@ namespace Grids{
 
         void printVal(Value*);
 
+        void flushProtocol();
+
     public slots:
         void parseEvent(Event*);
 

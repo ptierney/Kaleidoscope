@@ -15,6 +15,8 @@ namespace Grids {
         running = 0; // Normally has mutex, but we're not using multiple threads yet
         last_event = 0;
         my_name = name;
+        /* Limit outbound traffic to 2 per second. */
+        outbound_limit = 500;
 
         sock = new QTcpSocket(this);
 
@@ -48,13 +50,23 @@ namespace Grids {
         protocolWrite(initString);
     }
 
-    int Protocol::protocolWrite(std::string &str) {
-        /* Different objects may try to write at the same time. */
-        QMutexLocker write_lock(&proto_write_mutex);
 
-        uint32_t len = str.size();
 
-        return protocolWrite(str.c_str(), len);
+    void Protocol::protocolFlush() {
+        /* If enough time has elapsed. */
+        /* Pop a string off the queue. */
+        /* Send it on its merry way. */
+        QMutexLocker locker(&outbound_queue_mutex);
+
+        if(!outbound_queue.empty() &&
+           outbound_timer.elapsed() > outbound_limit){
+
+            std::string str = outbound_queue.front();
+            outbound_queue.pop();
+            outbound_timer.start();
+
+            protocolWrite(str);
+        }
     }
 
     void Protocol::endianSwap(unsigned int& x)
@@ -69,6 +81,15 @@ namespace Grids {
     {
         return (((nLongNumber&0x000000FF)<<24)+((nLongNumber&0x0000FF00)<<8)+
                 ((nLongNumber&0x00FF0000)>>8)+((nLongNumber&0xFF000000)>>24));
+    }
+
+    int Protocol::protocolWrite(std::string &str) {
+        /* Different objects may try to write at the same time. */
+        QMutexLocker write_lock(&proto_write_mutex);
+
+        uint32_t len = str.size();
+
+        return protocolWrite(str.c_str(), len);
     }
 
     int Protocol::protocolWrite(const char *str, quint32 len) {
@@ -139,7 +160,7 @@ namespace Grids {
 
         std::string valueStr = stringifyValue(args);
 
-        protocolWrite(valueStr);
+        pushOutboundRequest(valueStr);
 
         if (createdVal)
             delete args;
@@ -368,6 +389,12 @@ namespace Grids {
         QMutexLocker lock(&event_queue_mutex);
 
         event_queue.push(new_event);
+    }
+
+    void Protocol::pushOutboundRequest(std::string str){
+        QMutexLocker lock(&outbound_queue_mutex);
+
+        outbound_queue.push(str);
     }
 
 

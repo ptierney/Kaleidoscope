@@ -1,10 +1,12 @@
 
 #include <kaleidoscope/console.h>
+#include <kaleidoscope/define.h>
 #include <kaleidoscope/consoleWindow.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/genericNodeItem.h>
+#include <kaleidoscope/genericLinkItem.h>
 #include <grids/interface.h>
 #include <kaleidoscope/device.h>
 
@@ -60,6 +62,10 @@ namespace Kaleidoscope {
         } else if(first == tr("create")) {
             if(second == tr("node")) {
                 GenericNodeItem::requestCreate(d, Vec3D(1.0, 1.0, 1.0), "Generic Node");
+            } else if(second == tr("nodes")) {
+                GridsID node1 = GenericNodeItem::requestCreate(d, Vec3D(300.0, 150.0, 0.0), "Node 1");
+                GridsID node2 = GenericNodeItem::requestCreate(d, Vec3D(-300.0, -150.0, 0.0), "Node 2");
+                GenericLinkItem::requestCreate(d, node1, node2);
             }
         } else if(first == tr("notify")) {
             d->getNoticeWindow()->setPriority(second.toInt());

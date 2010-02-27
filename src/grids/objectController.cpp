@@ -6,10 +6,11 @@
 #include <grids/gObject.h>
 #include <grids/event.h>
 #include <kaleidoscope/genericNodeItem.h>
+#include <kaleidoscope/genericLinkItem.h>
+#include <kaleidoscope/inputTextItem.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
-#include <kaleidoscope/inputTextItem.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/device.h>
 
@@ -68,6 +69,9 @@ namespace Grids {
             found = 1;
         } else if( type == "GenericNode") {
             Kal::GenericNodeItem::gridsCreate(d, evt);
+            found = 1;
+        } else if( type == "GenericLink") {
+            Kal::GenericLinkItem::gridsCreate(d, evt);
             found = 1;
         }
 

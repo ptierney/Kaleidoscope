@@ -103,6 +103,7 @@ namespace Kaleidoscope {
         }
 
         //getNoticeWindow()->write(tr("update"));
+        getInterface()->flushProtocol();
         getInterface()->collectEvents();
     }
 

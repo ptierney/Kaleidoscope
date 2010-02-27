@@ -303,6 +303,10 @@ namespace Grids {
         }
     }
 
+    void Interface::flushProtocol() {
+        proto->protocolFlush();
+    }
+
     void Interface::printVal(Value* val) {
         //d->getNoticeWindow()->write(tr("sending>> ") + tr( (*val).toStyledString().c_str() ));
         d->getNoticeWindow()->writeValue(0, val);

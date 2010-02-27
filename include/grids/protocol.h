@@ -12,6 +12,7 @@
 #include <QThread>
 #include <QWaitCondition>
 #include <QTcpSocket>
+#include <QTime>
 
 namespace Grids {
 
@@ -25,7 +26,8 @@ namespace Grids {
         bool connectToNode(const char *address);
         void sendProtocolInitiationString();
         int protocolWrite(std::string &str);
-        int protocolWrite(const char *str, uint32_t len);
+
+        void protocolFlush();
         void closeConnection();
 
         std::string stringifyValue(Value *val);
@@ -68,8 +70,13 @@ namespace Grids {
         QMutex finishedMutex;
         QMutex eventLoopRunningMutex;
         QMutex event_queue_mutex;
+        QMutex outbound_queue_mutex;
         QMutex proto_write_mutex;
         bool running;
+        QTime outbound_timer;
+        int outbound_limit;
+
+                int protocolWrite(const char *str, uint32_t len);
 	
         void endianSwap(unsigned int&);
         quint32 byteSwap(quint32);
@@ -77,7 +84,12 @@ namespace Grids {
         /* Add an event to the event queue, locking the mutex as necessary. */
         void pushEvent(Event*);
 
+        /* Add to an event queue, for network speed limiting. */
+        void pushOutboundRequest(std::string);
+
         EventQueue event_queue;
+
+        std::queue<std::string> outbound_queue;
 
         std::string my_name;
 
