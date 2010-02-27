@@ -2,7 +2,7 @@
 # Project created by QtCreator 2009-09-04T01:51:13
 # -------------------------------------------------
 CONFIG += static
-CXXFLAGS+=-fexceptions
+CXXFLAGS += -fexceptions
 QT += network \
     opengl
 TARGET = Kaleidoscope
@@ -36,7 +36,8 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/inputTextItem.cpp \
     ../../src/kaleidoscope/scene2d.cpp \
     ../../src/kaleidoscope/genericNodeItem.cpp \
-    ../../src/kaleidoscope/view2d.cpp
+    ../../src/kaleidoscope/view2d.cpp \
+    ../../src/kaleidoscope/genericLinkItem.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -88,5 +89,6 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/inputTextItem.h \
     ../../include/kaleidoscope/scene2d.h \
     ../../include/kaleidoscope/genericNodeItem.h \
-    ../../include/kaleidoscope/view2d.h
+    ../../include/kaleidoscope/view2d.h \
+    ../../include/kaleidoscope/genericLinkItem.h
 FORMS += kaleidoscope.ui

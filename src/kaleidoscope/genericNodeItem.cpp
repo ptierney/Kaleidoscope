@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QRect>
+#include <QGraphicsObject>
 
 #include <kaleidoscope/genericNodeItem.h>
 #include <grids/utility.h>
@@ -62,15 +63,18 @@ namespace Kaleidoscope {
 
     GridsID GenericNodeItem::requestCreate(Device *dev, Vec3D position, std::string text){
         Grids::Value* create_val = new Grids::Value();
+        GridsID new_id = dev->getGridsUtility()->getNewUUID();
 
         (*create_val)["type"] = "GenericNode";
         (*create_val)["parent"] = dev->getMyID();
-        (*create_val)["id"] = dev->getGridsUtility()->getNewUUID();
+        (*create_val)["id"] = new_id;
         (*create_val)["text"] = text;
 
         return dev->getInterface()->requestCreateObject(create_val, position);
 
         delete create_val;
+
+        return new_id;
     }
 
     void GenericNodeItem::gridsCreate(Device* dev, Grids::Event *evt) {
@@ -117,7 +121,7 @@ namespace Kaleidoscope {
     }
 
     void GenericNodeItem::updateAttr(Grids::Event *evt) {
-
+        Grids::Object::updateAttr(evt);
     }
 
 

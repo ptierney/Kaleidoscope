@@ -8,6 +8,7 @@
 
 #include <string>
 
+
 #define GRIDS_SERVER "mmmii.net"
 #define DEFAULT_SERVER "mmmii.net"
 
@@ -20,12 +21,21 @@
 
 namespace Kaleidoscope
 {
-	typedef irr::core::vector3df Vec3D;
-	typedef irr::core::vector2df Vec2D;
+
 	typedef irr::core::matrix4 Matrix4;
+
+        typedef irr::core::vector3df Vec3D;
+        typedef irr::core::vector2df Vec2D;
 	typedef irr::core::vector3df Vector3;
 	typedef irr::core::vector2df Vector2;
-	
+
+        /*
+        typedef irr::core::vector3d<qreal> Vec3D;
+        typedef irr::core::vector3d<qreal> Vector3;
+        typedef irr::core::vector2d<qreal> Vec2D;
+        typedef irr::core::vector2d<qreal> Vector2;
+        */
+
 	typedef std::string GridsID;
 	
 	const float GRAD_PI = irr::core::RADTODEG; // 180.0f / PI

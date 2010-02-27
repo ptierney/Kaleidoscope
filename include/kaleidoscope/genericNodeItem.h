@@ -8,6 +8,8 @@
 #include <kaleidoscope/object.h>
 #include <grids/define.h>
 
+/* Generic node representing text data. */
+
 namespace Kaleidoscope {
 
     /* Not that this item inherits from both QGraphicsItem and QObject.

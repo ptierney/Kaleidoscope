@@ -12,6 +12,7 @@
 
 #include <json/value.h>
 
+
 #define GRIDS_ID_ERROR "ID ERROR"
 #define GRIDS_CREATE_ROOM "Room.Create" 
 #define GRIDS_CREATE_OBJECT "Room.CreateObject"
@@ -22,10 +23,16 @@
 
 namespace Grids {
 
-	typedef irr::core::vector3df Vec3D;
+        typedef irr::core::vector3df Vec3D;
 	typedef irr::core::vector2df Vec2D;
 	typedef irr::core::vector3df Vector3;
-	typedef irr::core::vector2df Vector2;
+        typedef irr::core::vector2df Vector2;
+/*
+    typedef irr::core::vector3d<qreal> Vec3D;
+    typedef irr::core::vector3d<qreal> Vector3;
+    typedef irr::core::vector2d<qreal> Vec2D;
+    typedef irr::core::vector2d<qreal> Vector2;
+    */
 
         /* EventQueue typedef is in event.h */
 

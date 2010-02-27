@@ -44,9 +44,9 @@ namespace Kaleidoscope {
         bool rooms_dont_exist = d->getInterface()->getKnownRooms().empty();
 
         if( rooms_dont_exist ){
-            setLocalPosition( Vec3D( 0.0f, 0.0f, 0.0f ) );
-            setLocalRotation( Vec3D( 0.0f, 0.0f, 0.0f ) );
-            setLocalScale( Vec3D( 1.0f, 1.0f, 1.0f ) );
+            setLocalPosition( Vec3D( 0.0, 0.0, 0.0 ) );
+            setLocalRotation( Vec3D( 0.0, 0.0, 0.0 ) );
+            setLocalScale( Vec3D( 1.0, 1.0, 1.0 ) );
         }
         else{
             int world_size = 5; // 20 x 20 x 20 = 8000 total rooms
