@@ -17,6 +17,9 @@ namespace Kaleidoscope {
         void scaleView(qreal scaleFactor);
 
         void drawBackground(QPainter *painter, const QRectF &rect);
+
+        /* This is set in the constructor. */
+        QRect world_size;
     };
 }
 

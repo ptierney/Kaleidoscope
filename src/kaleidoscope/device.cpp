@@ -168,7 +168,8 @@ namespace Kaleidoscope {
         dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
         console = new Console(this, dock);
         dock->setWidget(console->getConsoleWindow());
-        main_window->addDockWidget(Qt::BottomDockWidgetArea, dock);
+
+        main_window->addDockWidget( Qt::RightDockWidgetArea, dock);
     }
 
     void Device::createNoticeWindow() {

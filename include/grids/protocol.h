@@ -25,7 +25,7 @@ namespace Grids {
 
         bool connectToNode(const char *address);
         void sendProtocolInitiationString();
-        int protocolWrite(std::string &str);
+
 
         void protocolFlush();
         void closeConnection();
@@ -76,7 +76,8 @@ namespace Grids {
         QTime outbound_timer;
         int outbound_limit;
 
-                int protocolWrite(const char *str, uint32_t len);
+        int protocolWrite(std::string &str);
+        int protocolWrite(const char *str, uint32_t len);
 	
         void endianSwap(unsigned int&);
         quint32 byteSwap(quint32);

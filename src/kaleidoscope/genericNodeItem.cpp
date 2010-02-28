@@ -21,28 +21,28 @@ namespace Kaleidoscope {
                                      QGraphicsItem *parent, QGraphicsScene *scene)
         :  QGraphicsObject(parent), Object(d, val) {
         this->d = d;
-        setFlag(ItemIsMovable);
+
+        setFlag(QGraphicsItem::ItemIsMovable);
+        setFlag(QGraphicsItem::ItemIsSelectable);
+        setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
+        setAcceptHoverEvents(true);
+
         rect_boarder = 1.f;
         line_thickness = 0.6f;
-        fill_color_r = 60; fill_color_g = 68; fill_color_b = 132;
-        text_r = 226; text_g = 224; text_b = 211;
+        fill_color_r = 64; fill_color_g = 64; fill_color_b = 99;
+        non_active_r = 42; non_active_g = 42; non_active_b = 59;
         fill_color_a = 255;
+        non_active_a = 290;
+
+        current_r = non_active_r;
+        current_g = non_active_g;
+        current_b = non_active_b;
+        current_a = non_active_a;
+
+        text_r = 226; text_g = 224; text_b = 211;
         text_a = 255;
 
         d->getNoticeWindow()->write(QObject::tr("Creating generic node"));
-
-        /* From the docs:
-           Note that setting QSvgRenderer on a QGraphicsSvgItem doesn't make the item take
-           ownership of the renderer, therefore if using setSharedRenderer() method one has
-           to make sure that the lifetime of the QSvgRenderer object will be at least as
-           long as that of the QGraphicsSvgItem.
-           */
-        /* TODO: find a way to delete renderer, move it to the descructor? */
-        /*
-        QSvgRenderer *renderer = new QSvgRenderer(QLatin1String("../../media/rect.svg"));
-        svg_item = new QGraphicsSvgItem(this);
-        svg_item->setSharedRenderer(renderer);
-        */
 
         std::string attr_text = getTextFromAttr(getAttrFromValue(val));
 
@@ -51,6 +51,8 @@ namespace Kaleidoscope {
 
         /* Set text magenta. */
         text_item->setDefaultTextColor(QColor(text_r, text_g, text_b, text_a));
+
+        updateDrawRect();
     }
 
     std::string GenericNodeItem::getTextFromAttr(Grids::Value* attr){
@@ -91,28 +93,30 @@ namespace Kaleidoscope {
         generic_node->setPos(item_pos.X, item_pos.Y);
     }
 
-    /* TODO: Remove magic numbers. */
     QRectF GenericNodeItem::boundingRect() const {
-        return text_item->boundingRect();
+        qreal adjust = 10;
+        return draw_rect.adjusted(-adjust, -adjust, adjust, adjust).normalized();
     }
 
     QPainterPath GenericNodeItem::shape() const {
         QPainterPath path;
-        path.addEllipse(-10, -10, 20, 20);
+        path.addRect(draw_rect);
         return path;
     }
 
-    /* Get these Magic Numbers the fuck out! */
     void GenericNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
         //d->getNoticeWindow()->write("Paint");
-        float x1 = text_item->boundingRect().left() - rect_boarder;
+        /*float x1 = text_item->boundingRect().left() - rect_boarder;
         float y1 = text_item->boundingRect().top() - rect_boarder;
         float x2 = text_item->boundingRect().right() + rect_boarder;
         float y2 = text_item->boundingRect().bottom() + rect_boarder;
+        */
+        updateDrawRect();
 
-        painter->setBrush(QColor(fill_color_r, fill_color_g, fill_color_b, fill_color_a));
-        painter->setPen(QPen(Qt::black, line_thickness));
-        painter->drawRect(x1, y1, x2, y2);
+        painter->setBrush(QColor(current_r, current_g, current_b, current_a));
+        painter->setPen(QPen(QColor(0, 0, 0, current_a), line_thickness));
+        //painter->drawRoundedRect(QRect());
+        painter->drawRect(draw_rect);
     }
 
     void GenericNodeItem::setLocalPosition(Vec3D vec) {
@@ -123,6 +127,62 @@ namespace Kaleidoscope {
     void GenericNodeItem::updateAttr(Grids::Event *evt) {
         Grids::Object::updateAttr(evt);
     }
+
+    void GenericNodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+        position_change = pos();
+
+        update();
+        QGraphicsItem::mousePressEvent(event);
+    }
+
+
+    void GenericNodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+        if(pos() != position_change) {
+            d->getNoticeWindow()->write("Pos change");
+            updatePosition(d, Vec3D(pos().x(), pos().y(), zValue()));
+        }
+
+        update();
+        QGraphicsItem::mouseReleaseEvent(event);
+
+    }
+
+    void GenericNodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
+        //d->getNoticeWindow()->write(6, tr("hover"));
+        current_a = fill_color_a;
+        current_r = fill_color_r;
+        current_g = fill_color_g;
+        current_b = fill_color_b;
+
+        update();
+
+        setCursor(Qt::ArrowCursor);
+
+        QGraphicsItem::hoverEnterEvent(event);
+
+    }
+
+    void GenericNodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){        
+        current_r = non_active_r;
+        current_g = non_active_g;
+        current_b = non_active_b;
+        current_a = non_active_a;
+
+        update();
+        setCursor(Qt::OpenHandCursor);
+
+        QGraphicsItem::hoverLeaveEvent(event);
+    }
+
+    void GenericNodeItem::updateDrawRect(){
+        draw_rect = QRectF(text_item->boundingRect().left() - rect_boarder,
+                           text_item->boundingRect().top() - rect_boarder,
+                           text_item->boundingRect().right() + rect_boarder,
+                           text_item->boundingRect().bottom() + rect_boarder);
+    }
+
+
+
 
 
 }

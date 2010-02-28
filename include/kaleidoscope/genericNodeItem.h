@@ -40,10 +40,21 @@ namespace Kaleidoscope {
         void setLocalPosition(Vec3D);
         void updateAttr(Grids::Event *);
 
+    protected:
+        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+
     private:
         std::string getTextFromAttr(Grids::Value*);
 
+        QRectF draw_rect;
+        void updateDrawRect();
+
         QPointF newPos;
+        QPointF position_change;
 
         Device* d;
 
@@ -51,8 +62,17 @@ namespace Kaleidoscope {
 
         float rect_boarder;
         float line_thickness;
+
         float fill_color_r, fill_color_g, fill_color_b, fill_color_a;
+
+        int non_active_a;
+        int non_active_r;
+        int non_active_g;
+        int non_active_b;
+
         float text_r, text_g, text_b, text_a;
+
+        int current_r, current_g, current_b, current_a;
     };
 }
 

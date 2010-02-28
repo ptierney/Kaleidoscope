@@ -15,8 +15,9 @@ namespace Grids {
         running = 0; // Normally has mutex, but we're not using multiple threads yet
         last_event = 0;
         my_name = name;
-        /* Limit outbound traffic to 2 per second. */
-        outbound_limit = 500;
+        /* Limit outbound traffic to 3 per second. */
+        outbound_limit = 1000;
+        outbound_timer.start();
 
         sock = new QTcpSocket(this);
 

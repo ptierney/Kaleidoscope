@@ -73,7 +73,9 @@ namespace Kaleidoscope {
         static const int text_color_r = 6;
         static const int text_color_g = 68;
         static const int text_color_b = 193;
-        static const int text_color_a = 200;
+        static const int text_color_a = 220;
+
+
 
         QColor text_color;
 

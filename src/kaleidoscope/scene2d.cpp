@@ -45,28 +45,34 @@ namespace Kaleidoscope {
     }
 
 
-    void Scene2D::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
-
-
-        if(mouseEvent->button() == Qt::RightButton)
-            InputTextItem::requestCreate(d, Vec3D( mouseEvent->scenePos().x(),
-                                               mouseEvent->scenePos().y(),
+    void Scene2D::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+        if(event->button() == Qt::RightButton)
+            InputTextItem::requestCreate(d, Vec3D( event->scenePos().x(),
+                                               event->scenePos().y(),
                                                1000.0) );
-        /*
-        if (mouseEvent->button() != Qt::LeftButton)
-            return;
-            */
 
-        QGraphicsScene::mousePressEvent(mouseEvent);
+        if(event->button() == Qt::LeftButton)
+            down_pos = event->scenePos();
+
+
+        QGraphicsScene::mousePressEvent(event);
     }
 
-    void Scene2D::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
-        QGraphicsScene::mouseMoveEvent(mouseEvent);
+    void Scene2D::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+        QGraphicsScene::mouseMoveEvent(event);
     }
 
-    void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
-        QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+        QGraphicsScene::mouseReleaseEvent(event);
+
+        if(event->button() == Qt::LeftButton &&
+           focusItem() == 0 &&
+           selectedItems().length() == 0 &&
+           down_pos == event->scenePos() ){
+            InputTextItem::requestCreate(d,Vec3D(event->scenePos().x(), event->scenePos().y(), 1000.0));
+        }
     }
+
 
     /* Allow for a somewhat primative zoom. */
     void Scene2D::wheelEvent(QWheelEvent *event) {

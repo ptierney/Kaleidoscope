@@ -53,6 +53,7 @@ namespace Kaleidoscope {
         void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
         void wheelEvent(QWheelEvent *event);
 
         void scaleView(qreal scaleFactor);
@@ -62,6 +63,8 @@ namespace Kaleidoscope {
         InputTextItem* textItem;
         QColor myTextColor;
         QFont myFont;
+
+        QPointF down_pos;
 
     };
 

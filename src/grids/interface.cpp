@@ -288,8 +288,10 @@ namespace Grids {
         Value* args = evt->getArgsPtr();
         int num_rooms = (*args)["rooms"].size();
 
-        if( num_rooms == 0 )
+        if( num_rooms == 0 ){
+            createMyRoom();
             return;
+        }
 
         std::vector<GridsID>::iterator result;
 

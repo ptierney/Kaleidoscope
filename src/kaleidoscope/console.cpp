@@ -65,7 +65,7 @@ namespace Kaleidoscope {
             } else if(second == tr("nodes")) {
                 GridsID node1 = GenericNodeItem::requestCreate(d, Vec3D(300.0, 150.0, 0.0), "Node 1");
                 GridsID node2 = GenericNodeItem::requestCreate(d, Vec3D(-300.0, -150.0, 0.0), "Node 2");
-                GenericLinkItem::requestCreate(d, node1, node2);
+                //GenericLinkItem::requestCreate(d, node1, node2, d->getMyID());
             }
         } else if(first == tr("notify")) {
             d->getNoticeWindow()->setPriority(second.toInt());

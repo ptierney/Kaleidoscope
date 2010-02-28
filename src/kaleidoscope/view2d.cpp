@@ -12,7 +12,11 @@ namespace Kaleidoscope {
     View2D::View2D(Scene2D *scene) : QGraphicsView(scene) {
 
         scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-        scene->setSceneRect(-200, -200, 400, 400);
+
+        //world_size = QRect(-10000, -10000, 10000, 10000).normalized();
+        //scene->setSceneRect(world_size);
+        //scene->setSceneRect(-200, -200, 200, 200);
+
         setScene(scene);
 
         setCacheMode(CacheBackground);
@@ -21,8 +25,11 @@ namespace Kaleidoscope {
         setTransformationAnchor(AnchorUnderMouse);
         setResizeAnchor(AnchorViewCenter);
 
+        setDragMode( QGraphicsView::ScrollHandDrag);
+
         scale(qreal(0.8), qreal(0.8));
         setMinimumSize(400, 400);
+        //centerOn(10000.0, 10000.0);
     }
 
     void View2D::drawBackground(QPainter *painter, const QRectF &rect)
@@ -59,6 +66,5 @@ namespace Kaleidoscope {
 
         scale(scale_factor, scale_factor);
     }
-
 
 }
