@@ -34,7 +34,6 @@ namespace Kaleidoscope {
         void draw(Device *);
 
         QRectF boundingRect() const;
-        QPainterPath shape() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
         void updateAttr(Grids::Event*);

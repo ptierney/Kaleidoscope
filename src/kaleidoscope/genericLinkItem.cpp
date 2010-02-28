@@ -25,7 +25,7 @@ namespace Kaleidoscope {
 
         d->getNoticeWindow()->write(tr("Creating generic link item"));
 
-        setFlag(ItemIsMovable);
+        //setFlag(ItemIsMovable);
 
         Grids::Value* attr = getAttrFromValue(val);
         node1_id = getNode1FromAttr(attr);
@@ -89,22 +89,15 @@ namespace Kaleidoscope {
 
     }
 
-    /* TODO: Remove magic numbers. */
     QRectF GenericLinkItem::boundingRect() const {
-        return QRectF(  node1_pos.X,
-                        node1_pos.Y,
-                        node2_pos.X,
-                        node2_pos.Y ).normalized();
+        qreal extra = 2;
+
+        return QRectF(QPointF(node1_pos.X, node1_pos.Y), QSizeF(node2_pos.X - node1_pos.X,
+                                          node2_pos.Y - node1_pos.Y))
+            .normalized()
+            .adjusted(-extra, -extra, extra, extra);
     }    
 
-    QPainterPath GenericLinkItem::shape() const {
-        QPainterPath path;
-        path.addRect( boundingRect() );
-        //path.a
-        return path;
-    }
-
-    /* Get these Magic Numbers the fuck out! */
     void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
         node1_pos = getNode1Pos();
         node2_pos = getNode2Pos();
@@ -112,9 +105,7 @@ namespace Kaleidoscope {
         QLineF line(QPointF(node1_pos.X, node1_pos.Y),
                     QPointF(node2_pos.X, node2_pos.Y) );
 
-        //painter->setBrush(QColor(fill_color_r, fill_color_g, fill_color_b, fill_color_a));
-        //painter->setPen(QPen(Qt::black, line_thickness));
-        painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter->setPen(QPen(Qt::black, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->drawLine(line);
     }
 

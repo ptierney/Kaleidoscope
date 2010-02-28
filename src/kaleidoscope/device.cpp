@@ -56,7 +56,6 @@ namespace Kaleidoscope {
 
         createObjects();
 
-        //setMyID( "7A293FB2-70C9-11DE-B84C-43FC4C661FD7" );
         setMyID( getGridsUtility()->getNewUUID() );
 
         init();

@@ -60,7 +60,11 @@ namespace Kaleidoscope {
 
         QGraphicsTextItem *text_item;
 
-        float rect_boarder;
+        float rect_boarder_width;
+        float rect_boarder_height;
+        float rect_radius_width;
+        float rect_radius_height;
+
         float line_thickness;
 
         float fill_color_r, fill_color_g, fill_color_b, fill_color_a;
@@ -71,6 +75,7 @@ namespace Kaleidoscope {
         int non_active_b;
 
         float text_r, text_g, text_b, text_a;
+
 
         int current_r, current_g, current_b, current_a;
     };

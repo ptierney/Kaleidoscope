@@ -27,20 +27,25 @@ namespace Kaleidoscope {
         setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
         setAcceptHoverEvents(true);
 
-        rect_boarder = 1.f;
+
         line_thickness = 0.6f;
-        fill_color_r = 64; fill_color_g = 64; fill_color_b = 99;
-        non_active_r = 42; non_active_g = 42; non_active_b = 59;
+        fill_color_r = 145; fill_color_g = 145; fill_color_b = 145;
+        non_active_r = 145; non_active_g = 145; non_active_b = 145;
         fill_color_a = 255;
-        non_active_a = 290;
+        non_active_a = 190;
 
         current_r = non_active_r;
         current_g = non_active_g;
         current_b = non_active_b;
         current_a = non_active_a;
 
-        text_r = 226; text_g = 224; text_b = 211;
+        text_r = 0; text_g = 0; text_b = 0;
         text_a = 255;
+
+        rect_radius_width = 7.0;
+        rect_radius_height = 5.0;
+        rect_boarder_width = 8.0;
+        rect_boarder_height = 1.0;
 
         d->getNoticeWindow()->write(QObject::tr("Creating generic node"));
 
@@ -94,7 +99,7 @@ namespace Kaleidoscope {
     }
 
     QRectF GenericNodeItem::boundingRect() const {
-        qreal adjust = 10;
+        qreal adjust = 2;
         return draw_rect.adjusted(-adjust, -adjust, adjust, adjust).normalized();
     }
 
@@ -116,7 +121,7 @@ namespace Kaleidoscope {
         painter->setBrush(QColor(current_r, current_g, current_b, current_a));
         painter->setPen(QPen(QColor(0, 0, 0, current_a), line_thickness));
         //painter->drawRoundedRect(QRect());
-        painter->drawRect(draw_rect);
+        painter->drawRoundedRect(draw_rect, rect_radius_width, rect_radius_height);
     }
 
     void GenericNodeItem::setLocalPosition(Vec3D vec) {
@@ -175,10 +180,10 @@ namespace Kaleidoscope {
     }
 
     void GenericNodeItem::updateDrawRect(){
-        draw_rect = QRectF(text_item->boundingRect().left() - rect_boarder,
-                           text_item->boundingRect().top() - rect_boarder,
-                           text_item->boundingRect().right() + rect_boarder,
-                           text_item->boundingRect().bottom() + rect_boarder);
+        draw_rect = QRectF(text_item->boundingRect().left() - rect_boarder_width,
+                           text_item->boundingRect().top() - rect_boarder_height,
+                           text_item->boundingRect().width() + 2*rect_boarder_width,
+                           text_item->boundingRect().height() + 2*rect_boarder_height);
     }
 
 
