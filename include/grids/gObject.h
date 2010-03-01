@@ -86,6 +86,7 @@ namespace Grids{
 		void setAttr( Value* );
 		void setAttrFromValue( Value* );
 		void setInitialPositions( Value* );
+                Vec3D getVectorFromValue( Value* val, std::string key);
 		
 		void setID( GridsID );
 

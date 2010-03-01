@@ -47,7 +47,10 @@ namespace Kaleidoscope {
         rect_boarder_width = 8.0;
         rect_boarder_height = 1.0;
 
-        d->getNoticeWindow()->write(QObject::tr("Creating generic node"));
+
+        /* Set position, set text. */
+
+        setPos( getPosition().X, getPosition().Y);
 
         std::string attr_text = getTextFromAttr(getAttrFromValue(val));
 
@@ -90,12 +93,10 @@ namespace Kaleidoscope {
 
         Scene2D* scene = dev->getScene();
         Grids::Value *val = evt->getArgsPtr();
-        Vec3D item_pos = evt->getPosition();
 
         GenericNodeItem *generic_node = new GenericNodeItem(dev, val);
 
         scene->addItem(generic_node);
-        generic_node->setPos(item_pos.X, item_pos.Y);
     }
 
     QRectF GenericNodeItem::boundingRect() const {
