@@ -21,6 +21,8 @@ namespace Kaleidoscope {
         /* Only send text information once per second. */
         /* Sending key data as fast as the user typed it crashed my server. */
         key_delay = 1000;
+        /* After this time a newline is added and the text is sent as an itput. */
+        input_time = 2250;
 
         this->d = d;
 
@@ -30,7 +32,6 @@ namespace Kaleidoscope {
                              (*(getAttrFromValue(val)))["text_color"][1u].asInt(),
                              (*(getAttrFromValue(val)))["text_color"][2u].asInt(),
                              (*(getAttrFromValue(val)))["text_color"][3u].asInt() );
-
 
         setFlag(QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemIsSelectable);
@@ -49,6 +50,8 @@ namespace Kaleidoscope {
         /* This sets up an loop. */
         startTimer(0);
         keys_unsent = 0;
+        input_unsent = 0;
+        last_key_press.start();
     }
 
     GridsID InputTextItem::requestCreate( Device* device, Vec3D start_pos) {
@@ -56,9 +59,9 @@ namespace Kaleidoscope {
 
         (*create_val)["type"] = "InputText";
         (*create_val)["parent"] = device->getMyID();
-        (*create_val)["text_color"][0u] = qrand() % 256;
-        (*create_val)["text_color"][1u] = qrand() % 256;
-        (*create_val)["text_color"][2u] = qrand() % 256;
+        (*create_val)["text_color"][0u] = qrand() % 150;
+        (*create_val)["text_color"][1u] = qrand() % 150;
+        (*create_val)["text_color"][2u] = qrand() % 150;
         (*create_val)["text_color"][3u] = 255;
 
         (*create_val)["id"] = device->getGridsUtility()->getNewUUID();
@@ -121,6 +124,25 @@ namespace Kaleidoscope {
              keys_unsent = false;
              updateText(toPlainText());
          }
+
+         if(input_unsent && last_key_press.elapsed() > input_time){
+            appendNewline();
+            input_unsent = 0;
+         }
+     }
+
+     void InputTextItem::appendNewline() {
+         setPlainText( toPlainText() + tr("\n"));
+
+         /* Position cursor at the end of the text box. */
+         QTextCursor temp_cursor = textCursor();
+         temp_cursor.movePosition(QTextCursor::End);
+         setTextCursor( temp_cursor );
+
+         if(keys_unsent == false){
+             keys_unsent = true;
+             key_timer.start();
+         }
      }
 
     /* Overload Grids::Object */
@@ -131,12 +153,13 @@ namespace Kaleidoscope {
 
     void InputTextItem::focusInEvent(QFocusEvent* event) {
         QMutexLocker locker(&focus_mutex);
-        d->getNoticeWindow()->write(tr("focus"));
     }
 
     void InputTextItem::focusOutEvent(QFocusEvent *event) {
         QMutexLocker locker(&focus_mutex);
-        d->getNoticeWindow()->write(tr("out focus"));
+
+        /* Add a newline if there isn't one already to confirm the input. */
+        appendNewline();
 
         setTextInteractionFlags(Qt::NoTextInteraction);
         emit lostFocus(this);
@@ -173,6 +196,14 @@ namespace Kaleidoscope {
     void InputTextItem::keyPressEvent(QKeyEvent* event) {
         /* Process the event so that toPlainText() returns the actual value of the item. */
         QGraphicsTextItem::keyPressEvent(event);
+
+        /* Keep note if there is input not registered. */
+        if( event->key() != Qt::Key_Return)
+            input_unsent = true;
+        else
+            input_unsent = false;
+
+        last_key_press.start();
 
         if(hasFocus() && keys_unsent == false){
             /*d->getNoticeWindow()->write(event->text());*/

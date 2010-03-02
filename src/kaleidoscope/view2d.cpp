@@ -27,7 +27,7 @@ namespace Kaleidoscope {
 
         setDragMode( QGraphicsView::ScrollHandDrag);
 
-        scale(qreal(0.8), qreal(0.8));
+        scale(qreal(1.2), qreal(1.2));
         setMinimumSize(400, 400);
         //centerOn(10000.0, 10000.0);
     }

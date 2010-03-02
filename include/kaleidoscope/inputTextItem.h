@@ -63,6 +63,11 @@ namespace Kaleidoscope {
         void timerEvent(QTimerEvent *);
 
     private:
+        /* Adds a newline to the text,
+           and updates the timers so the
+           text is sent. */
+        void appendNewline();
+
         Device* d;
 
         QPointF position_change;
@@ -75,13 +80,18 @@ namespace Kaleidoscope {
         static const int text_color_b = 193;
         static const int text_color_a = 220;
 
-
-
         QColor text_color;
 
         QTime key_timer;
+        QTime last_key_press;
+        /* Keys unsent is for general updates
+           to the servers.  Input is for newline
+           terminated messages that register as
+           input. */
         bool keys_unsent;
+        bool input_unsent;
         int key_delay;
+        int input_time;
     };
 }
 
