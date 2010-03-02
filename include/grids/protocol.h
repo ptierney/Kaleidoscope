@@ -9,14 +9,13 @@
 #include <grids/define.h>
 #include <QMutex>
 #include <QSize>
-#include <QThread>
 #include <QWaitCondition>
 #include <QTcpSocket>
 #include <QTime>
 
 namespace Grids {
 
-    class Protocol : public QThread {
+    class Protocol : public QObject {
         Q_OBJECT
 
     public:
@@ -40,12 +39,6 @@ namespace Grids {
 	
         Value parseJson(std::string &msg);
         bool sockConnected();
-
-        int runEventLoopThreaded();
-        void stopEventLoopThread();
-
-        bool getEventLoopRunning();
-        void setEventLoopRunning(bool);
 
         // last_event is mainly used for testing
         Event* last_event;
@@ -72,7 +65,6 @@ namespace Grids {
         QMutex event_queue_mutex;
         QMutex outbound_queue_mutex;
         QMutex proto_write_mutex;
-        bool running;
         QTime outbound_timer;
         int outbound_limit;
 

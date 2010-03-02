@@ -10,9 +10,7 @@
 
 namespace Grids {
 
-    Protocol::Protocol(std::string name, QObject* parent)
-        : QThread(parent) {
-        running = 0; // Normally has mutex, but we're not using multiple threads yet
+    Protocol::Protocol(std::string name, QObject* parent) {
         last_event = 0;
         my_name = name;
         /* Limit outbound traffic to 3 per second. */
@@ -32,6 +30,7 @@ namespace Grids {
     bool Protocol::connectToNode(const char *address) {
         sock->connectToHost(tr(address), GRIDS_PORT);
 
+        /* Wait for 5 seconds. */
         if (!sock->waitForConnected(5000)){
             printf("Failed to connect to host\n");
             return 0;
@@ -293,10 +292,6 @@ namespace Grids {
 
     }
 
-    void Protocol::run() {
-        exec();
-    }
-
     void Protocol::handleMessage(std::string &msg) {
         if (msg.size() < 2) return; // obv. bogus
 
@@ -399,36 +394,7 @@ namespace Grids {
     }
 
 
-    int Protocol::runEventLoopThreaded() {
-        if(!isRunning()){
-            start(NormalPriority);
-            return 0;
-        } else {
-            return -1;
-        }
-    }
 
-    void Protocol::stopEventLoopThread() {
-        if(isRunning())
-            quit();
-    }
-
-
-    bool Protocol::getEventLoopRunning(){
-        bool isRunning;
-	
-        eventLoopRunningMutex.lock();
-        isRunning = running;
-        eventLoopRunningMutex.unlock();
-
-        return isRunning;
-    }
-
-    void Protocol::setEventLoopRunning( bool run ){
-        eventLoopRunningMutex.lock();
-        running = run;
-        eventLoopRunningMutex.unlock();
-    }
 
 
 } // end namespace Proto

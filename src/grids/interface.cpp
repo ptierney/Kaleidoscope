@@ -58,13 +58,11 @@ namespace Grids {
         proto->connectToNode( server_address.c_str() );
         d->getNoticeWindow()->write(7, tr("Opened network connection to server"));
 
-        proto->runEventLoopThreaded();
-        d->getNoticeWindow()->write(0, tr("Running Event Loop"));
     }
 
     Interface::~Interface(){
         proto->closeConnection();
-        proto->stopEventLoopThread();
+        delete proto;
     }
 
     void Interface::rawReceive(QString raw_data){
