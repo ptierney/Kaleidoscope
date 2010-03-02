@@ -5,6 +5,8 @@ package Monolog;
 use strict;
 use warnings;
 
+use Data::Dumper;
+
 use Phrase;
 
 sub new {
@@ -30,21 +32,15 @@ sub phrases {
 	return  @{ $self->{PHRASES} };
 }
 
-# Finds if the phrase is 
+# Looks through phrases and finds an array 
 sub find_phrase {
 	my ($self, $text) = @_;
 	
-	foreach my $phrase ($self->{PHRASES}){
+	foreach my $phrase ( @{$self->{PHRASES}} ){
 		if( $phrase->text eq $text){
 			return $phrase;
 		}
 	}
-	
-	# Phase not found, generate new phrase
-	my $temp_phrase = Phrase->new();
-	$temp_phrase->text($text);
-	
-	return $temp_phrase;
 }
 
 # This function takes a newline separated input string
@@ -65,10 +61,36 @@ sub parse_text_input {
 	if( $last_valid == 0){
 		pop(@input_split);
 	}
-	
+
+	my $counter = 0;
+
+	#my @phrase_cache = $self->phrases;
+	#my $num_phrases = @phrase_cache;
+
+	my $num_phrases = @{$self->{PHRASES}};
+
 	foreach my $text_seg (@input_split){
-		$self->find_phrase( $text_seg);		
-	}	
+		if($counter >= $num_phrases){
+			last;
+		}
+
+		# Make sure to access the text INSIDE of the Phrase object
+		if( $text_seg eq ${$self->{PHRASES}}[$counter]->text ){
+			$counter++;
+			next;
+		}
+		last;
+	}
+
+	for( ; $counter < @input_split; $counter++){
+		print STDERR "MAKING NEW PHRASE\n";
+
+		my $temp_phrase = Phrase->new();
+		$temp_phrase->text( $input_split[$counter] );
+		
+		push( @{$self->{PHRASES}}, $temp_phrase);
+		#$self->phrases( $self->phrases, $temp_phrase);
+	}
 }
 
 

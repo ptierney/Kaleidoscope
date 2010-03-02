@@ -23,6 +23,7 @@ use Data::Dumper;
 #use WordNet::QueryData;
 #use WWW::Wikipedia;
 use Monolog;
+use Phrase;
 
 my $id = Grids::Identity->new();
 my $client;
@@ -43,6 +44,9 @@ my $con = Grids::Console->new(
 # Hashref to each monolog
 my $monologs = {};
 
+my $column_x = 250;
+my $column_y = -250;
+
 # data structure to keep track of conversation structures
 
 #my $wn = WordNet::QueryData->new(noload => 1);
@@ -56,10 +60,12 @@ sub find_monolog {
 	my $monolog_id = shift;
 	
 	while ( my ($key, $value) = each( %$monologs) ) {
-		if( $monolog_id eq $key ){
+		if( $key eq $monolog_id ){
 			return $value;
 		}
 	}
+
+	$con->print("MAKING NEW MONOLOG");
 	
 	# Not found, create an object
 	my $new_monolog = Monolog->new();
@@ -151,7 +157,11 @@ sub create_object_cb {
 		return;
 	}
 
-	#$con->print("About to dump");
+	unless( $evt->args->{attr}->{type} ) {
+		return;
+	}
+
+	#$con->print("Dump from create_object_cb");
 	#$con->print( Dumper($args));
 
 	if( $evt->args->{attr}->{type} eq "InputText"){
@@ -174,20 +184,21 @@ sub update_object_cb {
 
 	my $args = $evt->args;
 
+	#$con->print("Dump from update_object_cb");
+	#$con->print( Dumper($args));
+
 	# Filter out the bounceback confirmation code
 	if( $args->{success}){
 		return;
 	}
-	
 	# Problem with Grids
-	# It seems to be the case that error / success messages get sent back
-	# but since I only use broadcast, it's fine
 	if( $args->{error}){
 		return;
 	}
-	
-	if( $evt->args->{attr}->{type} eq "InputText"){
-		my $monolog = find_monolog( $evt->args->{id} );
+
+	if( $monologs->{$evt->args->{id}} ) {
+		
+		my $monolog = $monologs->{ $evt->args->{id} };
 		
 		if( $evt->args->{attr}->{text} ){
 			$monolog->parse_text_input( $evt->args->{attr}->{text} );		
@@ -234,9 +245,12 @@ sub create_node_from_phrase {
 	my ($phrase) = @_;
 
 	$phrase->node_generated(1);
+
+	$con->print("Creating node from phrase");
 	
-	my $pos_x = 500 - rand(1000);
-	my $pos_y = 500 - rand(1000);
+	my $pos_x = $column_x;
+	my $pos_y = $column_y;
+	$column_y += 50;
 
 	# limit to 3 decimals of precision
 	$pos_x = sprintf("%.3f", $pos_x);
@@ -244,40 +258,16 @@ sub create_node_from_phrase {
 
 	my $pos_z = 0;
 
-	my $node_value = { '_broadcast' => 1, pos => [$pos_x,$pos_y,0], rot => [0,0,0], scl => [1,1,1], id => Grids::UUID->new_id, room_id => $room, attr => { type => 'GenericNode', text => $phrase->text } };
+	my $node_value = { '_broadcast' => 1, pos => [$pos_x,$pos_y,0], rot => [0,0,0], scl => [1,1,1], id => $phrase->id, room_id => $room, attr => { type => 'GenericNode', text => $phrase->text } };
 
 	#$con->print("About to make node:");
 	#$con->print( Dumper($node_value));
 
-	sleep(1);
+	# Sleep for 250 ms
+	select(undef,undef,undef, 0.5);
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
 } 
 
-sub create_generic_node {
-	$con->print("CREATED INPUT TEXT!!!");
-
-	my $pos_x = 500 - rand(1000);
-	my $pos_y = 500 - rand(1000);
-
-	# limit to 3 decimals of precision
-	$pos_x = sprintf("%.3f", $pos_x);
-	$pos_y = sprintf("%.3f", $pos_y);
-
-	my $pos_z = 0;
-
-	$pos_x += 0.0;
-	$pos_y += 0.0;
-	$pos_z += 0.0;
-	
-	my $node_value = { '_broadcast' => 1, pos => [$pos_x,$pos_y,0], rot => [0,0,0], scl => [1,1,1], id => Grids::UUID->new_id, room_id => $room, attr => { type => 'GenericNode', text => 'Lol Dongs' } };
-
-	#$con->print("About to make node:");
-	#$con->print( Dumper($node_value));
-
-	sleep(1);
-
-	$client->dispatch_event('Room.CreateObject', $node_value);
-} 
 
 

@@ -36,6 +36,4 @@ sub node_generated {
 }
 
 
-
-
 1;
