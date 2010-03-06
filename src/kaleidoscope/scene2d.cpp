@@ -132,6 +132,9 @@ namespace Kaleidoscope {
         if(mouseGrabberItem() )
             return;
 
+        if(true)
+            return;
+
         foreach(GenericNodeItem* item, node_items) {
             item->calculateForces();
         }
