@@ -118,12 +118,8 @@ namespace Kaleidoscope {
     void GenericLinkItem::timerEvent(QTimerEvent *event) {
         Q_UNUSED(event);
 
-        if(false && node_changed) {
-            calculateForces();
-            updateNodePositions();
-        }
-
-        //last_physics.start();
+        node1_qpos = ((GenericNodeItem*)node1)->pos();
+        node2_qpos = ((GenericNodeItem*)node2)->pos();
     }
 
     /* Calculates the forces between two nodes. */
@@ -259,6 +255,10 @@ namespace Kaleidoscope {
 
     GenericNodeItem* GenericLinkItem::getNode2() {
         return (GenericNodeItem*)node2;
+    }
+
+    GenericLinkItem::LinkType GenericLinkItem::getLinkType() {
+        return link_type;
     }
 
     void GenericLinkItem::nodeChanged() {

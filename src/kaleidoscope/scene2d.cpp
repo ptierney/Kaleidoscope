@@ -128,6 +128,10 @@ namespace Kaleidoscope {
     void Scene2D::timerEvent(QTimerEvent *event) {
         Q_UNUSED(event);
 
+        /* Don't caluculate while dragging. */
+        if(mouseGrabberItem() )
+            return;
+
         foreach(GenericNodeItem* item, node_items) {
             item->calculateForces();
         }

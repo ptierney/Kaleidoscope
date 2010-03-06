@@ -49,6 +49,8 @@ namespace Kaleidoscope {
         GenericNodeItem* getNode1();
         GenericNodeItem* getNode2();
 
+        GenericLinkItem::LinkType getLinkType();
+
     protected:
         GridsID getNode1FromAttr(Grids::Value*);
         GridsID getNode2FromAttr(Grids::Value*);

@@ -228,6 +228,7 @@ namespace Kaleidoscope {
     }
 
     QVariant GenericNodeItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+        /*
         switch (change) {
         case ItemPositionHasChanged:
             for(int i = 0; i < link_pointers.size(); i++ ){
@@ -237,6 +238,7 @@ namespace Kaleidoscope {
         default:
             break;
         };
+        */
 
         return QGraphicsItem::itemChange(change, value);
     }
@@ -250,20 +252,27 @@ namespace Kaleidoscope {
         // Sum up all forces pushing this item away
         qreal xvel = 0;
         qreal yvel = 0;
+
+        /* This Eyecandy looks REALLY COOL, but it really bogs the program down. */
+        /*
         foreach (GenericNodeItem *item, d->getScene()->getNodeItems()) {
 
             QLineF line(mapFromItem(item, 0, 0), QPointF(0, 0));
             qreal dx = line.dx();
             qreal dy = line.dy();
             double l = 2.0 * (dx * dx + dy * dy);
-            if (l > 0) {
+            /* If distance is > 0, and somewhat closeby. */
+            /* 450*450 + 450*450 */
+            /*
+            if (l > 0 && l < 205000.0) {
                 xvel += (dx * 150.0) / l;
                 yvel += (dy * 150.0) / l;
             }
         }
+        */
 
         // Now subtract all forces pulling items together
-        double weight = (link_pointers.size() + 1) * 10;
+        double weight = (link_pointers.size() + 1) * 60;
 
         for(int i = 0; i < link_pointers.size(); i++) {
             GenericLinkItem* item = link_pointers[i];
@@ -274,8 +283,25 @@ namespace Kaleidoscope {
             else
                 pos = mapFromItem(item->getNode1(), 0, 0);
 
-            xvel += pos.x() / weight;
-            yvel += pos.y() / weight;
+            if(  item->getLinkType() == GenericLinkItem::SOFT_LINK ) {
+                if( ( pos.x() * pos.x() + pos.y() * pos.y() ) > 5000) {
+                    xvel += pos.x() / weight;
+                    yvel += pos.y() / weight;
+                    item->update();
+                } else {
+                    xvel = 0;
+                    yvel = 0;
+                }
+            } else if( item->getLinkType() == GenericLinkItem::HARD_LINK) {
+                if ( ( pos.x() * pos.x() + pos.y() * pos.y() ) > 10000) {
+                    xvel += pos.x() / weight;
+                    yvel += pos.y() / weight;
+                    item->update();
+                } else {
+                    xvel = 0;
+                    yvel = 0;
+                }
+            }
         }
 
         if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
