@@ -6,6 +6,7 @@
 #include <QRect>
 #include <QGraphicsObject>
 #include <QVariant>
+#include <QGraphicsPolygonItem>
 
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/genericLinkItem.h>
@@ -104,6 +105,7 @@ namespace Kaleidoscope {
         GenericNodeItem *generic_node = new GenericNodeItem(dev, val);
 
         scene->addItem(generic_node);
+        scene->addNodeItem(generic_node);
     }
 
     QRectF GenericNodeItem::boundingRect() const {
@@ -150,8 +152,36 @@ namespace Kaleidoscope {
 
 
     void GenericNodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-        if(pos() != position_change) {
-            d->getNoticeWindow()->write("Pos change");
+
+        QRectF my_rect = boundingRect();
+        QRectF other_rect;
+        GenericNodeItem* other_node = 0;
+        bool intersected;
+
+        /* Check to see if it intersected any other object. */
+        QList<GenericNodeItem*> node_items =  d->getScene()->getNodeItems();
+
+        foreach(GenericNodeItem* node, node_items){
+            other_rect = node->boundingRect();
+
+            if( (this != node) && my_rect.intersects(other_rect) ){
+                intersected = true;
+                other_node = node;
+                break;
+            }
+        }
+
+        /* If so, move it back to it's original position. */
+        /* Create a new hard link. */
+
+        if(intersected && other_node) {
+            setPos(position_change);
+
+            GridsID other_id = d->getObjectController()->getIDFromPointer(other_node);
+
+            GenericLinkItem::requestCreate(d, getID(), other_id, GenericLinkItem::HARD_LINK );
+        } else if(pos() != position_change) {
+            //d->getNoticeWindow()->write("Pos change");
             updatePosition(d, Vec3D(pos().x(), pos().y(), zValue()));
         }
 

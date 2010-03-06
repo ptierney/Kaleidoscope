@@ -95,6 +95,8 @@ namespace Kaleidoscope {
         text_item->setPos(QPointF(item_pos.X, item_pos.Y));
         //text_item->setPlainText(tr("This is a test"));
         /*emit textInserted(textItem);*/
+
+        scene->addInputTextItem(text_item);
    }
 
     /* Part of the object has changed.  Broadcast a message to Grids that lets

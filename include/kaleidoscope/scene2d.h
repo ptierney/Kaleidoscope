@@ -22,6 +22,9 @@ QT_END_NAMESPACE
 namespace Kaleidoscope {
     class InputTextItem;
     class Device;
+    class GenericNodeItem;
+    class GenericLinkItem;
+    class InputTextItem;
 
     class Scene2D : public QGraphicsScene {
         Q_OBJECT
@@ -31,8 +34,6 @@ namespace Kaleidoscope {
         Scene2D(Device*, QObject* parent = 0);
         QSize sizeHint() const;
 
-        void addInputTextItem(Grids::Value*, Vec3D);
-        void addGenericNodeItem(Grids::Value*, Vec3D);
 
         QFont font() const
         { return myFont; }
@@ -41,6 +42,14 @@ namespace Kaleidoscope {
 
         void setTextColor(const QColor &color);
         void setFont(const QFont &font);
+
+        void addInputTextItem(InputTextItem*);
+        void addNodeItem(GenericNodeItem*);
+        void addLinkItem(GenericLinkItem*);
+
+        QList<InputTextItem*> getInputTextItems();
+        QList<GenericNodeItem*> getNodeItems();
+        QList<GenericLinkItem*> getLinkItems();
 
     public slots:
         void editorLostFocus(InputTextItem *item);
@@ -65,6 +74,10 @@ namespace Kaleidoscope {
         QFont myFont;
 
         QPointF down_pos;
+
+        QList<InputTextItem*> input_text_items;
+        QList<GenericNodeItem*> node_items;
+        QList<GenericLinkItem*> link_items;
 
     };
 

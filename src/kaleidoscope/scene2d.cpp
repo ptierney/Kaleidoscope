@@ -24,14 +24,6 @@ namespace Kaleidoscope {
           return QSize(DEFAULT_WINDOW_WIDTH - DEFAULT_SIDEBAR_WIDTH,DEFAULT_WINDOW_HEIGHT);
      }
 
-    void Scene2D::addInputTextItem(Grids::Value* val, Vec3D item_pos) {
-
-    }
-
-    void Scene2D::addGenericNodeItem(Grids::Value *val, Vec3D item_pos) {
-
-    }
-
     void Scene2D::editorLostFocus(InputTextItem *item) {
         QTextCursor cursor = item->textCursor();
         cursor.clearSelection();
@@ -107,9 +99,28 @@ namespace Kaleidoscope {
         item->setDefaultTextColor(myTextColor);
     }
 
+    void Scene2D::addInputTextItem(InputTextItem* item) {
+        input_text_items.append(item);
+    }
 
+    void Scene2D::addNodeItem(GenericNodeItem *item) {
+        node_items.append(item);
+    }
 
+    void Scene2D::addLinkItem(GenericLinkItem *item) {
+        link_items.append(item);
+    }
 
+    QList<InputTextItem*> Scene2D::getInputTextItems() {
+        return input_text_items;
+    }
 
+    QList<GenericNodeItem*> Scene2D::getNodeItems() {
+        return node_items;
+    }
+
+    QList<GenericLinkItem*> Scene2D::getLinkItems() {
+        return link_items;
+    }
 
 }

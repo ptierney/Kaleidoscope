@@ -86,6 +86,7 @@ namespace Kaleidoscope {
         GenericLinkItem *generic_link = new GenericLinkItem(dev, val);
 
         scene->addItem(generic_link);
+        scene->addLinkItem(generic_link);
     }
 
     GridsID GenericLinkItem::getNode1FromAttr(Grids::Value* attr){
@@ -121,6 +122,13 @@ namespace Kaleidoscope {
     }    
 
     void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+
+        QGraphicsItem* qnode1 = (QGraphicsItem*)node1;
+        QGraphicsItem* qnode2 = (QGraphicsItem*)node2;
+
+        if( qnode1->collidesWithItem(qnode2) )
+            return;
+
         node1_pos = getNode1Pos();
         node2_pos = getNode2Pos();
 
