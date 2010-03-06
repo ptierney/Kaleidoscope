@@ -112,12 +112,12 @@ namespace Kaleidoscope {
          * Accessor functions
          */
 	void Camera::setTarget( Vec3D vec ){ 
-		QMutexLocker lock(&target_mutex); 
+                //QMutexLocker lock(&target_mutex);
 		target = vec;
 	}
 	
 	Vec3D Camera::getTarget(){
-		QMutexLocker lock(&target_mutex);
+                //QMutexLocker lock(&target_mutex);
 		return target;
 	}
 

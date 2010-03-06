@@ -92,7 +92,7 @@ namespace Grids {
     }
 
     void Interface::parseEvent( Event* evt ){
-        QMutexLocker lock(&parse_event_mutex);
+        //QMutexLocker lock(&parse_event_mutex);
 
         /* Check for the success bounceback. Use this to determine if a message
          * was received by the server. */
@@ -242,7 +242,7 @@ namespace Grids {
     }
 
     GridsID Interface::getMyRoom(){
-        QMutexLocker lock(&my_room_mutex);
+        //QMutexLocker lock(&my_room_mutex);
         return my_room;
     }
 
@@ -259,7 +259,7 @@ namespace Grids {
 
         // Make my room the first available room
         if( my_room.empty() ){
-            QMutexLocker my_room_lock(&my_room_mutex);
+            //QMutexLocker my_room_lock(&my_room_mutex);
             my_room = rm_id;
             my_room_created = 1;
 
@@ -274,7 +274,7 @@ namespace Grids {
         }
 
         if( !in_vector){
-            QMutexLocker known_lock(&known_rooms_mutex);
+            //QMutexLocker known_lock(&known_rooms_mutex);
             known_rooms.push_back( rm_id );
         }
 
@@ -313,7 +313,7 @@ namespace Grids {
     }
 
     bool Interface::isConnected(){
-        QMutexLocker lock(&connected_mutex);
+        //QMutexLocker lock(&connected_mutex);
         return connected;
     }
 
@@ -322,8 +322,16 @@ namespace Grids {
     }
 
     void Interface::setConnected( bool con_stat ){
-        QMutexLocker lock(&connected_mutex);
+        //QMutexLocker lock(&connected_mutex);
         connected = con_stat;
+    }
+
+    int Interface::getOutboundQueueLength() {
+        return proto->getOutboundQueueLength();
+    }
+
+    int Interface::getReceivedQueueLength() {
+        return proto->getReceivedQueueLength();
     }
 
 

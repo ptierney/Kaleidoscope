@@ -47,6 +47,9 @@ namespace Grids {
            delete the original queue, return the copy, unlock. */
         EventQueue getEvents();
 
+        int getReceivedQueueLength();
+        int getOutboundQueueLength();
+
     public slots:
         void gridsRead();
 	

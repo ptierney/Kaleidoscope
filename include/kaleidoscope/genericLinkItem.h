@@ -23,12 +23,17 @@ namespace Kaleidoscope {
     public:
         GenericLinkItem(Device*, Grids::Value*, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
 
+        enum LinkType { SOFT_LINK = 0,
+                        HARD_LINK };
+
         static GridsID requestCreate(Device*,
-                                     GridsID node1, GridsID node2);
+                                     GridsID node1, GridsID node2, LinkType);
         static GridsID requestCreate(Device*,
-                                     GridsID node1, GridsID node2, GridsID parent);
+                                     GridsID node1, GridsID node2, LinkType, GridsID parent);
 
         static void gridsCreate(Device*, Grids::Event*);
+
+
 
         /* Required functions from Kal::Object */
         void draw(Device *);
@@ -37,9 +42,14 @@ namespace Kaleidoscope {
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
         void updateAttr(Grids::Event*);
+
+        /* Call this function when one of the nodes has changed. */
+        void nodeChanged();
+
     protected:
         GridsID getNode1FromAttr(Grids::Value*);
         GridsID getNode2FromAttr(Grids::Value*);
+        GenericLinkItem::LinkType getLinkTypeFromAttr(Grids::Value*);
 
     private:
         Grids::Object *node1, *node2;
@@ -51,13 +61,14 @@ namespace Kaleidoscope {
 
         Vec3D node1_pos, node2_pos;
 
+        QColor fill_color;
         float fill_color_r, fill_color_g, fill_color_b, fill_color_a;
         float line_thickness;
 
+        LinkType link_type;
+
         Device* d;
-
     };
-
 
 }
 

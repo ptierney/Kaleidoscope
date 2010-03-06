@@ -68,6 +68,9 @@ namespace Grids{
 
         void flushProtocol();
 
+        int getOutboundQueueLength();
+        int getReceivedQueueLength();
+
     public slots:
         void parseEvent(Event*);
 

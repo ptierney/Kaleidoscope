@@ -25,12 +25,12 @@ namespace Grids {
     }
 
     GridsID Object::getID() {
-        QMutexLocker lock(&id_mutex);
+        //QMutexLocker lock(&id_mutex);
         return obj_id;
     }
 
     GridsID Object::getRoom() {
-        QMutexLocker lock(&id_mutex);
+        //QMutexLocker lock(&id_mutex);
         return obj_room;
     }
 
@@ -64,32 +64,32 @@ namespace Grids {
     }
 
     Vec3D Object::getLocalPosition(){
-        QMutexLocker lock(&position_mutex);
+        //QMutexLocker lock(&position_mutex);
         return position;
     }
 
     Vec3D Object::getLocalRotation(){
-        QMutexLocker lock(&rotation_mutex);
+        //QMutexLocker lock(&rotation_mutex);
         return rotation;
     }
 
     Vec3D Object::getLocalScale() {
-        QMutexLocker lock(&scale_mutex);
+        //QMutexLocker lock(&scale_mutex);
         return scale;
     }
 
     void Object::setLocalPosition( Vec3D pos ){
-        QMutexLocker lock(&position_mutex);
+        //QMutexLocker lock(&position_mutex);
         position = pos;
     }
 
     void Object::setLocalRotation( Vec3D rot ){
-        QMutexLocker lock(&rotation_mutex);
+        //QMutexLocker lock(&rotation_mutex);
         rotation = rot;
     }
 
     void Object::setLocalScale( Vec3D scl ){
-        QMutexLocker lock(&scale_mutex);
+        //QMutexLocker lock(&scale_mutex);
         scale = scl;
     }
 
@@ -111,27 +111,27 @@ namespace Grids {
 
     // TODO: This is NOT threadsafe!!
     Object* Object::getParent(){
-        QMutexLocker lock(&parent_mutex);
+        //QMutexLocker lock(&parent_mutex);
         return parent;
     }
 
     GridsID Object::getParentID(){
-        QMutexLocker lock(&parent_mutex);
+        //QMutexLocker lock(&parent_mutex);
         return parent_id;
     }
 
     void Object::setParent( Object* parent_ptr ){
-        QMutexLocker lock(&parent_mutex);
+        //QMutexLocker lock(&parent_mutex);
         parent = parent_ptr;
     }
 
     void Object::setParentID( GridsID in_parent_id ){
-        QMutexLocker lock(&parent_mutex);
+        //QMutexLocker lock(&parent_mutex);
         parent_id = in_parent_id;
     }
 
     std::vector< Object* > Object::getChildren(){
-        QMutexLocker lock(&children_mutex);
+        //QMutexLocker lock(&children_mutex);
         return children;
     }
 
@@ -192,12 +192,12 @@ namespace Grids {
     }
 
     Value* Object::getAttr(){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         return &attr;
     }
 
     void Object::setAttr( Value* new_attr ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         if(new_attr == NULL)
             attr = Value();
         else
@@ -211,17 +211,17 @@ namespace Grids {
     //Private:
 
     void Object::setID( GridsID new_id ){
-        QMutexLocker lock(&id_mutex);
+        //QMutexLocker lock(&id_mutex);
         obj_id = new_id;
     }
 
     void Object::setRoom( GridsID new_room ){
-        QMutexLocker lock(&room_mutex);
+        //QMutexLocker lock(&room_mutex);
         obj_room = new_room;
     }
 
     void Object::addChild( Object* obj_ptr ){
-        QMutexLocker lock(&children_mutex);
+        //QMutexLocker lock(&children_mutex);
         children.push_back( obj_ptr );
     }
 
@@ -234,14 +234,14 @@ namespace Grids {
     /////////////////////////////////////
 
     Vec3D Object::getAttrPosition( ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         return Vec3D( attr[ "pos" ][ 0u ].asDouble(),
                       attr[ "pos" ][ 1u ].asDouble(),
                       attr[ "pos" ][ 2u ].asDouble() );
     }
 
     Vec3D Object::getAttrScale( ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         return Vec3D( attr[ "scl" ][ 0u ].asDouble(),
                       attr[ "scl" ][ 1u ].asDouble(),
                       attr[ "scl" ][ 2u ].asDouble() );
@@ -250,28 +250,28 @@ namespace Grids {
 
 
     Vec3D Object::getAttrRotation( ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         return Vec3D( attr[ "rot" ][ 0u ].asDouble(),
                       attr[ "rot" ][ 1u ].asDouble(),
                       attr[ "rot" ][ 2u ].asDouble() );
     }
 
     void Object::setAttrPosition( Vec3D new_position ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         attr[ "pos" ][ 0u ] = new_position.X;
         attr[ "pos" ][ 1u ] = new_position.Y;
         attr[ "pos" ][ 2u ] = new_position.Z;
     }
 
     void Object::setAttrRotation( Vec3D new_rotation ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         attr[ "rot" ][ 0u ] = new_rotation.X;
         attr[ "rot" ][ 1u ] = new_rotation.Y;
         attr[ "rot" ][ 2u ] = new_rotation.Z;
     }
 
     void Object::setAttrScale( Vec3D new_scale ){
-        QMutexLocker lock(&attr_mutex);
+        //QMutexLocker lock(&attr_mutex);
         attr[ "scl" ][ 0u ] = new_scale.X;
         attr[ "scl" ][ 1u ] = new_scale.Y;
         attr[ "scl" ][ 2u ] = new_scale.Z;

@@ -70,32 +70,32 @@ namespace Kaleidoscope {
 	}
 
 	void SpaceRenderer::setTextureOn( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Texture_On = in_bool; 
 	}
 
 	void SpaceRenderer::setLightOn( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Light_On = in_bool; 
 	}
 
 	void SpaceRenderer::setAlphaAdd( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Alpha_Add = in_bool; 
 	}
 
 	void SpaceRenderer::setBlendOn( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Blend_On = in_bool; 
 	}
 
 	void SpaceRenderer::setFilteringOn( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Filtering_On = in_bool; 
 	}
 
 	void SpaceRenderer::setSmoothOn( bool in_bool ) { 
-		QMutexLocker lock(&gl_settings_mutex);
+                //QMutexLocker lock(&gl_settings_mutex);
 		Smooth_On = in_bool; 
 	}
 

@@ -35,20 +35,13 @@ namespace Kaleidoscope {
     void View2D::drawBackground(QPainter *painter, const QRectF &rect)
     {
         Q_UNUSED(rect);
-        /* This is ugly
-        // Shadow
+        /*
         QRectF sceneRect = this->sceneRect();
-        QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-        QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-        if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-            painter->fillRect(rightShadow, Qt::darkGray);
-        if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-            painter->fillRect(bottomShadow, Qt::darkGray);
 
         // Fill
         QLinearGradient gradient(sceneRect.topLeft(), sceneRect.bottomRight());
-        gradient.setColorAt(0, Qt::white);
-        gradient.setColorAt(1, Qt::lightGray);
+        gradient.setColorAt(0, QColor(0, 0, 255, 50) );
+        gradient.setColorAt(1, QColor(0, 0, 0, 50) );
         painter->fillRect(rect.intersect(sceneRect), gradient);
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(sceneRect);

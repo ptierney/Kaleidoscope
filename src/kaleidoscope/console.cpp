@@ -65,7 +65,10 @@ namespace Kaleidoscope {
             } else if(second == tr("nodes")) {
                 GridsID node1 = GenericNodeItem::requestCreate(d, Vec3D(300.0, 150.0, 0.0), "Node 1");
                 GridsID node2 = GenericNodeItem::requestCreate(d, Vec3D(-300.0, -150.0, 0.0), "Node 2");
-                GenericLinkItem::requestCreate(d, node1, node2, d->getMyID());
+                GenericLinkItem::requestCreate(d, node1, node2, GenericLinkItem::SOFT_LINK, d->getMyID());
+                GridsID node3 = GenericNodeItem::requestCreate(d, Vec3D(300.0, -150.0, 0.0), "Node 3");
+                GenericLinkItem::requestCreate(d, node1, node3, GenericLinkItem::HARD_LINK, d->getMyID());
+
             }
         } else if(first == tr("notify")) {
             d->getNoticeWindow()->setPriority(second.toInt());
@@ -78,6 +81,16 @@ namespace Kaleidoscope {
         } else if(first == tr("request")) {
             if(second == tr("allrooms")) {
                 d->getInterface()->requestAllRooms();
+            }
+        } else if(first == tr("length")) {
+            if(second == tr("outboundqueue")) {
+                QString temp_string;
+                temp_string.setNum(d->getInterface()->getOutboundQueueLength());
+                d->getNoticeWindow()->write(10, tr("Outbound queue has: ") + temp_string);
+            } else if(second == tr("inboundqueue")) {
+                QString temp_string;
+                temp_string.setNum(d->getInterface()->getReceivedQueueLength());
+                d->getNoticeWindow()->write(10, tr("Received queue has: ") + temp_string);
             }
         }
 

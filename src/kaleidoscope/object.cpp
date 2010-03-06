@@ -30,27 +30,27 @@ namespace Kaleidoscope {
 	// Accessor functions
 
 	void Object::show(){
-		QMutexLocker lock(&visible_mutex);
+                //QMutexLocker lock(&visible_mutex);
 		visible = 1;
 	}
 
 	void Object::hide(){
-		QMutexLocker lock(&visible_mutex);
+                //QMutexLocker lock(&visible_mutex);
 		visible = 0;
 	}
 
 	bool Object::getVisibility(){
-		QMutexLocker lock(&visible_mutex);
+                //QMutexLocker lock(&visible_mutex);
 		return visible;
 	}
 
 	void Object::select(){
-                QMutexLocker lock(&selected_mutex);
+                //QMutexLocker lock(&selected_mutex);
 		selected = 1;
 	}	
 
 	void Object::deselect(){
-		QMutexLocker lock(&selected_mutex);
+                //QMutexLocker lock(&selected_mutex);
 		selected = 0;
 	}
 

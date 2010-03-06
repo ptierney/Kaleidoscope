@@ -26,7 +26,7 @@ namespace Grids {
     }
 
     void ObjectController::registerObject( GridsID new_id, Object* new_ptr ){
-        QMutexLocker lock(&map_mutex);
+        ////QMutexLocker lock(&map_mutex);
         object_ids.push_back( new_id );
         id_ptr_map[ new_id ] = new_ptr;
         ptr_id_map[ new_ptr ] = new_id;
@@ -34,13 +34,13 @@ namespace Grids {
 
     // Returns an object's ID given it's pointer
     GridsID ObjectController::getIDFromPointer( Object* obj_ptr ){
-        QMutexLocker lock(&map_mutex);
+        ////QMutexLocker lock(&map_mutex);
         return ptr_id_map[ obj_ptr ];
     }
 
     // Returns an object's pointer given it's ID
     Object* ObjectController::getPointerFromID( GridsID obj_id ){
-        QMutexLocker lock(&map_mutex);
+        ////QMutexLocker lock(&map_mutex);
         return id_ptr_map[ obj_id ];
     }
 
@@ -93,19 +93,31 @@ namespace Grids {
     }
 
     void ObjectController::updateObjectPosition( GridsID in_id, Vec3D pos ){
-        getPointerFromID( in_id )->setLocalPosition(pos);
+        Object* obj = getPointerFromID( in_id );
+
+        if(obj)
+            obj->setLocalPosition(pos);
     }
 
     void ObjectController::updateObjectRotation( GridsID in_id, Vec3D rot ){
-        getPointerFromID( in_id )->setLocalRotation( rot );
+        Object* obj = getPointerFromID( in_id );
+
+        if( obj )
+            obj->setLocalRotation( rot );
     }
 
     void ObjectController::updateObjectScale( GridsID in_id, Vec3D scl ){
-        getPointerFromID( in_id )->setLocalScale( scl );
+        Object* obj = getPointerFromID( in_id );
+
+        if(obj)
+            obj->setLocalScale( scl );
     }
 
     void ObjectController::updateObjectAttr( GridsID in_id, Event* evt ){
-        getPointerFromID( in_id )->updateAttr(evt);
+        Object* obj = getPointerFromID(in_id);
+
+        if(obj)
+            obj->updateAttr(evt);
     }
 
     void ObjectController::mouseReleasedEvent(QMouseEvent* event) {

@@ -56,7 +56,7 @@ namespace Grids {
         /* If enough time has elapsed. */
         /* Pop a string off the queue. */
         /* Send it on its merry way. */
-        QMutexLocker locker(&outbound_queue_mutex);
+        //QMutexLocker locker(&outbound_queue_mutex);
 
         if(!outbound_queue.empty() &&
            outbound_timer.elapsed() > outbound_limit){
@@ -85,7 +85,7 @@ namespace Grids {
 
     int Protocol::protocolWrite(std::string &str) {
         /* Different objects may try to write at the same time. */
-        QMutexLocker write_lock(&proto_write_mutex);
+        //QMutexLocker write_lock(&proto_write_mutex);
 
         uint32_t len = str.size();
 
@@ -366,11 +366,10 @@ namespace Grids {
         return (sock->state() == QAbstractSocket::ConnectedState);
     }
 
-
     /* Lock the queue mutex, copy the event queue,
        delete the original queue, return the copy, unlock. */
     EventQueue Protocol::getEvents() {
-        QMutexLocker lock(&event_queue_mutex);
+        //QMutexLocker lock(&event_queue_mutex);
 
         EventQueue temp_queue(event_queue);
 
@@ -382,15 +381,23 @@ namespace Grids {
     }
 
     void Protocol::pushEvent(Event *new_event) {
-        QMutexLocker lock(&event_queue_mutex);
+        //QMutexLocker lock(&event_queue_mutex);
 
         event_queue.push(new_event);
     }
 
     void Protocol::pushOutboundRequest(std::string str){
-        QMutexLocker lock(&outbound_queue_mutex);
+        //QMutexLocker lock(&outbound_queue_mutex);
 
         outbound_queue.push(str);
+    }
+
+    int Protocol::getReceivedQueueLength() {
+        return event_queue.size();
+    }
+
+    int Protocol::getOutboundQueueLength() {
+        return outbound_queue.size();
     }
 
 

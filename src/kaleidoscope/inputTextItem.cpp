@@ -42,7 +42,7 @@ namespace Kaleidoscope {
 
         /* If I created this item, select it and add a cursor. */
         if(d->myChild(getParentID())){
-            QMutexLocker locker(&focus_mutex);
+            //QMutexLocker locker(&focus_mutex);
             setSelected(1);
             setFocus(Qt::OtherFocusReason);
         }
@@ -152,11 +152,11 @@ namespace Kaleidoscope {
     }
 
     void InputTextItem::focusInEvent(QFocusEvent* event) {
-        QMutexLocker locker(&focus_mutex);
+        //QMutexLocker locker(&focus_mutex);
     }
 
     void InputTextItem::focusOutEvent(QFocusEvent *event) {
-        QMutexLocker locker(&focus_mutex);
+        //QMutexLocker locker(&focus_mutex);
 
         /* Add a newline if there isn't one already to confirm the input. */
         appendNewline();

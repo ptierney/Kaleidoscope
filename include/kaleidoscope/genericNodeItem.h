@@ -36,15 +36,25 @@ namespace Kaleidoscope {
         enum { BOUNDMIN = -10,
                BOUNDMAX = 23 };
 
+
+        /* stores if the link is selected. This may not be needed. */
+
+
         /* Overload Grids::Object function. */
         void setLocalPosition(Vec3D);
         void updateAttr(Grids::Event *);
+
+        void addLink(GridsID);
+        void addLinkPointer(Grids::Object*);
+        void addLinkID(GridsID);
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
         void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+        QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 
     private:
@@ -76,8 +86,13 @@ namespace Kaleidoscope {
 
         float text_r, text_g, text_b, text_a;
 
+        bool selected;
+        bool node_1_describe, node_2_describe;
 
         int current_r, current_g, current_b, current_a;
+
+        std::vector<Grids::Object*> link_pointers;
+        std::vector<GridsID> link_ids;
     };
 }
 

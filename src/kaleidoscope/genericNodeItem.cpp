@@ -5,14 +5,19 @@
 #include <QStyleOption>
 #include <QRect>
 #include <QGraphicsObject>
+#include <QVariant>
 
 #include <kaleidoscope/genericNodeItem.h>
+#include <kaleidoscope/genericLinkItem.h>
 #include <grids/utility.h>
 #include <grids/event.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/scene2d.h>
 #include <grids/interface.h>
+#include <grids/objectController.h>
 #include <kaleidoscope/device.h>
+
+#include <algorithm>
 
 
 namespace Kaleidoscope {
@@ -25,8 +30,8 @@ namespace Kaleidoscope {
         setFlag(QGraphicsItem::ItemIsMovable);
         setFlag(QGraphicsItem::ItemIsSelectable);
         setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges);
         setAcceptHoverEvents(true);
-
 
         line_thickness = 0.6f;
         fill_color_r = 145; fill_color_g = 145; fill_color_b = 145;
@@ -47,7 +52,6 @@ namespace Kaleidoscope {
         rect_boarder_width = 8.0;
         rect_boarder_height = 1.0;
 
-
         /* Set position, set text. */
 
         setPos( getPosition().X, getPosition().Y);
@@ -59,6 +63,9 @@ namespace Kaleidoscope {
 
         /* Set text magenta. */
         text_item->setDefaultTextColor(QColor(text_r, text_g, text_b, text_a));
+
+        text_item->setPos( text_item->pos().x() - text_item->boundingRect().width() / 2,
+                           text_item->pos().y() - text_item->boundingRect().height() / 2 );
 
         updateDrawRect();
     }
@@ -153,6 +160,48 @@ namespace Kaleidoscope {
 
     }
 
+    QVariant GenericNodeItem::itemChange(GraphicsItemChange change, const QVariant &value) {
+        switch (change) {
+        case ItemPositionHasChanged:
+            for(int i = 0; i < link_pointers.size(); i++ ){
+                ((GenericLinkItem*)(link_pointers[i]))->nodeChanged();
+            }
+            break;
+        default:
+            break;
+        };
+
+        return QGraphicsItem::itemChange(change, value);
+    }
+
+    void GenericNodeItem::addLink(GridsID link) {
+        addLinkID(link);
+    }
+
+    void GenericNodeItem::addLinkID(GridsID link) {
+        Grids::Object* obj = d->getObjectController()->getPointerFromID(link);
+
+        if(obj == 0)
+            return;
+
+        link_ids.push_back(link);
+        addLinkPointer(obj);
+    }
+
+    void GenericNodeItem::addLinkPointer(Grids::Object *link) {
+        if(link == 0)
+            return;
+
+        link_pointers.push_back(link);
+
+        GridsID temp_id = d->getObjectController()->getIDFromPointer(link);
+
+        /* Check to see if the id is in our array. */
+        if( std::find(link_ids.begin(), link_ids.end(), temp_id) != link_ids.end() ) {
+            link_ids.push_back(temp_id);
+        }
+    }
+
     void GenericNodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
         //d->getNoticeWindow()->write(6, tr("hover"));
         current_a = fill_color_a;
@@ -180,9 +229,11 @@ namespace Kaleidoscope {
         QGraphicsItem::hoverLeaveEvent(event);
     }
 
+    /* Is there a more efficient way to do this, so that I don't have to access .x(), y(), etc.
+       This function is called every loop. */
     void GenericNodeItem::updateDrawRect(){
-        draw_rect = QRectF(text_item->boundingRect().left() - rect_boarder_width,
-                           text_item->boundingRect().top() - rect_boarder_height,
+        draw_rect = QRectF(text_item->pos().x() + text_item->boundingRect().left() - rect_boarder_width,
+                           text_item->pos().y() + text_item->boundingRect().top() - rect_boarder_height,
                            text_item->boundingRect().width() + 2*rect_boarder_width,
                            text_item->boundingRect().height() + 2*rect_boarder_height);
     }
