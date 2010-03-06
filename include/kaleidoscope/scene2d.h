@@ -67,6 +67,8 @@ namespace Kaleidoscope {
 
         void scaleView(qreal scaleFactor);
 
+        void timerEvent(QTimerEvent *);
+
     private:
         Device* d;
         InputTextItem* textItem;

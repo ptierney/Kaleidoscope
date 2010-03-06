@@ -4,6 +4,7 @@
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/inputTextItem.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/device.h>
 
 #include <QTextCursor>
@@ -18,6 +19,8 @@ namespace Kaleidoscope {
     Scene2D::Scene2D(Device* d, QObject* parent) : QGraphicsScene(parent) {
         this->d = d;
         myTextColor = Qt::black;
+
+         startTimer(0);
     }
 
     QSize Scene2D::sizeHint() const {
@@ -89,7 +92,6 @@ namespace Kaleidoscope {
         //At this point the selection can change so the first selected item might not be a DiagramTextItem
         if (item)
             item->setFont(myFont);
-
     }
 
     void Scene2D::setTextColor(const QColor &color) {
@@ -121,6 +123,18 @@ namespace Kaleidoscope {
 
     QList<GenericLinkItem*> Scene2D::getLinkItems() {
         return link_items;
+    }
+
+    void Scene2D::timerEvent(QTimerEvent *event) {
+        Q_UNUSED(event);
+
+        foreach(GenericNodeItem* item, node_items) {
+            item->calculateForces();
+        }
+
+        foreach(GenericNodeItem* item, node_items) {
+            item->advance();
+        }
     }
 
 }

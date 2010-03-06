@@ -27,6 +27,8 @@ namespace Kaleidoscope {
         d->getNoticeWindow()->write(tr("Creating generic link item"));
 
         //setFlag(ItemIsMovable);
+        /* Set up the event loop. */
+        startTimer(0);
 
         Grids::Value* attr = getAttrFromValue(val);
         node1_id = getNode1FromAttr(attr);
@@ -44,16 +46,21 @@ namespace Kaleidoscope {
         /* Check link type, set parameters. */
         fill_color = QColor(0, 0, 0);
 
-        if( link_type == SOFT_LINK)
+        if( link_type == SOFT_LINK){
             line_thickness = 0.6;
-        else if( link_type == HARD_LINK )
+            rest_distance = 100.0;
+        } else if( link_type == HARD_LINK ) {
             line_thickness = 1.6;
+            rest_distance = 165.0;
+        }
 
         node1_pos = getNode1Pos();
         node2_pos = getNode2Pos();
 
         ((GenericNodeItem*)node1)->addLinkPointer(this);
         ((GenericNodeItem*)node2)->addLinkPointer(this);
+
+        last_physics.start();
     }
 
     /* Links node1 (parent) to node2 (child) */
@@ -108,6 +115,92 @@ namespace Kaleidoscope {
         }
     }
 
+    void GenericLinkItem::timerEvent(QTimerEvent *event) {
+        Q_UNUSED(event);
+
+        if(false && node_changed) {
+            calculateForces();
+            updateNodePositions();
+        }
+
+        //last_physics.start();
+    }
+
+    /* Calculates the forces between two nodes. */
+    /* Soft links have stronger forces than hard links. */
+    void GenericLinkItem::calculateForces() {
+        if( !(node1 || node2 ))
+            return;
+
+        node1_qpos = ((GenericNodeItem*)node1)->pos();
+        node2_qpos = ((GenericNodeItem*)node2)->pos();
+
+        Vec3D vec1 = Vec3D(node1_qpos.x(), node1_qpos.y(), 0.0);
+        Vec3D vec2 = Vec3D(node2_qpos.y(), node2_qpos.y(), 0.0);
+
+        float dist = vec1.getDistanceFrom(vec2);
+
+        /* force on a spring F = kx is proportional to its displacement
+           from equilibrium. */
+
+        float x = dist - rest_distance;
+
+        QString temp_string;
+        temp_string.setNum(x);
+
+        //d->getNoticeWindow()->write(tr("x = ") + temp_string);
+
+        Vec3D dir1 = node2_pos - node1_pos;
+        Vec3D dir2 = node1_pos - node2_pos;
+        dir1.normalize();
+        dir2.normalize();
+
+        /* next step in symbols:
+           F = ma -> ma = kx -> dv/dt = kx/m -> dv = kx/m dt
+           i.e., in a short space of time, there's a small change in velocity
+           due to the spring's displacement from equilibrium, x.
+           Much more simply:
+        */
+
+        //dir1 *= (x/(10000.0 * last_physics.elapsed()) );
+        //dir2 *= (x/(10000.0 * last_physics.elapsed()) );
+        dir1 *= (x/50000.0);
+        dir2 *= (x/50000.0);
+
+        node1_vel += dir1;
+        node2_vel += dir2;
+
+        node1_vel *= 0.98;
+        node2_vel *= 0.98;
+
+        if( qAbs(node1_vel.X) < 0.001)
+            node1_vel.X = 0.0;
+        if( qAbs(node1_vel.Y) < 0.001 )
+            node1_vel.Y = 0.0;
+
+        if( qAbs(node2_vel.X) < 0.001 )
+            node2_vel.X = 0.0;
+        if( qAbs(node2_vel.Y) < 0.001 )
+            node2_vel.Y = 0.0;
+    }
+
+    void GenericLinkItem::updateNodePositions() {
+        if( !(node1 || node2) )
+            return;
+
+        /*
+        if( node1_vel.getLengthSQ() < 0.001 || node2_vel.getLengthSQ() < 0.001 ) {
+            return;
+        }
+        */
+
+        node1_qpos += QPointF(node1_vel.X, node1_vel.Y);
+        node2_qpos += QPointF(node2_vel.X, node2_vel.Y);
+
+        ((GenericNodeItem*)node1)->setPos(node1_qpos);
+        ((GenericNodeItem*)node2)->setPos(node2_qpos);
+    }
+
     void GenericLinkItem::draw(Device* d){
 
     }
@@ -115,29 +208,19 @@ namespace Kaleidoscope {
     QRectF GenericLinkItem::boundingRect() const {
         qreal extra = 2;
 
-        return QRectF(QPointF(node1_pos.X, node1_pos.Y), QSizeF(node2_pos.X - node1_pos.X,
-                                          node2_pos.Y - node1_pos.Y))
-            .normalized()
-            .adjusted(-extra, -extra, extra, extra);
+        return QRectF(node1_qpos, QSizeF(node2_qpos.x() - node1_qpos.y(),
+                                         node2_qpos.x() - node1_qpos.y() ))
+        .normalized()
+        .adjusted(-extra, -extra, extra, extra);
     }    
 
     void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
 
-        QGraphicsItem* qnode1 = (QGraphicsItem*)node1;
-        QGraphicsItem* qnode2 = (QGraphicsItem*)node2;
+        QLineF line(node1_qpos, node2_qpos );
 
-        if( qnode1->collidesWithItem(qnode2) )
-            return;
-
-        node1_pos = getNode1Pos();
-        node2_pos = getNode2Pos();
-
-        QLineF line(QPointF(node1_pos.X, node1_pos.Y),
-                    QPointF(node2_pos.X, node2_pos.Y) );
-
-        if(link_type == SOFT_LINK )
+        if( link_type == SOFT_LINK )
             painter->setPen(QPen(fill_color, line_thickness, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-        else if(link_type == HARD_LINK )
+        else if( link_type == HARD_LINK )
             painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
         painter->drawLine(line);
@@ -169,16 +252,26 @@ namespace Kaleidoscope {
         return getNodePos(node2);
     }
 
+    GenericNodeItem* GenericLinkItem::getNode1() {
+        return (GenericNodeItem*)node1;
+
+    }
+
+    GenericNodeItem* GenericLinkItem::getNode2() {
+        return (GenericNodeItem*)node2;
+    }
+
     void GenericLinkItem::nodeChanged() {
         if (!node1 || !node2)
             return;
+
+        node_changed = true;
 
         /*
         QLineF line(mapFromItem((QGraphicsItem*)node1, 0, 0),
                     mapFromItem((QGraphicsItem*)node2, 0, 0));
         qreal length = line.length();
         */
-
 
         //d->getNoticeWindow()->write(5, tr("Link called"));
 

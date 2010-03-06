@@ -1,10 +1,1 @@
-mkdir ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks
-cp -R /Library/Frameworks/QtOpenGL.framework ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/
-cp -R /Library/Frameworks/QtGui.framework ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/
-cp -R /Library/Frameworks/QtNetwork.framework ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/
-cp -R /Library/Frameworks/QtCore.framework ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/
-#install_name_tool -id @executable_path/../Frameworks/QtOpenGL.framework/Versions/4/QtOpenGL ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/QtOpenGL.framework/Versions/4/QtOpenGL
-#install_name_tool -id @executable_path/../Frameworks/QtGui.framework/Versions/4/QtGui ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/QtGui.framework/Versions/4/QtGui
-#install_name_tool -id @executable_path/../Frameworks/QtNetwork.framework/Versions/4/QtNetwork ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork
-#install_name_tool -id @executable_path/../Frameworks/QtCore.framework/Versions/4/QtCore ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/Frameworks/QtCore.framework/Versions/4/QtCore
-otool -L ../Qt/Kaleidoscope/Kaleidoscope.app/Contents/MacOS/Kaleidoscope
+/Developer/Tools/Qt/macdeployqt ../Qt/Kaleidoscope/Kaleidoscope.app	

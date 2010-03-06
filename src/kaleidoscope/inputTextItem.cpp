@@ -189,7 +189,7 @@ namespace Kaleidoscope {
 
     void InputTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         if(pos() != position_change) {
-            d->getNoticeWindow()->write("Pos change");
+            //d->getNoticeWindow()->write("Pos change");
             updatePosition(d, Vec3D(pos().x(), pos().y(), zValue()));
         }
         QGraphicsTextItem::mouseReleaseEvent(event);

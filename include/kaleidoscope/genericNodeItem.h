@@ -12,6 +12,8 @@
 
 namespace Kaleidoscope {
 
+    class GenericLinkItem;
+
     /* Not that this item inherits from both QGraphicsItem and QObject.
        It should probably derive from a more appropriate graphics object,
        that incude QObject. */
@@ -45,8 +47,11 @@ namespace Kaleidoscope {
         void updateAttr(Grids::Event *);
 
         void addLink(GridsID);
-        void addLinkPointer(Grids::Object*);
+        void addLinkPointer(GenericLinkItem*);
         void addLinkID(GridsID);
+
+        void calculateForces();
+        bool advance();
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -58,12 +63,14 @@ namespace Kaleidoscope {
 
 
     private:
+        bool nodesIntersect(GenericNodeItem*, GenericNodeItem*);
+
         std::string getTextFromAttr(Grids::Value*);
 
         QRectF draw_rect;
         void updateDrawRect();
 
-        QPointF newPos;
+        QPointF new_pos;
         QPointF position_change;
 
         Device* d;
@@ -91,7 +98,7 @@ namespace Kaleidoscope {
 
         int current_r, current_g, current_b, current_a;
 
-        std::vector<Grids::Object*> link_pointers;
+        std::vector<GenericLinkItem*> link_pointers;
         std::vector<GridsID> link_ids;
     };
 }
