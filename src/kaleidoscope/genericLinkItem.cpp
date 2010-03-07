@@ -111,82 +111,6 @@ namespace Kaleidoscope {
         }
     }
 
-
-    /* Calculates the forces between two nodes. */
-    /* Soft links have stronger forces than hard links. */
-    void GenericLinkItem::calculateForces() {
-        if( !(node1 || node2 ))
-            return;
-
-        node1_qpos = ((GenericNodeItem*)node1)->pos();
-        node2_qpos = ((GenericNodeItem*)node2)->pos();
-
-        Vec3D vec1 = Vec3D(node1_qpos.x(), node1_qpos.y(), 0.0);
-        Vec3D vec2 = Vec3D(node2_qpos.y(), node2_qpos.y(), 0.0);
-
-        float dist = vec1.getDistanceFrom(vec2);
-
-        /* force on a spring F = kx is proportional to its displacement
-           from equilibrium. */
-
-        float x = dist - rest_distance;
-
-        QString temp_string;
-        temp_string.setNum(x);
-
-        //d->getNoticeWindow()->write(tr("x = ") + temp_string);
-
-        Vec3D dir1 = node2_pos - node1_pos;
-        Vec3D dir2 = node1_pos - node2_pos;
-        dir1.normalize();
-        dir2.normalize();
-
-        /* next step in symbols:
-           F = ma -> ma = kx -> dv/dt = kx/m -> dv = kx/m dt
-           i.e., in a short space of time, there's a small change in velocity
-           due to the spring's displacement from equilibrium, x.
-           Much more simply:
-        */
-
-        //dir1 *= (x/(10000.0 * last_physics.elapsed()) );
-        //dir2 *= (x/(10000.0 * last_physics.elapsed()) );
-        dir1 *= (x/50000.0);
-        dir2 *= (x/50000.0);
-
-        node1_vel += dir1;
-        node2_vel += dir2;
-
-        node1_vel *= 0.98;
-        node2_vel *= 0.98;
-
-        if( qAbs(node1_vel.X) < 0.001)
-            node1_vel.X = 0.0;
-        if( qAbs(node1_vel.Y) < 0.001 )
-            node1_vel.Y = 0.0;
-
-        if( qAbs(node2_vel.X) < 0.001 )
-            node2_vel.X = 0.0;
-        if( qAbs(node2_vel.Y) < 0.001 )
-            node2_vel.Y = 0.0;
-    }
-
-    void GenericLinkItem::updateNodePositions() {
-        if( !(node1 || node2) )
-            return;
-
-        /*
-        if( node1_vel.getLengthSQ() < 0.001 || node2_vel.getLengthSQ() < 0.001 ) {
-            return;
-        }
-        */
-
-        node1_qpos += QPointF(node1_vel.X, node1_vel.Y);
-        node2_qpos += QPointF(node2_vel.X, node2_vel.Y);
-
-        ((GenericNodeItem*)node1)->setPos(node1_qpos);
-        ((GenericNodeItem*)node2)->setPos(node2_qpos);
-    }
-
     void GenericLinkItem::draw(Device* d){
 
     }
@@ -204,14 +128,50 @@ namespace Kaleidoscope {
         node1_qpos = ((GenericNodeItem*)node1)->pos();
         node2_qpos = ((GenericNodeItem*)node2)->pos();
 
-        QLineF line(node1_qpos, node2_qpos );
+        QRectF node1_rect = ((GenericNodeItem*)node1)->boundingRect();
+        QRectF node2_rect = ((GenericNodeItem*)node2)->boundingRect();
+
+        QLineF center_line = QLineF(node1_qpos, node2_qpos );
+
+        /* Find intersection with first box. */
+        QPointF p2;
+        QPointF intersection_point_1, intersection_point_2;
+        QLineF poly_line[4];
+
+        poly_line[0] = QLineF( node1_rect.topLeft(), node1_rect.bottomLeft());
+        poly_line[1] = QLineF( node1_rect.bottomLeft(), node1_rect.bottomRight());
+        poly_line[2] = QLineF( node1_rect.bottomRight(), node1_rect.topRight());
+        poly_line[3] = QLineF( node1_rect.topRight(), node1_rect.topLeft());
+
+        for( int i = 0; i < 4; i++) {
+            poly_line[i].translate(node1_qpos);
+            QLineF::IntersectType intersect_type = poly_line[i].intersect(center_line, &intersection_point_1);
+            if(intersect_type == QLineF::BoundedIntersection)
+                break;
+        }
+
+        poly_line[0] = QLineF( node2_rect.topLeft(), node2_rect.bottomLeft());
+        poly_line[1] = QLineF( node2_rect.bottomLeft(), node2_rect.bottomRight());
+        poly_line[2] = QLineF( node2_rect.bottomRight(), node2_rect.topRight());
+        poly_line[3] = QLineF( node2_rect.topRight(), node2_rect.topLeft());
+
+        for( int i = 0; i < 4; i++) {
+            poly_line[i].translate(node2_qpos);
+
+            QLineF::IntersectType intersect_type = poly_line[i].intersect(center_line, &intersection_point_2);
+            if(intersect_type == QLineF::BoundedIntersection)
+                break;
+        }
+
+        QLineF line = QLineF(intersection_point_1, intersection_point_2);
 
         if( link_type == SOFT_LINK )
-            painter->setPen(QPen(fill_color, line_thickness, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+            painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         else if( link_type == HARD_LINK )
             painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
         painter->drawLine(line);
+
     }
 
     void GenericLinkItem::updateAttr(Grids::Event *evt) {

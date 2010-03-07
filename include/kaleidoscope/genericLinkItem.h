@@ -56,9 +56,6 @@ namespace Kaleidoscope {
         GridsID getNode2FromAttr(Grids::Value*);
         GenericLinkItem::LinkType getLinkTypeFromAttr(Grids::Value*);
 
-        virtual void calculateForces();
-        virtual void updateNodePositions();
-
     private:
         Grids::Object *node1, *node2;
         //QGraphicsObject *qnode1, *qnode2;
