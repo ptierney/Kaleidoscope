@@ -32,16 +32,8 @@ namespace Kaleidoscope {
         qtime.start();
         qsrand ( time(NULL) );
 
-
-        /* Set up the main update loop. */
-        /* Fuck QT why doesn't this work?
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timout()), this, SLOT(deviceUpdate()));
-        timer->start();
-        */
-
         /* OK, let's try setting up an event loop like this. */
-        startTimer(0);
+        startTimer(250);
 
         /* NoticeWindow & ErrorWindow must be created before any Grids::Objects,
          * as all Grids::Objects require them to be created. */
@@ -84,13 +76,6 @@ namespace Kaleidoscope {
         app->exit(0);
     }
 
-    /* This should be the main event loop, but QT doesn't work. */
-    void Device::deviceUpdate() {
-        getNoticeWindow()->write(tr("update"));
-        std::cout << "Update" << std::endl;
-        getInterface()->collectEvents();
-    }
-
     /* This is the main event loop. */
     void Device::timerEvent(QTimerEvent *event) {
 
@@ -101,15 +86,12 @@ namespace Kaleidoscope {
             loadRoom();
         }
 
-        //getNoticeWindow()->write(tr("update"));
         getInterface()->flushProtocol();
         getInterface()->collectEvents();
     }
 
     void Device::gridsConnectionEstablished() {
-        /*
-        getNoticeWindow()->write(0, tr("Loading room / creating room"));
-        */
+
         loadRoom();
     }
 

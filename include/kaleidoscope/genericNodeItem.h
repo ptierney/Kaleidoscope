@@ -38,9 +38,7 @@ namespace Kaleidoscope {
         enum { BOUNDMIN = -10,
                BOUNDMAX = 23 };
 
-
         /* stores if the link is selected. This may not be needed. */
-
 
         /* Overload Grids::Object function. */
         void setLocalPosition(Vec3D);

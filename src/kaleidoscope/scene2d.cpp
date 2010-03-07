@@ -20,7 +20,7 @@ namespace Kaleidoscope {
         this->d = d;
         myTextColor = Qt::black;
 
-         startTimer(0);
+         startTimer(100);
     }
 
     QSize Scene2D::sizeHint() const {
@@ -130,9 +130,6 @@ namespace Kaleidoscope {
 
         /* Don't caluculate while dragging. */
         if(mouseGrabberItem() )
-            return;
-
-        if(true)
             return;
 
         foreach(GenericNodeItem* item, node_items) {

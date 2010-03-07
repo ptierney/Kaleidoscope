@@ -26,10 +26,6 @@ namespace Kaleidoscope {
 
         d->getNoticeWindow()->write(tr("Creating generic link item"));
 
-        //setFlag(ItemIsMovable);
-        /* Set up the event loop. */
-        startTimer(0);
-
         Grids::Value* attr = getAttrFromValue(val);
         node1_id = getNode1FromAttr(attr);
         node2_id = getNode2FromAttr(attr);       
@@ -115,12 +111,6 @@ namespace Kaleidoscope {
         }
     }
 
-    void GenericLinkItem::timerEvent(QTimerEvent *event) {
-        Q_UNUSED(event);
-
-        node1_qpos = ((GenericNodeItem*)node1)->pos();
-        node2_qpos = ((GenericNodeItem*)node2)->pos();
-    }
 
     /* Calculates the forces between two nodes. */
     /* Soft links have stronger forces than hard links. */
@@ -211,6 +201,8 @@ namespace Kaleidoscope {
     }    
 
     void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+        node1_qpos = ((GenericNodeItem*)node1)->pos();
+        node2_qpos = ((GenericNodeItem*)node2)->pos();
 
         QLineF line(node1_qpos, node2_qpos );
 

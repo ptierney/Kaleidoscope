@@ -56,8 +56,6 @@ namespace Kaleidoscope {
         GridsID getNode2FromAttr(Grids::Value*);
         GenericLinkItem::LinkType getLinkTypeFromAttr(Grids::Value*);
 
-        void timerEvent(QTimerEvent *);
-
         virtual void calculateForces();
         virtual void updateNodePositions();
 
@@ -95,7 +93,6 @@ namespace Kaleidoscope {
         float rest_distance;
         //static const float SOFT_DISTANCE = 100.0;
         //static const float HARD_DISTANCE = 165.0;
-
 
         LinkType link_type;
 

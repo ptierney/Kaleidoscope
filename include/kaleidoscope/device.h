@@ -86,7 +86,6 @@ namespace Kaleidoscope {
     public slots:
         void gridsConnectionEstablished();
         void myRoomCreated(GridsID);
-        void deviceUpdate();
 
     private:
         Grids::ObjectController* object_controller;

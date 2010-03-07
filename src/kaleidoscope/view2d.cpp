@@ -11,16 +11,13 @@ namespace Kaleidoscope {
 
     View2D::View2D(Scene2D *scene) : QGraphicsView(scene) {
 
+        /* "Use this if your scene has many moving elements." */
         scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-
-        //world_size = QRect(-10000, -10000, 10000, 10000).normalized();
-        //scene->setSceneRect(world_size);
-        //scene->setSceneRect(-200, -200, 200, 200);
 
         setScene(scene);
 
         setCacheMode(CacheBackground);
-        setViewportUpdateMode(BoundingRectViewportUpdate);
+        //setViewportUpdateMode(BoundingRectViewportUpdate);
         setRenderHint(QPainter::Antialiasing);
         setTransformationAnchor(AnchorUnderMouse);
         setResizeAnchor(AnchorViewCenter);
