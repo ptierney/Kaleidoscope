@@ -18,6 +18,7 @@ use Grids::Conf;
 use Carp qw (croak);
 use Getopt::Long;
 use Data::Dumper;
+use Math::Trig ':pi';
 
 # To be implemented
 #use WordNet::QueryData;
@@ -46,6 +47,8 @@ my $monologs = {};
 
 my $column_x = 250;
 my $column_y = -250;
+
+my $network_pause = 0.4;
 
 # data structure to keep track of conversation structures
 
@@ -166,7 +169,14 @@ sub create_object_cb {
 
 	if( $evt->args->{attr}->{type} eq "InputText"){
 		my $monolog = find_monolog( $evt->args->{id} );
-		
+
+		$monolog->position( $evt->args->{pos}[0],
+							$evt->args->{pos}[1], 
+							$evt->args->{pos}[2] );
+	
+		#$monolog->position( 123.0, 456, 678.0);
+
+	
 		if( $evt->args->{attr}->{text} ){
 			$monolog->parse_text_input( $evt->args->{attr}->{text} );		
 		}
@@ -200,13 +210,19 @@ sub update_object_cb {
 		
 		my $monolog = $monologs->{ $evt->args->{id} };
 		
+		if( $evt->args->{pos} ) {
+			$monolog->position( $evt->args->{pos}[0],
+								$evt->args->{pos}[1], 
+								$evt->args->{pos}[2] );
+		}
+
 		if( $evt->args->{attr}->{text} ){
 			$monolog->parse_text_input( $evt->args->{attr}->{text} );		
 		}
 		
 		foreach my $phrase ($monolog->phrases) {
 			if( $phrase->node_generated == 0){
-				create_node_from_phrase($phrase);
+				create_node_from_phrase($monolog, $phrase);
 			}
 		}
 	}
@@ -242,15 +258,24 @@ sub run {
 }
 
 sub create_node_from_phrase {
-	my ($phrase) = @_;
+	my ($monolog, $phrase) = @_;
 
 	$phrase->node_generated(1);
 
 	$con->print("Creating node from phrase");
-	
-	my $pos_x = $column_x;
-	my $pos_y = $column_y;
-	$column_y += 50;
+
+	my $node_ratio = $monolog->nodes_created / $monolog->num_per_circle;
+	my $theta =  $node_ratio * 2*pi - pi/2;
+	my $radius = $monolog->circle_radius + $monolog->pitch * $node_ratio;
+
+	my $pos_x = $radius * cos($theta) + $monolog->x;
+	my $pos_y = $radius * sin($theta) + $monolog->y;
+
+
+	$con->print( Dumper($monolog));
+	#my $pos_x = $column_x;
+	#my $pos_y = $column_y;
+	#$column_y += 50;
 
 	# limit to 3 decimals of precision
 	$pos_x = sprintf("%.3f", $pos_x);
@@ -260,13 +285,29 @@ sub create_node_from_phrase {
 
 	my $node_value = { '_broadcast' => 1, pos => [$pos_x,$pos_y,0], rot => [0,0,0], scl => [1,1,1], id => $phrase->id, room_id => $room, attr => { type => 'GenericNode', text => $phrase->text } };
 
+	$monolog->nodes_created( $monolog->nodes_created + 1 );
+
 	#$con->print("About to make node:");
 	#$con->print( Dumper($node_value));
 
 	# Sleep for 250 ms
-	select(undef,undef,undef, 0.5);
+	select(undef,undef,undef, $network_pause);
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
+
+	# If last_node_id
+	# Make link
+	if($monolog->last_node_id) {
+		
+		my $link_value = { '_broadcast' => 1, id => Grids::UUID->new_id, room_id => $room, 
+						   attr => { type => 'GenericLink', parent => $monolog->last_node_id, node1 => $monolog->last_node_id, node2 => $phrase->id, link_type => 0 } };
+
+		select(undef, undef, undef, $network_pause);
+		
+		$client->dispatch_event('Room.CreateObject', $link_value);
+	}
+	
+	$monolog->last_node_id( $phrase->id );
 } 
 
 

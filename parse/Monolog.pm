@@ -15,6 +15,13 @@ sub new {
 
 	$self->{ID} = undef;
 	$self->{PHRASES} = [];
+	$self->{POSITION} = [0.0, 0.0, 0.0];
+	$self->{NODES_CREATED} = 0;
+	$self->{CIRCLE_RADIUS} = 250.0;
+	$self->{NUM_PER_CIRCLE} = 12;
+	# pitch is how much it increasess per outward revolution
+	$self->{PITCH} = 100;
+	$self->{LAST_NODE_ID};
 
 	bless $self, $class;
 	return $self;
@@ -31,6 +38,62 @@ sub phrases {
 	if (@_) { @{$self->{PHRASES} } = @_ }
 	return  @{ $self->{PHRASES} };
 }
+
+sub position {
+	my $self = shift;
+	if (@_) { @{$self->{POSITION} } = @_ }
+	return @{ $self->{POSITION} };
+}
+
+sub x {
+	my $self = shift;
+	if(@_) { ${ $self->{POSITION}}[0] = @_ }
+	return ${ $self->{POSITION}}[0];
+}
+
+sub y {
+	my $self = shift;
+	if(@_) { ${ $self->{POSITION}}[1] = @_ }
+	return ${ $self->{POSITION}}[1];
+}
+
+sub z {
+	my $self = shift;
+	if(@_) { ${ $self->{POSITION}}[2] = @_ }
+	return ${ $self->{POSITION}}[2];
+}
+
+sub nodes_created {
+	my $self = shift;
+	if(@_) { $self->{NODES_CREATED} = shift }
+	return $self->{NODES_CREATED};
+}
+
+sub circle_radius {
+	my $self = shift;
+	if(@_) { $self->{CIRCLE_RADIUS} = shift }
+	return $self->{CIRCLE_RADIUS};
+}
+
+sub num_per_circle {
+	my $self = shift;
+	if(@_) { $self->{NUM_PER_CIRCLE} = shift }
+	return $self->{NUM_PER_CIRCLE};
+}
+
+sub pitch {
+	my $self = shift;
+	if(@_) { $self->{PITCH} = shift }
+	return $self->{PITCH};
+}
+
+sub last_node_id {
+	my $self = shift;
+	if(@_) { $self->{LAST_NODE_ID} = shift }
+	return $self->{LAST_NODE_ID};
+}
+
+
 
 # Looks through phrases and finds an array 
 sub find_phrase {
