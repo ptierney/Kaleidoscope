@@ -68,6 +68,15 @@ namespace Kaleidoscope {
         }
     }
 
+    void Scene2D::keyPressEvent(QKeyEvent *event) {
+
+        if(focusItem() == 0)
+            InputTextItem::requestCreate(d,Vec3D(qrand() % 1000 - 500,
+                                                 qrand() % 1000 - 500,
+                                                 1000.0));
+        QGraphicsScene::keyPressEvent(event);
+    }
+
 
     /* Allow for a somewhat primative zoom. */
     void Scene2D::wheelEvent(QWheelEvent *event) {

@@ -128,10 +128,10 @@ namespace Kaleidoscope {
         node1_qpos = ((GenericNodeItem*)node1)->pos();
         node2_qpos = ((GenericNodeItem*)node2)->pos();
 
-        QRectF node1_rect = ((GenericNodeItem*)node1)->boundingRect();
-        QRectF node2_rect = ((GenericNodeItem*)node2)->boundingRect();
+        node1_rect = ((GenericNodeItem*)node1)->boundingRect();
+        node2_rect = ((GenericNodeItem*)node2)->boundingRect();
 
-        QLineF center_line = QLineF(node1_qpos, node2_qpos );
+        center_line = QLineF(node1_qpos, node2_qpos );
 
         /* Find intersection with first box. */
         QPointF p2;

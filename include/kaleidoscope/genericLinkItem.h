@@ -26,7 +26,8 @@ namespace Kaleidoscope {
         GenericLinkItem(Device*, Grids::Value*, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
 
         enum LinkType { SOFT_LINK = 0,
-                        HARD_LINK };
+                        HARD_LINK,
+                        INFO_LINK };
 
         static GridsID requestCreate(Device*,
                                      GridsID node1, GridsID node2, LinkType);
@@ -76,6 +77,8 @@ namespace Kaleidoscope {
            and the local position, which is used
            for small-scale movements.
            */
+        QRectF node1_rect, node2_rect;
+        QLineF center_line;
 
         bool node_changed;
         QTime last_physics;

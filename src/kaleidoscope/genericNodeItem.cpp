@@ -153,7 +153,6 @@ namespace Kaleidoscope {
     void GenericNodeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
         QRectF my_rect = boundingRect();
-        QRectF other_rect;
         GenericNodeItem* other_node = 0;
         bool intersected = false;
 
@@ -161,7 +160,6 @@ namespace Kaleidoscope {
         QList<GenericNodeItem*> node_items =  d->getScene()->getNodeItems();
 
         foreach(GenericNodeItem* node, node_items){
-            other_rect = node->boundingRect();
 
             if( (this != node) && nodesIntersect(this, node) ){
                 intersected = true;
@@ -194,39 +192,10 @@ namespace Kaleidoscope {
     }
 
     bool GenericNodeItem::nodesIntersect(GenericNodeItem* node1, GenericNodeItem* node2) {
-        /*FUCK RECTANGLE INTERSECTION!!!!!!
-          WHAT THE FUCK IS THE POINT OF QT, AND ALL THIS OTHER GUI SHIT
-          IF IT CAN'T EVEN PERFORM A FUCKING INTERSECTION BETWEEN TWO FUCKING
-          RECTANGLES.
+        QRectF rect1 = node1->boundingRect().translated(node1->pos()).normalized();
+        QRectF rect2 = node2->boundingRect().translated(node2->pos()).normalized();
 
-          AS A RESULT, I HAVE TO USE THIS PIECE OF SHIT DISTANCE HACK.*/
-        /*
-        QRectF rect1 = node1->boundingRect();
-        QRectF rect2 = node2->boundingRect();
-        rect1 = rect1.normalized();
-        rect2 = rect2.normalized();
-
-        QPointF tl1 = rect1.topLeft();
-        QPointF br1 = rect1.bottomRight();
-        QPointF tl2 = rect2.topLeft();
-        QPointF br2 = rect2.bottomRight();
-        */
-
-        QPointF p1 = node1->pos();
-        QPointF p2 = node2->pos();
-
-        Vec3D v1 = Vec3D( (float)(p1.x()), (float)(p1.y()), 0.0 );
-        Vec3D v2 = Vec3D( (float)(p2.x()), (float)(p2.y()), 0.0 );
-
-        /*
-        return ( ! ( (tl1.x() > br2.x())) || (tl2.x() > br1.x() ) || (tl1.y()
-        < br2.y() ) || (tl2.y() < br1.y() ));
-        */
-
-        if( v1.getDistanceFrom(v2) < 40.0 )
-            return true;
-        else
-            return false;
+        return rect1.intersects(rect2);
     }
 
     QVariant GenericNodeItem::itemChange(GraphicsItemChange change, const QVariant &value) {
