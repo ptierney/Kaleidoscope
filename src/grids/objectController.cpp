@@ -52,19 +52,18 @@ namespace Grids {
     // Thoughs: this function should be replaced by a hash.  Each object
     // "registers" both it's name and ... is this possible?
     bool ObjectController::knownObject( GridsID new_id, Event* evt ) {
-        d->getNoticeWindow()->write(0, tr("Testing known object"));
-
+        //d->getNoticeWindow()->write(0, tr("Testing known object"));
 
         std::string type = (*(evt->getArgsPtr()))[ "attr" ][ "type" ].asString();
         bool found = 0;
 
-        d->getNoticeWindow()->write(0, tr(">>") + tr(type.c_str()) + tr("<<"));
+        //d->getNoticeWindow()->write(0, tr(">>") + tr(type.c_str()) + tr("<<"));
 
         if( type == "Camera" ){
             d->registerCamera(evt->getArgsPtr());
             found = 1;
         } else if( type == "InputText") {
-            d->getNoticeWindow()->write(0, tr("Found InputText"));
+            //d->getNoticeWindow()->write(0, tr("Found InputText"));
             Kal::InputTextItem::gridsCreate(d, evt);
             found = 1;
         } else if( type == "GenericNode") {

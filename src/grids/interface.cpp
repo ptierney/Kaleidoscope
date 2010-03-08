@@ -43,7 +43,7 @@ namespace Grids {
 
         connected = 0;
         proto = new Protocol(d->getMyID(), this);
-        d->getNoticeWindow()->write(0, tr("Created Protocol"));
+        //d->getNoticeWindow()->write(0, tr("Created Protocol"));
 
         connect(proto, SIGNAL(protocolInitiated(Event*)),
                 this, SLOT(protocolInitiated(Event*)));
