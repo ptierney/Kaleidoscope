@@ -214,18 +214,19 @@ namespace Kaleidoscope {
         return QGraphicsItem::itemChange(change, value);
     }
 
+    /* The forces are a mixture of forces pushing all the nodes away from
+       each other, and the forces of the springs pulling some nodes together. */
     void GenericNodeItem::calculateForces() {
         if( d->getScene()->mouseGrabberItem() == this) {
             new_pos = pos();
             return;
         }
 
-        // Sum up all forces pushing this item away
+        /* Sum up all forces pushing this item away */
         qreal xvel = 0;
         qreal yvel = 0;
 
         /* This Eyecandy looks REALLY COOL, but it really bogs the program down. */
-
         foreach (GenericNodeItem *item, d->getScene()->getNodeItems()) {
 
             QLineF line(mapFromItem(item, 0, 0), QPointF(0, 0));
@@ -239,24 +240,31 @@ namespace Kaleidoscope {
             }
         }
 
-
-        // Now subtract all forces pulling items together
+        /* Now subtract all forces pulling items together */
         double weight = (link_pointers.size() + 1) * 40;
 
         for(int i = 0; i < link_pointers.size(); i++) {
             GenericLinkItem* item = link_pointers[i];
 
+            /* In this section of code, I find the closest point on the other node
+               to this node.  I subtract from it my position, so that the
+               values are centered on me, and then are directly tranlatable to
+               my velocity.*/
             QPointF pos;
-            if (item->getNode1() == this)
-                pos = mapFromItem(item->getNode2(), 0, 0);
-            else
-                pos = mapFromItem(item->getNode1(), 0, 0);
+            if (item->getNode1() == this){
+                //pos = mapFromItem(item->getNode2(), 0, 0);
+                pos = item->getIntersectionPoint(item->getNode2()) - item->getNode1()->pos();
+            }
+            else {
+                pos = item->getIntersectionPoint(item->getNode1()) - item->getNode2()->pos();
+                //pos = mapFromItem(item->getNode1(), 0, 0);
+            }
 
             if(  item->getLinkType() == GenericLinkItem::SOFT_LINK ) {
                 if( ( pos.x() * pos.x() + pos.y() * pos.y() ) > 5000) {
                     xvel += pos.x() / weight * 5;
                     yvel += pos.y() / weight * 5;
-                    item->update();
+                    //item->update();
                 } else {
                     xvel = 0;
                     yvel = 0;
@@ -265,7 +273,7 @@ namespace Kaleidoscope {
                 if ( ( pos.x() * pos.x() + pos.y() * pos.y() ) > 10000) {
                     xvel += pos.x() / weight;
                     yvel += pos.y() / weight;
-                    item->update();
+                    //item->update();
                 } else {
                     xvel = 0;
                     yvel = 0;
@@ -275,6 +283,12 @@ namespace Kaleidoscope {
 
         if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
             xvel = yvel = 0;
+        else {
+            for(int i = 0; i < link_pointers.size(); i++) {
+                GenericLinkItem* item = link_pointers[i];
+                item->nodeChanged();
+            }
+        }
 
         QRectF scene_rect = d->getScene()->sceneRect();
         new_pos = pos() + QPointF(xvel, yvel);

@@ -52,6 +52,8 @@ namespace Kaleidoscope {
 
         GenericLinkItem::LinkType getLinkType();
 
+        QPointF getIntersectionPoint(GenericNodeItem*);
+
     protected:
         GridsID getNode1FromAttr(Grids::Value*);
         GridsID getNode2FromAttr(Grids::Value*);
@@ -79,6 +81,7 @@ namespace Kaleidoscope {
            */
         QRectF node1_rect, node2_rect;
         QLineF center_line;
+        QLineF line;
 
         bool node_changed;
         QTime last_physics;

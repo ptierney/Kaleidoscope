@@ -13,7 +13,7 @@ namespace Grids {
     Protocol::Protocol(std::string name, QObject* parent) {
         last_event = 0;
         my_name = name;
-        /* Limit outbound traffic to 3 per second. */
+        /* Limit outbound traffic to one message every 1.5 seconds. */
         outbound_limit = 1000;
         outbound_timer.start();
 

@@ -105,8 +105,10 @@ namespace Kaleidoscope {
             return SOFT_LINK;
         else if( (*attr)["link_type"].asInt() == HARD_LINK )
             return HARD_LINK;
-        else {
-            d->getNoticeWindow()->write(5, tr("Error, couldn't find link type"));
+        else if( (*attr)["link_type"].asInt() == INFO_LINK ){
+            return INFO_LINK;
+        } else {
+            d->getErrorWindow()->write(5, tr("Error, couldn't find link type"));
             return HARD_LINK;
         }
     }
@@ -163,12 +165,15 @@ namespace Kaleidoscope {
                 break;
         }
 
-        QLineF line = QLineF(intersection_point_1, intersection_point_2);
+        line = QLineF(intersection_point_1, intersection_point_2);
 
-        if( link_type == SOFT_LINK )
+        /* Experimenting with different styles of line for each link. */
+        if( link_type == SOFT_LINK  )
             painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         else if( link_type == HARD_LINK )
             painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        else if( link_type == INFO_LINK )
+             painter->setPen(QPen(fill_color, line_thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
         painter->drawLine(line);
 
@@ -273,6 +278,18 @@ namespace Kaleidoscope {
             sourcePoint = destPoint = line.p1();
         }
         */
+    }
+
+
+    QPointF GenericLinkItem::getIntersectionPoint(GenericNodeItem *node) {
+        if(node == node1)
+            return line.p1();
+
+        else if(node == node2)
+            return line.p2();
+
+        else
+            return QPointF();
     }
 
 
