@@ -9,6 +9,7 @@
 
 #include <kaleidoscope/genericLinkItem.h>
 #include <kaleidoscope/genericNodeItem.h>
+#include <kaleidoscope/inputTextItem.h>
 #include <grids/utility.h>
 #include <grids/event.h>
 #include <kaleidoscope/noticeWindow.h>
@@ -35,6 +36,8 @@ namespace Kaleidoscope {
 
         if(node1 == 0 || node2 == 0){
             d->getErrorWindow()->write(7, tr("Error getting node pointers for link: ") + tr(getID().c_str()));
+            link_type = BROKEN_LINK;
+            return;
         }
 
         link_type = getLinkTypeFromAttr(attr);
@@ -48,6 +51,8 @@ namespace Kaleidoscope {
         } else if( link_type == HARD_LINK ) {
             line_thickness = 1.6;
             rest_distance = 165.0;
+        } else if ( link_type == INFO_LINK ) {
+            line_thickness = 0.5;
         }
 
         node1_pos = getNode1Pos();
@@ -88,6 +93,11 @@ namespace Kaleidoscope {
 
         GenericLinkItem *generic_link = new GenericLinkItem(dev, val);
 
+        if( generic_link->getLinkType() == GenericLinkItem::BROKEN_LINK) {
+            delete generic_link;
+            return;
+        }
+
         scene->addItem(generic_link);
         scene->addLinkItem(generic_link);
     }
@@ -127,11 +137,8 @@ namespace Kaleidoscope {
     }    
 
     void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-        node1_qpos = ((GenericNodeItem*)node1)->pos();
-        node2_qpos = ((GenericNodeItem*)node2)->pos();
-
-        node1_rect = ((GenericNodeItem*)node1)->boundingRect();
-        node2_rect = ((GenericNodeItem*)node2)->boundingRect();
+        loadNodeQPos();
+        loadNodeRects();
 
         center_line = QLineF(node1_qpos, node2_qpos );
 
@@ -179,6 +186,28 @@ namespace Kaleidoscope {
 
     }
 
+    void GenericLinkItem::loadNodeQPos() {
+        if(link_type == INFO_LINK) {
+            node1_qpos = ((InputTextItem*)node1)->pos();
+            node2_qpos = ((GenericNodeItem*)node2)->pos();
+            return;
+        }
+
+        node1_qpos = ((GenericNodeItem*)node1)->pos();
+        node2_qpos = ((GenericNodeItem*)node2)->pos();
+    }
+
+    void GenericLinkItem::loadNodeRects() {
+        if(link_type == INFO_LINK) {
+            node1_rect = ((InputTextItem*)node1)->boundingRect();
+            node2_rect = ((GenericNodeItem*)node2)->boundingRect();
+            return;
+        }
+
+        node1_rect = ((GenericNodeItem*)node1)->boundingRect();
+        node2_rect = ((GenericNodeItem*)node2)->boundingRect();
+    }
+
     void GenericLinkItem::updateAttr(Grids::Event *evt) {
         Grids::Object::updateAttr(evt);
     }
@@ -205,7 +234,7 @@ namespace Kaleidoscope {
         return getNodePos(node2);
     }
 
-    GenericNodeItem* GenericLinkItem::getNode1() {
+    GenericNodeItem* GenericLinkItem::getNode1() {        
         return (GenericNodeItem*)node1;
 
     }
@@ -218,76 +247,21 @@ namespace Kaleidoscope {
         return link_type;
     }
 
+    /* If a node moved, the entire shape of this object changes. */
     void GenericLinkItem::nodeChanged() {
         if (!node1 || !node2)
             return;
 
         node_changed = true;
 
-        /*
-        QLineF line(mapFromItem((QGraphicsItem*)node1, 0, 0),
-                    mapFromItem((QGraphicsItem*)node2, 0, 0));
-        qreal length = line.length();
-        */
-
-        //d->getNoticeWindow()->write(5, tr("Link called"));
-
         prepareGeometryChange();
-
-        //QLineF line(mapFromItem((QGraphicsItem*)node1, 0, 0), mapFromItem((QGraphicsItem*)node2, 0, 0));
-        //qreal length = line.length();
-
-        //prepareGeometryChange();
-
-        //node1_pos = Vec3D(line.p1().x(), line.p1().y(), 0.);
-        //node2_pos = Vec3D(line.p2().x(), line.p2().y(), 0.);
-
-                    /*
-        if (length > qreal(20.)) {
-            QPointF edgeOffset((line.dx() * 10) / length, (line.dy() * 10) / length);
-            sourcePoint = line.p1() + edgeOffset;
-            destPoint = line.p2() - edgeOffset;
-        } else {
-            sourcePoint = destPoint = line.p1();
-        }
-        */
-
-        /*
-        //node1_pos = node1->getPosition();
-        //node2_pos = node2->getPosition();
-
-        node1_pos = Vec3D( ((QGraphicsItem*)node1)->pos().x(),
-                           ((QGraphicsItem*)node1)->pos().y(),
-                           0.);
-
-        node2_pos = Vec3D( ((QGraphicsItem*)node2)->pos().x(),
-                           ((QGraphicsItem*)node2)->pos().y(),
-                           0.);
-
-                           */
-
-
-        //update();
-        /*
-
-        if (length > qreal(20.)) {
-            QPointF edgeOffset((line.dx() * 10) / length, (line.dy() * 10) / length);
-            sourcePoint = line.p1() + edgeOffset;
-            destPoint = line.p2() - edgeOffset;
-        } else {
-            sourcePoint = destPoint = line.p1();
-        }
-        */
     }
-
 
     QPointF GenericLinkItem::getIntersectionPoint(GenericNodeItem *node) {
         if(node == node1)
             return line.p1();
-
         else if(node == node2)
             return line.p2();
-
         else
             return QPointF();
     }

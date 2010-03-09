@@ -27,7 +27,8 @@ namespace Kaleidoscope {
 
         enum LinkType { SOFT_LINK = 0,
                         HARD_LINK,
-                        INFO_LINK };
+                        INFO_LINK,
+                        BROKEN_LINK };
 
         static GridsID requestCreate(Device*,
                                      GridsID node1, GridsID node2, LinkType);
@@ -40,7 +41,7 @@ namespace Kaleidoscope {
         void draw(Device *);
 
         QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+        virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
         void updateAttr(Grids::Event*);
 
@@ -58,6 +59,9 @@ namespace Kaleidoscope {
         GridsID getNode1FromAttr(Grids::Value*);
         GridsID getNode2FromAttr(Grids::Value*);
         GenericLinkItem::LinkType getLinkTypeFromAttr(Grids::Value*);
+
+        virtual void loadNodeQPos();
+        virtual void loadNodeRects();
 
     private:
         Grids::Object *node1, *node2;

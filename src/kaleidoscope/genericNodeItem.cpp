@@ -246,6 +246,9 @@ namespace Kaleidoscope {
         for(int i = 0; i < link_pointers.size(); i++) {
             GenericLinkItem* item = link_pointers[i];
 
+            if( item->getLinkType() == GenericLinkItem::INFO_LINK)
+                continue;
+
             /* In this section of code, I find the closest point on the other node
                to this node.  I subtract from it my position, so that the
                values are centered on me, and then are directly tranlatable to
