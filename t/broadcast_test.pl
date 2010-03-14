@@ -5,6 +5,7 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../../grids-platform/lib";
 use lib "$FindBin::Bin/../../crypt-otr/lib";
+use lib "$findBin::Bin/../../crypt-otr/blib/lib";
 
 use Grids::Address::IPv4;
 use Grids::Client;
