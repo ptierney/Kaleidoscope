@@ -4,6 +4,7 @@ use warnings;
 
 use FindBin;
 use lib "$FindBin::Bin/../../grids-platform/lib";
+use lib "$FindBin::Bin/../../crypt-otr/lib";
 
 use Grids::Address::IPv4;
 use Grids::Client;
@@ -14,9 +15,10 @@ use Grids::Conf;
 use Data::Dumper;
 
 my $server_address = '127.0.0.1';
+#my $server_address = 'elcerrito.ath.cx';
 my $num_messages = 300;
 # This is the pause between each message
-my $millis_pause = 0.01;
+my $millis_pause = 0.001;
 
 my $is_sender;
 my $messages_received = 0;
