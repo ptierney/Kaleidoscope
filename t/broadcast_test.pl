@@ -6,6 +6,8 @@ use FindBin;
 use lib "$FindBin::Bin/../../grids-platform/lib";
 use lib "$FindBin::Bin/../../crypt-otr/lib";
 use lib "$FindBin::Bin/../../crypt-otr/blib/lib";
+use lib "$FindBin::Bin/../../crypt-otr/blib/lib/auto";
+use lib "$FindBin::Bin/../../crypt-otr/blib/arch/auto";
 
 use Grids::Address::IPv4;
 use Grids::Client;
@@ -19,7 +21,7 @@ my $server_address = '127.0.0.1';
 #my $server_address = 'elcerrito.ath.cx';
 my $num_messages = 300;
 # This is the pause between each message
-my $millis_pause = 0.001;
+my $millis_pause = 0.1;
 
 my $is_sender;
 my $messages_received = 0;
@@ -134,16 +136,19 @@ sub create_object_cb {
 
 	if( $evt->args->{attr}->{type} eq "GenericNode"){
 #		if( $evt->args->{attr}->{owner} eq $sender_id->{name}){
+		if( $evt->args->{attr}->{text} eq "Node Num $messages_received"){
 			$messages_received++;
 			$con->print( $messages_received);
 			if($messages_received == $num_messages){
 				$con->print("Passed");
 				exit();
 			}
+		}
 #		}
 	}
 }
 
+ 
 sub send_test_text {
 	my( $text_num) = @_;
 
@@ -156,6 +161,10 @@ sub send_test_text {
 	#$con->print( Dumper($node_value));
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
+}
+
+sub send_create {
+	send_test_text(-1.0);
 }
 
 sub run {
@@ -178,6 +187,9 @@ sub run {
 	$con = Grids::Console->new(
 							   title => "Parser",
 							   prompt => "Parser>",
+							   handlers => {
+								   send => \&send_create,
+							   },
 							   );
 
 	# main loop condition
