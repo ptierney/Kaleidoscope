@@ -13,8 +13,8 @@ namespace Grids {
     Protocol::Protocol(std::string name, QObject* parent) {
         last_event = 0;
         my_name = name;
-        /* Limit outbound traffic to one message every 1.5 seconds. */
-        outbound_limit = 1000;
+        /* Limit outbound traffic to with this variable. */
+        outbound_limit = 50;
         outbound_timer.start();
 
         sock = new QTcpSocket(this);
@@ -57,6 +57,11 @@ namespace Grids {
         /* Pop a string off the queue. */
         /* Send it on its merry way. */
         //QMutexLocker locker(&outbound_queue_mutex);
+
+        if(sock->bytesAvailable()){
+            //std::cerr << "You got bytes" << std::endl;
+            gridsRead();
+        }
 
         if(!outbound_queue.empty() &&
            outbound_timer.elapsed() > outbound_limit){
@@ -184,6 +189,8 @@ namespace Grids {
 
         std::string valueStr = stringifyValue(args);
 
+
+
         handleMessage(valueStr);
     }
 
@@ -284,6 +291,9 @@ namespace Grids {
 
         // TODO: run in seperate thread
         std::string msg = buf;
+
+        //std::cerr << msg << std::endl;
+
         handleMessage(msg);
 
         /*std::cerr << "Freeing buff\n";*/

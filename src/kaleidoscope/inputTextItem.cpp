@@ -20,7 +20,7 @@ namespace Kaleidoscope {
 
         /* Only send text information once per second. */
         /* Sending key data as fast as the user typed it crashed my server. */
-        key_delay = 1000;
+        key_delay = 250;
         /* After this time a newline is added and the text is sent as an itput. */
         input_time = 2250;
 
