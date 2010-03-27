@@ -1,0 +1,4 @@
+#ifndef RESPONDNODE_H
+#define RESPONDNODE_H
+
+#endif // RESPONDNODE_H

@@ -87,7 +87,7 @@ namespace Kaleidoscope {
         (*create_val)["id"] = new_id;
         (*create_val)["text"] = text;
 
-        return dev->getInterface()->requestCreateObject(create_val, position);
+        dev->getInterface()->requestCreateObject(create_val, position);
 
         delete create_val;
 

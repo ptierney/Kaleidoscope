@@ -50,8 +50,8 @@ namespace Grids{
 		
 		void addChild( Object* obj_ptr );
 
-		virtual void drawAll( Kal::Device* ) = 0;
-		virtual bool getVisibility() = 0;		
+                //virtual void drawAll( Kal::Device* ) = 0;
+                //virtual bool getVisibility() = 0;
 
 		friend class ObjectController;
 		friend class Kal::Camera;
