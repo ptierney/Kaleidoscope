@@ -37,7 +37,9 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/scene2d.cpp \
     ../../src/kaleidoscope/genericNodeItem.cpp \
     ../../src/kaleidoscope/view2d.cpp \
-    ../../src/kaleidoscope/genericLinkItem.cpp
+    ../../src/kaleidoscope/genericLinkItem.cpp \
+    ../../src/kaleidoscope/responseNode.cpp \
+    ../../src/kaleidoscope/tete.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -90,5 +92,6 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/scene2d.h \
     ../../include/kaleidoscope/genericNodeItem.h \
     ../../include/kaleidoscope/view2d.h \
-    ../../include/kaleidoscope/genericLinkItem.h
+    ../../include/kaleidoscope/genericLinkItem.h \
+    ../../include/kaleidoscope/responseNode.h
 FORMS += kaleidoscope.ui
