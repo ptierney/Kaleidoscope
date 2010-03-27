@@ -1,4 +1,10 @@
 
+#include <map>
+
+#include <QMutex>
+#include <QMutexLocker>
+#include <QMouseEvent>
+
 #include <grids/objectController.h>
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
@@ -14,9 +20,7 @@
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/device.h>
 
-#include <QMutex>
-#include <QMutexLocker>
-#include <QMouseEvent>
+
 
 namespace Grids {
 
@@ -26,7 +30,6 @@ namespace Grids {
     }
 
     void ObjectController::registerObject( GridsID new_id, Object* new_ptr ){
-        ////QMutexLocker lock(&map_mutex);
         object_ids.push_back( new_id );
         id_ptr_map[ new_id ] = new_ptr;
         ptr_id_map[ new_ptr ] = new_id;
@@ -34,19 +37,46 @@ namespace Grids {
 
     // Returns an object's ID given it's pointer
     GridsID ObjectController::getIDFromPointer( Object* obj_ptr ){
-        ////QMutexLocker lock(&map_mutex);
-        return ptr_id_map[ obj_ptr ];
+        if( pointerRegistered(obj_ptr) == false)
+            return GridsID();
+        else
+            return ptr_id_map[ obj_ptr ];
     }
 
-    // Returns an object's pointer given it's ID
+    // Returns an object's pointer given its ID
     Object* ObjectController::getPointerFromID( GridsID obj_id ){
-        ////QMutexLocker lock(&map_mutex);
-        return id_ptr_map[ obj_id ];
+        if( idRegistered(obj_id) == false)
+            return NULL;
+        else
+            return id_ptr_map[ obj_id ];
     }
 
     void ObjectController::createObject( GridsID new_id, Event* evt ){
         if( !knownObject( new_id, evt ) )
             createGenericObject( new_id, evt );
+    }
+
+    bool ObjectController::idRegistered( GridsID obj_id ){
+        id_ptr_iter = id_ptr_map.find(obj_id);
+
+        if( id_ptr_iter == id_ptr_map.end() )
+            return false;
+        else
+            return true;
+    }
+
+    bool ObjectController::pointerRegistered( Object* obj_ptr ){
+        ptr_id_iter = ptr_id_map.find(obj_ptr);
+
+        if( ptr_id_iter == ptr_id_map.end() )
+            return false;
+        else
+            return true;
+    }
+
+    void ObjectController::deleteObjectFromID( GridsID obj_id ) {
+
+
     }
 
     // Thoughs: this function should be replaced by a hash.  Each object
