@@ -24,6 +24,10 @@ namespace Grids {
         setAttrFromValue( in_value );
     }
 
+    Object::~Object(){
+      // Nothing here
+    }
+
     GridsID Object::getID() {
         //QMutexLocker lock(&id_mutex);
         return obj_id;

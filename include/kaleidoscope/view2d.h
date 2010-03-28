@@ -12,9 +12,10 @@ namespace Kaleidoscope {
     public:
         View2D(Scene2D*);
 
+        void scaleView(qreal scaleFactor);
+
     protected:
         void wheelEvent(QWheelEvent *event);
-        void scaleView(qreal scaleFactor);
 
         void drawBackground(QPainter *painter, const QRectF &rect);
 

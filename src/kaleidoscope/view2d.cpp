@@ -15,6 +15,7 @@ namespace Kaleidoscope {
         scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
         setScene(scene);
+        scene->set_main_view(this);
 
         setCacheMode(CacheBackground);
         //setViewportUpdateMode(BoundingRectViewportUpdate);
@@ -49,10 +50,12 @@ namespace Kaleidoscope {
         scaleView(pow((double)2, event->delta() / 240.0));
     }
 
+    /* Scales the view by the fraction passed in.
+       0.5 makes everything half as big. */
     void View2D::scaleView(qreal scale_factor) {
-        qreal factor = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
-        if (factor < 0.07 || factor > 100)
-            return;
+        //qreal scale_factor_ = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
+        //if (factor < 0.07 || factor > 100)
+        //    return;
 
         scale(scale_factor, scale_factor);
     }

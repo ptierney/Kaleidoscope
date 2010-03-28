@@ -1,4 +1,11 @@
 
+#include <time.h>
+
+#include <iostream>
+
+#include <QDockWidget>
+#include <QGraphicsView>
+
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/settings.h>
 #include <kaleidoscope/room.h>
@@ -10,17 +17,12 @@
 #include <kaleidoscope/console.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/view2d.h>
+#include <kaleidoscope/chatController.h>
 
 #include <grids/interface.h>
 #include <grids/objectController.h>
 #include <grids/utility.h>
 #include <grids/event.h>
-
-#include <iostream>
-#include <QDockWidget>
-#include <QGraphicsView>
-
-#include <time.h>
 
 namespace Kaleidoscope {
     Device::Device(QApplication* in_app, QMainWindow* m_win)
@@ -33,7 +35,7 @@ namespace Kaleidoscope {
         qsrand ( time(NULL) );
 
         /* OK, let's try setting up an event loop like this. */
-        startTimer(250);
+        startTimer(100);
 
         /* NoticeWindow & ErrorWindow must be created before any Grids::Objects,
          * as all Grids::Objects require them to be created. */
@@ -58,12 +60,13 @@ namespace Kaleidoscope {
 
         // Settings stores / loads the user data
         settings = new Settings();
+        chat_controller_ = new ChatController(this);
+        chat_controller_->init();
 
         // Derived from QWidget, handles misc. key presses
         event_controller = new Kal::EventController(this, main_window);
         object_controller = new Grids::ObjectController(this, main_window);
         g_utility = new Grids::Utility();
-
     }
 
     void Device::init() {
@@ -88,10 +91,11 @@ namespace Kaleidoscope {
 
         getInterface()->flushProtocol();
         getInterface()->collectEvents();
+
+        chat_controller_->checkReframe();
     }
 
     void Device::gridsConnectionEstablished() {
-
         loadRoom();
     }
 
@@ -115,6 +119,8 @@ namespace Kaleidoscope {
     NoticeWindow* Device::getErrorWindow() { return errorWindow; }
     Scene2D* Device::getScene() { return scene; }
     Camera* Device::getCamera() { return main_camera; }
+    ChatController* Device::getChatController() { return chat_controller_; }
+    ChatController* Device::chat_controller() { return chat_controller_; }
 
     void Device::loadRoom(){
         getInterface()->requestAllRooms();

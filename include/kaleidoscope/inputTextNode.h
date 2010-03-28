@@ -1,0 +1,4 @@
+#ifndef INPUTTEXTNODE_H
+#define INPUTTEXTNODE_H
+
+#endif // INPUTTEXTNODE_H

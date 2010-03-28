@@ -25,6 +25,7 @@ namespace Kaleidoscope {
     class GenericNodeItem;
     class GenericLinkItem;
     class InputTextItem;
+    class View2D;
 
     class Scene2D : public QGraphicsScene {
         Q_OBJECT
@@ -33,7 +34,6 @@ namespace Kaleidoscope {
 
         Scene2D(Device*, QObject* parent = 0);
         QSize sizeHint() const;
-
 
         QFont font() const
         { return myFont; }
@@ -46,6 +46,9 @@ namespace Kaleidoscope {
         void addInputTextItem(InputTextItem*);
         void addNodeItem(GenericNodeItem*);
         void addLinkItem(GenericLinkItem*);
+
+        void set_main_view(View2D*);
+        View2D* main_view();
 
         QList<InputTextItem*> getInputTextItems();
         QList<GenericNodeItem*> getNodeItems();
@@ -81,6 +84,8 @@ namespace Kaleidoscope {
         QList<InputTextItem*> input_text_items;
         QList<GenericNodeItem*> node_items;
         QList<GenericLinkItem*> link_items;
+
+        View2D* main_view_;
 
     };
 

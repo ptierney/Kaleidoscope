@@ -14,6 +14,7 @@
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/genericLinkItem.h>
 #include <kaleidoscope/inputTextItem.h>
+#include <kaleidoscope/tete.h>
 #include <kaleidoscope/camera.h>
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
@@ -102,12 +103,10 @@ namespace Grids {
         } else if( type == "GenericLink") {
             Kal::GenericLinkItem::gridsCreate(d, evt);
             found = 1;
-        }
-
-        /*else if( type == "SpaceText" ) {
-		    new Kal::SpaceText( d, evt->getArgsPtr() );
-		    found = 1;
-		    }*/
+          } else if(type == "Tete") {
+            Kal::Tete::gridsCreate(d, evt);
+            found = 1;
+          }
 
         return found;
     }

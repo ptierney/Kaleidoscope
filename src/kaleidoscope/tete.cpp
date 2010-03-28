@@ -1,7 +1,11 @@
 
 #include <algorithm>
+#include <string>
 
 #include <kaleidoscope/tete.h>
+#include <kaleidoscope/displayTextNode.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/chatController.h>
 #include <grids/utility.h>
 #include <grids/gObject.h>
 #include <grids/event.h>
@@ -14,6 +18,14 @@ namespace Kaleidoscope {
             Grids::Object(d, val) {
         d_ = d;
         text_ = getTextFromAttr(getAttrFromValue(val));
+        chat_id_ = getChatIDFromAttr(getAttrFromValue(val));
+        chat_ = NULL;
+    }
+
+    void Tete::init(){
+      if(chat_id_.empty()){
+        chat_id_ = d_->chat_controller()->default_chat_id();
+      }
     }
 
     GridsID Tete::requestCreate(Device *dev, GridsID parent, GridsID chat, std::string text, Vec3D position){
@@ -43,7 +55,16 @@ namespace Kaleidoscope {
         // add the
 
         Tete* tete = new Tete(dev, val);
-        delete tete;
+        tete->init();
+
+        DisplayTextNode* display_node = new DisplayTextNode(dev, tete);
+        display_node->init();
+
+        tete->set_tete_node(display_node);
+        dev->chat_controller()->addTete(tete);
+
+        Scene2D* scene = dev->getScene();        
+        scene->addItem(display_node);
     }
 
     std::string Tete::text(){
@@ -56,6 +77,10 @@ namespace Kaleidoscope {
 
     std::string Tete::getTextFromAttr(Grids::Value* attr){
         return (*attr)["text"].asString();
+    }
+
+    GridsID Tete::getChatIDFromAttr(Grids::Value* attr){
+      return (*attr)["chat"].asString();
     }
 
     void Tete::addReference(Tete* tete){
@@ -86,12 +111,32 @@ namespace Kaleidoscope {
         return child_tetes();
     }
 
-    Chat* Tete::parent_chat(){
-        return parent_chat_;
+    Chat* Tete::chat(){
+        return chat_;
+    }
+
+    void Tete::set_chat(Chat *chat){
+      chat_ = chat;
+    }
+
+    GridsID Tete::chat_id(){
+      return chat_id_;
+    }
+
+    void Tete::set_chat_id(GridsID chat_id){
+      chat_id_ = chat_id;
     }
 
     std::vector<Chat*> Tete::referenced_chats(){
         return referenced_chats_;
+    }
+
+    TeteNode* Tete::tete_node(){
+      return tete_node_;
+    }
+
+    void Tete::set_tete_node(TeteNode* tete_node){
+      tete_node_ = tete_node;
     }
 
 

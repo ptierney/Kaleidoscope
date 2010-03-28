@@ -16,7 +16,7 @@ namespace Kaleidoscope {
 			std::vector< Grids::Object* > temp_children = getChildren();
 
                for( int i = 0; i < temp_children.size(); i++ ){
-                    temp_children[i]->drawAll( d );
+                    //temp_children[i]->drawAll( d );
                }
                draw( d ); // draw yourself
           }

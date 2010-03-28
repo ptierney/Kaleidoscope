@@ -3,18 +3,31 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
+#include <QGraphicsScene>
+
+#include <kaleidoscope/respondNode.h>
 
 namespace Kaleidoscope {
-  class TeteNode : public QGraphicsObject {
-    Q_OBJECT
+  class Tete;
 
-      public:
-    TeteNode(QGraphicsItem* parent = 0, QGraphicsScene* = 0);
+  class TeteNode : public RespondNode {
+
+  public:
+    TeteNode(Device*, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+    virtual ~TeteNode();
     void init();
-    
 
+    Tete* tete();
+    void set_tete(Tete*);
+
+    // Required by ResponseNode
+    bool frameOn();
+
+  protected:
+    Tete* tete_;
+    
   private:
-    QGraphicsTextItem* text;
+
   };
 
 

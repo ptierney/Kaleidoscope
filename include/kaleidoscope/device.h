@@ -30,6 +30,7 @@ namespace Kaleidoscope {
     class Console;
     class Scene2D;
     class View2D;
+    class ChatController;
 
     class Device : public QObject {
         Q_OBJECT
@@ -46,6 +47,8 @@ namespace Kaleidoscope {
         Settings* getSettings();
         Camera* getCamera();
         void registerCamera(Grids::Value*);
+        ChatController* getChatController();
+        ChatController* chat_controller();
 
         void quit();
         bool getRunning();
@@ -99,6 +102,7 @@ namespace Kaleidoscope {
         NoticeWindow* errorWindow;
         Scene2D* scene;
         View2D* view2D;
+        ChatController* chat_controller_;
 
         void createObjects();
 

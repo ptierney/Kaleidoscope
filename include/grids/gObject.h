@@ -21,6 +21,7 @@ namespace Grids{
 
 	public:
 		Object( Kal::Device*, Value* );
+    virtual ~Object();
 		
 		GridsID getID();
 		GridsID getRoom();

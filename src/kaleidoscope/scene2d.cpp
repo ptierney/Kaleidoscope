@@ -150,4 +150,12 @@ namespace Kaleidoscope {
         }
     }
 
+    View2D* Scene2D::main_view(){
+      return main_view_;
+    }
+
+    void Scene2D::set_main_view(View2D* main_view){
+      main_view_ = main_view;
+    }
+
 }
