@@ -22,7 +22,7 @@ namespace Kaleidoscope {
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
-    void timerEvent(QTimerEvent *);
+    //void timerEvent(QTimerEvent *);
 
     bool selected_;
     // Used for keeping track of reframing

@@ -4,6 +4,7 @@
 #include <kaleidoscope/define.h>
 
 namespace Kaleidoscope {
+  class Device;
 
   class User {
   public:

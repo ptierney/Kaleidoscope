@@ -91,8 +91,6 @@ namespace Kaleidoscope {
 
         getInterface()->flushProtocol();
         getInterface()->collectEvents();
-
-        chat_controller_->checkReframe();
     }
 
     void Device::gridsConnectionEstablished() {

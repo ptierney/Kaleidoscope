@@ -30,7 +30,8 @@ namespace Kaleidoscope {
   void TeteNode::set_tete(Tete* tete){
     tete_ = tete;
   }
-  
+
+
   bool TeteNode::frameOn(){
      // boundingRect defined in TextNode, ImageNode, etc
     QRectF my_rect = boundingRect();
@@ -39,11 +40,11 @@ namespace Kaleidoscope {
     int total_object_width = boundingRect().width();
     int total_object_height = boundingRect().height();
 
-    int window_width = d_->main_window->centralWidget()->size().width();
-    int window_height = d_->main_window->centralWidget()->size().height();
+    float window_width = d_->main_window->centralWidget()->size().width();
+    float window_height = d_->main_window->centralWidget()->size().height();
 
-    int display_width = window_width - zoom_margin_*2;
-    int display_height = window_height - zoom_margin_*2;
+    float display_width = window_width - zoom_margin_*2.0;
+    float display_height = window_height - zoom_margin_*2.0;
 
     float view_scale_width = display_width / total_object_width;
     float view_scale_height = display_height / total_object_height;
@@ -63,7 +64,7 @@ namespace Kaleidoscope {
     temp_matrix.scale(new_scale, new_scale);
     d_->getScene()->main_view()->setMatrix(temp_matrix);
 
-    d_->getScene()->main_view()->centerOn(pos().x(), pos().y());
+    d_->getScene()->main_view()->ensureVisible(this, zoom_margin_, zoom_margin_);
 
     return selected_;
   }

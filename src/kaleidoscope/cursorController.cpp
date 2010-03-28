@@ -7,8 +7,8 @@
 
 namespace Kaleidoscope
 {
-	CursorController::CursorController(Device* dvc, QWidget* wid) {
-		d = dvc;
+  CursorController::CursorController(Device* dev, QWidget* wid) {
+    d = dev;
 		widget = wid;
 	}	
 

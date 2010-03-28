@@ -2,21 +2,28 @@
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/chat.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/teteNode.h>
 #include <grids/objectController.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <grids/utility.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
-  ChatController::ChatController(Device* d){
+  ChatController::ChatController(Device* d, QObject* parent) :
+    QObject(parent) {
     d_ = d;
-    chat_refresh_ = 100;
+    chat_refresh_ = 50;
+    zoom_out_speed_ = 0.04;
+    zoom_margin_ = 10;
+    last_selected_ = NULL;
   }
 
   ChatController::~ChatController(){
     Chat* temp_chat;
-    for(int i = 0; i < chats_.size(); i++){
+    for(unsigned int i = 0u; i < chats_.size(); i++){
       temp_chat = chats_[i];
       delete temp_chat;
     }
@@ -24,6 +31,19 @@ namespace Kaleidoscope {
 
   void ChatController::init(){
     default_chat_id_ = d_->getGridsUtility()->getNewUUID();
+
+    int main_width = d_->main_window->centralWidget()->size().width();
+    int main_height = d_->main_window->centralWidget()->size().height();
+    /*all_chats_rect_ = QRectF(-main_width/2, -main_height/2,
+      main_width, main_height);*/
+    all_chats_rect_ = QRectF(-10, -10, 20, 20);
+    all_chats_rect_ = all_chats_rect_.normalized();
+
+    startTimer(chat_refresh_);
+  }
+
+  void ChatController::timerEvent(QTimerEvent* event){
+    checkReframe();
   }
 
   void ChatController::addChat(Chat* chat){
@@ -39,7 +59,7 @@ namespace Kaleidoscope {
       // This should be the only place I make a new Chat
       GridsID chat_id = tete->chat_id();
 
-      for(int i = 0; i < chats_.size(); i++){
+      for(unsigned int i = 0u; i < chats_.size(); i++){
         if(chats_[i]->chat_id() == chat_id)
           chat = chats_[i];
       }
@@ -54,15 +74,46 @@ namespace Kaleidoscope {
 
     chat->addTete(tete);
     tetes_.push_back(tete);
+
+    updateChatsRect();
+  }
+
+  void ChatController::updateChatsRect(){
+    float min_x = all_chats_rect_.topLeft().x();
+    float min_y = all_chats_rect_.topLeft().y();
+    float max_x = all_chats_rect_.bottomRight().x();
+    float max_y = all_chats_rect_.bottomRight().y();
+
+    for(unsigned int i = 0u; i < tetes_.size(); i++){
+      QRectF local_bound = tetes_[i]->tete_node()->boundingRect();
+      QRectF bound = local_bound;
+      bound.moveTo(tetes_[i]->tete_node()->pos());
+      bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+      if(bound.topLeft().x() < min_x)
+        min_x = bound.topLeft().x();
+      if(bound.topLeft().y() < min_y)
+        min_y = bound.topLeft().y();
+      if(bound.bottomRight().x() > max_x)
+        max_x = bound.bottomRight().x();
+      if(bound.bottomRight().y() > max_y)
+        max_y = bound.bottomRight().y();
+    }
+
+    all_chats_rect_ = QRectF(QPointF(min_x, min_y),
+                             QPointF(max_x, max_y)).normalized();
   }
 
   void ChatController::checkReframe(){
     bool reframing = false;
 
-    for(int i = 0; i < tetes_.size(); i++){
+    for(unsigned int i = 0u; i < tetes_.size(); i++){
       if( tetes_[i] && tetes_[i]->tete_node() ){
-        if( tetes_[i]->tete_node()->frameOn() ){
+        if( tetes_[i]->tete_node()->selected() ){
           reframing = true;
+          last_selected_ = tetes_[i];
+          tetes_[i]->tete_node()->frameOn();
+          d_->getNoticeWindow()->write(7, "setting last selceted");
         }
       }
     }
@@ -71,6 +122,62 @@ namespace Kaleidoscope {
       return;
 
     // Zoom out
+    zoomOut();
+  }
+
+  void ChatController::zoomOut(){
+    View2D* view = d_->getScene()->main_view();
+
+    int total_object_width = all_chats_rect_.width();
+    int total_object_height = all_chats_rect_.height();
+
+    float window_width = d_->main_window->centralWidget()->size().width();
+    float window_height = d_->main_window->centralWidget()->size().height();
+
+    float display_width = window_width - zoom_margin_*2.0;
+    float display_height = window_height - zoom_margin_*2.0;
+
+    float view_scale_width = display_width / total_object_width;
+    float view_scale_height = display_height / total_object_height;
+
+    float view_scale = view_scale_width <= view_scale_height ?
+      view_scale_width :
+      view_scale_height;
+
+    QMatrix current_matrix = view->matrix();
+    // Note: m11 and m22 hold the horizontal and vertical scale.
+    // They should be the same.
+    float current_scale = current_matrix.m11();
+
+    float new_scale = current_scale + (view_scale - current_scale) * zoom_out_speed_;
+   
+    QMatrix temp_matrix;
+    temp_matrix.scale(new_scale, new_scale);
+    view->setMatrix(temp_matrix);
+
+    /* It would be awesome if I could get this to work
+    QPointF cursor_view = view->mapFromGlobal(QPoint( d_->main_window->cursor().pos() ));
+
+    float current_center_x = d_->getScene()->width() / 2.0;
+    float current_center_y = d_->getScene()->height() / 2.0;
+    QPointF center_point = view->mapFromScene(current_center_x, current_center_y);
+
+    float trans_dist_x = (cursor_view.x() - center_point.x()) * zoom_out_speed_/10.0;
+    float trans_dist_y = (cursor_view.y() - center_point.y()) * zoom_out_speed_/10.0;
+    */
+
+    if(last_selected_ && last_selected_->tete_node()){
+      //d_->getNoticeWindow()->write(7, "last selceted");
+      view->centerOn(last_selected_->tete_node()->pos());
+    }
+    else
+      view->centerOn(all_chats_rect_.center());
+
+    /*
+      d_->getScene()->main_view()->centerOn(center_point.x() + trans_dist_x,
+      center_point.y() + trans_dist_y);
+    */
+    //d_->getScene()->main_view()->ensureVisible(all_chats_rect_, zoom_margin_, zoom_margin_);
   }
 
   GridsID ChatController::default_chat_id(){

@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#include <QObject>
+#include <QGraphicsObject>
+
 #include <kaleidoscope/define.h>
 
 namespace Kaleidoscope {
@@ -10,9 +13,10 @@ namespace Kaleidoscope {
   class Chat;
   class Tete;
 
-  class ChatController {
+  class ChatController : public QObject {
+    Q_OBJECT
   public:
-    ChatController(Device*);
+    ChatController(Device*, QObject* parent = 0);
     ~ChatController();
     void init();
 
@@ -23,6 +27,11 @@ namespace Kaleidoscope {
     void addTete(Tete*);
 
     void checkReframe();
+    void zoomOut();
+    void updateChatsRect();
+
+  protected:
+    void timerEvent(QTimerEvent*);
 
   private:
     Device* d_;
@@ -30,6 +39,10 @@ namespace Kaleidoscope {
     std::vector<Tete*> tetes_;
     int chat_refresh_;
     GridsID default_chat_id_;
+    QRectF all_chats_rect_;
+    float zoom_out_speed_;
+    float zoom_margin_;
+    Tete* last_selected_;
   };
 }
 
