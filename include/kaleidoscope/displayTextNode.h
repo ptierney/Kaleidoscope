@@ -16,6 +16,8 @@ namespace Kaleidoscope {
     DisplayTextNode(Device*, Tete*, QGraphicsItem* parent = 0, QGraphicsScene* scene= 0);
     virtual ~DisplayTextNode();
     void init();
+
+    void setTete(Tete* tete);
     
   protected:
  

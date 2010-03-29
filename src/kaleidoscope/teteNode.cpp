@@ -11,7 +11,8 @@ namespace Kaleidoscope {
   TeteNode::TeteNode(Device* d, QGraphicsItem* parent, QGraphicsScene* scene) :
     RespondNode(d, parent, scene) {
     tete_ = NULL;
-
+    x_vel_ = 0.0;
+    y_vel_ = 0.0;
   }
 
   TeteNode::~TeteNode(){
@@ -30,7 +31,6 @@ namespace Kaleidoscope {
   void TeteNode::set_tete(Tete* tete){
     tete_ = tete;
   }
-
 
   bool TeteNode::frameOn(){
      // boundingRect defined in TextNode, ImageNode, etc
@@ -67,6 +67,26 @@ namespace Kaleidoscope {
     d_->getScene()->main_view()->ensureVisible(this, zoom_margin_, zoom_margin_);
 
     return selected_;
+  }
+
+  void TeteNode::updatePosition(){
+    setPos(x() + x_vel_, y() + y_vel_);
+  }
+
+  float TeteNode::x_vel(){
+    return x_vel_;
+  }
+
+  void TeteNode::set_x_vel(float x_vel){
+    x_vel_ = x_vel;
+  }
+
+  float TeteNode::y_vel(){
+    return y_vel_;
+  }
+
+  void TeteNode::set_y_vel(float y_vel){
+    y_vel_ = y_vel;
   }
 
 }

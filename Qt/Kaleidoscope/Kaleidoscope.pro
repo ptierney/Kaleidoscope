@@ -46,7 +46,9 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/displayTextNode.cpp \
     ../../src/kaleidoscope/inputTextNode.cpp \
     ../../src/kaleidoscope/chatController.cpp \
-    ../../src/kaleidoscope/chat.cpp
+    ../../src/kaleidoscope/chat.cpp \
+    ../../src/kaleidoscope/chatLinkSystem.cpp \
+    ../../src/kaleidoscope/chatNode.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -108,5 +110,7 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/displayTextNode.h \
     ../../include/kaleidoscope/inputTextNode.h \
     ../../include/kaleidoscope/chatController.h \
-    ../../include/kaleidoscope/chat.h
+    ../../include/kaleidoscope/chat.h \
+    ../../include/kaleidoscope/chatLinkSystem.h \
+    ../../include/kaleidoscope/chatNode.h
 FORMS += kaleidoscope.ui

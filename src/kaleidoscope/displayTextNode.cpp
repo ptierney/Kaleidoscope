@@ -31,5 +31,17 @@ namespace Kaleidoscope {
     updateDrawRect();
   }
 
+  void DisplayTextNode::set_tete(Tete* tete){
+    tete_ = tete;
+
+    if(tete_->parent() && tete_->parent()->tete_node() ){
+      setPos(tete_->parent()->tete_node()->pos().x() +
+             text_item_->boundingRect().width() +
+             tete_->parent()->tete_node()->boundingRect().width(),
+             tete_->parent()->tete_node()->pos().y() + );
+    }
+
+  }
+
 
 }

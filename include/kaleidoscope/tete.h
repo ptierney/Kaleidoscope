@@ -15,22 +15,25 @@ namespace Kaleidoscope {
         Tete(Device*, Grids::Value*);
         void init();
 
-        static GridsID requestCreate(Device* dev, GridsID parent, GridsID chat, std::string text, Vec3D position);
+        static GridsID requestCreate(Device* dev, GridsID parent, GridsID chat,
+                                     std::string text, Vec3D position);
         static void gridsCreate(Device* dev, Grids::Event* evt);
 
         enum { TEXT_TETE,
                TEXT_IMAGE_TETE,
-               IMAGE_TETE };               
+               IMAGE_TETE };
 
         std::string text();
         void set_text(std::string);
         std::string getTextFromAttr(Grids::Value*);
         GridsID getChatIDFromAttr(Grids::Value*);
+        GridsID getParentIDFromAttr(Grids::Value*);
 
         void set_parent(Tete*);
         void addReference(Tete*);
         void addChild(Tete*);
         Tete* parent();
+        GridsID parent_id();
         std::vector<Tete*> reference_tetes();
         std::vector<Tete*> child_tetes();
         Chat* chat();
@@ -46,6 +49,7 @@ namespace Kaleidoscope {
         Device* d_;
         TeteNode* tete_node_;
         Tete* parent_;
+        GridsID parent_id_;
         std::vector<Tete*> reference_tetes_;
         std::vector<Tete*> child_tetes_;
         Chat* chat_;

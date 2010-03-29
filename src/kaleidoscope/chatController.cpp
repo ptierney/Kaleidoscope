@@ -1,4 +1,6 @@
 
+#include <algorithm>
+
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/chat.h>
@@ -8,6 +10,8 @@
 #include <grids/objectController.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <grids/utility.h>
+#include <kaleidoscope/chatLinkSystem.h>
+#include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -27,6 +31,8 @@ namespace Kaleidoscope {
       temp_chat = chats_[i];
       delete temp_chat;
     }
+
+    delete link_system_;
   }
 
   void ChatController::init(){
@@ -40,6 +46,8 @@ namespace Kaleidoscope {
     all_chats_rect_ = all_chats_rect_.normalized();
 
     startTimer(chat_refresh_);
+
+    link_system_ = new ChatLinkSystem(d_);
   }
 
   void ChatController::timerEvent(QTimerEvent* event){
@@ -67,6 +75,10 @@ namespace Kaleidoscope {
       if(chat == NULL){
         chat = new Chat(d_, chat_id);
         chats_.push_back(chat);
+        ChatNode* chat_node = new ChatNode(d_, chat);
+        chat_node->init();
+        chat_nodes_.push_back(chat_node);
+        d_->getScene()->addItem(chat_node);
       }
 
       tete->set_chat(chat);
@@ -76,6 +88,22 @@ namespace Kaleidoscope {
     tetes_.push_back(tete);
 
     updateChatsRect();
+  }
+
+  Tete* ChatController::getTeteFromID(GridsID id){
+    bool found = false;
+    int i;
+    for(i = 0; i < tetes_.size(); i++){
+      if(tetes_[i]->getID() == id){
+        found = true;
+        break;
+      }
+    }
+
+    if(found)
+      return tetes_[i];
+
+    return NULL;
   }
 
   void ChatController::updateChatsRect(){
@@ -113,8 +141,7 @@ namespace Kaleidoscope {
           reframing = true;
           last_selected_ = tetes_[i];
           tetes_[i]->tete_node()->frameOn();
-          d_->getNoticeWindow()->write(7, "setting last selceted");
-        }
+          }
       }
     }
 
@@ -186,6 +213,10 @@ namespace Kaleidoscope {
 
   void ChatController::set_default_chat_id(GridsID default_chat_id){
     default_chat_id_ = default_chat_id;
+  }
+
+  std::vector<Chat*> ChatController::chats(){
+    return chats_;
   }
 
 } // end namespace

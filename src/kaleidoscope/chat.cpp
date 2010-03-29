@@ -1,5 +1,9 @@
 
 #include <kaleidoscope/chat.h>
+#include <kaleidoscope/tete.h>
+#include <grids/objectController.h>
+#include <kaleidoscope/chatController.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
@@ -17,6 +21,19 @@ namespace Kaleidoscope {
   }
 
   void Chat::addTete(Tete* tete){
+    Tete* parent = d_->chat_controller()->getTeteFromID(tete->parent_id());
+
+     if(parent == NULL) {
+       if(!tetes_.empty()){
+        parent = tetes_.back();
+      }
+    }
+    tete->set_parent(parent);
+
+    if(parent){
+      parent->addChild(tete);
+    }
+
     tetes_.push_back(tete);
   }
 

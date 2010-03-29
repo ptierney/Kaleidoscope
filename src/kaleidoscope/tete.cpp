@@ -20,6 +20,7 @@ namespace Kaleidoscope {
         text_ = getTextFromAttr(getAttrFromValue(val));
         chat_id_ = getChatIDFromAttr(getAttrFromValue(val));
         chat_ = NULL;
+        parent_id_ = getParentIDFromAttr(getAttrFromValue(val));
     }
 
     void Tete::init(){
@@ -83,6 +84,10 @@ namespace Kaleidoscope {
       return (*attr)["chat"].asString();
     }
 
+    GridsID Tete::getParentIDFromAttr(Grids::Value* attr) {
+      return (*attr)["parent"].asString();
+    }
+
     void Tete::addReference(Tete* tete){
         // Check to make sure the pointer isn't already in the vector
         if( std::find(reference_tetes_.begin(), reference_tetes_.end(), tete) != reference_tetes_.end() )
@@ -101,6 +106,14 @@ namespace Kaleidoscope {
 
     Tete* Tete::parent(){
         return parent_;
+    }
+
+    void Tete::set_parent(Tete *parent){
+      parent_ = parent;
+    }
+
+    GridsID Tete::parent_id(){
+      return parent_id_;
     }
 
     std::vector<Tete*> Tete::reference_tetes(){
