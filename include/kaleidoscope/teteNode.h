@@ -53,6 +53,7 @@ namespace Kaleidoscope {
                             float*, float*);
     bool frame_selected_;
     FrameRect* frame_rect_object_;
+    bool mouse_moved_;
 
   };
 
