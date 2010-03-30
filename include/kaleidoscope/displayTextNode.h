@@ -17,7 +17,8 @@ namespace Kaleidoscope {
     virtual ~DisplayTextNode();
     void init();
 
-    void setTete(Tete* tete);
+    // Places it in the correct position according to its parent
+    void placeNode();
     
   protected:
  

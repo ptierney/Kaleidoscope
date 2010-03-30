@@ -18,7 +18,7 @@ namespace Kaleidoscope {
     void init();
 
     Tete* tete();
-    virtual void set_tete(Tete*);
+    void set_tete(Tete*);
     void updatePosition();
 
     // Required by ResponseNode
@@ -27,6 +27,10 @@ namespace Kaleidoscope {
     void set_x_vel(float);
     float y_vel();
     void set_y_vel(float);
+    QRectF frame_rect();
+    void updateFrameRect();
+
+    virtual void placeNode() = 0;
 
   protected:
     Tete* tete_;
@@ -34,6 +38,12 @@ namespace Kaleidoscope {
   private:
     float x_vel_;
     float y_vel_;
+
+    QRectF frame_rect_;
+
+    void addTeteToMinMax(Tete*,
+                            float*, float*,
+                            float*, float*);
 
   };
 

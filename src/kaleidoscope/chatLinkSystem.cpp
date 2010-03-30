@@ -14,12 +14,13 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
-    min_distance_ = 200.0;
+    min_distance_ = 100.0;
     // For pull, larger is slower
-    pull_weight_ = 2.0;
+    pull_weight_ = 1.0;
     // For push, smaller is slower
-    push_weight_ = 0.1;
+    push_weight_ = 0.5;
     min_velocity_ = 0.1;
+    max_velocity_ = 10.0;
     startTimer(50);
   }
 
@@ -76,15 +77,14 @@ namespace Kaleidoscope {
     if(tete->parent())
       doPullForce(tete, tete->parent(),
                   &xvel, &yvel);
-/*
-    for(int i = 0; i < tete->child_tetes().size(); i++){
-      doPullForce(tete, tete->child_tetes()[i],
+
+    for(int i = 0; i < tete->children().size(); i++){
+      doPullForce(tete, tete->children()[i],
                   &xvel, &yvel);
     }
-    */
 
-    for(int i = 0; i < tete->reference_tetes().size(); i++){
-      doPullForce(tete, tete->reference_tetes()[i],
+    for(int i = 0; i < tete->references().size(); i++){
+      doPullForce(tete, tete->references()[i],
                   &xvel, &yvel);
     }
 
@@ -92,6 +92,10 @@ namespace Kaleidoscope {
       xvel = 0;
     if(qAbs(yvel) < min_velocity_)
       yvel = 0;
+    if(qAbs(xvel) > max_velocity_)
+      xvel = xvel > 0 ? max_velocity_ : -max_velocity_;
+    if(qAbs(yvel) > max_velocity_)
+      yvel = yvel > 0 ? max_velocity_ : -max_velocity_;
 
     tete->tete_node()->set_x_vel(xvel);
     tete->tete_node()->set_y_vel(yvel);

@@ -268,7 +268,7 @@ namespace Grids {
 
         bool in_vector = 0;
 
-        for( int i = 0; i < known_rooms.size(); i++ ){
+        for( unsigned int i = 0u; i < known_rooms.size(); i++ ){
             if( known_rooms[i] == rm_id )
                 in_vector = 1;
         }

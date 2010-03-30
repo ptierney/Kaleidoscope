@@ -28,6 +28,8 @@ namespace Kaleidoscope {
 
     void addChat(Chat*);
     void addTete(Tete*);
+    // Deletes all tete nodes in this conversation from this point down
+    void deleteTeteNodeTree(Tete* tete);
 
     void checkReframe();
     void zoomOut();

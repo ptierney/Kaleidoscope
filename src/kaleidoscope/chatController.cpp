@@ -20,7 +20,7 @@ namespace Kaleidoscope {
     QObject(parent) {
     d_ = d;
     chat_refresh_ = 50;
-    zoom_out_speed_ = 0.04;
+    zoom_out_speed_ = 0.01;
     zoom_margin_ = 10;
     last_selected_ = NULL;
   }
@@ -77,6 +77,7 @@ namespace Kaleidoscope {
         chats_.push_back(chat);
         ChatNode* chat_node = new ChatNode(d_, chat);
         chat_node->init();
+        chat->set_chat_node(chat_node);
         chat_nodes_.push_back(chat_node);
         d_->getScene()->addItem(chat_node);
       }
@@ -88,6 +89,20 @@ namespace Kaleidoscope {
     tetes_.push_back(tete);
 
     updateChatsRect();
+    // Update the node placements
+    chat->chat_node()->placeNodes();
+  }
+
+  void ChatController::deleteTeteNodeTree(Tete *tete){
+    std::vector<Tete*> children = tete->children();
+    if(tete->tete_node()){
+      delete tete->tete_node();
+      tete->set_tete_node(NULL);
+    }
+
+    for(int i = 0; i < children.size(); i++){
+      deleteTeteNodeTree(children[i]);
+    }
   }
 
   Tete* ChatController::getTeteFromID(GridsID id){
@@ -107,10 +122,10 @@ namespace Kaleidoscope {
   }
 
   void ChatController::updateChatsRect(){
-    float min_x = all_chats_rect_.topLeft().x();
-    float min_y = all_chats_rect_.topLeft().y();
-    float max_x = all_chats_rect_.bottomRight().x();
-    float max_y = all_chats_rect_.bottomRight().y();
+    float min_x = -1;
+    float min_y = -1;
+    float max_x = 1;
+    float max_y = 1;
 
     for(unsigned int i = 0u; i < tetes_.size(); i++){
       QRectF local_bound = tetes_[i]->tete_node()->boundingRect();

@@ -15,7 +15,7 @@ namespace Kaleidoscope {
           if( getVisibility() ){
 			std::vector< Grids::Object* > temp_children = getChildren();
 
-               for( int i = 0; i < temp_children.size(); i++ ){
+               for( unsigned int i = 0u; i < temp_children.size(); i++ ){
                     //temp_children[i]->drawAll( d );
                }
                draw( d ); // draw yourself
@@ -23,7 +23,7 @@ namespace Kaleidoscope {
 	}
 
 	bool Object::detectSelection(){
-
+    return false;
 	}
 
 	////////////////////////////

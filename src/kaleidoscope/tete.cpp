@@ -21,6 +21,7 @@ namespace Kaleidoscope {
         chat_id_ = getChatIDFromAttr(getAttrFromValue(val));
         chat_ = NULL;
         parent_id_ = getParentIDFromAttr(getAttrFromValue(val));
+        parent_ = NULL;
     }
 
     void Tete::init(){
@@ -47,13 +48,11 @@ namespace Kaleidoscope {
     void Tete::gridsCreate(Device *dev, Grids::Event *evt){
         Grids::Value *val = evt->getArgsPtr();
 
-        // Find chat from value
-        // See if ChatNode exists. If not
-        // create a new ChatNode an attatch it to the scene
-        // scete->addItem, etc
-
-        // Create a new TeteNode, add this to the node
-        // add the
+        // Create Tete
+        // Create TeteNode
+        // Add Tete to ChatController
+        // Add Tete to Chat
+        // Place TeteNode in Chat
 
         Tete* tete = new Tete(dev, val);
         tete->init();
@@ -63,6 +62,8 @@ namespace Kaleidoscope {
 
         tete->set_tete_node(display_node);
         dev->chat_controller()->addTete(tete);
+
+        display_node->placeNode();
 
         Scene2D* scene = dev->getScene();        
         scene->addItem(display_node);
@@ -90,18 +91,18 @@ namespace Kaleidoscope {
 
     void Tete::addReference(Tete* tete){
         // Check to make sure the pointer isn't already in the vector
-        if( std::find(reference_tetes_.begin(), reference_tetes_.end(), tete) != reference_tetes_.end() )
+        if( std::find(references_.begin(), references_.end(), tete) != references_.end() )
             return;
 
-        reference_tetes_.push_back(tete);
+        references_.push_back(tete);
     }
 
     void Tete::addChild(Tete* tete){
         // Check to make sure the pointer isn't already in the vector
-        if( std::find(child_tetes_.begin(), child_tetes_.end(), tete) != child_tetes_.end() )
+        if( std::find(children_.begin(), children_.end(), tete) != children_.end() )
             return;
 
-        child_tetes_.push_back(tete);
+        children_.push_back(tete);
     }
 
     Tete* Tete::parent(){
@@ -116,12 +117,12 @@ namespace Kaleidoscope {
       return parent_id_;
     }
 
-    std::vector<Tete*> Tete::reference_tetes(){
-        return reference_tetes_;
+    std::vector<Tete*> Tete::references(){
+        return references_;
     }
 
-    std::vector<Tete*> Tete::child_tetes(){
-        return child_tetes();
+    std::vector<Tete*> Tete::children(){
+        return children_;
     }
 
     Chat* Tete::chat(){

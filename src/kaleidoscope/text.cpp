@@ -13,6 +13,7 @@ namespace Kaleidoscope {
                 //text_font = 0;
 
                 //glGenTextures( 1, &texture );
+
 	}
 	
 	Text::~Text() {

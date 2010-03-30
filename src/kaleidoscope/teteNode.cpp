@@ -13,6 +13,7 @@ namespace Kaleidoscope {
     tete_ = NULL;
     x_vel_ = 0.0;
     y_vel_ = 0.0;
+    frame_rect_ = QRectF(-1, -1, 2, 2);
   }
 
   TeteNode::~TeteNode(){
@@ -33,12 +34,15 @@ namespace Kaleidoscope {
   }
 
   bool TeteNode::frameOn(){
-     // boundingRect defined in TextNode, ImageNode, etc
-    QRectF my_rect = boundingRect();
-    //d_->getNoticeWindow()->write(7, QObject::tr("FrameOn"));
     // Get the rects of parent, referenced, and children nodes
-    int total_object_width = boundingRect().width();
-    int total_object_height = boundingRect().height();
+    updateFrameRect();
+    float total_object_width = frame_rect_.width();
+    float total_object_height = frame_rect_.height();
+    QString string;
+    string.setNum(total_object_width);
+    //d_->getNoticeWindow()->write(7, tr("width = ")+string);
+    string.setNum(total_object_height);
+    //d_->getNoticeWindow()->write(7, tr("height = ")+string);
 
     float window_width = d_->main_window->centralWidget()->size().width();
     float window_height = d_->main_window->centralWidget()->size().height();
@@ -64,7 +68,7 @@ namespace Kaleidoscope {
     temp_matrix.scale(new_scale, new_scale);
     d_->getScene()->main_view()->setMatrix(temp_matrix);
 
-    d_->getScene()->main_view()->ensureVisible(this, zoom_margin_, zoom_margin_);
+    d_->getScene()->main_view()->ensureVisible(frame_rect_, zoom_margin_, zoom_margin_);
 
     return selected_;
   }
@@ -87,6 +91,52 @@ namespace Kaleidoscope {
 
   void TeteNode::set_y_vel(float y_vel){
     y_vel_ = y_vel;
+  }
+
+  QRectF TeteNode::frame_rect(){
+    return frame_rect_;
+  }
+
+  void TeteNode::updateFrameRect(){
+    float min_x = -1;//frame_rect_.topLeft().x();
+    float min_y = -1;//frame_rect_.topLeft().y();
+    float max_x = 1;//frame_rect_.bottomRight().x();
+    float max_y = 1;//frame_rect_.bottomRight().y();
+
+    std::vector<Tete*> children = tete_->children();
+    for(unsigned int i = 0u; i < children.size(); i++){
+      addTeteToMinMax(children[i], &min_x, &min_y,
+                      &max_x, &max_y);
+    }
+
+    addTeteToMinMax(tete_->parent(), &min_x, &min_y,
+                    &max_x, &max_y);
+
+    frame_rect_ = QRectF(QPointF(min_x, min_y),
+                         QPointF(max_x, max_y)).normalized();
+  }
+
+  void TeteNode::addTeteToMinMax(Tete* tete,
+                          float* min_x, float* min_y,
+                          float* max_x, float* max_y) {
+    if(tete == NULL)
+      return;
+    if(tete->tete_node() == NULL)
+      return;
+
+    QRectF local_bound = tete->tete_node()->boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(tete->tete_node()->pos());
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    if(bound.topLeft().x() < *min_x)
+      *min_x = bound.topLeft().x();
+    if(bound.topLeft().y() < *min_y)
+      *min_y = bound.topLeft().y();
+    if(bound.bottomRight().x() > *max_x)
+      *max_x = bound.bottomRight().x();
+    if(bound.bottomRight().y() > *max_y)
+      *max_y = bound.bottomRight().y();
   }
 
 }

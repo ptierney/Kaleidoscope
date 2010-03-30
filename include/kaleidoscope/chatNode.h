@@ -1,6 +1,7 @@
 #ifndef CHATNODE_H
 #define CHATNODE_H
 
+#include <kaleidoscope/define.h>
 #include <kaleidoscope/respondNode.h>
 
 namespace Kaleidoscope {
@@ -28,11 +29,19 @@ namespace Kaleidoscope {
     Chat* chat();
     ChatLinkSystem* link_system();
 
+    void buildNodeTree();
+    void buildNodeTree(Tete*);
+    void playbackTeteList(Tete*);
+    void placeNodes();
+    void placeNodes(Tete* tete);
+
   private:
     Chat* chat_;
     ChatLinkSystem* link_system_;
     QRectF draw_rect_;
     QRectF all_tetes_rect_;
+
+    float node_y_space_;
 
   };
 }

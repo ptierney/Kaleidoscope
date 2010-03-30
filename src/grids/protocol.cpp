@@ -216,7 +216,7 @@ namespace Grids {
 
     void Protocol::gridsRead() {
         /*std::cerr << "gridsRead\n";*/
-        int socketReady;
+        //int socketReady;
         qint64 bytesRead;
         quint32 incomingLength;
         char *buf;

@@ -3,7 +3,9 @@
 #include <kaleidoscope/tete.h>
 #include <grids/objectController.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/device.h>
+
 
 namespace Kaleidoscope {
 
@@ -39,6 +41,14 @@ namespace Kaleidoscope {
 
   std::vector<Tete*> Chat::tetes(){
     return tetes_;
+  }
+
+  ChatNode* Chat::chat_node(){
+    return chat_node_;
+  }
+
+  void Chat::set_chat_node(ChatNode* chat_node){
+    chat_node_ = chat_node;
   }
 
 }

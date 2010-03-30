@@ -34,8 +34,8 @@ namespace Kaleidoscope {
         void addChild(Tete*);
         Tete* parent();
         GridsID parent_id();
-        std::vector<Tete*> reference_tetes();
-        std::vector<Tete*> child_tetes();
+        std::vector<Tete*> references();
+        std::vector<Tete*> children();
         Chat* chat();
         void set_chat(Chat*);
         GridsID chat_id();
@@ -50,8 +50,8 @@ namespace Kaleidoscope {
         TeteNode* tete_node_;
         Tete* parent_;
         GridsID parent_id_;
-        std::vector<Tete*> reference_tetes_;
-        std::vector<Tete*> child_tetes_;
+        std::vector<Tete*> references_;
+        std::vector<Tete*> children_;
         Chat* chat_;
         GridsID chat_id_;
         // This is more for cacheing purposes

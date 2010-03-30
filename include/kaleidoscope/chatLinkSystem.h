@@ -37,6 +37,7 @@ namespace Kaleidoscope {
     float pull_weight_;
     float push_weight_;
     float min_velocity_;
+    float max_velocity_;
   };
 }
 

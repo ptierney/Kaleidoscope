@@ -16,7 +16,7 @@
 namespace Kaleidoscope {
 
 	Camera::Camera(Device* d, Grids::Value* val, QWidget* parent) 
-                : Object(d, val), QWidget(parent) {
+                :  QWidget(parent), Object(d, val) {
 		this->d = d;
 
 		d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
@@ -100,7 +100,7 @@ namespace Kaleidoscope {
         }
 
         /* Required functions */
-        bool Camera::detectSelection() { }
+        bool Camera::detectSelection() { return false; }
         void Camera::select() { }
         void Camera::deselect() { }
 

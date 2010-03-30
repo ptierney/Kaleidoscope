@@ -60,7 +60,7 @@ namespace Kaleidoscope {
 			{
 				glBegin( GL_LINES );
 				
-				for( int g = 0; g < attr[ "lines" ].size(); g++)
+        for( unsigned int g = 0u; g < attr[ "lines" ].size(); g++)
 					{
 						if( !( attr[ "lines" ][ g ][ "color" ] ) == false )
 							{
@@ -75,7 +75,7 @@ namespace Kaleidoscope {
 						int vertice_index_1;
 						int vertice_index_2;
 					
-						for( int h = 0; h < attr[ "lines" ][ g ][ "indices"].size(); h++ )
+            for( unsigned int h = 0u; h < attr[ "lines" ][ g ][ "indices"].size(); h++ )
 							{
 								vertice_index_1 = attr[ "lines" ][ g ][ "indices"][ h ][ 0u ].asInt();
 								vertice_index_2 = attr[ "lines" ][ g ][ "indices"][ h ][ 1u ].asInt();
@@ -98,7 +98,7 @@ namespace Kaleidoscope {
 			{
 				glBegin( GL_QUADS );
 				
-				for( int g = 0; g < attr[ "quads" ].size(); g++)
+        for(unsigned int g = 0u; g < attr[ "quads" ].size(); g++)
 					{
 						if( !( attr[ "quads" ][ g ][ "color" ] ) == false )
 							{
@@ -115,7 +115,7 @@ namespace Kaleidoscope {
 						int vertice_index_3;
 						int vertice_index_4;
 					
-						for( int h = 0; h < attr[ "quads" ][ g ][ "indices" ].size(); h++ )
+            for( unsigned int h = 0u; h < attr[ "quads" ][ g ][ "indices" ].size(); h++ )
 							{
 								vertice_index_1 = attr[ "quads" ][ g ][ "indices" ][ h ][ 0u ].asInt();
 								vertice_index_2 = attr[ "quads" ][ g ][ "indices" ][ h ][ 1u ].asInt();
@@ -152,7 +152,7 @@ namespace Kaleidoscope {
 			{
 				glBegin(GL_TRIANGLES);
 						
-				for( int h = 0; h < attr[ "triangles" ].size(); h++ )
+        for( unsigned int h = 0u; h < attr[ "triangles" ].size(); h++ )
 					{
 						if( !( attr[ "triangles" ][ h ][ "color" ] ) == false )
 							{
@@ -168,7 +168,7 @@ namespace Kaleidoscope {
 						int vertice_index_2;
 						int vertice_index_3;
 							
-						for( int k = 0; k < attr[ "triangles" ][ h ][ "indices" ].size(); k++ )
+            for( unsigned int k = 0u; k < attr[ "triangles" ][ h ][ "indices" ].size(); k++ )
 							{
 								vertice_index_1 = attr[ "triangles" ][ h ][ "indices" ][ k ][ 0u ].asInt();
 								vertice_index_2 = attr[ "triangles" ][ h ][ "indices" ][ k ][ 1u ].asInt();
