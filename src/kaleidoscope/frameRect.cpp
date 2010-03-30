@@ -11,7 +11,7 @@ namespace Kaleidoscope {
                        QGraphicsItem* parent,
                        QGraphicsScene* scene) :
   QGraphicsObject(parent) {
-    setAcceptHoverEvents(true);
+    //setAcceptHoverEvents(true);
     frame_rect_ = rect;
     selected = true;
     tete_node_ = tete_node;
@@ -40,15 +40,7 @@ namespace Kaleidoscope {
     painter->drawRect(frame_rect_);
   }
 
-  // This shouldn't be called
-  void FrameRect::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
-  }
 
-  void FrameRect::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
-    tete_node_->frameLeave(this);
-  }
 
 
 

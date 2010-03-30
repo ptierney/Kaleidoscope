@@ -15,6 +15,7 @@ namespace Kaleidoscope {
     x_vel_ = 0.0;
     y_vel_ = 0.0;
     frame_rect_ = QRectF(-1, -1, 2, 2);
+    frame_rect_object_ = NULL;
   }
 
   TeteNode::~TeteNode(){
@@ -39,6 +40,10 @@ namespace Kaleidoscope {
     updateFrameRect();
     selected_ = true;
     frame_selected_ = true;
+    if(frame_rect_object_){
+      delete frame_rect_object_;
+      frame_rect_object_ = NULL;
+    }
     frame_rect_object_ = new FrameRect(d_, frame_rect_, this);
     d_->getScene()->addItem(frame_rect_object_);
   }
@@ -89,12 +94,28 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::frameLeave(FrameRect *frame){
-    frame_selected_ = false;
-    delete frame;
+
   }
 
   bool TeteNode::frame_selected(){
+    if(frame_rect_object_ == NULL)
+      return false;
+
+    if(frame_selected_ == false)
+      return false;
+
+    updateFrameSelected();
+
     return frame_selected_;
+  }
+
+  void TeteNode::updateFrameSelected(){
+    frame_selected_ = frame_rect_object_->isUnderMouse();
+
+    if(frame_selected_ == false){
+      delete frame_rect_object_;
+      frame_rect_object_ = NULL;
+    }
   }
 
   void TeteNode::updatePosition(){

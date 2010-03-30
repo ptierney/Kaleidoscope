@@ -22,8 +22,6 @@ namespace Kaleidoscope {
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
   protected:
-    void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
   private:
     QRectF frame_rect_;

@@ -41,6 +41,8 @@ namespace Kaleidoscope {
 
     Tete* tete_;
     QRectF frame_rect_;
+
+    void updateFrameSelected();
     
   private:
     float x_vel_;
