@@ -20,8 +20,8 @@ namespace Kaleidoscope {
     QObject(parent) {
     d_ = d;
     chat_refresh_ = 50;
-    zoom_out_speed_ = 0.01;
-    zoom_margin_ = 10;
+    zoom_out_speed_ = 0.04;
+    zoom_margin_ = 75;
     last_selected_ = NULL;
   }
 
@@ -88,9 +88,9 @@ namespace Kaleidoscope {
     chat->addTete(tete);
     tetes_.push_back(tete);
 
-    updateChatsRect();
     // Update the node placements
     chat->chat_node()->placeNodes();
+    updateChatsRect();
   }
 
   void ChatController::deleteTeteNodeTree(Tete *tete){
@@ -122,10 +122,27 @@ namespace Kaleidoscope {
   }
 
   void ChatController::updateChatsRect(){
-    float min_x = -1;
-    float min_y = -1;
-    float max_x = 1;
-    float max_y = 1;
+    if(tetes_.empty()){
+      all_chats_rect_ = QRectF(-1, -1, 2, 2);
+      return;
+    }
+
+    TeteNode* first_node = NULL;
+
+    for(unsigned int i = 0u; first_node == NULL; i++){
+      first_node = tetes_[i]->tete_node();
+    }
+
+    QRectF local_bound = first_node->boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(first_node->pos());
+    // Translate more due to text
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    float min_x = bound.topLeft().x();
+    float min_y = bound.topLeft().y();
+    float max_x = bound.bottomRight().x();
+    float max_y = bound.bottomRight().y();
 
     for(unsigned int i = 0u; i < tetes_.size(); i++){
       QRectF local_bound = tetes_[i]->tete_node()->boundingRect();
@@ -162,6 +179,11 @@ namespace Kaleidoscope {
 
     if(reframing)
       return;
+
+    if(last_selected_ && last_selected_->tete_node()){
+      if(last_selected_->tete_node()->frame_selected())
+        return;
+    }
 
     // Zoom out
     zoomOut();
@@ -232,6 +254,10 @@ namespace Kaleidoscope {
 
   std::vector<Chat*> ChatController::chats(){
     return chats_;
+  }
+
+  QRectF ChatController::all_chats_rect(){
+    return all_chats_rect_;
   }
 
 } // end namespace

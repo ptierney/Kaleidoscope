@@ -9,6 +9,7 @@
 
 namespace Kaleidoscope {
   class Tete;
+  class FrameRect;
 
   class TeteNode : public RespondNode {
 
@@ -31,19 +32,25 @@ namespace Kaleidoscope {
     void updateFrameRect();
 
     virtual void placeNode() = 0;
+    virtual void frameLeave(FrameRect*);
+    bool frame_selected();
 
   protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+
     Tete* tete_;
+    QRectF frame_rect_;
     
   private:
     float x_vel_;
     float y_vel_;
 
-    QRectF frame_rect_;
-
     void addTeteToMinMax(Tete*,
                             float*, float*,
                             float*, float*);
+    bool frame_selected_;
+    FrameRect* frame_rect_object_;
 
   };
 

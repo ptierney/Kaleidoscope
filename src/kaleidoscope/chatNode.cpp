@@ -1,4 +1,6 @@
 
+#include <QPainter>
+
 #include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/chat.h>
@@ -32,10 +34,14 @@ namespace Kaleidoscope {
   }
 
   void ChatNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    Q_UNUSED(painter);
+    //Q_UNUSED(painter);
     Q_UNUSED(option);
     Q_UNUSED(widget);
     updateDrawRect();
+
+    //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+    //painter->drawRect(all_tetes_rect_);
   }
 
   void ChatNode::updateDrawRect(){
@@ -44,32 +50,60 @@ namespace Kaleidoscope {
   }
 
   void ChatNode::updateAllTetesRect(){
-    float min_x = all_tetes_rect_.topLeft().x();
-    float min_y = all_tetes_rect_.topLeft().y();
-    float max_x = all_tetes_rect_.bottomRight().x();
-    float max_y = all_tetes_rect_.bottomRight().y();
-
     std::vector<Tete*> tetes = chat_->tetes();
 
-    for(unsigned int i = 0u; i < tetes.size(); i++){
-      QRectF local_bound = tetes[i]->tete_node()->boundingRect();
-      QRectF bound = local_bound;
-      bound.moveTo(tetes[i]->tete_node()->pos());
-      // Translate more due to text
-      bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+    if(tetes.empty()){
+      all_tetes_rect_ = QRectF(-1, -1, 2, 2);
+      return;
+    }
 
-      if(bound.topLeft().x() < min_x)
-        min_x = bound.topLeft().x();
-      if(bound.topLeft().y() < min_y)
-        min_y = bound.topLeft().y();
-      if(bound.bottomRight().x() > max_x)
-        max_x = bound.bottomRight().x();
-      if(bound.bottomRight().y() > max_y)
-        max_y = bound.bottomRight().y();
+    TeteNode* first_node = NULL;
+
+    for(unsigned int i = 0u; first_node == NULL; i++){
+      first_node = tetes[i]->tete_node();
+    }
+
+    QRectF local_bound = first_node->boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(first_node->pos());
+    // Translate more due to text
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    float min_x = bound.topLeft().x();
+    float min_y = bound.topLeft().y();
+    float max_x = bound.bottomRight().x();
+    float max_y = bound.bottomRight().y();
+
+    for(unsigned int i = 0u; i < tetes.size(); i++){
+      addTeteToMinMax(tetes[i], &min_x, &min_x, &max_x, &max_y);
     }
 
     all_tetes_rect_ = QRectF(QPointF(min_x, min_y),
                              QPointF(max_x, max_y)).normalized();
+  }
+
+  void ChatNode::addTeteToMinMax(Tete* tete,
+                                 float* min_x, float* min_y,
+                                 float* max_x, float* max_y) {
+    //return;
+    if(tete == NULL)
+      return;
+    if(tete->tete_node() == NULL)
+      return;
+
+    QRectF local_bound = tete->tete_node()->boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(tete->tete_node()->pos());
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    if(bound.topLeft().x() < *min_x)
+      *min_x = bound.topLeft().x();
+    if(bound.topLeft().y() < *min_y)
+      *min_y = bound.topLeft().y();
+    if(bound.bottomRight().x() > *max_x)
+      *max_x = bound.bottomRight().x();
+    if(bound.bottomRight().y() > *max_y)
+      *max_y = bound.bottomRight().y();
   }
 
   bool ChatNode::frameOn(){

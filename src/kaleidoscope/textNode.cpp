@@ -1,7 +1,13 @@
 
+#include <vector>
+
 #include <QPointF>
+#include <QPainter>
 
 #include <kaleidoscope/textNode.h>
+#include <kaleidoscope/tete.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -40,6 +46,25 @@ namespace Kaleidoscope {
 
   void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     updateDrawRect();
+
+    if(selected_){
+      painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+      if(tete_->parent() && tete_->parent()->tete_node() ){
+        QLineF parent_line = QLineF(QPointF(),
+                                    tete_->parent()->tete_node()->pos() - pos() );
+        painter->drawLine(parent_line);
+      }
+
+      for(int i = 0; i < tete_->children().size(); i++ ){
+        if(tete_->children()[i]->tete_node()){
+          QLineF child_line = QLineF(QPointF(),
+                                     tete_->children()[i]->tete_node()->pos() - pos());
+          painter->drawLine(child_line);
+        }
+      }
+      //painter->drawRect(frame_rect().translated(pos() * -1.0));
+    }
   }
 
   /* Is there a more efficient way to do this, so that I don't have to access .x(), y(), etc.

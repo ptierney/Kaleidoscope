@@ -4,6 +4,7 @@
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/frameRect.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -31,6 +32,20 @@ namespace Kaleidoscope {
 
   void TeteNode::set_tete(Tete* tete){
     tete_ = tete;
+  }
+
+  void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
+    Q_UNUSED(event)
+    updateFrameRect();
+    selected_ = true;
+    frame_selected_ = true;
+    frame_rect_object_ = new FrameRect(d_, frame_rect_, this);
+    d_->getScene()->addItem(frame_rect_object_);
+  }
+
+  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
+    Q_UNUSED(event)
+    selected_ = false;
   }
 
   bool TeteNode::frameOn(){
@@ -68,9 +83,18 @@ namespace Kaleidoscope {
     temp_matrix.scale(new_scale, new_scale);
     d_->getScene()->main_view()->setMatrix(temp_matrix);
 
-    d_->getScene()->main_view()->ensureVisible(frame_rect_, zoom_margin_, zoom_margin_);
-
+    //d_->getScene()->main_view()->ensureVisible(frame_rect_, zoom_margin_, zoom_margin_);
+    d_->getScene()->main_view()->centerOn(this);
     return selected_;
+  }
+
+  void TeteNode::frameLeave(FrameRect *frame){
+    frame_selected_ = false;
+    delete frame;
+  }
+
+  bool TeteNode::frame_selected(){
+    return frame_selected_;
   }
 
   void TeteNode::updatePosition(){
@@ -98,10 +122,18 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updateFrameRect(){
-    float min_x = -1;//frame_rect_.topLeft().x();
-    float min_y = -1;//frame_rect_.topLeft().y();
-    float max_x = 1;//frame_rect_.bottomRight().x();
-    float max_y = 1;//frame_rect_.bottomRight().y();
+
+    // First set the initial min max values to this object's bounding
+    // box
+    QRectF local_bound = boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(pos());
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    float min_x = bound.topLeft().x();//frame_rect_.topLeft().x();
+    float min_y = bound.topLeft().y();//frame_rect_.topLeft().y();
+    float max_x = bound.bottomRight().x();//frame_rect_.bottomRight().x();
+    float max_y = bound.bottomRight().y();//frame_rect_.bottomRight().y();
 
     std::vector<Tete*> children = tete_->children();
     for(unsigned int i = 0u; i < children.size(); i++){
@@ -112,6 +144,14 @@ namespace Kaleidoscope {
     addTeteToMinMax(tete_->parent(), &min_x, &min_y,
                     &max_x, &max_y);
 
+    if(tete_->children().empty()){
+      max_x += (max_x - min_x)*0.6;
+    }
+
+    if(tete_->parent() == NULL){
+      min_x -= (max_x - min_x)*0.6;
+    }
+
     frame_rect_ = QRectF(QPointF(min_x, min_y),
                          QPointF(max_x, max_y)).normalized();
   }
@@ -119,6 +159,7 @@ namespace Kaleidoscope {
   void TeteNode::addTeteToMinMax(Tete* tete,
                           float* min_x, float* min_y,
                           float* max_x, float* max_y) {
+      //return;
     if(tete == NULL)
       return;
     if(tete->tete_node() == NULL)
@@ -138,5 +179,6 @@ namespace Kaleidoscope {
     if(bound.bottomRight().y() > *max_y)
       *max_y = bound.bottomRight().y();
   }
+
 
 }

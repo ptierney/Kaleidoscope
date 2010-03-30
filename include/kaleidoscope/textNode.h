@@ -28,6 +28,7 @@ namespace Kaleidoscope {
     int rect_boarder_height_;
     
     void updateDrawRect();
+    bool frame_selected_;
   };
 }
 

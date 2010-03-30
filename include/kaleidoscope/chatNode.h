@@ -43,6 +43,9 @@ namespace Kaleidoscope {
 
     float node_y_space_;
 
+    void addTeteToMinMax(Tete*,
+                         float*, float*, float*, float*);
+
   };
 }
 

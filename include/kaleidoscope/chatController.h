@@ -37,6 +37,7 @@ namespace Kaleidoscope {
 
     std::vector<Chat*> chats();
     ChatLinkSystem* link_system();
+    QRectF all_chats_rect();
 
   protected:
     void timerEvent(QTimerEvent*);

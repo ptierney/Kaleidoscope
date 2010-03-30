@@ -25,8 +25,10 @@ namespace Kaleidoscope {
     text_item_->setPlainText(QObject::tr(tete_->text().c_str()));
     text_item_->setDefaultTextColor(text_color_);
 
-    text_item_->setPos( text_item_->pos().x() - text_item_->boundingRect().width() / 2,
-                       text_item_->pos().y() - text_item_->boundingRect().height() / 2 );
+    //text_item_->setPos( text_item_->pos().x() - text_item_->boundingRect().width() / 2,
+    //                   text_item_->pos().y() - text_item_->boundingRect().height() / 2 );
+    text_item_->setPos(text_item_->boundingRect().width() / -2.0,
+                      text_item_->boundingRect().height() / -2.0);
 
     updateDrawRect();
   }
@@ -42,6 +44,4 @@ namespace Kaleidoscope {
              -4.0 * (text_item_->boundingRect().height()) );
     }
   }
-
-
 }
