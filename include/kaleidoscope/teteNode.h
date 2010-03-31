@@ -14,7 +14,8 @@ namespace Kaleidoscope {
   class TeteNode : public RespondNode {
 
   public:
-    TeteNode(Device*, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+    TeteNode(Device*, QGraphicsItem* parent = 0,
+             QGraphicsScene* scene = 0);
     virtual ~TeteNode();
     void init();
 
