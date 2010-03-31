@@ -95,44 +95,9 @@ namespace Kaleidoscope {
 
     if(mouse_moved_ == false){
       mouse_moved_ = true;
-      //QPoint global_point = d_->getScene()->main_view()->mapToGlobal( QPoint(pos().x(), pos().y()) );
-      QString string1, string2;
-      QPointF scene_pos = pos() - d_->getScene()->main_view()->sceneRect().topLeft();
-      string1.setNum(scene_pos.x());
-      string2.setNum(scene_pos.y());
-      //d_->getNoticeWindow()->write(7, tr("scene_pos = ") + string1 + tr(", ") + string2 );
-      scene_pos *= new_scale;
-      string1.setNum(scene_pos.x());
-      string2.setNum(scene_pos.y());
-      //d_->getNoticeWindow()->write(7, tr("scene_pos = ") + string1 + tr(", ") + string2 );
 
-      string1.setNum(pos().x());
-      string2.setNum(pos().y());
-      d_->getNoticeWindow()->write(7, tr("pos = ") + string1 + tr(", ") + string2 );
-
-      QPointF temp_scene_pos = d_->getScene()->main_view()->mapToParent(pos().toPoint());
-      //temp_scene_pos = d_->main_window->mapToGlobal(temp_scene_pos.toPoint());
-      string1.setNum(temp_scene_pos.x());
-      string2.setNum(temp_scene_pos.y());
-      d_->getNoticeWindow()->write(7, tr("temp_scene_pos = ") + string1 + tr(", ") + string2 );
-
-
-      QPoint global_pos = d_->getScene()->main_view()->mapToGlobal(QPoint(0, 0));
-      string1.setNum(global_pos.x());
-      string2.setNum(global_pos.y());
-      //d_->getNoticeWindow()->write(7, tr("global_pos = ") + string1 + tr(", ") + string2 );
-      //global_pos += scene_pos.toPoint();
-      global_pos += temp_scene_pos.toPoint();
-      string1.setNum(global_pos.x());
-      string2.setNum(global_pos.y());
-      //d_->getNoticeWindow()->write(7, tr("global = ") + string1 + tr(", ") + string2 );
-      //global_point += (pos() * new_scale);
-      //QPoint local_point = d_->main_window->mapFromGlobal(global_point);
-
-      //QPoint global_point = d_->getScene()->main_view()->viewport()->mapToGlobal(scene_pos.toPoint());
-      d_->getScene()->main_view()->cursor().setPos( global_pos);
-
-      //d_->main_window->cursor().setPos(local_point);
+      QPoint condense = d_->getScene()->main_view()->mapToGlobal(d_->getScene()->main_view()->mapFromScene(pos().toPoint()));
+      d_->getScene()->main_view()->cursor().setPos(condense);
     }
 
     return selected_;
