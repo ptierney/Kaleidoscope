@@ -1,5 +1,11 @@
 
+#include <QPainter>
+
 #include <kaleidoscope/linkNode.h>
+#include <kaleidoscope/link.h>
+#include <kaleidoscope/tete.h>
+#include <kaleidoscope/teteNode.h>
+
 
 namespace Kaleidoscope {
 
@@ -29,28 +35,32 @@ namespace Kaleidoscope {
   void LinkNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
     updateBoundingRect();
     painter->setPen(QPen(line_color_, line_weight_, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter->drawLink(link_line_)
+    painter->drawLine(link_line_);
   }
 
   void LinkNode::updateBoundingRect(){
     if(link_ == NULL ||
-       link_->node_1_ == NULL ||
-       link_->node_2_ == NULL ||
-       link_->node_1_->tete_node() == NULL ||
-       link_->node_2_->tete_node() == NULL){
+       link_->node_1() == NULL ||
+       link_->node_2() == NULL ||
+       link_->node_1()->tete_node() == NULL ||
+       link_->node_2()->tete_node() == NULL){
       bounding_rect_ = QRectF();
       return;
     }
 
-    link_line_ = QLineF(link_->node_1_->tete_node()->pos(),
-                        link_->node_2_->tete_node()->pos());
+    link_line_ = QLineF(link_->node_1()->tete_node()->pos(),
+                        link_->node_2()->tete_node()->pos());
 
-    bounding_rect_ = QRectF(link_line_.p1(),
-                            link_line_.p2()).normalized();
+    bounding_rect_ = QRectF(link_line().p1(),
+                            link_line().p2()).normalized();
   }
 
   Link* LinkNode::link(){
     return link_;
+  }
+
+  void LinkNode::set_link(Link* link){
+    link_ = link;
   }
 
   QLineF LinkNode::link_line(){

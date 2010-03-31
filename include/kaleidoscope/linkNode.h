@@ -6,10 +6,14 @@
 // the link, IE a line.
 
 #include <QGraphicsObject>
+#include <QGraphicsScene>
 
 namespace Kaleidoscope {
+  class Link;
+  class Device;
 
   class LinkNode : public QGraphicsObject {
+    Q_OBJECT
   public:
     LinkNode(Device*, QGraphicsItem* parent = 0,
              QGraphicsScene* scene = 0);

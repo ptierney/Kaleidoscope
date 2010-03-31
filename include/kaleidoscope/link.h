@@ -4,10 +4,12 @@
 #include <grids/gObject.h>
 
 namespace Kaleidoscope {
+  class Tete;
 
   class Link : public Grids::Object {
   public:
     Link(Device* d, Grids::Value* val);
+    void init();
 
     static GridsID requestCreate(Device*, GridsID, GridsID);
     static void gridsCreate(Device*, Grids::Event*);
@@ -21,6 +23,9 @@ namespace Kaleidoscope {
     GridsID node_2_id();
     void set_node_1_id(GridsID);
     void set_node_2_id(GridsID);
+
+    GridsID getNode1IDFromAttr(Grids::Value*);
+    GridsID getNode2IDFromAttr(Grids::Value*);
 
   private:
     Device* d_;

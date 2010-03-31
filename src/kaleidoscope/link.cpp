@@ -1,6 +1,9 @@
 
 #include <kaleidoscope/link.h>
-
+#include <grids/utility.h>
+#include <grids/interface.h>
+#include <grids/event.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
@@ -30,11 +33,11 @@ namespace Kaleidoscope {
     (*create_val)["id"] = new_id;
 
     dev->getInterface()->requestCreateObject(create_val);
-    detele create_val;
+    delete create_val;
     return new_id;
   }
 
-  void Link::gridsCreate(Dev* dev, Grids::Event* evt){
+  void Link::gridsCreate(Device* dev, Grids::Event* evt){
     Grids::Value* val = evt->getArgsPtr();
 
     // Find nodes
@@ -44,13 +47,15 @@ namespace Kaleidoscope {
 
   }
 
-  Link::getNode1IDFromAttr(Grids::Value* attr){
+  GridsID Link::getNode1IDFromAttr(Grids::Value* attr){
     return (*attr)["node1"].asString();
   }
 
-  Link::getNode2IDFromAttr(Grids::Value* attr){
+  GridsID Link::getNode2IDFromAttr(Grids::Value* attr){
     return (*attr)["node2"].asString();
   }
+
+
 
 
 
