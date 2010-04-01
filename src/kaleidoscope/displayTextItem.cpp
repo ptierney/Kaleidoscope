@@ -1,5 +1,6 @@
 
 #include <kaleidoscope/displayTextItem.h>
+#include <kaleidoscope/displayTextNode.h>
 
 namespace Kaleidoscope {
 
@@ -28,7 +29,7 @@ namespace Kaleidoscope {
   }
 
   void DisplayTextItem::focusOutEvent(QFocusEvent *event) {
-    //centerTextItem();
+    node_->centerTextItem();
     setTextInteractionFlags(Qt::NoTextInteraction);
     //emit lostFocus(this);
     QGraphicsTextItem::focusOutEvent(event);

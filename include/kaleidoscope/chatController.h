@@ -43,6 +43,7 @@ namespace Kaleidoscope {
     std::vector<Chat*> chats();
     ChatLinkSystem* link_system();
     QRectF all_chats_rect();
+    bool reframing();
 
   protected:
     void timerEvent(QTimerEvent*);
@@ -60,6 +61,7 @@ namespace Kaleidoscope {
     float zoom_margin_;
     Tete* last_selected_;
     ChatLinkSystem* link_system_;
+    bool reframing_;
   };
 }
 

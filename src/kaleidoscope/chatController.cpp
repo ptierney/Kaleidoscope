@@ -211,19 +211,19 @@ namespace Kaleidoscope {
   }
 
   void ChatController::checkReframe(){
-    bool reframing = false;
+    reframing_ = false;
 
     for(unsigned int i = 0u; i < tetes_.size(); i++){
       if( tetes_[i] && tetes_[i]->tete_node() ){
         if( tetes_[i]->tete_node()->selected() ){
-          reframing = true;
+          reframing_ = true;
           last_selected_ = tetes_[i];
           tetes_[i]->tete_node()->frameOn();
           }
       }
     }
 
-    if(reframing)
+    if(reframing_)
       return;
 
     if(last_selected_ && last_selected_->tete_node()){
@@ -304,6 +304,10 @@ namespace Kaleidoscope {
 
   QRectF ChatController::all_chats_rect(){
     return all_chats_rect_;
+  }
+
+  bool reframing(){
+    return reframing_;
   }
 
 } // end namespace

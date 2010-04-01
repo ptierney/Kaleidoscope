@@ -4,6 +4,7 @@
 
 #include <kaleidoscope/displayTextNode.h>
 #include <kaleidoscope/tete.h>
+#include <kaleidoscope/displayTextItem.h>
 
 namespace Kaleidoscope {
 
@@ -22,7 +23,7 @@ namespace Kaleidoscope {
     // Call any previous inits
     TextNode::init();
 
-    text_item_ = new QGraphicsTextItem(this);
+    text_item_ = new DisplayTextItem(d_, this, this);
     text_item_->setPlainText(QObject::tr(tete_->text().c_str()));
     text_item_->setDefaultTextColor(text_color_);
 

@@ -42,7 +42,7 @@ namespace Kaleidoscope {
 
 
   void Scene2D::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if(event->button() == Qt::RightButton)
+    if(false && event->button() == Qt::RightButton)
       InputTextItem::requestCreate(d, Vec3D( event->scenePos().x(),
                                              event->scenePos().y(),
                                              1000.0) );
@@ -61,7 +61,7 @@ namespace Kaleidoscope {
   void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mouseReleaseEvent(event);
 
-    if(event->button() == Qt::LeftButton &&
+    if(false && event->button() == Qt::LeftButton &&
        focusItem() == 0 &&
        selectedItems().length() == 0 &&
        down_pos == event->scenePos() ){
