@@ -8,7 +8,7 @@
 namespace Kaleidoscope {
   class Device;
 
-  class InputTextNode : public TextNode, public TeteInterface {
+  class InputTextNode : public TextNode {
 
   public:
     InputTextNode(Device*, QGraphicsItem* parent = 0,

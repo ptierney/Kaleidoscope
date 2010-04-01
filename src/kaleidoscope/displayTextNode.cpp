@@ -11,7 +11,7 @@ namespace Kaleidoscope {
       TextNode(d, parent, scene) {
     set_tete(tete);
     setPos( tete->getPosition().X, tete->getPosition().Y);
-    setFlag(QGraphicsItem::ItemIsFocusable);
+    //setFlag(QGraphicsItem::ItemIsFocusable);
   }
 
   DisplayTextNode::~DisplayTextNode(){
@@ -52,6 +52,7 @@ namespace Kaleidoscope {
       text_item_->setFlag(QGraphicsItem::ItemIsSelectable);
       text_item_->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
+
     //text_item_->mouseDoubleClickEvent(event);
     QGraphicsObject::mouseDoubleClickEvent(event);
   }
