@@ -92,7 +92,7 @@ namespace Kaleidoscope {
     tetes_.push_back(tete);
 
     // Update the node placements
-    chat->chat_node()->placeNodes();
+    //chat->chat_node()->placeNodes();
     updateChatsRect();
   }
 

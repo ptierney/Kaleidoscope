@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QObject>
+#include <QGraphicsItem>
 
 #include <kaleidoscope/define.h>
 
@@ -35,8 +36,8 @@ namespace Kaleidoscope {
   protected:
     void timerEvent(QTimerEvent*);
 
-    Vec3D coulombRepulsion(Tete*, Tete*);
-    Vec3D hookeAttraction(Tete*, Tete*, Link*);
+    Vec3D coulombRepulsion(QGraphicsItem*, QGraphicsItem*);
+    Vec3D hookeAttraction(QPointF, QPointF);
 
   private:
     Device* d_;

@@ -17,16 +17,16 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
-    rest_distance_ = 200.0;
+    rest_distance_ = 75.0;
     // For pull, larger is slower
     attract_weight_ = 10.0;
     // For push, smaller is slower
-    repulse_weight_ = 10.0;
+    repulse_weight_ = 50.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
-    damping_ = 0.1;
+    damping_ = 0.02;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 1.0;
+    energy_threshold_ = 0.1;
     running_ = false;
     startTimer(50);
   }
@@ -82,13 +82,15 @@ namespace Kaleidoscope {
       if(chat->tetes()[i]->tete_node() == NULL)
         continue;
 
-      force += coulombRepulsion(tete, chat->tetes()[i]);
+      force += coulombRepulsion(tete->tete_node(),
+                                chat->tetes()[i]->tete_node());
     }
 
     std::vector<Link*> links = tete->links();
     Tete* other_node;
 
     for(unsigned int i = 0u; i < links.size(); i++){
+
       if(links[i]->node_1() == tete)
         other_node = links[i]->node_2();
       else
@@ -97,7 +99,12 @@ namespace Kaleidoscope {
       if(other_node == NULL)
         continue;
 
-      force += hookeAttraction(tete, other_node, links[i]);
+      links[i]->link_node()->updateLinkLine();
+
+      // Use points from an line intersection, to take into account the size of the
+      // boxes.
+      force += hookeAttraction(links[i]->link_node()->getNodeIntersectPosition(tete),
+                               links[i]->link_node()->getNodeIntersectPosition(other_node));
     }
 
     //tete->tete_node()->addVelocity(force*damping_);
@@ -109,12 +116,13 @@ namespace Kaleidoscope {
   }
 
 
-  Vec3D ChatLinkSystem::coulombRepulsion(Tete* node_1, Tete* node_2){
+  Vec3D ChatLinkSystem::coulombRepulsion(QGraphicsItem* node_1,
+                                         QGraphicsItem* node_2){
 
-    float dx = node_1->tete_node()->pos().x() -
-               node_2->tete_node()->pos().x();
-    float dy = node_1->tete_node()->pos().y() -
-               node_2->tete_node()->pos().y();
+    float dx = node_1->pos().x() -
+               node_2->pos().x();
+    float dy = node_1->pos().y() -
+               node_2->pos().y();
 
     float r = sqrt(dx*dx + dy*dy);
 
@@ -124,16 +132,7 @@ namespace Kaleidoscope {
   }
 
   // Notice that the direction is flipped
-  Vec3D ChatLinkSystem::hookeAttraction(Tete* node_1, Tete* node_2, Link* link){
-    //if( link->node_1()->tete_node()->boundingRect().translated(link->node_1()->tete_node()->pos()).intersects(link->node_2()->tete_node()->boundingRect().translated(link->node_2()->tete_node()->pos()))){
-   //   return Vec3D();
-   // }
-
-    //QPointF node_1_pos = link->link_node()->getNodeIntersectPosition(node_1);
-    //QPointF node_2_pos = link->link_node()->getNodeIntersectPosition(node_2);
-    QPointF node_1_pos = node_1->tete_node()->pos();
-    QPointF node_2_pos = node_2->tete_node()->pos();
-
+  Vec3D ChatLinkSystem::hookeAttraction(QPointF node_1_pos, QPointF node_2_pos){
     float dx = node_2_pos.x() -
                node_1_pos.x();
     float dy = node_2_pos.y() -

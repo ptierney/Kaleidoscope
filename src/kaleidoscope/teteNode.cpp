@@ -1,6 +1,7 @@
 
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
+#include <kaleidoscope/link.h>
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/noticeWindow.h>
@@ -165,27 +166,34 @@ namespace Kaleidoscope {
     bound.moveTo(pos());
     bound.translate(-local_bound.width()/2,-local_bound.height()/2);
 
-    float min_x = bound.topLeft().x();//frame_rect_.topLeft().x();
-    float min_y = bound.topLeft().y();//frame_rect_.topLeft().y();
-    float max_x = bound.bottomRight().x();//frame_rect_.bottomRight().x();
-    float max_y = bound.bottomRight().y();//frame_rect_.bottomRight().y();
+    float start_min_x, start_min_y, start_max_x, start_max_y;
+    float min_x = start_min_x = bound.topLeft().x();//frame_rect_.topLeft().x();
+    float min_y = start_min_y = bound.topLeft().y();//frame_rect_.topLeft().y();
+    float max_x = start_max_x = bound.bottomRight().x();//frame_rect_.bottomRight().x();
+    float max_y = start_max_y = bound.bottomRight().y();//frame_rect_.bottomRight().y();
 
-    std::vector<Tete*> children = tete_->children();
-    for(unsigned int i = 0u; i < children.size(); i++){
-      addTeteToMinMax(children[i], &min_x, &min_y,
+    std::vector<Link*> links = tete_->links();
+    Tete* other_node;
+    for(unsigned int i = 0u; i < links.size(); i++){
+      if(links[i]->node_1() == tete_)
+        other_node = links[i]->node_2();
+      else
+        other_node = links[i]->node_1();
+
+      addTeteToMinMax(other_node, &min_x, &min_y,
                       &max_x, &max_y);
     }
 
-    addTeteToMinMax(tete_->parent(), &min_x, &min_y,
-                    &max_x, &max_y);
-
-    if(tete_->children().empty()){
-      max_x += (max_x - min_x)*0.6;
-    }
-
-    if(tete_->parent() == NULL){
-      min_x -= (max_x - min_x)*0.6;
-    }
+    // If nothing was added to one side, double the frame on that side,
+    // so that the center node is more or less guaranteed to be centered.
+    if(min_x == start_min_x)
+      min_x -= (max_x - min_x);
+    if(min_y == start_min_y)
+      min_y -= (max_y - min_y);
+    if(max_x == start_max_x)
+      max_x += (max_x - min_x);
+    if(max_y == start_max_y)
+      max_y += (max_y - min_y);
 
     frame_rect_ = QRectF(QPointF(min_x, min_y),
                          QPointF(max_x, max_y)).normalized();

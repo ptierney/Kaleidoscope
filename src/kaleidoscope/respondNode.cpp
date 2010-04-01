@@ -7,7 +7,7 @@ namespace Kaleidoscope {
     QGraphicsObject(parent) {
     Q_UNUSED(scene)
     d_ = d;
-    zoom_margin_ = 50;
+    zoom_margin_ = 40;
     zoom_speed_ = 0.1;
     setAcceptHoverEvents(true);
     // Set up a 100 ms loop to check

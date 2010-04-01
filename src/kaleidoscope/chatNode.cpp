@@ -14,7 +14,7 @@ namespace Kaleidoscope {
                      QGraphicsItem* parent, QGraphicsScene* scene) :
     RespondNode(d, parent, scene) {
     chat_ = chat;
-    node_y_space_ = 15;
+    node_y_space_ = 100;
   }
 
   void ChatNode::init(){
