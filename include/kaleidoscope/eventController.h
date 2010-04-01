@@ -1,21 +1,26 @@
 
 #pragma once
 
-#include <QWidget>
+#include <QKeyEvent>
+
+/* So this would be a nice interface for collecing
+   focus code, but it needs to have focus to receive events.
+   */
 
 namespace Kaleidoscope {
 	class Device;
 
-	class EventController : public QWidget {
-		Q_OBJECT
+  class EventController {
 	public:
-		EventController(Device*, QWidget* parent = 0);
+    EventController(Device*);
+
+    void keyPressEvent(QKeyEvent*);
 
 	protected:
-                void keyPressEvent(QKeyEvent*);
+
 		
 	private:
-		Device* d;
+    Device* d_;
 	};
 
 } // end namespace Kaleidoscope

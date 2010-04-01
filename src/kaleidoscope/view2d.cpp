@@ -1,39 +1,43 @@
 
-#include <kaleidoscope/view2d.h>
-#include <kaleidoscope/scene2d.h>
+#include <math.h>
 
 #include <QGraphicsScene>
 #include <QWheelEvent>
 
-#include <math.h>
+#include <kaleidoscope/view2d.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/eventController.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
-    View2D::View2D(Scene2D *scene) : QGraphicsView(scene) {
+  View2D::View2D(Device* d, Scene2D *scene)
+    : QGraphicsView(scene) {
+    d_ = d;
 
-        /* "Use this if your scene has many moving elements." */
-        scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    /* "Use this if your scene has many moving elements." */
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
 
-        setScene(scene);
-        scene->set_main_view(this);
+    setScene(scene);
+    scene->set_main_view(this);
 
-        setCacheMode(CacheBackground);
-        //setViewportUpdateMode(BoundingRectViewportUpdate);
-        setRenderHint(QPainter::Antialiasing);
-        setTransformationAnchor(AnchorUnderMouse);
-        setResizeAnchor(AnchorViewCenter);
+    setCacheMode(CacheBackground);
+    //setViewportUpdateMode(BoundingRectViewportUpdate);
+    setRenderHint(QPainter::Antialiasing);
+    setTransformationAnchor(AnchorUnderMouse);
+    setResizeAnchor(AnchorViewCenter);
 
-        setDragMode( QGraphicsView::ScrollHandDrag);
+    setDragMode( QGraphicsView::ScrollHandDrag);
 
-        scale(qreal(1.2), qreal(1.2));
-        setMinimumSize(400, 400);
-        //centerOn(10000.0, 10000.0);
-    }
+    scale(qreal(1.2), qreal(1.2));
+    setMinimumSize(400, 400);
+    //centerOn(10000.0, 10000.0);
+  }
 
-    void View2D::drawBackground(QPainter* /*painter*/, const QRectF &rect)
-    {
-        Q_UNUSED(rect);
-        /*
+  void View2D::drawBackground(QPainter* /*painter*/, const QRectF &rect)
+  {
+    Q_UNUSED(rect);
+    /*
         QRectF sceneRect = this->sceneRect();
 
         // Fill
@@ -44,20 +48,25 @@ namespace Kaleidoscope {
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(sceneRect);
         */
-    }
+  }
 
-    void View2D::wheelEvent(QWheelEvent *event) {
-        scaleView(pow((double)2, event->delta() / 240.0));
-    }
+  void View2D::wheelEvent(QWheelEvent *event) {
+    scaleView(pow((double)2, event->delta() / 240.0));
+  }
 
-    /* Scales the view by the fraction passed in.
+  void View2D::keyPressEvent(QKeyEvent* event){
+    //d_->event_controller()->keyPressEvent(event);
+    QGraphicsView::keyPressEvent(event);
+  }
+
+  /* Scales the view by the fraction passed in.
        0.5 makes everything half as big. */
-    void View2D::scaleView(qreal scale_factor) {
-        //qreal scale_factor_ = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
-        //if (factor < 0.07 || factor > 100)
-        //    return;
+  void View2D::scaleView(qreal scale_factor) {
+    //qreal scale_factor_ = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
+    //if (factor < 0.07 || factor > 100)
+    //    return;
 
-        scale(scale_factor, scale_factor);
-    }
+    scale(scale_factor, scale_factor);
+  }
 
 }

@@ -8,9 +8,10 @@
 namespace Kaleidoscope {
 
   DisplayTextNode::DisplayTextNode(Device* d, Tete* tete, QGraphicsItem* parent, QGraphicsScene* scene) :
-    TextNode(d, parent, scene) {
+      TextNode(d, parent, scene) {
     set_tete(tete);
     setPos( tete->getPosition().X, tete->getPosition().Y);
+    setFlag(QGraphicsItem::ItemIsFocusable);
   }
 
   DisplayTextNode::~DisplayTextNode(){
@@ -43,4 +44,27 @@ namespace Kaleidoscope {
              -4.0 * (text_item_->boundingRect().height()) );
     }
   }
+
+  void DisplayTextNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+  {
+    if (text_item_->textInteractionFlags() == Qt::NoTextInteraction){
+      text_item_->setFlag(QGraphicsItem::ItemIsFocusable);
+      text_item_->setFlag(QGraphicsItem::ItemIsSelectable);
+      text_item_->setTextInteractionFlags(Qt::TextEditorInteraction);
+    }
+    //text_item_->mouseDoubleClickEvent(event);
+    QGraphicsObject::mouseDoubleClickEvent(event);
+  }
+
+  void DisplayTextNode::focusInEvent(QFocusEvent* /*event*/) {
+
+  }
+
+  void DisplayTextNode::focusOutEvent(QFocusEvent *event) {
+    centerTextItem();
+    text_item_->setTextInteractionFlags(Qt::NoTextInteraction);
+    //emit lostFocus(this);
+    QGraphicsObject::focusOutEvent(event);
+  }
+
 }

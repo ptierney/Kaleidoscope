@@ -44,6 +44,7 @@ namespace Kaleidoscope {
         Grids::Interface* getInterface();
         Grids::Utility* getGridsUtility();
         EventController* getEventController();
+        EventController* event_controller();
         Settings* getSettings();
         Camera* getCamera();
         void registerCamera(Grids::Value*);
@@ -95,7 +96,7 @@ namespace Kaleidoscope {
         Grids::Interface* g_interface;
         Grids::Utility* g_utility;
 
-        EventController* event_controller;
+        EventController* event_controller_;
         Settings* settings;
         Console* console;
         NoticeWindow* noticeWindow;

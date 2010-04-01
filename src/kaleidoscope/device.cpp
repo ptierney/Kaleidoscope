@@ -64,7 +64,7 @@ namespace Kaleidoscope {
         chat_controller_->init();
 
         // Derived from QWidget, handles misc. key presses
-        event_controller = new Kal::EventController(this, main_window);
+        event_controller_ = new Kal::EventController(this);
         object_controller = new Grids::ObjectController(this, main_window);
         g_utility = new Grids::Utility();
     }
@@ -112,7 +112,8 @@ namespace Kaleidoscope {
     Grids::Interface* Device::getInterface(){ return g_interface; }
     Grids::Utility* Device::getGridsUtility(){ return g_utility; }
     Settings* Device::getSettings() { return settings; }
-    EventController* Device::getEventController(){ return event_controller; }
+    EventController* Device::getEventController(){ return event_controller_; }
+    EventController* Device::event_controller(){ return event_controller_; }
     NoticeWindow* Device::getNoticeWindow() { return noticeWindow; }
     NoticeWindow* Device::getErrorWindow() { return errorWindow; }
     Scene2D* Device::getScene() { return scene; }
@@ -177,7 +178,7 @@ namespace Kaleidoscope {
     void Device::createScene() {
 
         scene = new Scene2D(this, main_window);
-        view2D = new View2D(scene);
+        view2D = new View2D(this, scene);
 
         main_window->setCentralWidget(view2D);
     }

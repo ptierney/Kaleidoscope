@@ -30,7 +30,9 @@ namespace Kaleidoscope {
       }
     }
 
-    GridsID Tete::requestCreate(Device *dev, GridsID parent, GridsID chat, std::string text, Vec3D position){
+    GridsID Tete::requestCreate(Device *dev,
+                                GridsID parent, GridsID chat,
+                                std::string text, Vec3D position){
         Grids::Value* create_val = new Grids::Value();
         GridsID new_id = dev->getGridsUtility()->getNewUUID();
 

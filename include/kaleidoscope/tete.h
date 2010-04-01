@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <grids/gObject.h>
+#include <kaleidoscope/teteInterface.h>
 
 namespace Kaleidoscope {
     class Chat;
