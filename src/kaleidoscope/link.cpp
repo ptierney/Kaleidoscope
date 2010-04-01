@@ -1,8 +1,12 @@
 
 #include <kaleidoscope/link.h>
+#include <kaleidoscope/linkNode.h>
 #include <grids/utility.h>
 #include <grids/interface.h>
 #include <grids/event.h>
+#include <kaleidoscope/chatController.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -40,11 +44,22 @@ namespace Kaleidoscope {
   void Link::gridsCreate(Device* dev, Grids::Event* evt){
     Grids::Value* val = evt->getArgsPtr();
 
-    // Find nodes
-    // Create Link
-    // Scene2D* scene = dev->getScene();
-    // scene->addItem(display_node);
+    Link* link = new Link(dev, val);
+    link->init();
+    LinkNode* link_node = new LinkNode(dev);
+    link_node->set_link(link);
+    link->set_link_node(link_node);
 
+    // If broken link, clean up and return
+    if( dev->chat_controller()->addLink(link) == false ){
+      dev->getNoticeWindow()->write(7, "Received broken link");
+      delete link;
+      delete link_node;
+      return;
+    }
+
+    dev->getNoticeWindow()->write(7, "Adding link node to scene");
+    dev->getScene()->addItem(link_node);
   }
 
   GridsID Link::getNode1IDFromAttr(Grids::Value* attr){
@@ -55,8 +70,44 @@ namespace Kaleidoscope {
     return (*attr)["node2"].asString();
   }
 
+  GridsID Link::node_1_id(){
+    return node_1_id_;
+  }
 
+  GridsID Link::node_2_id(){
+    return node_2_id_;
+  }
 
+  void Link::set_node_1_id(GridsID id){
+    node_1_id_ = id;
+  }
 
+  void Link::set_node_2_id(GridsID id){
+    node_2_id_ = id;
+  }
+
+  Tete* Link::node_1(){
+    return node_1_;
+  }
+
+  Tete* Link::node_2(){
+    return node_2_;
+  }
+
+  void Link::set_node_1(Tete* node){
+    node_1_ = node;
+  }
+
+  void Link::set_node_2(Tete* node){
+    node_2_ = node;
+  }
+
+  LinkNode* Link::link_node(){
+    return link_node_;
+  }
+
+  void Link::set_link_node(LinkNode* link_node){
+    link_node_ = link_node;
+  }
 
 }

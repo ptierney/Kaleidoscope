@@ -83,7 +83,7 @@ namespace Kaleidoscope {
         scaleView(pow((double)2, -event->delta() / 240.0));
     }
 
-    void Scene2D::scaleView(qreal scale_factor) {
+    void Scene2D::scaleView(qreal /*scale_factor*/) {
         /* TODO: swich display from a QGraphicsScene to a QGraphicsView
         qreal factor = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
         if (factor < 0.07 || factor > 100)

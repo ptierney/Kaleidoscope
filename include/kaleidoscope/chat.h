@@ -9,13 +9,18 @@ namespace Kaleidoscope {
   class Device;
   class Tete;
   class ChatNode;
+  class Link;
 
   class Chat {
   public:
     Chat(Device*, GridsID);
 
     void addTete(Tete*);
+    // Add tete and link up parent / child relationships
+    void addTeteAsTree(Tete*);
     std::vector<Tete*> tetes();
+    void addLink(Link*);
+    std::vector<Link*> links();
 
     GridsID chat_id();
     void set_chat_id(GridsID);
@@ -26,6 +31,7 @@ namespace Kaleidoscope {
   private:
     Device* d_;
     std::vector<Tete*> tetes_;
+    std::vector<Link*> links_;
     GridsID chat_id_;
     ChatNode* chat_node_;
   };

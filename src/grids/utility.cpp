@@ -44,7 +44,7 @@ namespace Grids{
 		std::string temp_string;
 		
 		// Remove dashes
-		for( int i = 0; i < in_id.length(); i++ ){
+    for( unsigned int i = 0u; i < in_id.length(); i++ ){
 			if( in_id[i] == '-' )
 				continue;
 			
@@ -57,7 +57,7 @@ namespace Grids{
 
 		char temp_char;
 
-		for( int i = 0; i < temp_string.length(); i++ ){
+    for( unsigned int i = 0u; i < temp_string.length(); i++ ){
 		
 			temp_char = temp_string[i];
 			if( temp_char >= '0' && temp_char <= '9' )

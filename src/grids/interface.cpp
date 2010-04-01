@@ -65,11 +65,11 @@ namespace Grids {
         delete proto;
     }
 
-    void Interface::rawReceive(QString raw_data){
+    void Interface::rawReceive(QString /*raw_data*/){
         //d->getNoticeWindow()->write(1, tr("rec>> ") + raw_data);
     }
 
-    void Interface::protocolInitiated(Event* in_event){
+    void Interface::protocolInitiated(Event* /*in_event*/){
         setConnected(1);
         /*emit gridsConnectionEstablished();*/
     }
@@ -284,16 +284,16 @@ namespace Grids {
 
     void Interface::receiveRoomList(Grids::Event* evt) {
         Value* args = evt->getArgsPtr();
-        int num_rooms = (*args)["rooms"].size();
+        unsigned int num_rooms = (*args)["rooms"].size();
 
-        if( num_rooms == 0 ){
+        if( num_rooms == 0u ){
             createMyRoom();
             return;
         }
 
         std::vector<GridsID>::iterator result;
 
-        for( unsigned int i = 0; i < num_rooms; i++) {
+        for( unsigned int i = 0u; i < num_rooms; i++) {
             GridsID room_id = (*args)["rooms"][i].asString();
             result = find(known_rooms.begin(), known_rooms.end(), room_id );
 

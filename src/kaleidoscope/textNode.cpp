@@ -44,7 +44,7 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+  void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
     updateDrawRect();
 
     if(selected_){
@@ -56,7 +56,7 @@ namespace Kaleidoscope {
         painter->drawLine(parent_line);
       }
 
-      for(int i = 0; i < tete_->children().size(); i++ ){
+      for(unsigned int i = 0u; i < tete_->children().size(); i++ ){
         if(tete_->children()[i]->tete_node()){
           QLineF child_line = QLineF(QPointF(),
                                      tete_->children()[i]->tete_node()->pos() - pos());

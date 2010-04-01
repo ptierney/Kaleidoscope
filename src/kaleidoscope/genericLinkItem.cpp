@@ -21,7 +21,7 @@
 namespace Kaleidoscope {
 
     GenericLinkItem::GenericLinkItem(Device* d, Grids::Value* val,
-                                     QGraphicsItem *parent, QGraphicsScene *scene)
+                                     QGraphicsItem *parent, QGraphicsScene* /*scene*/)
         :  QGraphicsObject(parent), Object(d, val) {
         this->d = d;
 
@@ -123,7 +123,7 @@ namespace Kaleidoscope {
         }
     }
 
-    void GenericLinkItem::draw(Device* d){
+    void GenericLinkItem::draw(Device* /*d*/){
 
     }
 
@@ -136,7 +136,7 @@ namespace Kaleidoscope {
         .adjusted(-extra, -extra, extra, extra);
     }    
 
-    void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+    void GenericLinkItem::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget *) {
         loadNodeQPos();
         loadNodeRects();
 

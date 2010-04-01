@@ -103,7 +103,7 @@ namespace Kaleidoscope {
     return selected_;
   }
 
-  void TeteNode::frameLeave(FrameRect *frame){
+  void TeteNode::frameLeave(FrameRect* /*frame*/){
 
   }
 
@@ -129,23 +129,27 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updatePosition(){
-    setPos(x() + x_vel_, y() + y_vel_);
+    setPos(x() + velocity_.X, y() + velocity_.Y);
   }
 
   float TeteNode::x_vel(){
-    return x_vel_;
-  }
-
-  void TeteNode::set_x_vel(float x_vel){
-    x_vel_ = x_vel;
+    return velocity_.X;
   }
 
   float TeteNode::y_vel(){
-    return y_vel_;
+    return velocity_.Y;
   }
 
-  void TeteNode::set_y_vel(float y_vel){
-    y_vel_ = y_vel;
+  Vec3D TeteNode::velocity(){
+    return velocity_;
+  }
+
+  void TeteNode::set_velocity(Vec3D velocity){
+    velocity_ = velocity;
+  }
+
+  void TeteNode::addVelocity(Vec3D addition){
+    velocity_ += addition;
   }
 
   QRectF TeteNode::frame_rect(){

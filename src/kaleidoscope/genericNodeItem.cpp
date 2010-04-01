@@ -24,7 +24,7 @@
 namespace Kaleidoscope {
 
     GenericNodeItem::GenericNodeItem(Device* d, Grids::Value* val,
-                                     QGraphicsItem *parent, QGraphicsScene *scene)
+                                     QGraphicsItem *parent, QGraphicsScene* /*scene*/)
         :  QGraphicsObject(parent), Object(d, val) {
         this->d = d;
 
@@ -74,7 +74,7 @@ namespace Kaleidoscope {
         return (*attr)["text"].asString();
     }
 
-    void GenericNodeItem::draw(Device* d) {
+    void GenericNodeItem::draw(Device* /*d*/) {
 
     }
 
@@ -118,7 +118,7 @@ namespace Kaleidoscope {
         return path;
     }
 
-    void GenericNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+    void GenericNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget *) {
         //d->getNoticeWindow()->write("Paint");
         /*float x1 = text_item->boundingRect().left() - rect_boarder;
         float y1 = text_item->boundingRect().top() - rect_boarder;
@@ -181,7 +181,7 @@ namespace Kaleidoscope {
             //d->getNoticeWindow()->write("Pos change");
             updatePosition(d, Vec3D(pos().x(), pos().y(), zValue()));
 
-            for(int i = 0; i < link_pointers.size(); i++){
+            for(unsigned int i = 0u; i < link_pointers.size(); i++){
                 link_pointers[i]->update();
             }
 
@@ -243,7 +243,7 @@ namespace Kaleidoscope {
         /* Now subtract all forces pulling items together */
         double weight = (link_pointers.size() + 1) * 40;
 
-        for(int i = 0; i < link_pointers.size(); i++) {
+        for(unsigned int i = 0u; i < link_pointers.size(); i++) {
             GenericLinkItem* item = link_pointers[i];
 
             if( item->getLinkType() == GenericLinkItem::INFO_LINK)
@@ -287,7 +287,7 @@ namespace Kaleidoscope {
         if (qAbs(xvel) < 0.1 && qAbs(yvel) < 0.1)
             xvel = yvel = 0;
         else {
-            for(int i = 0; i < link_pointers.size(); i++) {
+            for(unsigned int i = 0u; i < link_pointers.size(); i++) {
                 GenericLinkItem* item = link_pointers[i];
                 item->nodeChanged();
             }

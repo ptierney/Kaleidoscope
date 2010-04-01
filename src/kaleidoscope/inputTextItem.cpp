@@ -120,7 +120,7 @@ namespace Kaleidoscope {
         //return QGraphicsItem::itemChange(change, value);
     }
 
-     void InputTextItem::timerEvent(QTimerEvent *event) {
+     void InputTextItem::timerEvent(QTimerEvent* /*event*/) {
          /* Check the milliseconds that have elapsed between presses. */
          if(keys_unsent && key_timer.elapsed() > key_delay){
              keys_unsent = false;
@@ -153,7 +153,7 @@ namespace Kaleidoscope {
         Grids::Object::setLocalPosition(new_pos);
     }
 
-    void InputTextItem::focusInEvent(QFocusEvent* event) {
+    void InputTextItem::focusInEvent(QFocusEvent* /*event*/) {
         //QMutexLocker locker(&focus_mutex);
     }
 
@@ -252,7 +252,7 @@ namespace Kaleidoscope {
 
 
     /* Required function */
-    void InputTextItem::draw( Device* d ){
+    void InputTextItem::draw( Device* /*d*/ ){
 
     }
 

@@ -5,8 +5,11 @@
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/chat.h>
+#include <kaleidoscope/link.h>
+#include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -14,22 +17,38 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
-    min_distance_ = 100.0;
+    rest_distance_ = 100.0;
     // For pull, larger is slower
-    pull_weight_ = 1.0;
+    attract_weight_ = 10.0;
     // For push, smaller is slower
-    push_weight_ = 0.5;
+    repulse_weight_ = 10.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
+    damping_ = 0.01;
+    total_kinetic_energy_ = 0.0;
+    energy_threshold_ = 1.0;
+    running_ = false;
     startTimer(50);
   }
 
-  void ChatLinkSystem::timerEvent(QTimerEvent* event){
+  bool ChatLinkSystem::running(){
+    return running_;
+  }
+
+  void ChatLinkSystem::set_running(bool running){
+    running_ = running;
+  }
+
+  void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
     //d_->getNoticeWindow()->write(7, "update");
-    //update(d_->chat_controller()->chats());
+    if(running_){
+      update(d_->chat_controller()->chats());
+      running_ = total_kinetic_energy_ > energy_threshold_;
+    }
   }
 
   void ChatLinkSystem::update(const std::vector<Chat *>& chats){
+    total_kinetic_energy_ = 0.0;
     // For every tete in every that, calculate forces
     for(unsigned int i = 0u; i < chats.size(); i++){
       for(unsigned int j = 0u; j < chats[i]->tetes().size(); j++){
@@ -46,75 +65,88 @@ namespace Kaleidoscope {
           tete->tete_node()->updatePosition();
       }
     }
+
+    d_->getScene()->update(d_->getScene()->sceneRect());
   }
 
   void ChatLinkSystem::doForces(Tete* tete, Chat* chat){
     if(tete->tete_node() == NULL)
       return;
 
-    float xvel = 0.0;
-    float yvel = 0.0;
+    Vec3D force = Vec3D(0.0, 0.0, 0.0);
 
     // Sum all the forces pushing this item away
-    for(int i = 0; i < chat->tetes().size(); i++){
+    for(unsigned int i = 0u; i < chat->tetes().size(); i++){
       if(chat->tetes()[i] == tete)
         continue;
       if(chat->tetes()[i]->tete_node() == NULL)
         continue;
 
-      float dx = tete->tete_node()->pos().x() -
-                 chat->tetes()[i]->tete_node()->pos().x();
-      float dy = tete->tete_node()->pos().y() -
-                 chat->tetes()[i]->tete_node()->pos().y();
-
-      float l = sqrt(dx*dx + dy*dy);
-
-      xvel += (dx *push_weight_) / l;
-      yvel += (dy *push_weight_) / l;
+      force += coulombRepulsion(tete, chat->tetes()[i]);
     }
 
-    // Now subtract all the forces pulling items together
-    if(tete->parent())
-      doPullForce(tete, tete->parent(),
-                  &xvel, &yvel);
+    std::vector<Link*> links = tete->links();
+    Tete* other_node;
 
-    for(int i = 0; i < tete->children().size(); i++){
-      doPullForce(tete, tete->children()[i],
-                  &xvel, &yvel);
+    for(unsigned int i = 0u; i < links.size(); i++){
+      if(links[i]->node_1() == tete)
+        other_node = links[i]->node_2();
+      else
+        other_node = links[i]->node_1();
+
+      if(other_node == NULL)
+        continue;
+
+      force += hookeAttraction(tete, other_node, links[i]);
     }
 
-    for(int i = 0; i < tete->references().size(); i++){
-      doPullForce(tete, tete->references()[i],
-                  &xvel, &yvel);
-    }
+    //tete->tete_node()->addVelocity(force*damping_);
+    //if(force.getLength() > max_velocity_)
+    //  force = Vec3D();
 
-    if(qAbs(xvel) < min_velocity_)
-      xvel = 0;
-    if(qAbs(yvel) < min_velocity_)
-      yvel = 0;
-    if(qAbs(xvel) > max_velocity_)
-      xvel = xvel > 0 ? max_velocity_ : -max_velocity_;
-    if(qAbs(yvel) > max_velocity_)
-      yvel = yvel > 0 ? max_velocity_ : -max_velocity_;
-
-    tete->tete_node()->set_x_vel(xvel);
-    tete->tete_node()->set_y_vel(yvel);
+    tete->tete_node()->set_velocity(force*damping_);
+    total_kinetic_energy_ += tete->tete_node()->velocity().getLengthSQ();
   }
 
-  void ChatLinkSystem::doPullForce(Tete* tete, Tete* other,
-                                   float* xvel, float* yvel ) {
-    if(other->tete_node() == NULL)
-      return;
 
-    QPointF dir = other->tete_node()->pos() -
-                  tete->tete_node()->pos();
+  Vec3D ChatLinkSystem::coulombRepulsion(Tete* node_1, Tete* node_2){
 
-    if(sqrt(dir.x() * dir.x() + dir.y() * dir.y()) > min_distance_ ){
-      *xvel += dir.x() / pull_weight_;
-      *yvel += dir.y() / pull_weight_;
-    } else {
-      *xvel = 0;
-      *yvel = 0;
-    }
+    float dx = node_1->tete_node()->pos().x() -
+               node_2->tete_node()->pos().x();
+    float dy = node_1->tete_node()->pos().y() -
+               node_2->tete_node()->pos().y();
+
+    float r = sqrt(dx*dx + dy*dy);
+
+    return Vec3D( (dx * repulse_weight_) / r,
+                  (dy * repulse_weight_) / r,
+                  0.0);
   }
+
+  // Notice that the direction is flipped
+  Vec3D ChatLinkSystem::hookeAttraction(Tete* node_1, Tete* node_2, Link* link){
+    //if( link->node_1()->tete_node()->boundingRect().translated(link->node_1()->tete_node()->pos()).intersects(link->node_2()->tete_node()->boundingRect().translated(link->node_2()->tete_node()->pos()))){
+   //   return Vec3D();
+   // }
+
+
+    //QPointF node_1_pos = link->link_node()->getNodeIntersectPosition(node_1);
+    //QPointF node_2_pos = link->link_node()->getNodeIntersectPosition(node_2);
+    QPointF node_1_pos = node_1->tete_node()->pos();
+    QPointF node_2_pos = node_2->tete_node()->pos();
+
+    float dx = node_2_pos.x() -
+               node_1_pos.x();
+    float dy = node_2_pos.y() -
+               node_1_pos.y();
+
+    float r = sqrt(dx*dx + dy*dy);
+    float displacement = r - rest_distance_;
+
+    return Vec3D(dx/r*displacement*attract_weight_,
+                 dy/r*displacement*attract_weight_,
+                 0.0);               
+  }
+
+
 }

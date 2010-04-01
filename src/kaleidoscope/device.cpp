@@ -80,7 +80,7 @@ namespace Kaleidoscope {
     }
 
     /* This is the main event loop. */
-    void Device::timerEvent(QTimerEvent *event) {
+    void Device::timerEvent(QTimerEvent* /*event*/) {
 
         if(connected == false && getInterface()->isConnected() == true) {
             connected = true;
@@ -124,7 +124,7 @@ namespace Kaleidoscope {
         getInterface()->requestAllRooms();
     }
 
-    void Device::myRoomCreated(GridsID rm) {
+    void Device::myRoomCreated(GridsID /*rm*/) {
         //getNoticeWindow()->addNotice(4, tr("Your room created"));
         //getNoticeWindow()->addNotice(4, tr("Requesting a camera from the server."));
 

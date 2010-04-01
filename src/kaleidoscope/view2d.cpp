@@ -30,7 +30,7 @@ namespace Kaleidoscope {
         //centerOn(10000.0, 10000.0);
     }
 
-    void View2D::drawBackground(QPainter *painter, const QRectF &rect)
+    void View2D::drawBackground(QPainter* /*painter*/, const QRectF &rect)
     {
         Q_UNUSED(rect);
         /*

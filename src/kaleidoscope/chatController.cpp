@@ -12,6 +12,8 @@
 #include <grids/utility.h>
 #include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/chatNode.h>
+#include <kaleidoscope/link.h>
+#include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -38,8 +40,8 @@ namespace Kaleidoscope {
   void ChatController::init(){
     default_chat_id_ = d_->getGridsUtility()->getNewUUID();
 
-    int main_width = d_->main_window->centralWidget()->size().width();
-    int main_height = d_->main_window->centralWidget()->size().height();
+    //int main_width = d_->main_window->centralWidget()->size().width();
+    //int main_height = d_->main_window->centralWidget()->size().height();
     /*all_chats_rect_ = QRectF(-main_width/2, -main_height/2,
       main_width, main_height);*/
     all_chats_rect_ = QRectF(-10, -10, 20, 20);
@@ -50,11 +52,12 @@ namespace Kaleidoscope {
     link_system_ = new ChatLinkSystem(d_);
   }
 
-  void ChatController::timerEvent(QTimerEvent* event){
+  void ChatController::timerEvent(QTimerEvent* /*event*/){
     checkReframe();
   }
 
   void ChatController::addChat(Chat* chat){
+    chats_.push_back(chat);
   }
 
   void ChatController::addTete(Tete* tete){
@@ -85,12 +88,39 @@ namespace Kaleidoscope {
       tete->set_chat(chat);
     }
 
-    chat->addTete(tete);
+    chat->addTeteAsTree(tete);
     tetes_.push_back(tete);
 
     // Update the node placements
     chat->chat_node()->placeNodes();
     updateChatsRect();
+  }
+
+  bool ChatController::addLink(Link* link){
+    // If the link is set up already, don't do anything special
+    if(link->node_1() && link->node_2()){
+      links_.push_back(link);
+      return true;
+    }
+
+    GridsID node_1_id = link->node_1_id();
+    GridsID node_2_id = link->node_2_id();
+
+    Tete* node_1 = getTeteFromID(node_1_id);
+    Tete* node_2 = getTeteFromID(node_2_id);
+
+    if(node_1 == NULL || node_2 == NULL)
+      return false;
+
+    link->set_node_1(node_1);
+    link->set_node_2(node_2);
+
+    node_1->addLink(link);
+    node_2->addLink(link);
+
+    link_system_->set_running(true);
+
+    return true;
   }
 
   void ChatController::deleteTeteNodeTree(Tete *tete){
@@ -100,15 +130,15 @@ namespace Kaleidoscope {
       tete->set_tete_node(NULL);
     }
 
-    for(int i = 0; i < children.size(); i++){
+    for(unsigned int i = 0u; i < children.size(); i++){
       deleteTeteNodeTree(children[i]);
     }
   }
 
   Tete* ChatController::getTeteFromID(GridsID id){
     bool found = false;
-    int i;
-    for(i = 0; i < tetes_.size(); i++){
+    unsigned int i;
+    for(i = 0u; i < tetes_.size(); i++){
       if(tetes_[i]->getID() == id){
         found = true;
         break;
@@ -117,6 +147,22 @@ namespace Kaleidoscope {
 
     if(found)
       return tetes_[i];
+
+    return NULL;
+  }
+
+  Link* ChatController::getLinkFromID(GridsID id){
+    bool found = false;
+    unsigned int i;
+    for(i = 0u; i < links_.size(); i++){
+      if(links_[i]->getID() == id){
+        found = true;
+        break;
+      }
+    }
+
+    if(found)
+      return links_[i];
 
     return NULL;
   }

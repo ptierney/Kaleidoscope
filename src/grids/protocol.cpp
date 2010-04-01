@@ -10,7 +10,8 @@
 
 namespace Grids {
 
-    Protocol::Protocol(std::string name, QObject* parent) {
+    Protocol::Protocol(std::string name, QObject* parent)
+      : QObject(parent) {
         last_event = 0;
         my_name = name;
         /* Limit outbound traffic to with this variable. */

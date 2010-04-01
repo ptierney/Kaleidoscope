@@ -48,25 +48,18 @@ namespace Kaleidoscope {
     void Tete::gridsCreate(Device *dev, Grids::Event *evt){
         Grids::Value *val = evt->getArgsPtr();
 
-        // Create Tete
-        // Create TeteNode
-        // Add Tete to ChatController
-        // Add Tete to Chat
-        // Place TeteNode in Chat
-
         Tete* tete = new Tete(dev, val);
         tete->init();
-
         DisplayTextNode* display_node = new DisplayTextNode(dev, tete);
         display_node->init();
 
         tete->set_tete_node(display_node);
-        dev->chat_controller()->addTete(tete);
+        display_node->set_tete(tete);
 
+        dev->chat_controller()->addTete(tete);
         display_node->placeNode();
 
-        Scene2D* scene = dev->getScene();        
-        scene->addItem(display_node);
+        dev->getScene()->addItem(display_node);
     }
 
     std::string Tete::text(){
@@ -105,6 +98,10 @@ namespace Kaleidoscope {
         children_.push_back(tete);
     }
 
+    void Tete::addLink(Link *link){
+      links_.push_back(link);
+    }
+
     Tete* Tete::parent(){
         return parent_;
     }
@@ -123,6 +120,10 @@ namespace Kaleidoscope {
 
     std::vector<Tete*> Tete::children(){
         return children_;
+    }
+
+    std::vector<Link*> Tete::links(){
+      return links_;
     }
 
     Chat* Tete::chat(){
@@ -152,6 +153,8 @@ namespace Kaleidoscope {
     void Tete::set_tete_node(TeteNode* tete_node){
       tete_node_ = tete_node;
     }
+
+
 
 
 

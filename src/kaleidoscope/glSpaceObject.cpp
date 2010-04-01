@@ -13,11 +13,11 @@ namespace Kaleidoscope {
 
 	}
 
-	void GLSpaceObject::draw( Device* d ) {
+  void GLSpaceObject::draw( Device* /*d*/ ) {
 
 	}
 
-	void GLSpaceObject::create( Device* d, Grids::Value* in_val ) {
+  void GLSpaceObject::create( Device* /*d*/, Grids::Value* /*in_val*/ ) {
 
 	}
 
@@ -52,7 +52,7 @@ namespace Kaleidoscope {
                 //d->getRenderer()->unlockGL();
 	}
 
-	void GLSpaceObject::glDrawGeometry( Device* d ){
+  void GLSpaceObject::glDrawGeometry( Device* /*d*/ ){
                 //d->getRenderer()->lockGL();
 		
 		// Draw Lines

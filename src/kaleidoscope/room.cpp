@@ -28,11 +28,11 @@ namespace Kaleidoscope {
         //d->getRenderer()->addChild( this );
     }
 
-    void Room::draw( Device* d ){
+    void Room::draw( Device* /*d*/ ){
         /*glDraw( d );*/
     }
 
-    void Room::create( Device* d, Grids::Value* val ){
+    void Room::create( Device* /*d*/, Grids::Value* /*val*/ ){
         // nothing here
     }
 
@@ -92,7 +92,7 @@ namespace Kaleidoscope {
         } // end else
     } // end placeRoom
 
-    void Room::buildRoom( Device * d ) {
+    void Room::buildRoom( Device * /*d*/ ) {
 
 
     } // end BuildRoom

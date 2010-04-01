@@ -22,7 +22,12 @@ namespace Kaleidoscope {
     chat_id_ = chat_id;
   }
 
-  void Chat::addTete(Tete* tete){
+  void Chat::addTete(Tete *tete){
+    tetes_.push_back(tete);
+  }
+
+  void Chat::addTeteAsTree(Tete* tete){
+
     Tete* parent = d_->chat_controller()->getTeteFromID(tete->parent_id());
 
      if(parent == NULL) {
@@ -41,6 +46,14 @@ namespace Kaleidoscope {
 
   std::vector<Tete*> Chat::tetes(){
     return tetes_;
+  }
+
+  void Chat::addLink(Link *link){
+    links_.push_back(link);
+  }
+
+  std::vector<Link*> Chat::links(){
+    return links_;
   }
 
   ChatNode* Chat::chat_node(){

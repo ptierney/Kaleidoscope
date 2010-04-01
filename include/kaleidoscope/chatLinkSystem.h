@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+#include <kaleidoscope/define.h>
+
 /* The spring system that keeps some order to
    this system.
    This requires that each Tete knows both its
@@ -17,6 +19,7 @@ namespace Kaleidoscope {
   class TeteNode;
   class Tete;
   class Chat;
+  class Link;
 
   class ChatLinkSystem : public QObject {
     Q_OBJECT
@@ -25,19 +28,27 @@ namespace Kaleidoscope {
 
     void update(const std::vector<Chat*>& chats);
     void doForces(Tete* tete, Chat* chat);
-    void doPullForce(Tete* tete, Tete* other,
-                     float* xvel, float* yvel);
+
+    bool running();
+    void set_running(bool);
 
   protected:
     void timerEvent(QTimerEvent*);
 
+    Vec3D coulombRepulsion(Tete*, Tete*);
+    Vec3D hookeAttraction(Tete*, Tete*, Link*);
+
   private:
     Device* d_;
-    float min_distance_;
-    float pull_weight_;
-    float push_weight_;
+    float rest_distance_;
+    float repulse_weight_;
+    float attract_weight_;
     float min_velocity_;
     float max_velocity_;
+    float damping_;
+    float total_kinetic_energy_;
+    float energy_threshold_;
+    bool running_;
   };
 }
 

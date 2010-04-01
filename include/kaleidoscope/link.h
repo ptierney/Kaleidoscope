@@ -1,10 +1,15 @@
 #ifndef LINK_H
 #define LINK_H
 
+// At the moment, this only supports local, non-broken
+// links. Both tetes exest on this client, and
+// both are in the same chat.
+
 #include <grids/gObject.h>
 
 namespace Kaleidoscope {
   class Tete;
+  class LinkNode;
 
   class Link : public Grids::Object {
   public:
@@ -27,6 +32,9 @@ namespace Kaleidoscope {
     GridsID getNode1IDFromAttr(Grids::Value*);
     GridsID getNode2IDFromAttr(Grids::Value*);
 
+    LinkNode* link_node();
+    void set_link_node(LinkNode*);
+
   private:
     Device* d_;
 
@@ -35,6 +43,8 @@ namespace Kaleidoscope {
 
     Tete* node_1_;
     Tete* node_2_;
+
+    LinkNode* link_node_;
   };
 }
 

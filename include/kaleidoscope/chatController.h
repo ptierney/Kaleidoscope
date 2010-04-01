@@ -14,6 +14,7 @@ namespace Kaleidoscope {
   class Tete;
   class ChatLinkSystem;
   class ChatNode;
+  class Link;
 
   class ChatController : public QObject {
     Q_OBJECT
@@ -25,11 +26,15 @@ namespace Kaleidoscope {
     GridsID default_chat_id();
     void set_default_chat_id(GridsID);
     Tete* getTeteFromID(GridsID);
+    Link* getLinkFromID(GridsID);
 
     void addChat(Chat*);
     void addTete(Tete*);
+    // Returns T if added, F if not
+    bool addLink(Link*);
     // Deletes all tete nodes in this conversation from this point down
     void deleteTeteNodeTree(Tete* tete);
+
 
     void checkReframe();
     void zoomOut();
@@ -46,6 +51,7 @@ namespace Kaleidoscope {
     Device* d_;
     std::vector<Chat*> chats_;
     std::vector<Tete*> tetes_;
+    std::vector<Link*> links_;
     std::vector<ChatNode*> chat_nodes_;
     int chat_refresh_;
     GridsID default_chat_id_;

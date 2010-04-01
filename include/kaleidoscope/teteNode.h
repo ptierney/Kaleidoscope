@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 
 #include <kaleidoscope/respondNode.h>
+#include <kaleidoscope/define.h>
 
 namespace Kaleidoscope {
   class Tete;
@@ -26,9 +27,10 @@ namespace Kaleidoscope {
     // Required by ResponseNode
     bool frameOn();
     float x_vel();
-    void set_x_vel(float);
     float y_vel();
-    void set_y_vel(float);
+    Vec3D velocity();
+    void set_velocity(Vec3D);
+    void addVelocity(Vec3D);
     QRectF frame_rect();
     void updateFrameRect();
 
@@ -48,6 +50,7 @@ namespace Kaleidoscope {
   private:
     float x_vel_;
     float y_vel_;
+    Vec3D velocity_;
 
     void addTeteToMinMax(Tete*,
                             float*, float*,

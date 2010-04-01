@@ -9,8 +9,9 @@ namespace Kaleidoscope {
 
   FrameRect::FrameRect(Device* d, QRectF rect, TeteNode* tete_node,
                        QGraphicsItem* parent,
-                       QGraphicsScene* scene) :
+                       QGraphicsScene* /*scene*/) :
   QGraphicsObject(parent) {
+    d_ = d;
     //setAcceptHoverEvents(true);
     frame_rect_ = rect;
     selected = true;
@@ -33,11 +34,11 @@ namespace Kaleidoscope {
   }
 
   void FrameRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    //Q_UNUSED(painter);
+    Q_UNUSED(painter);
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter->drawRect(frame_rect_);
+    //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    //painter->drawRect(frame_rect_);
   }
 
 

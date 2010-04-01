@@ -28,7 +28,7 @@ namespace Kaleidoscope {
 
         /* This is the main loop of the program, similar to Processing's
          * draw() function. */
-	void Camera::paintEvent(QPaintEvent* event) {
+  void Camera::paintEvent(QPaintEvent* /*event*/) {
                 /* Makes this context the current OpenGL rendering context.
 		makeCurrent();
                 */
@@ -54,7 +54,7 @@ namespace Kaleidoscope {
 		setTarget( temp_target );
 	}
 
-	void Camera::keyPressEvent(QKeyEvent* event) {
+  void Camera::keyPressEvent(QKeyEvent* /*event*/) {
                 /*if(event->key() == Qt::Key_Space)
                   perhaps switch between navigation modes.
                 */
@@ -74,28 +74,28 @@ namespace Kaleidoscope {
 		doMovement(NULL, event, NULL);
 	}
 	
-	void Camera::wheelEvent(QWheelEvent* event) {
+  void Camera::wheelEvent(QWheelEvent* event) {
 		doMovement(NULL, NULL, event);
 	}
 
-        void Camera::mouseMoved(QMouseEvent* event){
+        void Camera::mouseMoved(QMouseEvent* /*event*/){
 
         }
 
-        void Camera::keyboardPressed(QKeyEvent* event) {
+        void Camera::keyboardPressed(QKeyEvent* /*event*/) {
 
         }
 
-        void Camera::keyboardReleased(QKeyEvent* event) {
+        void Camera::keyboardReleased(QKeyEvent* /*event*/) {
 
         }
 
-	void Camera::doMovement(QKeyEvent* k_event, QMouseEvent* m_event, QWheelEvent* w_event) {
+  void Camera::doMovement(QKeyEvent* /*k_event*/, QMouseEvent* /*m_event*/, QWheelEvent* /*w_event*/) {
 
 	}
 
         /* A public slot, probably to be used to display other people's views. */
-        void Camera::updatePosition(Vec3D new_pos, Vec3D new_rot, Vec3D new_tar) {
+        void Camera::updatePosition(Vec3D /*new_pos*/, Vec3D /*new_rot*/, Vec3D /*new_tar*/) {
 
         }
 
@@ -104,7 +104,7 @@ namespace Kaleidoscope {
         void Camera::select() { }
         void Camera::deselect() { }
 
-	void Camera::draw( Device* d ){
+  void Camera::draw( Device* /*d*/ ){
 
 	}
 	

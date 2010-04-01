@@ -11,6 +11,7 @@
 namespace Kaleidoscope {
   class Link;
   class Device;
+  class Tete;
 
   class LinkNode : public QGraphicsObject {
     Q_OBJECT
@@ -28,8 +29,12 @@ namespace Kaleidoscope {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     void updateBoundingRect();
+    void updateLinkLine();
+
+    QPointF getNodeIntersectPosition(Tete*);
 
   private:
+    Device* d_;
     Link* link_;
     QRectF bounding_rect_;
     QLineF link_line_;

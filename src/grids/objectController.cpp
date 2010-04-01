@@ -19,6 +19,7 @@
 #include <kaleidoscope/spaceRenderer.h>
 #include <kaleidoscope/spaceText.h>
 #include <kaleidoscope/noticeWindow.h>
+#include <kaleidoscope/link.h>
 #include <kaleidoscope/device.h>
 
 
@@ -75,14 +76,16 @@ namespace Grids {
             return true;
     }
 
-    void ObjectController::deleteObjectFromID( GridsID obj_id ) {
+    void ObjectController::deleteObjectFromID( GridsID /*obj_id*/ ) {
 
 
     }
 
-    // Thoughs: this function should be replaced by a hash.  Each object
-    // "registers" both it's name and ... is this possible?
-    bool ObjectController::knownObject( GridsID new_id, Event* evt ) {
+    // Thoughs: this function could be replaced by a hash.  Each object
+    // registers both it's name and a function pointer to gridsCreate on
+    // startup.
+    // It would then be constant time, versus n_types / 2 time.
+    bool ObjectController::knownObject( GridsID /*new_id*/, Event* evt ) {
         //d->getNoticeWindow()->write(0, tr("Testing known object"));
 
         std::string type = (*(evt->getArgsPtr()))[ "attr" ][ "type" ].asString();
@@ -106,16 +109,19 @@ namespace Grids {
           } else if(type == "Tete") {
             Kal::Tete::gridsCreate(d, evt);
             found = 1;
+          } else if(type == "Link") {
+            Kal::Link::gridsCreate(d, evt);
+            found = 1;
           }
 
         return found;
     }
 
-    void ObjectController::createGenericObject( GridsID new_id, Event* evt ){
+    void ObjectController::createGenericObject( GridsID /*new_id*/, Event* /*evt*/){
         // Create a cube with a questionmark or something
     }
 
-    void ObjectController::registerCamera( GridsID new_id, Event* evt ){
+    void ObjectController::registerCamera( GridsID /*new_id*/, Event* /*evt*/){
         // Each camera is created inside of a new window, therefore the device must
         // create the camera.
     }
@@ -152,7 +158,7 @@ namespace Grids {
         detectSelectionThreaded(event->x(), event->y());
     }
 
-    void ObjectController::detectSelectionThreaded(int mouse_x, int mouse_y){
+    void ObjectController::detectSelectionThreaded(int /*mouse_x*/, int /*mouse_y*/){
 
     }
 

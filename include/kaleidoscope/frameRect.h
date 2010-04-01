@@ -24,6 +24,7 @@ namespace Kaleidoscope {
   protected:
 
   private:
+    Device* d_;
     QRectF frame_rect_;
     bool selected;
     TeteNode* tete_node_;

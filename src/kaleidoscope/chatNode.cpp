@@ -33,10 +33,8 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void ChatNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    //Q_UNUSED(painter);
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
+  void ChatNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
+
     updateDrawRect();
 
     //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -107,7 +105,7 @@ namespace Kaleidoscope {
   }
 
   bool ChatNode::frameOn(){
-
+    return false;
   }
 
   void ChatNode::buildNodeTree(){
@@ -185,7 +183,7 @@ namespace Kaleidoscope {
       children[i]->tete_node()->setPos(x, y);
     }
 
-    for(int i = 0; i < children.size(); i++){
+    for(unsigned int i = 0u; i < children.size(); i++){
       placeNodes(children[i]);
     }
   }

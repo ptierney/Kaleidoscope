@@ -9,6 +9,7 @@
 namespace Kaleidoscope {
     class Chat;
     class TeteNode;
+    class Link;
 
     class Tete : public Grids::Object {
     public:
@@ -32,10 +33,12 @@ namespace Kaleidoscope {
         void set_parent(Tete*);
         void addReference(Tete*);
         void addChild(Tete*);
+        void addLink(Link*);
         Tete* parent();
         GridsID parent_id();
         std::vector<Tete*> references();
         std::vector<Tete*> children();
+        std::vector<Link*> links();
         Chat* chat();
         void set_chat(Chat*);
         GridsID chat_id();
@@ -52,6 +55,7 @@ namespace Kaleidoscope {
         GridsID parent_id_;
         std::vector<Tete*> references_;
         std::vector<Tete*> children_;
+        std::vector<Link*> links_;
         Chat* chat_;
         GridsID chat_id_;
         // This is more for cacheing purposes

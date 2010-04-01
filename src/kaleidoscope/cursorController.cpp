@@ -13,8 +13,8 @@ namespace Kaleidoscope
 	}	
 
 	void CursorController::setPosition( float xScale, float yScale ) {
-		int wid_wid = widget->width();
-		int wid_hei = widget->height();
+    //int wid_wid = widget->width();
+    //int wid_hei = widget->height();
 		
 		QPoint wid_center_point = QPoint( (int)(xScale*(widget->width())), 
 								(int)(yScale*(widget->height())));

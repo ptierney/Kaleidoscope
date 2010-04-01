@@ -9,7 +9,7 @@ namespace Kaleidoscope {
 	}
 
 	bool SpaceObject::detectSelection(){
-
+    return false;
 	}
 
 } // end namespace Kaleidoscope
