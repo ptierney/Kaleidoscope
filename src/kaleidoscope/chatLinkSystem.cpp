@@ -17,14 +17,14 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
-    rest_distance_ = 100.0;
+    rest_distance_ = 200.0;
     // For pull, larger is slower
     attract_weight_ = 10.0;
     // For push, smaller is slower
     repulse_weight_ = 10.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
-    damping_ = 0.01;
+    damping_ = 0.1;
     total_kinetic_energy_ = 0.0;
     energy_threshold_ = 1.0;
     running_ = false;
@@ -128,7 +128,6 @@ namespace Kaleidoscope {
     //if( link->node_1()->tete_node()->boundingRect().translated(link->node_1()->tete_node()->pos()).intersects(link->node_2()->tete_node()->boundingRect().translated(link->node_2()->tete_node()->pos()))){
    //   return Vec3D();
    // }
-
 
     //QPointF node_1_pos = link->link_node()->getNodeIntersectPosition(node_1);
     //QPointF node_2_pos = link->link_node()->getNodeIntersectPosition(node_2);
