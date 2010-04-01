@@ -13,11 +13,14 @@ namespace Kaleidoscope {
   class DisplayTextNode : public TextNode {
 
   public:
-    DisplayTextNode(Device*, Tete*, QGraphicsItem* parent = 0, QGraphicsScene* scene= 0);
+    DisplayTextNode(Device*, Tete*, QGraphicsItem* parent = 0,
+                    QGraphicsScene* scene= 0);
     virtual ~DisplayTextNode();
     void init();
 
     // Places it in the correct position according to its parent
+    // Don't use this method.  Call the ChatNode to place the
+    // entire tree.
     void placeNode();
     
   protected:

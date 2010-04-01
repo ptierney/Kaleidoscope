@@ -76,5 +76,13 @@ namespace Kaleidoscope {
                        text_item_->boundingRect().height() + 2*rect_boarder_height_);
   }
 
+  void TextNode::centerTextItem(){
+    if(text_item_ == NULL)
+      return;
+
+    text_item_->setPos(text_item_->boundingRect().width() / -2.0,
+                      text_item_->boundingRect().height() / -2.0);
+  }
+
 
 }

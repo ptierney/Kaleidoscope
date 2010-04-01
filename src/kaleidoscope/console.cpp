@@ -7,6 +7,8 @@
 #include <kaleidoscope/cursorController.h>
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/genericLinkItem.h>
+#include <kaleidoscope/inputTextNode.h>
+#include <kaleidoscope/scene2d.h>
 #include <grids/interface.h>
 #include <kaleidoscope/device.h>
 
@@ -69,7 +71,11 @@ namespace Kaleidoscope {
                 GridsID node3 = GenericNodeItem::requestCreate(d, Vec3D(300.0, -150.0, 0.0), "Node 3");
                 GenericLinkItem::requestCreate(d, node1, node3, GenericLinkItem::HARD_LINK, d->getMyID());
 
-            }
+              } else if(second == tr("inputnode")){
+                InputTextNode* input_node = new InputTextNode(d);
+                input_node->init();
+                d->getScene()->addItem(input_node);
+              }
         } else if(first == tr("notify")) {
             d->getNoticeWindow()->setPriority(second.toInt());
         } else if(first == tr("get")) {

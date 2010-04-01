@@ -27,9 +27,8 @@ namespace Kaleidoscope {
 
     //text_item_->setPos( text_item_->pos().x() - text_item_->boundingRect().width() / 2,
     //                   text_item_->pos().y() - text_item_->boundingRect().height() / 2 );
-    text_item_->setPos(text_item_->boundingRect().width() / -2.0,
-                      text_item_->boundingRect().height() / -2.0);
 
+    centerTextItem();
     updateDrawRect();
   }
 

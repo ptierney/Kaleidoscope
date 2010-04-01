@@ -19,6 +19,8 @@ namespace Kaleidoscope {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     QGraphicsTextItem* text_item();
+
+    void centerTextItem();
   protected:
     QGraphicsTextItem* text_item_;
     QColor text_color_;
