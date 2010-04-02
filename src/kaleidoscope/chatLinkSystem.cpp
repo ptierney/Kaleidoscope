@@ -76,14 +76,16 @@ namespace Kaleidoscope {
     Vec3D force = Vec3D(0.0, 0.0, 0.0);
 
     // Sum all the forces pushing this item away
-    for(unsigned int i = 0u; i < chat->tetes().size(); i++){
-      if(chat->tetes()[i] == tete)
+    std::vector<Tete*> tetes = chat->tetes();
+
+    for(std::vector<Tetes*>::size_type it = tetes.begin(); it !=  tetes.end(); ++it){
+      if((*it) == tete)
         continue;
-      if(chat->tetes()[i]->tete_node() == NULL)
+      if((*it)->tete_node() == NULL)
         continue;
 
       force += coulombRepulsion(tete->tete_node(),
-                                chat->tetes()[i]->tete_node());
+                                (*it)->tete_node());
     }
 
     std::vector<Link*> links = tete->links();
