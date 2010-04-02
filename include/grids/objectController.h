@@ -24,8 +24,8 @@ namespace Grids {
 		void registerObject(GridsID, Object*);
 		GridsID getIDFromPointer( Object* );
 		Object* getPointerFromID( GridsID );
-                bool pointerRegistered( Object* );
-                bool idRegistered( GridsID );
+    bool pointerRegistered( Object* );
+    bool idRegistered( GridsID );
 
 		void createObject( GridsID, Event* );
 		bool knownObject( GridsID, Event* );	
@@ -38,8 +38,8 @@ namespace Grids {
 		
 		void detectSelectionThreaded(int, int);
 
-                void deleteObjectFromID( GridsID );
-	
+    void deleteObjectFromID( GridsID );
+
 	protected:
 		void mouseReleasedEvent(QMouseEvent*);
 
@@ -49,8 +49,8 @@ namespace Grids {
 		std::vector< GridsID > object_ids;
 		std::map< GridsID, Object* > id_ptr_map;
 		std::map< Object*, GridsID > ptr_id_map;
-                std::map< GridsID, Object* >::iterator id_ptr_iter;
-                std::map< Object*, GridsID >::iterator ptr_id_iter;
+    std::map< GridsID, Object* >::iterator id_ptr_iter;
+    std::map< Object*, GridsID >::iterator ptr_id_iter;
 		
 		QMutex map_mutex;
 

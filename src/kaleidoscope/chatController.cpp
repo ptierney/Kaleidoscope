@@ -29,8 +29,8 @@ namespace Kaleidoscope {
 
   ChatController::~ChatController(){
     Chat* temp_chat;
-    for(unsigned int i = 0u; i < chats_.size(); i++){
-      temp_chat = chats_[i];
+    for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
+      temp_chat = *i;
       delete temp_chat;
     }
 
@@ -70,9 +70,9 @@ namespace Kaleidoscope {
       // This should be the only place I make a new Chat
       GridsID chat_id = tete->chat_id();
 
-      for(unsigned int i = 0u; i < chats_.size(); i++){
-        if(chats_[i]->chat_id() == chat_id)
-          chat = chats_[i];
+      for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
+        if((*i)->chat_id() == chat_id)
+          chat = (*i);
       }
 
       if(chat == NULL){
@@ -306,7 +306,7 @@ namespace Kaleidoscope {
     return all_chats_rect_;
   }
 
-  bool reframing(){
+  bool ChatController::reframing(){
     return reframing_;
   }
 

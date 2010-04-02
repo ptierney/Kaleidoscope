@@ -23,25 +23,25 @@
 
 namespace Grids {
 
-        typedef irr::core::vector3df Vec3D;
+  typedef irr::core::vector3df Vec3D;
 	typedef irr::core::vector2df Vec2D;
 	typedef irr::core::vector3df Vector3;
-        typedef irr::core::vector2df Vector2;
-/*
+  typedef irr::core::vector2df Vector2;
+  /*
     typedef irr::core::vector3d<qreal> Vec3D;
     typedef irr::core::vector3d<qreal> Vector3;
     typedef irr::core::vector2d<qreal> Vec2D;
     typedef irr::core::vector2d<qreal> Vector2;
     */
 
-        /* EventQueue typedef is in event.h */
+  /* EventQueue typedef is in event.h */
 
 	typedef std::string GridsID;
 	
 	typedef Json::Value Value;
 
-        const int BROADCAST = 1;
-        const int LOCAL = 0;
+  const int BROADCAST = 1;
+  const int LOCAL = 0;
 
 }
 
