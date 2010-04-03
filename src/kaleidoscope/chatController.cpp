@@ -70,8 +70,8 @@ namespace Kaleidoscope {
       // This should be the only place I make a new Chat
       GridsID chat_id = tete->chat_id();
 
-      // Could this be a const_iterator?
-      for(std::vector<Chat*>::iterator i = chats_.begin(); i != chats_.end(); i++){
+      // Should this be a const_iterator?
+      for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
         if((*i)->chat_id() == chat_id)
           chat = (*i);
       }

@@ -43,7 +43,7 @@ namespace Kaleidoscope {
 
   void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
     //d_->getNoticeWindow()->write(7, "update");
-    if(running_){
+    if( running_){
       update(d_->chat_controller()->chats());
       running_ = total_kinetic_energy_ > energy_threshold_;
     }
@@ -51,6 +51,7 @@ namespace Kaleidoscope {
 
   void ChatLinkSystem::update(std::vector<Chat*> chats){
     total_kinetic_energy_ = 0.0;
+
     // For every tete in every that, calculate forces
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
@@ -58,16 +59,32 @@ namespace Kaleidoscope {
       }
     }
 
+    /* BIG NOTE:
+       The following code is puzzling, to say the least, and may mean the end of this project.
+       If I run updatePosition() inside of an iterator loop, as in the commented-out code,
+       the program segfaults on the setPos() call inside updatePosition().  Not only am I clueless
+       as to what is causing this, but I am clueless as to what might possibly be causing this.
+       It could be (1) a quirk or Qt, or (2) my program is jacked up somewhere else and I really need
+       to know more about C++ to realize it.
+       */
+
+    for(std::vector<Chat*>::size_type i = 0u; i < chats.size(); ++i){
+      for(std::vector<Tete*>::size_type j = 0u; j < chats[i]->tetes().size(); ++j){
+        if(chats[i]->tetes()[j]->tete_node())
+          chats[i]->tetes()[j]->tete_node()->updatePosition();
+      }
+    }
+
+    /*
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
         //std::cerr << (*tete_it)->tete_node() << std::endl;
         if( (*tete_it)->tete_node() != NULL ){
-          (*tete_it)->tete_node()->updatePosition();
+          //(*tete_it)->tete_node()->updatePosition();
         }
       }
     }
-
-    std::cout << "Total Energy: " << total_kinetic_energy_ << std::endl;
+    */
 
     d_->getScene()->update(d_->getScene()->sceneRect());
   }
@@ -78,16 +95,13 @@ namespace Kaleidoscope {
     if(tete->tete_node() == NULL)
       return;
 
-    std::cout << "Start do force" << std::endl;
-    Vec3D force = Vec3D(0.0, 0.0, 0.0);
-    std::cout << "Force" << force.X << " " <<
-        force.Y << " " << force.Z << std::endl;
+    Vec3D force = Vec3D();
 
     // Sum all the forces pushing this item away
     std::vector<Tete*> tetes = chat->tetes();
 
-    // Could this be a const_iterator?
-    for(std::vector<Tete*>::iterator it = tetes.begin(); it !=  tetes.end(); ++it){
+    // Should this be a const_iterator?
+    for(std::vector<Tete*>::const_iterator it = tetes.begin(); it !=  tetes.end(); ++it){
       if((*it) == tete)
         continue;
       if((*it)->tete_node() == NULL)
@@ -96,9 +110,6 @@ namespace Kaleidoscope {
       force += coulombRepulsion(tete->tete_node(),
                                 (*it)->tete_node());
     }
-
-    std::cout << "Force" << force.X << " " <<
-        force.Y << " " << force.Z << std::endl;
 
     std::vector<Link*> links = tete->links();
     Tete* other_node;
@@ -119,18 +130,13 @@ namespace Kaleidoscope {
       // boxes.
       force += hookeAttraction((*it)->link_node()->getNodeIntersectPosition(tete),
                                (*it)->link_node()->getNodeIntersectPosition(other_node));
-
-      std::cout << "Force " << force.X << " " <<
-          force.Y << " " << force.Z << std::endl;
     }
 
     //tete->tete_node()->addVelocity(force*damping_);
     //if(force.getLength() > max_velocity_)
     //  force = Vec3D();
 
-    std::cout << "Force" << force.X << " " <<
-        force.Y << " " << force.Z << std::endl;
-
+    // Check for floating point NaNs
     if( force != force ){
       force = Vec3D();
     }

@@ -10,6 +10,9 @@
 #include <kaleidoscope/inputTextNode.h>
 #include <kaleidoscope/scene2d.h>
 #include <grids/interface.h>
+#include <kaleidoscope/chat.h>
+#include <kaleidoscope/tete.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 
@@ -98,7 +101,13 @@ namespace Kaleidoscope {
                 temp_string.setNum(d->getInterface()->getReceivedQueueLength());
                 d->getNoticeWindow()->write(10, tr("Received queue has: ") + temp_string);
             }
-        }
+          } else if(first == tr("update")){
+            if(second == tr("node")){
+              //d->chat_controller()->chats()[0u]->tetes()[0u]->tete_node()->setPos(0.0, 0.0);
+              d->chat_controller()->chats()[0u]->tetes()[0u]->tete_node()->updatePosition();
+
+            }
+          }
 
     }
 } // end namespace Kaleidoscope

@@ -133,10 +133,7 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updatePosition(){
-    std::cout << velocity_.X << " " << velocity_.Y << std::endl;
-    std::cout << x() << " " << y() << std::endl;
-    //setPos(x() + velocity_.X, y() + velocity_.Y);
-    setPos(0.0, 0.0);
+    setPos(x() + velocity_.X, y() + velocity_.Y);
   }
 
   float TeteNode::x_vel(){
@@ -180,8 +177,8 @@ namespace Kaleidoscope {
 
     std::vector<Link*> links = tete_->links();
     Tete* other_node;
-    // Could this be a const_iterator?
-    for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
+    // Should this be a const_iterator?
+    for(std::vector<Link*>::const_iterator it = links.begin(); it != links.end(); ++it){
       if((*it)->node_1() == tete_)
         other_node = (*it)->node_2();
       else
