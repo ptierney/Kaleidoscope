@@ -29,7 +29,7 @@ namespace Kaleidoscope {
 
   ChatController::~ChatController(){
     Chat* temp_chat;
-    for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
+    for(std::vector<Chat*>::iterator i = chats_.begin(); i != chats_.end(); i++){
       temp_chat = *i;
       delete temp_chat;
     }
@@ -70,7 +70,8 @@ namespace Kaleidoscope {
       // This should be the only place I make a new Chat
       GridsID chat_id = tete->chat_id();
 
-      for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
+      // Could this be a const_iterator?
+      for(std::vector<Chat*>::iterator i = chats_.begin(); i != chats_.end(); i++){
         if((*i)->chat_id() == chat_id)
           chat = (*i);
       }

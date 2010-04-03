@@ -1,6 +1,8 @@
 
 #include <math.h>
 
+#include <iostream>
+
 #include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
@@ -47,38 +49,45 @@ namespace Kaleidoscope {
     }
   }
 
-  void ChatLinkSystem::update(const std::vector<Chat *>& chats){
+  void ChatLinkSystem::update(std::vector<Chat*> chats){
     total_kinetic_energy_ = 0.0;
     // For every tete in every that, calculate forces
-    for(unsigned int i = 0u; i < chats.size(); i++){
-      for(unsigned int j = 0u; j < chats[i]->tetes().size(); j++){
-        doForces(chats[i]->tetes()[j], chats[i]);
+    for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
+      for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
+        doForces((*tete_it), (*chat_it));
       }
     }
 
-    Tete* tete;
-
-    for(unsigned int i = 0u; i < chats.size(); i++){
-      for(unsigned int j = 0u; j < chats[i]->tetes().size(); j++){
-        tete = chats[i]->tetes()[j];
-        if( tete->tete_node() )
-          tete->tete_node()->updatePosition();
+    for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
+      for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
+        //std::cerr << (*tete_it)->tete_node() << std::endl;
+        if( (*tete_it)->tete_node() != NULL ){
+          (*tete_it)->tete_node()->updatePosition();
+        }
       }
     }
+
+    std::cout << "Total Energy: " << total_kinetic_energy_ << std::endl;
 
     d_->getScene()->update(d_->getScene()->sceneRect());
   }
 
   void ChatLinkSystem::doForces(Tete* tete, Chat* chat){
+    if(tete == NULL)
+      return;
     if(tete->tete_node() == NULL)
       return;
 
+    std::cout << "Start do force" << std::endl;
     Vec3D force = Vec3D(0.0, 0.0, 0.0);
+    std::cout << "Force" << force.X << " " <<
+        force.Y << " " << force.Z << std::endl;
 
     // Sum all the forces pushing this item away
     std::vector<Tete*> tetes = chat->tetes();
 
-    for(std::vector<Tetes*>::size_type it = tetes.begin(); it !=  tetes.end(); ++it){
+    // Could this be a const_iterator?
+    for(std::vector<Tete*>::iterator it = tetes.begin(); it !=  tetes.end(); ++it){
       if((*it) == tete)
         continue;
       if((*it)->tete_node() == NULL)
@@ -88,38 +97,51 @@ namespace Kaleidoscope {
                                 (*it)->tete_node());
     }
 
+    std::cout << "Force" << force.X << " " <<
+        force.Y << " " << force.Z << std::endl;
+
     std::vector<Link*> links = tete->links();
     Tete* other_node;
 
-    for(unsigned int i = 0u; i < links.size(); i++){
+    for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
 
-      if(links[i]->node_1() == tete)
-        other_node = links[i]->node_2();
+      if((*it)->node_1() == tete)
+        other_node = (*it)->node_2();
       else
-        other_node = links[i]->node_1();
+        other_node = (*it)->node_1();
 
       if(other_node == NULL)
         continue;
 
-      links[i]->link_node()->updateLinkLine();
+      (*it)->link_node()->updateLinkLine();
 
       // Use points from an line intersection, to take into account the size of the
       // boxes.
-      force += hookeAttraction(links[i]->link_node()->getNodeIntersectPosition(tete),
-                               links[i]->link_node()->getNodeIntersectPosition(other_node));
+      force += hookeAttraction((*it)->link_node()->getNodeIntersectPosition(tete),
+                               (*it)->link_node()->getNodeIntersectPosition(other_node));
+
+      std::cout << "Force " << force.X << " " <<
+          force.Y << " " << force.Z << std::endl;
     }
 
     //tete->tete_node()->addVelocity(force*damping_);
     //if(force.getLength() > max_velocity_)
     //  force = Vec3D();
 
+    std::cout << "Force" << force.X << " " <<
+        force.Y << " " << force.Z << std::endl;
+
+    if( force != force ){
+      force = Vec3D();
+    }
+
     tete->tete_node()->set_velocity(force*damping_);
     total_kinetic_energy_ += tete->tete_node()->velocity().getLengthSQ();
   }
 
 
-  Vec3D ChatLinkSystem::coulombRepulsion(QGraphicsItem* node_1,
-                                         QGraphicsItem* node_2){
+  Vec3D ChatLinkSystem::coulombRepulsion(TeteNode* node_1,
+                                         TeteNode* node_2){
 
     float dx = node_1->pos().x() -
                node_2->pos().x();

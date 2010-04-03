@@ -22,6 +22,7 @@ namespace Kaleidoscope {
         chat_ = NULL;
         parent_id_ = getParentIDFromAttr(getAttrFromValue(val));
         parent_ = NULL;
+        tete_node_ = NULL;
     }
 
     void Tete::init(){

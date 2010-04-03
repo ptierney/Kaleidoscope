@@ -27,7 +27,7 @@ namespace Kaleidoscope {
   public:
     ChatLinkSystem(Device*, QObject* parent = 0);
 
-    void update(const std::vector<Chat*>& chats);
+    void update(std::vector<Chat*> chats);
     void doForces(Tete* tete, Chat* chat);
 
     bool running();
@@ -36,7 +36,7 @@ namespace Kaleidoscope {
   protected:
     void timerEvent(QTimerEvent*);
 
-    Vec3D coulombRepulsion(QGraphicsItem*, QGraphicsItem*);
+    Vec3D coulombRepulsion(TeteNode*, TeteNode*);
     Vec3D hookeAttraction(QPointF, QPointF);
 
   private:

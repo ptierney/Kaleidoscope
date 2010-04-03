@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/link.h>
@@ -18,6 +20,7 @@ namespace Kaleidoscope {
     frame_rect_ = QRectF(-1, -1, 2, 2);
     frame_rect_object_ = NULL;
     mouse_moved_ = true;
+    velocity_ = Vec3D();
   }
 
   TeteNode::~TeteNode(){
@@ -130,7 +133,10 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updatePosition(){
-    setPos(x() + velocity_.X, y() + velocity_.Y);
+    std::cout << velocity_.X << " " << velocity_.Y << std::endl;
+    std::cout << x() << " " << y() << std::endl;
+    //setPos(x() + velocity_.X, y() + velocity_.Y);
+    setPos(0.0, 0.0);
   }
 
   float TeteNode::x_vel(){
@@ -174,11 +180,12 @@ namespace Kaleidoscope {
 
     std::vector<Link*> links = tete_->links();
     Tete* other_node;
-    for(unsigned int i = 0u; i < links.size(); i++){
-      if(links[i]->node_1() == tete_)
-        other_node = links[i]->node_2();
+    // Could this be a const_iterator?
+    for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
+      if((*it)->node_1() == tete_)
+        other_node = (*it)->node_2();
       else
-        other_node = links[i]->node_1();
+        other_node = (*it)->node_1();
 
       addTeteToMinMax(other_node, &min_x, &min_y,
                       &max_x, &max_y);
