@@ -34,6 +34,7 @@ namespace Kaleidoscope {
     static GridsID getParentIDFromAttr(Grids::Value*);
     static GridsID getOwnerIDFromAttr(Grids::Value*);
     static Grids::Value* getLinksFromAttr(Grids::Value*);
+    static std::string getUserNameFromAttr(Grids::Value*);
 
     void set_parent(Tete*);
     void addReference(Tete*);
@@ -42,6 +43,7 @@ namespace Kaleidoscope {
     Tete* parent();
     GridsID parent_id();
     GridsID owner_id();
+    std::string user_name();
     std::vector<Tete*> references();
     std::vector<Tete*> children();
     std::vector<Link*> links();
@@ -56,6 +58,7 @@ namespace Kaleidoscope {
 
   private:
     std::string text_;
+    std::string user_name_;
     Device* d_;
     TeteNode* tete_node_;
     Tete* parent_;

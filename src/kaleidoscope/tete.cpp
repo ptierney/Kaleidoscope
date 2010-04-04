@@ -15,6 +15,7 @@
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/link.h>
+#include <kaleidoscope/user.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -22,12 +23,20 @@ namespace Kaleidoscope {
   Tete::Tete(Device* d, Grids::Value* val) :
       Grids::Object(d, val) {
     d_ = d;
-    text_ = getTextFromAttr(getAttrFromValue(val));
-    chat_id_ = getChatIDFromAttr(getAttrFromValue(val));
+    Grids::Value* temp_attr = getAttrFromValue(val);
+
+    text_ = getTextFromAttr(temp_attr);
+    chat_id_ = getChatIDFromAttr(temp_attr);
     chat_ = NULL;
-    parent_id_ = getParentIDFromAttr(getAttrFromValue(val));
+    parent_id_ = getParentIDFromAttr(temp_attr);
     parent_ = NULL;
-    owner_id_ = getOwnerIDFromAttr(getAttrFromValue(val));
+    owner_id_ = getOwnerIDFromAttr(temp_attr);
+    user_name_ = getUserNameFromAttr(temp_attr);
+    if(user_name_.empty()){
+      //user_name_ = d->getUserController()->get
+    } else {
+      // push user name onto userControllerStack
+    }
     tete_node_ = NULL;
   }
 
@@ -58,15 +67,14 @@ namespace Kaleidoscope {
     (*create_val)["links"][0u] = parent;
     (*create_val)["parent"] = parent;
     (*create_val)["owner"] = dev->my_id();
+    if(dev->user()->hasSetName())
+      (*create_val)["user_name"] = dev->user()->name();
     (*create_val)["chat"] = chat;
-
 
     new_id = dev->getInterface()->requestCreateObject(create_val,position);
     delete create_val;
     return new_id;
   }
-
-
 
 
   void Tete::gridsCreate(Device* dev, Grids::Event* evt){
@@ -160,6 +168,11 @@ namespace Kaleidoscope {
     return &((*attr)["links"]);
   }
 
+  std::string Tete::getUserNameFromAttr(Grids::Value* attr) {
+    return (*attr)["user_name"].asString();
+  }
+
+
   void Tete::addReference(Tete* tete){
     // Check to make sure the pointer isn't already in the vector
     if( std::find(references_.begin(), references_.end(), tete) != references_.end() )
@@ -234,6 +247,10 @@ namespace Kaleidoscope {
 
   void Tete::set_tete_node(TeteNode* tete_node){
     tete_node_ = tete_node;
+  }
+
+  std::string Tete::user_name(){
+    return user_name_;
   }
 
   void Tete::updateText(std::string text) {

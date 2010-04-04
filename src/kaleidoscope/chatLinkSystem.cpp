@@ -45,7 +45,7 @@ namespace Kaleidoscope {
 
   void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
     //d_->getNoticeWindow()->write(7, "update");
-    if( running_){
+    if(running_){
       update(d_->chat_controller()->chats());
       running_ = total_kinetic_energy_ > energy_threshold_;
     }
@@ -132,6 +132,7 @@ namespace Kaleidoscope {
     if( force != force ){
       force = Vec3D();
     }
+
 
     tete->tete_node()->set_velocity(force*damping_);
     total_kinetic_energy_ += tete->tete_node()->velocity().getLengthSQ();

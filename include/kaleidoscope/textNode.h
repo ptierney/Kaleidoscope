@@ -22,16 +22,23 @@ namespace Kaleidoscope {
     void setText(std::string);
     void setActiveText(std::string);
 
+    void hoverEnter();
+    void hoverLeave();
+
     DisplayTextItem* text_item();
 
     void centerTextItem();
   protected:
     DisplayTextItem* text_item_;
+    QGraphicsTextItem* name_item_;
     QColor text_color_;
+    QColor name_color_;
+    float name_scale_;
     QRectF draw_rect_;
 
     int rect_boarder_width_;
     int rect_boarder_height_;
+    float text_width_;
     
     void updateDrawRect();
     bool frame_selected_;

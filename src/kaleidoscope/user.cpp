@@ -6,11 +6,15 @@ namespace Kaleidoscope {
   User::User(Device* d, GridsID id){
     d_ = d;
     id_ = id;
-    name_ = id;
+    name_ = std::string();
   }
 
   std::string User::name(){
     return name_;
+  }
+
+  bool User::hasSetName(){
+    return !name_.empty();
   }
 
   void User::set_name(std::string name){

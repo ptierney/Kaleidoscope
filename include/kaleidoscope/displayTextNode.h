@@ -28,6 +28,7 @@ namespace Kaleidoscope {
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void focusInEvent(QFocusEvent *event);
     void focusOutEvent(QFocusEvent *event);
+
   };
 }
 

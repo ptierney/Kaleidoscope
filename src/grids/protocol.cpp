@@ -334,6 +334,8 @@ namespace Grids {
                 last_event = new Event(*evt);
             }
 
+            std::cout << evt->getStyledString() << std::endl;
+
             pushEvent(evt);
 
             /* These events will be deleted by the interface, after

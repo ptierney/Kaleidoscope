@@ -14,6 +14,7 @@ namespace Kaleidoscope {
     void set_id(GridsID);
     std::string name();
     void set_name(std::string);
+    bool hasSetName();
 
   private:
     Device* d_;

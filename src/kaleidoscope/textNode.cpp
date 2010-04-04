@@ -3,12 +3,15 @@
 
 #include <QPointF>
 #include <QPainter>
+#include <QGraphicsObject>
 
 #include <kaleidoscope/textNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/displayTextItem.h>
+#include <kaleidoscope/link.h>
+#include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -17,9 +20,11 @@ namespace Kaleidoscope {
     TeteNode(d, parent, scene) {
     // Set color to black
     text_color_ = QColor(0, 0, 0);
+    name_color_ = QColor(0, 0, 0, 150);
     // If drawing a rect behind the text, set its size (in addition to the text size) here.
     rect_boarder_width_ = 0;
     rect_boarder_height_ = 0;
+    name_scale_ = 0.75;
   }
 
   TextNode::~TextNode(){
@@ -28,6 +33,12 @@ namespace Kaleidoscope {
 
   void TextNode::init(){
     TeteNode::init();
+
+    name_item_ = new QGraphicsTextItem(this);
+    name_item_->setPlainText(tr(tete_->user_name().c_str()));
+    name_item_->setDefaultTextColor(name_color_);
+    name_item_->setScale(name_scale_);
+
   }
 
   DisplayTextItem* TextNode::text_item() {
@@ -71,10 +82,10 @@ namespace Kaleidoscope {
   /* Is there a more efficient way to do this, so that I don't have to access .x(), y(), etc.
      This function is called every loop. */
   void TextNode::updateDrawRect(){
-    draw_rect_ = QRectF(text_item_->pos().x() + text_item_->boundingRect().left() - rect_boarder_width_,
-                       text_item_->pos().y() + text_item_->boundingRect().top() - rect_boarder_height_,
+    draw_rect_ = QRectF(text_item_->pos().x() + text_item_->boundingRect().left() - rect_boarder_width_ ,
+                       text_item_->pos().y() + text_item_->boundingRect().top() - rect_boarder_height_ - name_item_->boundingRect().height() ,
                        text_item_->boundingRect().width() + 2*rect_boarder_width_,
-                       text_item_->boundingRect().height() + 2*rect_boarder_height_);
+                       text_item_->boundingRect().height() + name_item_->boundingRect().height() + 2*rect_boarder_height_);
   }
 
   void TextNode::centerTextItem(){
@@ -83,6 +94,13 @@ namespace Kaleidoscope {
 
     text_item_->setPos(text_item_->boundingRect().width() / -2.0,
                       text_item_->boundingRect().height() / -2.0);
+
+    name_item_->setPos(text_item_->pos().x() +
+                       text_item_->boundingRect().width() / 2.0 -
+                       name_item_->boundingRect().width() / 2.0,
+                       text_item_->pos().y() -
+                       name_item_->boundingRect().height() );
+
   }
 
   void TextNode::setText(std::string text){

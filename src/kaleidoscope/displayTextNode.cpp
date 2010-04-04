@@ -13,6 +13,7 @@ namespace Kaleidoscope {
     set_tete(tete);
     setPos( tete->getPosition().X, tete->getPosition().Y);
     //setFlag(QGraphicsItem::ItemIsFocusable);
+    text_width_ = 200.0;
   }
 
   DisplayTextNode::~DisplayTextNode(){
@@ -27,6 +28,7 @@ namespace Kaleidoscope {
     text_item_->init();
     text_item_->setPlainText(QObject::tr(tete_->text().c_str()));
     text_item_->setDefaultTextColor(text_color_);
+    //text_item_->setTextWidth(text_width_);
 
     //text_item_->setPos( text_item_->pos().x() - text_item_->boundingRect().width() / 2,
     //                   text_item_->pos().y() - text_item_->boundingRect().height() / 2 );
@@ -43,7 +45,8 @@ namespace Kaleidoscope {
              text_item_->boundingRect().width() +
              tete_->parent()->tete_node()->boundingRect().width(),
              tete_->parent()->tete_node()->pos().y() +
-             -4.0 * (text_item_->boundingRect().height()) );
+             -4.0 * (text_item_->boundingRect().height()) +
+             tete_->parent()->links().size()  * 2.0 * (text_item_->boundingRect().height() ) );
     }
   }
 
