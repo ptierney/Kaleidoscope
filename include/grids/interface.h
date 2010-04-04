@@ -8,108 +8,108 @@
 #include <QMutex>
 
 namespace Kaleidoscope {
-    class Device;
-    class Room;
+  class Device;
+  class Room;
 }
 
 namespace Grids{
 
-    class Protocol;
-    class Event;
+  class Protocol;
+  class Event;
 
 
-    class Interface : public QObject {
-        Q_OBJECT
-    public:
-        Interface(Kaleidoscope::Device*, QObject* parent = 0);
-        Interface(Kaleidoscope::Device*, std::string in_server, QObject* parent = 0);
-        ~Interface();
+  class Interface : public QObject {
+    Q_OBJECT
+  public:
+    Interface(Kaleidoscope::Device*, QObject* parent = 0);
+    Interface(Kaleidoscope::Device*, std::string in_server, QObject* parent = 0);
+    ~Interface();
 
-        std::string getServer();
+    std::string getServer();
 
-        static void receiveEvent(Protocol*, Event*, void*); // Grids protocol object hooks into this
-        static void connectedCallback(Protocol*, Event*, void*);
+    static void receiveEvent(Protocol*, Event*, void*); // Grids protocol object hooks into this
+    static void connectedCallback(Protocol*, Event*, void*);
 
-        bool isConnected();
+    bool isConnected();
 
-        void requestCreateRoom();
-        void createMyRoom();
+    void requestCreateRoom();
+    void createMyRoom();
 
-        /* These functions are used to create objects in the world,
+    /* These functions are used to create objects in the world,
 		   with either a default position, a specific position, or position + rotation + scale 
 		   These functions create a GridsID for the object, and returns it so you know how to find the 
 		   object when it is finally created */
-        GridsID requestCreateObject(Value* object_attr );
-        GridsID requestCreateObject(Value* object_attr, Vec3D pos );
-        GridsID requestCreateObject(Value* object_attr, Vec3D pos, Vec3D rot, Vec3D scl );
+    GridsID requestCreateObject(Value* object_attr );
+    GridsID requestCreateObject(Value* object_attr, Vec3D pos );
+    GridsID requestCreateObject(Value* object_attr, Vec3D pos, Vec3D rot, Vec3D scl );
 
-        void requestUpdateAttr(GridsID object_id, Value* object_attr );
-        void requestUpdatePosition(GridsID object_id, Vec3D new_pos );
-        void requestUpdateRotation(GridsID object_id, Vec3D new_pos );
-        void requestUpdateScale(GridsID object_id, Vec3D new_pos );
+    void requestUpdateAttr(GridsID object_id, Value* object_attr );
+    void requestUpdatePosition(GridsID object_id, Vec3D new_pos );
+    void requestUpdateRotation(GridsID object_id, Vec3D new_pos );
+    void requestUpdateScale(GridsID object_id, Vec3D new_pos );
 
-        GridsID getMyRoom();
-        // Known rooms are rooms that I've created or
-        // have been messaged as being created.
-        // Server rooms are the rooms on the server,
-        // accessed with GRIDS_LIST_ROOMS
-        std::vector< GridsID > getKnownRooms();
-        std::vector< GridsID > getServerRooms();
-        void requestAllRooms();
+    GridsID getMyRoom();
+    // Known rooms are rooms that I've created or
+    // have been messaged as being created.
+    // Server rooms are the rooms on the server,
+    // accessed with GRIDS_LIST_ROOMS
+    std::vector< GridsID > getKnownRooms();
+    std::vector< GridsID > getServerRooms();
+    void requestAllRooms();
 
-        void setMyRoom(GridsID);
+    void setMyRoom(GridsID);
 
-        /* Read events from the protocol event queue. */
-        void collectEvents();
+    /* Read events from the protocol event queue. */
+    void collectEvents();
 
-        friend class Kaleidoscope::Device;
+    friend class Kaleidoscope::Device;
 
-        void printVal(Value*);
+    void printVal(Value*);
 
-        void flushProtocol();
+    void flushProtocol();
 
-        int getOutboundQueueLength();
-        int getReceivedQueueLength();
+    int getOutboundQueueLength();
+    int getReceivedQueueLength();
 
-    public slots:
-        void parseEvent(Event*);
+  public slots:
+    void parseEvent(Event*);
 
-        /* Called when protocol receives the correct init string */
-        void protocolInitiated(Event*);
+    /* Called when protocol receives the correct init string */
+    void protocolInitiated(Event*);
 
-        /* Slot to pass the raw data received from Grids */
-        void rawReceive(QString);
-	
-    signals:
-        void error(int, QString);
-        void notice(int, QString);
-        void gridsConnectionEstablished();
-        void myRoomCreated(GridsID);
+    /* Slot to pass the raw data received from Grids */
+    void rawReceive(QString);
 
-    private:
-        void init();
-        void setConnected( bool );
-        //void registerNewRoom( Kaleidoscope::Room* );
-        void registerCreateRoom(Event*);
-        void registerNewRoom(GridsID);
-        void receiveRoomList(Event*);
+  signals:
+    void error(int, QString);
+    void notice(int, QString);
+    void gridsConnectionEstablished();
+    void myRoomCreated(GridsID);
 
-        std::vector< GridsID > known_rooms;
-        std::vector< GridsID > server_rooms;
+  private:
+    void init();
+    void setConnected( bool );
+    //void registerNewRoom( Kaleidoscope::Room* );
+    void registerCreateRoom(Event*);
+    void registerNewRoom(GridsID);
+    void receiveRoomList(Event*);
 
-        std::string server_address;
-        Protocol* proto;
-        bool connected;
+    std::vector< GridsID > known_rooms;
+    std::vector< GridsID > server_rooms;
 
-        GridsID my_room;
+    std::string server_address;
+    Protocol* proto;
+    bool connected;
 
-        QMutex my_room_mutex;
-        QMutex known_rooms_mutex;
-        QMutex connected_mutex;
-        QMutex parse_event_mutex;
+    GridsID my_room;
 
-        Kaleidoscope::Device* d;
-    };
+    QMutex my_room_mutex;
+    QMutex known_rooms_mutex;
+    QMutex connected_mutex;
+    QMutex parse_event_mutex;
+
+    Kaleidoscope::Device* d;
+  };
 
 
 } // end namespace Grids

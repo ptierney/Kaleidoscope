@@ -1,12 +1,13 @@
 
 #pragma once
 
-#include <grids/define.h>
-#include <kaleidoscope/define.h>
 #include <map>
 #include <vector>
-#include <QMutex>
-#include <QWidget>
+
+#include <QObject>
+
+#include <grids/define.h>
+#include <kaleidoscope/define.h>
 
 namespace Kaleidoscope {
 	class Device;
@@ -16,10 +17,10 @@ namespace Grids {
 	class Object;
 	class Event;
 	
-	class ObjectController : QWidget {
+  class ObjectController : QObject {
 		Q_OBJECT
 	public:
-		ObjectController(Kal::Device*, QWidget* parent = 0);
+    ObjectController(Kaleidoscope::Device*, QObject* parent = 0);
 		
 		void registerObject(GridsID, Object*);
 		GridsID getIDFromPointer( Object* );
@@ -35,13 +36,8 @@ namespace Grids {
 		void updateObjectRotation( GridsID, Vec3D );
 		void updateObjectScale( GridsID, Vec3D );
 		void updateObjectAttr( GridsID, Event* );		
-		
-		void detectSelectionThreaded(int, int);
 
     void deleteObjectFromID( GridsID );
-
-	protected:
-		void mouseReleasedEvent(QMouseEvent*);
 
 	private:		
 		void registerCamera( GridsID, Event* );
@@ -51,10 +47,8 @@ namespace Grids {
 		std::map< Object*, GridsID > ptr_id_map;
     std::map< GridsID, Object* >::iterator id_ptr_iter;
     std::map< Object*, GridsID >::iterator ptr_id_iter;
-		
-		QMutex map_mutex;
 
-		Kal::Device* d;
+    Kaleidoscope::Device* d;
 	};
 
 } // end namespace Grids

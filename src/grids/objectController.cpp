@@ -26,8 +26,8 @@
 
 namespace Grids {
 
-  ObjectController::ObjectController(Kal::Device* d_, QWidget* parent)
-    : QWidget(parent) {
+  ObjectController::ObjectController(Kal::Device* d_, QObject* parent)
+    : QObject(parent) {
     d = d_;
   }
 
@@ -152,14 +152,6 @@ namespace Grids {
     if(type == "Tete"){
       Kaleidoscope::Tete::gridsUpdate(d, evt);
     }
-
-  }
-
-  void ObjectController::mouseReleasedEvent(QMouseEvent* event) {
-    detectSelectionThreaded(event->x(), event->y());
-  }
-
-  void ObjectController::detectSelectionThreaded(int /*mouse_x*/, int /*mouse_y*/){
 
   }
 

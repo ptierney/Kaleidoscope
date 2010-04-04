@@ -17,11 +17,11 @@ namespace Kaleidoscope {
 		void setToCenter();
 		
 		Vec2D getRelativePosition();
-                Vec2D getRelativePosition(QMouseEvent*);
+    Vec2D getRelativePosition(QMouseEvent*);
 		int getMouseX();
 		int getMouseY();
-                void hideCursor();
-                void showCursor();
+    void hideCursor();
+    void showCursor();
 
 	private:	
 		int mouse_x;
