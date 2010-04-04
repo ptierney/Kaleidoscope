@@ -124,7 +124,8 @@ namespace Kaleidoscope {
 
     // This probably means I'm updating the text
     if((*attr)["owner"].asString() == dev->my_id() ){
-      tete->tete_node()->setActiveText(text);
+      // This doesn't work...
+      //tete->tete_node()->setActiveText(text);
     } else {
       tete->tete_node()->setText(text);
     }

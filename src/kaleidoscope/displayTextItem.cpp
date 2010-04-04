@@ -18,7 +18,7 @@ namespace Kaleidoscope {
     // Send update messages at this rate
     key_delay_ = 250;
     // After this time focus is lost.
-    input_time_ = 3000;
+    input_time_ = 15000;
     keys_unsent_ = false;
     input_unsent_ = false;
   }
@@ -43,9 +43,6 @@ namespace Kaleidoscope {
     node_->tete()->updateText(toPlainText().toStdString());
   }
 
-  void DisplayTextItem::timerEvent(QTimerEvent* /*event*/){
-
-  }
 
   void DisplayTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     makeActive();
@@ -140,12 +137,15 @@ namespace Kaleidoscope {
       return;
     }
 
+    if(!hasFocus())
+      return;
+
     if(keys_unsent_ && key_timer_.elapsed() > key_delay_){
-      keys_unsend_ = false;
+      keys_unsent_ = false;
       node_->tete()->updateText(toPlainText().toStdString());
     }
 
-    if(hasFocus() && last_key_press_.elapsed() > input_time_){
+    if(last_key_press_.elapsed() > input_time_){
       makeNotActive();
     }
   }
