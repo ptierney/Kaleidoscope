@@ -17,13 +17,15 @@ namespace Kaleidoscope {
   }
 
   void InputTextNode::init(){
+    /*
     TextNode::init();
 
-    text_item_ = new QGraphicsTextItem(this);
+    text_item_ = new DisplayTextItem(this);
     text_item_->setDefaultTextColor(text_color_);
     text_item_->setTextInteractionFlags(Qt::TextEditorInteraction);
     //text_item_->setCursor(Qt::IBeamCursor);
     centerTextItem();
+    */
   }
 
   void InputTextNode::keyPressEvent(QKeyEvent* /*event*/){

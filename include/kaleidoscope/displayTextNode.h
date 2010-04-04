@@ -22,6 +22,7 @@ namespace Kaleidoscope {
     // Don't use this method.  Call the ChatNode to place the
     // entire tree.
     void placeNode();
+    void makeActive();
     
   protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);

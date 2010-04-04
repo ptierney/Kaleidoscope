@@ -36,7 +36,7 @@ namespace Kaleidoscope {
   protected:
     void timerEvent(QTimerEvent*);
 
-    Vec3D coulombRepulsion(TeteNode*, TeteNode*);
+    Vec3D coulombRepulsion(QPointF, QPointF);
     Vec3D hookeAttraction(QPointF, QPointF);
 
   private:

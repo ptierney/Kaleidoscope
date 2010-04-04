@@ -8,6 +8,7 @@
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/view2d.h>
+#include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -29,7 +30,7 @@ namespace Kaleidoscope {
     TeteNode::init();
   }
 
-  QGraphicsTextItem* TextNode::text_item() {
+  DisplayTextItem* TextNode::text_item() {
     return text_item_;
   }
 
@@ -82,6 +83,15 @@ namespace Kaleidoscope {
 
     text_item_->setPos(text_item_->boundingRect().width() / -2.0,
                       text_item_->boundingRect().height() / -2.0);
+  }
+
+  void TextNode::setText(std::string text){
+    text_item_->setText(text);
+    centerTextItem();
+  }
+
+  void TextNode::setActiveText(std::string text){
+    text_item_->setActiveText(text);
   }
 
 

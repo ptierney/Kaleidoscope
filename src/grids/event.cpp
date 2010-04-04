@@ -38,17 +38,29 @@ namespace Grids
 		return args;
 	}
 
-	Grids::Value * Event::getArgsPtr( )	{
+  Grids::Value* Event::getArgsPtr( )	{
 		return &args;
 	}
+
+  Grids::Value Event::getAttr(){
+    return args["attr"];
+  }
+
+  Grids::Value* Event::getAttrPointer(){
+    return &(args["attr"]);
+  }
+
+  std::string Event::getAttrType(){
+    return args["attr"]["type"].asString();
+  }
 
 	std::string Event::getEventType()	{
 		return event_type;
 	}
 
-        std::string Event::getStyledString() {
-            return args.toStyledString();
-        }
+  std::string Event::getStyledString() {
+    return args.toStyledString();
+  }
 	
 	GridsID Event::getID() {
 		return args[ "id" ].asString();
@@ -72,22 +84,22 @@ namespace Grids
 	
 	Vec3D Event::getPosition() {
 		return Vec3D( args[ "pos" ][ 0u ].asDouble(),
-				    args[ "pos" ][ 1u ].asDouble(),
-				    args[ "pos" ][ 2u ].asDouble() );
+                  args[ "pos" ][ 1u ].asDouble(),
+                  args[ "pos" ][ 2u ].asDouble() );
 	}
 
 	Vec3D Event::getRotation() {
 		return Vec3D( args[ "rot" ][ 0u ].asDouble(),
-				    args[ "rot" ][ 1u ].asDouble(),
-				    args[ "rot" ][ 2u ].asDouble() );
+                  args[ "rot" ][ 1u ].asDouble(),
+                  args[ "rot" ][ 2u ].asDouble() );
 	}
 
 	Vec3D Event::getScale() {
 		return Vec3D( args[ "scl" ][ 0u ].asDouble(),
-				    args[ "scl" ][ 1u ].asDouble(),
-				    args[ "scl" ][ 2u ].asDouble() );
+                  args[ "scl" ][ 1u ].asDouble(),
+                  args[ "scl" ][ 2u ].asDouble() );
 	}
-			
+
 
 
 }

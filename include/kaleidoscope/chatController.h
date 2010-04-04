@@ -39,11 +39,13 @@ namespace Kaleidoscope {
     void checkReframe();
     void zoomOut();
     void updateChatsRect();
+    void fixBrokenLinks();
 
     std::vector<Chat*> chats();
     ChatLinkSystem* link_system();
     QRectF all_chats_rect();
     bool reframing();
+    Tete* last_selected();
 
   protected:
     void timerEvent(QTimerEvent*);
@@ -53,6 +55,7 @@ namespace Kaleidoscope {
     std::vector<Chat*> chats_;
     std::vector<Tete*> tetes_;
     std::vector<Link*> links_;
+    std::vector<Link*> broken_links_;
     std::vector<ChatNode*> chat_nodes_;
     int chat_refresh_;
     GridsID default_chat_id_;
@@ -62,6 +65,7 @@ namespace Kaleidoscope {
     Tete* last_selected_;
     ChatLinkSystem* link_system_;
     bool reframing_;
+    bool chat_reframing_;
   };
 }
 

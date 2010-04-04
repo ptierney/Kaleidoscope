@@ -12,14 +12,17 @@ namespace Kaleidoscope {
   class Link;
   class Device;
   class Tete;
+  class TeteNode;
 
   class LinkNode : public QGraphicsObject {
     Q_OBJECT
   public:
     LinkNode(Device*, QGraphicsItem* parent = 0,
              QGraphicsScene* scene = 0);
-
     void init();
+
+    static QLineF getLineBetween(TeteNode*, TeteNode*);
+
     Link* link();
     void set_link(Link*);
     QLineF link_line();

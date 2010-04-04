@@ -16,11 +16,18 @@ namespace Kaleidoscope {
 
     void keyPressEvent(QKeyEvent*);
 
+    std::string key_queue();
+    void reset_key_queue();
+    void start_key_queue();
+    std::string stopRecordingKeys();
+
 	protected:
 
 		
 	private:
     Device* d_;
+    bool recording_keys_;
+    std::string key_queue_;
 	};
 
 } // end namespace Kaleidoscope

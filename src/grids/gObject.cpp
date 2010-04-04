@@ -33,6 +33,10 @@ namespace Grids {
         return obj_id;
     }
 
+    GridsID Object::id(){
+      return obj_id;
+    }
+
     GridsID Object::getRoom() {
         //QMutexLocker lock(&id_mutex);
         return obj_room;
@@ -280,5 +284,7 @@ namespace Grids {
         attr[ "scl" ][ 1u ] = new_scale.Y;
         attr[ "scl" ][ 2u ] = new_scale.Z;
     }
+
+
 
 } // end namespace Grids

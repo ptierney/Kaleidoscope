@@ -1,5 +1,11 @@
 
+#include <math.h>
+
 #include <QtGui>
+#include <QTextCursor>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+#include <QWheelEvent>
 
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/inputTextItem.h>
@@ -7,13 +13,6 @@
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/device.h>
-
-#include <QTextCursor>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsScene>
-#include <QWheelEvent>
-
-#include <math.h>
 
 namespace Kaleidoscope {
 
@@ -71,13 +70,9 @@ namespace Kaleidoscope {
 
   void Scene2D::keyPressEvent(QKeyEvent *event) {
 
+    // If we are not in a text box
     if(focusItem() == 0){
       d->event_controller()->keyPressEvent(event);
-      /*
-            InputTextItem::requestCreate(d,Vec3D(qrand() % 1000 - 500,
-                                                 qrand() % 1000 - 500,
-                                                 1000.0));
-                                                 */
     }
 
     QGraphicsScene::keyPressEvent(event);

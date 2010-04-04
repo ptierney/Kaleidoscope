@@ -35,8 +35,11 @@ namespace Kaleidoscope {
     void updateFrameRect();
 
     virtual void placeNode() = 0;
+    virtual void setText(std::string) = 0;
+    virtual void setActiveText(std::string) = 0;
     virtual void frameLeave(FrameRect*);
     bool frame_selected();
+    void beginFraming();
 
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);

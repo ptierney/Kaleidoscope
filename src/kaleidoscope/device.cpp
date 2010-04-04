@@ -234,23 +234,23 @@ namespace Kaleidoscope {
     // Accessor Functions
 
     bool Device::getRunning() {
-        //QMutexLocker lock(&running_mutex);
         return running;
     }
 
     void Device::setRunning( bool new_run ){
-        //QMutexLocker lock(&running_mutex);
         running = new_run;
     }
 
     GridsID Device::getMyID(){
-        //QMutexLocker lock(&my_id_mutex);
-        return my_id;
+        return my_id_;
+    }
+
+    GridsID Device::my_id(){
+      return my_id_;
     }
 
     void Device::setMyID( GridsID temp_id ){
-        //QMutexLocker lock(&my_id_mutex);
-        my_id = temp_id;
+        my_id_ = temp_id;
         getNoticeWindow()->addNotice(4, tr("ID set to: ")+tr(temp_id.c_str()));
     }
 

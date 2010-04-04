@@ -6,6 +6,7 @@
 
 namespace Kaleidoscope {
   class Tete;
+  class DisplayTextItem;
 
   class TextNode : public TeteNode {
     
@@ -18,11 +19,14 @@ namespace Kaleidoscope {
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QGraphicsTextItem* text_item();
+    void setText(std::string);
+    void setActiveText(std::string);
+
+    DisplayTextItem* text_item();
 
     void centerTextItem();
   protected:
-    QGraphicsTextItem* text_item_;
+    DisplayTextItem* text_item_;
     QColor text_color_;
     QRectF draw_rect_;
 

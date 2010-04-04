@@ -42,6 +42,15 @@ namespace Kaleidoscope {
 
   void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
     Q_UNUSED(event)
+    beginFraming();
+  }
+
+  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
+    Q_UNUSED(event)
+    selected_ = false;
+  }
+
+  void TeteNode::beginFraming(){
     updateFrameRect();
     selected_ = true;
     frame_selected_ = true;
@@ -52,11 +61,6 @@ namespace Kaleidoscope {
     }
     frame_rect_object_ = new FrameRect(d_, frame_rect_, this);
     d_->getScene()->addItem(frame_rect_object_);
-  }
-
-  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
-    selected_ = false;
   }
 
   bool TeteNode::frameOn(){

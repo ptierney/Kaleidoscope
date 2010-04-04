@@ -25,13 +25,16 @@ namespace Kaleidoscope {
     zoom_out_speed_ = 0.04;
     zoom_margin_ = 75;
     last_selected_ = NULL;
+    reframing_ = false;
+    chat_reframing_ = false;
   }
 
   ChatController::~ChatController(){
     Chat* temp_chat;
-    for(std::vector<Chat*>::iterator i = chats_.begin(); i != chats_.end(); i++){
-      temp_chat = *i;
+    for(std::vector<Chat*>::iterator it = chats_.begin(); it != chats_.end(); ++it){
+      temp_chat = *it;
       delete temp_chat;
+      // TODO: erase element of vector?
     }
 
     delete link_system_;
@@ -61,6 +64,8 @@ namespace Kaleidoscope {
   }
 
   void ChatController::addTete(Tete* tete){
+    d_->getNoticeWindow()->write(7, "Adding Tete");
+
     // Extract Chat
     Chat* chat = tete->chat();
 
@@ -92,12 +97,15 @@ namespace Kaleidoscope {
     chat->addTeteAsTree(tete);
     tetes_.push_back(tete);
 
+    fixBrokenLinks();
+
     // Update the node placements
     //chat->chat_node()->placeNodes();
     updateChatsRect();
   }
 
   bool ChatController::addLink(Link* link){
+    d_->getNoticeWindow()->write(7, "Adding Link");
     // If the link is set up already, don't do anything special
     if(link->node_1() && link->node_2()){
       links_.push_back(link);
@@ -110,8 +118,10 @@ namespace Kaleidoscope {
     Tete* node_1 = getTeteFromID(node_1_id);
     Tete* node_2 = getTeteFromID(node_2_id);
 
-    if(node_1 == NULL || node_2 == NULL)
+    if(node_1 == NULL || node_2 == NULL){
+      broken_links_.push_back(link);
       return false;
+    }
 
     link->set_node_1(node_1);
     link->set_node_2(node_2);
@@ -122,6 +132,16 @@ namespace Kaleidoscope {
     link_system_->set_running(true);
 
     return true;
+  }
+
+  void ChatController::fixBrokenLinks(){
+    for(std::vector<Link*>::iterator it = broken_links_.begin(); it != broken_links_.end(); ){
+      if(addLink(*it)){
+        it = broken_links_.erase(it);
+      } else {
+        ++it;
+      }
+    }
   }
 
   void ChatController::deleteTeteNodeTree(Tete *tete){
@@ -191,10 +211,10 @@ namespace Kaleidoscope {
     float max_x = bound.bottomRight().x();
     float max_y = bound.bottomRight().y();
 
-    for(unsigned int i = 0u; i < tetes_.size(); i++){
-      QRectF local_bound = tetes_[i]->tete_node()->boundingRect();
+    for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
+      QRectF local_bound = (*it)->tete_node()->boundingRect();
       QRectF bound = local_bound;
-      bound.moveTo(tetes_[i]->tete_node()->pos());
+      bound.moveTo((*it)->tete_node()->pos());
       bound.translate(-local_bound.width()/2,-local_bound.height()/2);
 
       if(bound.topLeft().x() < min_x)
@@ -214,12 +234,12 @@ namespace Kaleidoscope {
   void ChatController::checkReframe(){
     reframing_ = false;
 
-    for(unsigned int i = 0u; i < tetes_.size(); i++){
-      if( tetes_[i] && tetes_[i]->tete_node() ){
-        if( tetes_[i]->tete_node()->selected() ){
+    for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
+      if( (*it) && (*it)->tete_node() ){
+        if( (*it)->tete_node()->selected() ){
           reframing_ = true;
-          last_selected_ = tetes_[i];
-          tetes_[i]->tete_node()->frameOn();
+          last_selected_ = (*it);
+          (*it)->tete_node()->frameOn();
           }
       }
     }
@@ -228,9 +248,12 @@ namespace Kaleidoscope {
       return;
 
     if(last_selected_ && last_selected_->tete_node()){
-      if(last_selected_->tete_node()->frame_selected())
+      if(last_selected_->tete_node()->frame_selected()){
+        chat_reframing_ = true;
         return;
+      }
     }
+    chat_reframing_ = false;
 
     // Zoom out
     zoomOut();
@@ -309,6 +332,10 @@ namespace Kaleidoscope {
 
   bool ChatController::reframing(){
     return reframing_;
+  }
+
+  Tete* ChatController::last_selected(){
+    return last_selected_;
   }
 
 } // end namespace

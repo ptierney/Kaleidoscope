@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <QLineF>
+
 #include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
@@ -28,7 +30,7 @@ namespace Kaleidoscope {
     max_velocity_ = 10.0;
     damping_ = 0.02;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.1;
+    energy_threshold_ = 0.01;
     running_ = false;
     startTimer(50);
   }
@@ -52,39 +54,26 @@ namespace Kaleidoscope {
   void ChatLinkSystem::update(std::vector<Chat*> chats){
     total_kinetic_energy_ = 0.0;
 
+    /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
+       though it has something to do with "temporaries". */
+    std::vector<Tete*> tetes;
+
     // For every tete in every that, calculate forces
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
-      for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
+      tetes = (*chat_it)->tetes();
+      for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         doForces((*tete_it), (*chat_it));
       }
     }
 
-    /* BIG NOTE:
-       The following code is puzzling, to say the least, and may mean the end of this project.
-       If I run updatePosition() inside of an iterator loop, as in the commented-out code,
-       the program segfaults on the setPos() call inside updatePosition().  Not only am I clueless
-       as to what is causing this, but I am clueless as to what might possibly be causing this.
-       It could be (1) a quirk or Qt, or (2) my program is jacked up somewhere else and I really need
-       to know more about C++ to realize it.
-       */
-
-    for(std::vector<Chat*>::size_type i = 0u; i < chats.size(); ++i){
-      for(std::vector<Tete*>::size_type j = 0u; j < chats[i]->tetes().size(); ++j){
-        if(chats[i]->tetes()[j]->tete_node())
-          chats[i]->tetes()[j]->tete_node()->updatePosition();
-      }
-    }
-
-    /*
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
-      for(std::vector<Tete*>::iterator tete_it = (*chat_it)->tetes().begin(); tete_it != (*chat_it)->tetes().end(); ++tete_it){
-        //std::cerr << (*tete_it)->tete_node() << std::endl;
+      tetes = (*chat_it)->tetes();
+      for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         if( (*tete_it)->tete_node() != NULL ){
-          //(*tete_it)->tete_node()->updatePosition();
+          (*tete_it)->tete_node()->updatePosition();
         }
       }
     }
-    */
 
     d_->getScene()->update(d_->getScene()->sceneRect());
   }
@@ -107,8 +96,11 @@ namespace Kaleidoscope {
       if((*it)->tete_node() == NULL)
         continue;
 
-      force += coulombRepulsion(tete->tete_node(),
-                                (*it)->tete_node());
+      QLineF line_between = LinkNode::getLineBetween(tete->tete_node(),
+                                                     (*it)->tete_node());
+
+      force += coulombRepulsion(line_between.p1(),
+                                line_between.p2());
     }
 
     std::vector<Link*> links = tete->links();
@@ -146,13 +138,13 @@ namespace Kaleidoscope {
   }
 
 
-  Vec3D ChatLinkSystem::coulombRepulsion(TeteNode* node_1,
-                                         TeteNode* node_2){
+  Vec3D ChatLinkSystem::coulombRepulsion(QPointF node_1_pos,
+                                         QPointF node_2_pos){
 
-    float dx = node_1->pos().x() -
-               node_2->pos().x();
-    float dy = node_1->pos().y() -
-               node_2->pos().y();
+    float dx = node_1_pos.x() -
+               node_2_pos.x();
+    float dy = node_1_pos.y() -
+               node_2_pos.y();
 
     float r = sqrt(dx*dx + dy*dy);
 

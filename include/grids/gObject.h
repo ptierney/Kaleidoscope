@@ -24,6 +24,7 @@ namespace Grids{
     virtual ~Object();
 		
 		GridsID getID();
+    GridsID id();
 		GridsID getRoom();
 
 		// Gets the absolute Position, including parents

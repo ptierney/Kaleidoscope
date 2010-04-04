@@ -105,8 +105,9 @@ namespace Kaleidoscope {
             if(second == tr("node")){
               //d->chat_controller()->chats()[0u]->tetes()[0u]->tete_node()->setPos(0.0, 0.0);
               d->chat_controller()->chats()[0u]->tetes()[0u]->tete_node()->updatePosition();
-
             }
+          } else if(first == tr("fixlinks")){
+            d->chat_controller()->fixBrokenLinks();
           }
 
     }

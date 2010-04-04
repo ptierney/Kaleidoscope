@@ -24,10 +24,13 @@ namespace Grids
 		void setArgs( Grids::Value );
 
 		Grids::Value getArgs();
-		Grids::Value *getArgsPtr();
+    Grids::Value* getArgsPtr();
+    Grids::Value getAttr();
+    Grids::Value* getAttrPointer();
 		std::string getEventType();
+    std::string getAttrType();
 
-                std::string getStyledString();
+    std::string getStyledString();
 		
 		bool hasPosition();
 		bool hasRotation();

@@ -55,6 +55,7 @@ namespace Kaleidoscope {
         bool getRunning();
         void setRunning( bool );
         GridsID getMyID();
+        GridsID my_id();
         GridsID getMyRoom();
         void setMyID(GridsID);
         void setMyRoom(GridsID);
@@ -119,7 +120,7 @@ namespace Kaleidoscope {
 
         QTime qtime;
         QTimer *timer;
-        GridsID my_id;
+        GridsID my_id_;
         GridsID my_room;
         bool connected;
 

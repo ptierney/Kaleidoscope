@@ -73,11 +73,18 @@ namespace Kaleidoscope {
     return link_line_;
   }
 
-  void LinkNode::updateLinkLine(){
-    QPointF node1_qpos = link_->node_1()->tete_node()->pos();
-    QPointF node2_qpos = link_->node_2()->tete_node()->pos();
-    QRectF node1_rect = link_->node_1()->tete_node()->boundingRect();
-    QRectF node2_rect = link_->node_2()->tete_node()->boundingRect();
+  QLineF LinkNode::getLineBetween(TeteNode* node_1, TeteNode* node_2){
+    if(node_1 == NULL || node_2 == NULL)
+      return QLineF();
+
+    QPointF node1_qpos = node_1->pos();
+    QPointF node2_qpos = node_2->pos();
+    QRectF node1_rect = node_1->boundingRect();
+    QRectF node2_rect = node_2->boundingRect();
+
+    if(node1_rect.intersects(node2_rect)){
+      QLineF(node1_qpos, node1_qpos);
+    }
 
     QLineF center_line = QLineF(node1_qpos,
                                  node2_qpos);
@@ -112,7 +119,12 @@ namespace Kaleidoscope {
             break;
     }
 
-    link_line_ = QLineF(intersection_point_1, intersection_point_2);
+    return QLineF(intersection_point_1, intersection_point_2);
+  }
+
+  void LinkNode::updateLinkLine(){
+    link_line_ = getLineBetween(link_->node_1()->tete_node(),
+                                link_->node_2()->tete_node());
   }
 
   QPointF LinkNode::getNodeIntersectPosition(Tete* tete){    

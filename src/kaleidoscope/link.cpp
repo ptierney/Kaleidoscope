@@ -29,14 +29,13 @@ namespace Kaleidoscope {
                               GridsID node1,
                               GridsID node2) {
     Grids::Value* create_val = new Grids::Value();
-    GridsID new_id = dev->getGridsUtility()->getNewUUID();
+    GridsID new_id;
 
     (*create_val)["type"] = "Link";
     (*create_val)["node1"] = node1;
     (*create_val)["node2"] = node2;
-    (*create_val)["id"] = new_id;
 
-    dev->getInterface()->requestCreateObject(create_val);
+    new_id = dev->getInterface()->requestCreateObject(create_val);
     delete create_val;
     return new_id;
   }
@@ -53,12 +52,12 @@ namespace Kaleidoscope {
     // If broken link, clean up and return
     if( dev->chat_controller()->addLink(link) == false ){
       dev->getNoticeWindow()->write(7, "Received broken link");
-      delete link;
+      link->set_link_node(NULL);
       delete link_node;
       return;
     }
 
-    dev->getNoticeWindow()->write(7, "Adding link node to scene");
+    //dev->getNoticeWindow()->write(7, "Adding link node to scene");
     dev->getScene()->addItem(link_node);
   }
 

@@ -24,6 +24,7 @@ namespace Kaleidoscope {
     TextNode::init();
 
     text_item_ = new DisplayTextItem(d_, this, this);
+    text_item_->init();
     text_item_->setPlainText(QObject::tr(tete_->text().c_str()));
     text_item_->setDefaultTextColor(text_color_);
 
@@ -48,14 +49,17 @@ namespace Kaleidoscope {
 
   void DisplayTextNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
   {
+
+    //text_item_->mouseDoubleClickEvent(event);
+    QGraphicsObject::mouseDoubleClickEvent(event);
+  }
+
+  void DisplayTextNode::makeActive(){
     if (text_item_->textInteractionFlags() == Qt::NoTextInteraction){
       text_item_->setFlag(QGraphicsItem::ItemIsFocusable);
       text_item_->setFlag(QGraphicsItem::ItemIsSelectable);
       text_item_->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
-
-    //text_item_->mouseDoubleClickEvent(event);
-    QGraphicsObject::mouseDoubleClickEvent(event);
   }
 
   void DisplayTextNode::focusInEvent(QFocusEvent* /*event*/) {
