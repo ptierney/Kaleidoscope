@@ -24,16 +24,23 @@ void Kaleidoscope::init() {
     d->init();
 }
 
+void Kaleidoscope::createUserInputWindow(){
+  d->createUserInputWindow();
+}
+
 void Kaleidoscope::createActions() {
 	//initAct = new QAction(tr("&Init"),this);
 	//connect(initAct, SIGNAL(triggered()), this, SLOT(init()));
+  set_name_act_ = new QAction(tr("&Set your name..."),this);
+  connect(set_name_act_, SIGNAL(triggered()), this, SLOT(createUserInputWindow()));
 }
 
 void Kaleidoscope::createMenus() {
-    /*
-    gridsMenu = menuBar()->addMenu(tr("&Grids"));
-    gridsMenu->addAction(initAct);
-    */
+  //gridsMenu = menuBar()->addMenu(tr("&Grids"));
+  //gridsMenu->addAction(initAct);
+
+  start_menu_ = menuBar()->addMenu(tr("&Start here"));
+  start_menu_->addAction(set_name_act_);
 }
 
 } // end namespace Kaleidoscope

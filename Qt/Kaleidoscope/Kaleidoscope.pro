@@ -53,7 +53,9 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/link.cpp \
     ../../src/kaleidoscope/linkNode.cpp \
     ../../src/kaleidoscope/inputTete.cpp \
-    ../../src/kaleidoscope/displayTextItem.cpp
+    ../../src/kaleidoscope/displayTextItem.cpp \
+    ../../src/kaleidoscope/userNameInputBox.cpp \
+    ../../src/kaleidoscope/userNameBox.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -123,5 +125,7 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/linkNode.h \
     ../../include/kaleidoscope/inputTete.h \
     ../../include/kaleidoscope/teteInterface.h \
-    ../../include/kaleidoscope/displayTextItem.h
+    ../../include/kaleidoscope/displayTextItem.h \
+    ../../include/kaleidoscope/userNameInputBox.h \
+    ../../include/kaleidoscope/userNameBox.h
 FORMS += kaleidoscope.ui

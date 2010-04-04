@@ -25,13 +25,16 @@ public:
 
    private slots:
     void init();
+    void createUserInputWindow();
 
 private:
     Ui::Kaleidoscope *ui;
     Kal::Device* d;
 
-    QAction* initAct;
-    QMenu* gridsMenu;
+    //QAction* initAct;
+    QAction* set_name_act_;
+    //QMenu* gridsMenu;
+    QMenu* start_menu_;
 };
 
 } // end namespace Kaleidoscope
