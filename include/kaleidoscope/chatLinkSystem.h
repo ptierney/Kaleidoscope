@@ -32,8 +32,6 @@ namespace Kaleidoscope {
 
     bool running();
     void set_running(bool);
-    // sets running to true.
-    void run();
 
   protected:
     void timerEvent(QTimerEvent*);

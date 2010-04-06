@@ -55,10 +55,6 @@ namespace Kaleidoscope {
     link_system_ = new ChatLinkSystem(d_);
   }
 
-  ChatLinkSystem* ChatController::link_system(){
-    return link_system_;
-  }
-
   void ChatController::timerEvent(QTimerEvent* /*event*/){
     checkReframe();
   }
@@ -345,10 +341,6 @@ namespace Kaleidoscope {
 
   Tete* ChatController::last_selected(){
     return last_selected_;
-  }
-
-  unsigned int ChatController::numLinks(){
-    return links_.size();
   }
 
 } // end namespace

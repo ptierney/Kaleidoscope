@@ -334,7 +334,7 @@ namespace Grids {
                 last_event = new Event(*evt);
             }
 
-            std::cout << evt->getStyledString() << std::endl;
+            //std::cout << evt->getStyledString() << std::endl;
 
             pushEvent(evt);
 

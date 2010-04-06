@@ -29,26 +29,19 @@ namespace Kaleidoscope {
 
     void centerTextItem();
   protected:
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-
     DisplayTextItem* text_item_;
     QGraphicsTextItem* name_item_;
     QColor text_color_;
     QColor name_color_;
-    QColor highlight_color_;
     float name_scale_;
     QRectF draw_rect_;
 
     int rect_boarder_width_;
     int rect_boarder_height_;
     float text_width_;
-    float dormant_scale_;
     
     void updateDrawRect();
     bool frame_selected_;
-
   };
 }
 

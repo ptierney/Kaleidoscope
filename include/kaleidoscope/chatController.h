@@ -48,8 +48,6 @@ namespace Kaleidoscope {
     bool reframing();
     Tete* last_selected();
 
-    unsigned int numLinks();
-
   protected:
     void timerEvent(QTimerEvent*);
 
