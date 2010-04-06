@@ -1,6 +1,7 @@
 
 #include <QTextCursor>
 #include <QTimerEvent>
+#include <QKeyEvent>
 
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/tete.h>
@@ -129,6 +130,9 @@ namespace Kaleidoscope {
 
     input_unsent_ = true;
     last_key_press_.start();
+
+    if(event->key() == Qt::Key_Return)
+      makeNotActive();
   }
 
   void DisplayTextItem::timerEvent(QTimerEvent* event){

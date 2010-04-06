@@ -1,6 +1,8 @@
 
 #include <iostream>
 
+#include <QTimer>
+
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/link.h>
@@ -21,6 +23,7 @@ namespace Kaleidoscope {
     frame_rect_object_ = NULL;
     mouse_moved_ = true;
     velocity_ = Vec3D();
+    dormant_ = false;
   }
 
   TeteNode::~TeteNode(){
@@ -30,6 +33,8 @@ namespace Kaleidoscope {
 
   void TeteNode::init(){
     RespondNode::init();
+
+    last_active_.start();
   }
 
   Tete* TeteNode::tete(){
@@ -229,6 +234,23 @@ namespace Kaleidoscope {
       *max_x = bound.bottomRight().x();
     if(bound.bottomRight().y() > *max_y)
       *max_y = bound.bottomRight().y();
+  }
+
+  QTime* TeteNode::last_active(){
+    return &last_active_;
+  }
+
+  int TeteNode::activeElapsed(){
+    return last_active_.elapsed();
+  }
+
+  bool TeteNode::dormant(){
+    return dormant_;
+  }
+
+  void TeteNode::activate(){
+    dormant_ = false;
+    last_active_.start();
   }
 
 

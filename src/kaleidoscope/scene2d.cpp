@@ -33,7 +33,7 @@ namespace Kaleidoscope {
     item->setTextCursor(cursor);
 
     if (item->toPlainText().isEmpty()) {
-      d->getNoticeWindow()->write(tr("Deleting empty item."));
+      //d->getNoticeWindow()->write(tr("Deleting empty item."));
       removeItem(item);
       item->deleteLater();
     }

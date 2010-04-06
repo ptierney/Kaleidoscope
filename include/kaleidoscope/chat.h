@@ -24,6 +24,7 @@ namespace Kaleidoscope {
 
     GridsID chat_id();
     void set_chat_id(GridsID);
+    GridsID id();
 
     ChatNode* chat_node();
     void set_chat_node(ChatNode*);

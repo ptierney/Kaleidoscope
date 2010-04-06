@@ -56,7 +56,7 @@ namespace Grids {
         */
 
         proto->connectToNode( server_address.c_str() );
-        d->getNoticeWindow()->write(7, tr("Opened network connection to server"));
+        //d->getNoticeWindow()->write(7, tr("Opened network connection to server"));
 
     }
 
@@ -82,8 +82,8 @@ namespace Grids {
             Event *temp_event = temp_queue.front();
 
             //d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
-            d->getNoticeWindow()->write(0, tr("Collected event"));
-            d->getNoticeWindow()->writeEvent(0, temp_event);
+            //d->getNoticeWindow()->write(0, tr("Collected event"));
+            //d->getNoticeWindow()->writeEvent(0, temp_event);
             parseEvent(temp_event);
 
             delete temp_event;
@@ -100,12 +100,12 @@ namespace Grids {
             return;
         }
 
-        d->getNoticeWindow()->write(0, "Parsing Event");
+        //d->getNoticeWindow()->write(0, "Parsing Event");
 
         std::string event_type = evt->getEventType();
         Grids::GridsID object_id = evt->getID();
 
-        d->getNoticeWindow()->write(0, tr("Event type = ") + tr(event_type.c_str()));
+        //d->getNoticeWindow()->write(0, tr("Event type = ") + tr(event_type.c_str()));
 
         if( event_type == GRIDS_CREATE_ROOM ){
             //registerNewRoom( new Kal::Room( d, evt->getArgsPtr() ) );
@@ -249,7 +249,7 @@ namespace Grids {
     void Interface::registerCreateRoom(Event* evt) {
         /* register new room evt->["id"] */
         GridsID new_room_id = (*(evt->getArgsPtr()))["id"].asString();
-        d->getNoticeWindow()->write(5, tr("Room created with id = ") + tr(new_room_id.c_str()));
+        //d->getNoticeWindow()->write(5, tr("Room created with id = ") + tr(new_room_id.c_str()));
         registerNewRoom( new_room_id );
     }
 
@@ -263,7 +263,7 @@ namespace Grids {
             my_room = rm_id;
             my_room_created = 1;
 
-            d->getNoticeWindow()->write(5, tr("Your room set to: ") + tr(my_room.c_str()));
+            //d->getNoticeWindow()->write(5, tr("Your room set to: ") + tr(my_room.c_str()));
         }
 
         bool in_vector = 0;
@@ -309,7 +309,7 @@ namespace Grids {
 
     void Interface::printVal(Value* val) {
         //d->getNoticeWindow()->write(tr("sending>> ") + tr( (*val).toStyledString().c_str() ));
-        d->getNoticeWindow()->writeValue(0, val);
+        //d->getNoticeWindow()->writeValue(0, val);
     }
 
     bool Interface::isConnected(){

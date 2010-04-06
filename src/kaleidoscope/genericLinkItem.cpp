@@ -25,7 +25,7 @@ namespace Kaleidoscope {
         :  QGraphicsObject(parent), Object(d, val) {
         this->d = d;
 
-        d->getNoticeWindow()->write(tr("Creating generic link item"));
+        //d->getNoticeWindow()->write(tr("Creating generic link item"));
 
         Grids::Value* attr = getAttrFromValue(val);
         node1_id = getNode1FromAttr(attr);

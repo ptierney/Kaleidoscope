@@ -134,7 +134,7 @@ namespace Kaleidoscope {
     else if(tete == link_->node_2())
       return link_line_.p2();
     else {
-      d_->getNoticeWindow()->write(7, "Error in LinkNode");
+      //d_->getNoticeWindow()->write(7, "Error in LinkNode");
       return QPointF();
     }
   }

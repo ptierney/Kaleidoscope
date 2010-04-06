@@ -51,7 +51,7 @@ namespace Kaleidoscope {
 
     // If broken link, clean up and return
     if( dev->chat_controller()->addLink(link) == false ){
-      dev->getNoticeWindow()->write(7, "Received broken link");
+      //dev->getNoticeWindow()->write(7, "Received broken link");
       link->set_link_node(NULL);
       delete link_node;
       return;

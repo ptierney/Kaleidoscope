@@ -12,6 +12,7 @@
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/link.h>
+#include <kaleidoscope/chat.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -47,9 +48,27 @@ namespace Kaleidoscope {
                                                 "", Vec3D() );
       Link::requestCreate(d_, new_node_id, node_id);
 
-    } // We are not framed on a node but in a chat
+    } // We are not framed on a node and not in a chat
     else {
       // rock my world
+      key_queue_.clear();
+      key_queue_ += event->text().toStdString();
+
+      GridsID chat_id = d_->chat_controller()->default_chat_id();
+      GridsID parent_id;
+
+      Chat* chat = d_->chat_controller()->getChatFromID(chat_id);
+      if(chat != NULL){
+        if(!chat->tetes().empty()){
+          parent_id = chat->tetes().back()->id();
+        }
+      }
+
+      recording_keys_ = true;
+
+      GridsID new_node_id = Tete::requestCreate(d_, parent_id, chat_id,
+                                                "", Vec3D() );
+
     }
 
 	}

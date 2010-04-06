@@ -27,6 +27,7 @@ namespace Kaleidoscope {
     void set_default_chat_id(GridsID);
     Tete* getTeteFromID(GridsID);
     Link* getLinkFromID(GridsID);
+    Chat* getChatFromID(GridsID);
 
     void addChat(Chat*);
     void addTete(Tete*);

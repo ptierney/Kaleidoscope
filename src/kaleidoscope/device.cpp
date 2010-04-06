@@ -34,25 +34,7 @@ namespace Kaleidoscope {
     app = in_app;
     main_camera = 0;
     connected = 0;
-    qtime.start();
-    qsrand ( time(NULL) );
-
-    /* OK, let's try setting up an event loop like this. */
-    startTimer(100);
-
-    /* NoticeWindow & ErrorWindow must be created before any Grids::Objects,
-         * as all Grids::Objects require them to be created. */
-    createNoticeWindow();
-    createErrorWindow();
-    createConsole();
-    createScene();
-    /* Show the main window so we can read notices as the program connects. */
-    m_win->show();
-
-    //noticeWindow->addNotice(tr("Set up windows"));
-    setMyID( getGridsUtility()->getNewUUID() );
-
-    createObjects();
+    debug_display_ = false;
 
     init();
   }
@@ -70,13 +52,36 @@ namespace Kaleidoscope {
     event_controller_ = new Kal::EventController(this);
     object_controller = new Grids::ObjectController(this, main_window);
     g_utility = new Grids::Utility();
+
+    // Make sure that the main window has focus
+    getScene()->main_view()->setFocus(Qt::NoFocusReason);
   }
 
   void Device::init() {
-    getNoticeWindow()->write(0, tr("Initializing..."));
+    qtime.start();
+    qsrand ( time(NULL) );
+
+    /* OK, let's try setting up an event loop like this. */
+    startTimer(100);
+
+    /* NoticeWindow & ErrorWindow must be created before any Grids::Objects,
+         * as all Grids::Objects require them to be created. */
+    createNoticeWindow();
+    createErrorWindow();
+    createConsole();
+    createScene();
+    /* Show the main window so we can read notices as the program connects. */
+    main_window->show();
+
+    //noticeWindow->addNotice(tr("Set up windows"));
+    setMyID( getGridsUtility()->getNewUUID() );
+
+    createObjects();
+
+    //getNoticeWindow()->write(0, tr("Initializing..."));
     // Creates the protocol, connects to the server
     g_interface = new Grids::Interface(this, main_window);
-    getNoticeWindow()->write(0, tr("Created Interface"));
+    //getNoticeWindow()->write(0, tr("Created Interface"));
   }
   void Device::quit() {
     app->exit(0);
@@ -87,8 +92,8 @@ namespace Kaleidoscope {
 
     if(connected == false && getInterface()->isConnected() == true) {
       connected = true;
-      getNoticeWindow()->write(tr("Connected!"));
-      getNoticeWindow()->write(0, tr("Loading room / creating room"));
+      //getNoticeWindow()->write(tr("Connected!"));
+      //getNoticeWindow()->write(0, tr("Loading room / creating room"));
       loadRoom();
     }
 
@@ -160,6 +165,8 @@ namespace Kaleidoscope {
     dock->setWidget(console->getConsoleWindow());
 
     main_window->addDockWidget( Qt::RightDockWidgetArea, dock);
+    if(!debug_display_)
+      dock->close();
   }
 
   void Device::createNoticeWindow() {
@@ -169,6 +176,8 @@ namespace Kaleidoscope {
     noticeWindow = new NoticeWindow(dock);
     dock->setWidget(noticeWindow);
     main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
+    if(!debug_display_)
+      dock->close();
   }
 
   void Device::createErrorWindow() {
@@ -177,6 +186,8 @@ namespace Kaleidoscope {
     errorWindow = new NoticeWindow(dock);
     dock->setWidget(errorWindow);
     main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
+    if(!debug_display_)
+      dock->close();
   }
 
   void Device::createUserInputWindow(){
@@ -265,7 +276,7 @@ namespace Kaleidoscope {
 
   void Device::setMyID( GridsID temp_id ){
     my_id_ = temp_id;
-    getNoticeWindow()->addNotice(4, tr("ID set to: ")+tr(temp_id.c_str()));
+    //getNoticeWindow()->addNotice(4, tr("ID set to: ")+tr(temp_id.c_str()));
   }
 
   GridsID Device::getMyRoom() {

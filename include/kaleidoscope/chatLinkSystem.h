@@ -37,11 +37,14 @@ namespace Kaleidoscope {
     void timerEvent(QTimerEvent*);
 
     Vec3D coulombRepulsion(QPointF, QPointF);
-    Vec3D hookeAttraction(QPointF, QPointF);
+    Vec3D hookeAttraction(QPointF, QPointF,
+                          float rest_distance);
 
   private:
     Device* d_;
     float rest_distance_;
+    float dormant_rest_distance_;
+    float rest_difference_;
     float repulse_weight_;
     float attract_weight_;
     float min_velocity_;

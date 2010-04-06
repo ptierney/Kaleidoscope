@@ -106,6 +106,7 @@ namespace Kaleidoscope {
   void TextNode::setText(std::string text){
     text_item_->setText(text);
     centerTextItem();
+    activate();
   }
 
   void TextNode::setActiveText(std::string text){

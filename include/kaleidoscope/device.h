@@ -132,6 +132,8 @@ namespace Kaleidoscope {
         QMutex running_mutex;
         QMutex my_id_mutex;
         QMutex my_room_mutex;
+
+        bool debug_display_;
     };
 
 } // end namespace Kaleidoscope

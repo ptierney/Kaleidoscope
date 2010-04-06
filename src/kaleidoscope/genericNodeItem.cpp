@@ -95,7 +95,7 @@ namespace Kaleidoscope {
     }
 
     void GenericNodeItem::gridsCreate(Device* dev, Grids::Event *evt) {
-        dev->getNoticeWindow()->write(QObject::tr("Creating generic node"));
+        //dev->getNoticeWindow()->write(QObject::tr("Creating generic node"));
         //dev->getScene()->addGenericNodeItem(evt->getArgsPtr(), evt->getPosition());
 
         Scene2D* scene = dev->getScene();

@@ -19,7 +19,7 @@ namespace Kaleidoscope {
                 :  QWidget(parent), Object(d, val) {
 		this->d = d;
 
-		d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
+    //d->getNoticeWindow()->addNotice(0, tr("Creating camera"));
 
 		parseAttrFromValue(val);
 		mouse_pressed = false;

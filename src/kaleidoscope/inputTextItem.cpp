@@ -26,7 +26,7 @@ namespace Kaleidoscope {
 
     this->d = d;
 
-    d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
+    //d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
 
     text_color = QColor( (*(getAttrFromValue(val)))["text_color"][0u].asInt(),
                          (*(getAttrFromValue(val)))["text_color"][1u].asInt(),
@@ -72,7 +72,7 @@ namespace Kaleidoscope {
   }
 
   void InputTextItem::gridsCreate(Device *dev, Grids::Event *evt) {
-    dev->getNoticeWindow()->write(tr("Creating input text"));
+    //dev->getNoticeWindow()->write(tr("Creating input text"));
     /*dev->getScene()->addInputTextItem(evt->getArgsPtr(), evt->getPosition()); */
 
     Scene2D *scene = dev->getScene();
@@ -113,7 +113,7 @@ namespace Kaleidoscope {
 
     /* Check for position change. */
     if(change == QGraphicsItem::ItemPositionChange) {
-      d->getNoticeWindow()->write("Pos change");
+      //d->getNoticeWindow()->write("Pos change");
       updatePosition(d, Vec3D(value.toPointF().x(), value.toPointF().y(), zValue()));
     }
     return value;
@@ -230,7 +230,7 @@ namespace Kaleidoscope {
   void InputTextItem::updateAttr(Grids::Event *evt) {
 
     if((*(evt->getArgsPtr()))["attr"].empty()){
-      d->getNoticeWindow()->write(tr("Received empty update attr"));
+      //d->getNoticeWindow()->write(tr("Received empty update attr"));
       return;
     }
 

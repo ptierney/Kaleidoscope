@@ -64,7 +64,7 @@ namespace Kaleidoscope {
   }
 
   void ChatController::addTete(Tete* tete){
-    d_->getNoticeWindow()->write(7, "Adding Tete");
+    //d_->getNoticeWindow()->write(7, "Adding Tete");
 
     // Extract Chat
     Chat* chat = tete->chat();
@@ -105,7 +105,7 @@ namespace Kaleidoscope {
   }
 
   bool ChatController::addLink(Link* link){
-    d_->getNoticeWindow()->write(7, "Adding Link");
+    //d_->getNoticeWindow()->write(7, "Adding Link");
     // If the link is set up already, don't do anything special
     if(link->node_1() && link->node_2()){
       links_.push_back(link);
@@ -157,35 +157,40 @@ namespace Kaleidoscope {
   }
 
   Tete* ChatController::getTeteFromID(GridsID id){
-    bool found = false;
-    unsigned int i;
-    for(i = 0u; i < tetes_.size(); i++){
-      if(tetes_[i]->getID() == id){
-        found = true;
+    Tete* found_tete = NULL;
+    for(std::vector<Tete*>::const_iterator it = tetes_.begin(); it != tetes_.end(); ++it){
+      if((*it)->id() == id){
+        found_tete = *it;
         break;
       }
     }
 
-    if(found)
-      return tetes_[i];
-
-    return NULL;
+    return found_tete;
   }
 
   Link* ChatController::getLinkFromID(GridsID id){
-    bool found = false;
-    unsigned int i;
-    for(i = 0u; i < links_.size(); i++){
-      if(links_[i]->getID() == id){
-        found = true;
+    Link* found_link = NULL;
+
+    for(std::vector<Link*>::const_iterator it = links_.begin(); it != links_.end(); ++it){
+      if((*it)->id() == id){
+        found_link = *it;
         break;
       }
     }
 
-    if(found)
-      return links_[i];
+    return found_link;
+  }
 
-    return NULL;
+  Chat* ChatController::getChatFromID(GridsID id){
+    Chat* found_chat = NULL;
+    for(std::vector<Chat*>::const_iterator it = chats_.begin(); it != chats_.end(); ++it) {
+      if((*it)->id() == id){
+        found_chat = *it;
+        break;
+      }
+    }
+
+    return found_chat;
   }
 
   void ChatController::updateChatsRect(){

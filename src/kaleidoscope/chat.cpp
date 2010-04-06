@@ -18,6 +18,10 @@ namespace Kaleidoscope {
     return chat_id_;
   }
 
+  GridsID Chat::id(){
+    return chat_id_;
+  }
+
   void Chat::set_chat_id(GridsID chat_id){
     chat_id_ = chat_id;
   }

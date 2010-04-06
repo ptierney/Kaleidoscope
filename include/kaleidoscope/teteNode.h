@@ -4,6 +4,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
+#include <QTime>
 
 #include <kaleidoscope/respondNode.h>
 #include <kaleidoscope/define.h>
@@ -33,6 +34,11 @@ namespace Kaleidoscope {
     void addVelocity(Vec3D);
     QRectF frame_rect();
     void updateFrameRect();
+    QTime* last_active();
+    int activeElapsed();
+
+    bool dormant();
+    void activate();
 
     virtual void placeNode() = 0;
     virtual void setText(std::string) = 0;
@@ -61,6 +67,8 @@ namespace Kaleidoscope {
     bool frame_selected_;
     FrameRect* frame_rect_object_;
     bool mouse_moved_;
+    bool dormant_;
+    QTime last_active_;
 
   };
 

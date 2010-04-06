@@ -29,7 +29,7 @@ namespace Kaleidoscope {
   }
 
   void InputTextNode::keyPressEvent(QKeyEvent* /*event*/){
-    d_->getNoticeWindow()->write(7, "Key Pressed");
+    //d_->getNoticeWindow()->write(7, "Key Pressed");
   }
 
   void InputTextNode::placeNode(){
