@@ -21,10 +21,12 @@ namespace Kaleidoscope {
     // Set color to black
     text_color_ = QColor(0, 0, 0);
     name_color_ = QColor(0, 0, 0, 150);
+    highlight_color_ = QColor( 50, 50, 50);
     // If drawing a rect behind the text, set its size (in addition to the text size) here.
     rect_boarder_width_ = 0;
     rect_boarder_height_ = 0;
     name_scale_ = 0.75;
+    dormant_scale_ = 0.4;
   }
 
   TextNode::~TextNode(){
@@ -40,6 +42,17 @@ namespace Kaleidoscope {
     name_item_->setScale(name_scale_);
 
   }
+
+  void TextNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
+    TeteNode::hoverEnterEvent(event);
+  }
+
+  void TextNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
+    TeteNode::hoverLeaveEvent(event);
+  }
+
+
+
 
   DisplayTextItem* TextNode::text_item() {
     return text_item_;
@@ -57,10 +70,16 @@ namespace Kaleidoscope {
   }
 
   void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
+    if(dormant_){
+      setScale(dormant_scale_);
+    } else {
+      setScale(1.0);
+    }
+
     updateDrawRect();
 
     if(selected_){
-      painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      painter->setPen(QPen(highlight_color_, 2, Qt::SolidLine, Qt::FlatCap, Qt::RoundJoin));
 
       if(tete_->parent() && tete_->parent()->tete_node() ){
         QLineF parent_line = QLineF(QPointF(),

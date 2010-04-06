@@ -22,17 +22,17 @@ namespace Kaleidoscope {
     QObject(parent) {
     d_ = d;
     rest_distance_ = 75.0;
-    dormant_rest_distance_ = 25.0;
+    dormant_rest_distance_ = 10.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
     // For pull, larger is slower
     attract_weight_ = 10.0;
     // For push, smaller is slower
-    repulse_weight_ = 50.0;
+    repulse_weight_ = 100.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
     damping_ = 0.02;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.01;
+    energy_threshold_ = 0.0001;
     running_ = false;
     startTimer(50);
   }
@@ -45,16 +45,23 @@ namespace Kaleidoscope {
     running_ = running;
   }
 
+  void ChatLinkSystem::run(){
+    set_running(true);
+  }
+
   void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
     //d_->getNoticeWindow()->write(7, "update");
     if(running_){
       update(d_->chat_controller()->chats());
       running_ = total_kinetic_energy_ > energy_threshold_;
     }
+
+    std::cerr << "Running" << std::endl;
   }
 
   void ChatLinkSystem::update(std::vector<Chat*> chats){
     total_kinetic_energy_ = 0.0;
+    energy_threshold_ = 0.001 / (float)(d_->chat_controller()->numLinks());
 
     /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
        though it has something to do with "temporaries". */
@@ -90,6 +97,8 @@ namespace Kaleidoscope {
     QPointF point_1, point_2;
     QLineF line_between;
     float rest_distance;
+    float attraction_scale = 1.0;
+    float repulse_scale = 1.0;
 
     // Sum all the forces pushing this item away
     std::vector<Tete*> tetes = chat->tetes();
@@ -105,6 +114,7 @@ namespace Kaleidoscope {
          (*it)->tete_node()->dormant() ){
         point_1 = tete->tete_node()->pos();
         point_2 = tete->tete_node()->pos();
+        //repulse_scale = 0.0001;
       } else {
         line_between = LinkNode::getLineBetween(tete->tete_node(),
                                                 (*it)->tete_node());
@@ -113,7 +123,7 @@ namespace Kaleidoscope {
       }
 
       force += coulombRepulsion(point_1,
-                                point_2);
+                                point_2) * repulse_scale;
     }
 
     std::vector<Link*> links = tete->links();
@@ -138,19 +148,20 @@ namespace Kaleidoscope {
           other_node->tete_node()->dormant() ){
         point_1 = tete->tete_node()->pos();
         point_2 = other_node->tete_node()->pos();
-        rest_distance = rest_distance_;
+        //rest_distance = rest_distance_ / 2000.0;
       } else {
         (*it)->link_node()->updateLinkLine();
         point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
         point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);
-        average = (tete->tete_node()->activeElapsed() + other_node->tete_node()->activeElapsed()) / 2.0;
-        rest_distance = dormant_rest_distance_ + rest_difference_ * (1/average);
+        //average = (tete->tete_node()->activeElapsed() + other_node->tete_node()->activeElapsed()) / 2.0;
+        //rest_distance = dormant_rest_distance_ + rest_difference_ * (1/average);
+        //rest_distance = rest_distance_;
       }
 
       // Use points from an line intersection, to take into account the size of the
       // boxes.
       force += hookeAttraction(point_1, point_2,
-                               rest_distance);
+                               rest_distance_);
     }
 
     //tete->tete_node()->addVelocity(force*damping_);
@@ -160,6 +171,7 @@ namespace Kaleidoscope {
     // Check for floating point NaNs
     if( force != force ){
       force = Vec3D();
+      //std::cerr << "Error" << std::endl;
     }
 
     tete->tete_node()->set_velocity(force*damping_);

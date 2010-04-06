@@ -10,6 +10,8 @@
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/frameRect.h>
+#include <kaleidoscope/chatController.h>
+#include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -24,6 +26,10 @@ namespace Kaleidoscope {
     mouse_moved_ = true;
     velocity_ = Vec3D();
     dormant_ = false;
+    dormant_check_timer_id_ = 0;
+    dormant_check_rate_ = 250;
+    // A node goes dormant after 10 seconds
+    dormant_time_ = 3000;
   }
 
   TeteNode::~TeteNode(){
@@ -46,12 +52,12 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
+    RespondNode::hoverEnterEvent(event);
     beginFraming();
   }
 
   void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
+    RespondNode::hoverLeaveEvent(event);
     selected_ = false;
   }
 
@@ -66,6 +72,7 @@ namespace Kaleidoscope {
     }
     frame_rect_object_ = new FrameRect(d_, frame_rect_, this);
     d_->getScene()->addItem(frame_rect_object_);
+    activateLinks();
   }
 
   bool TeteNode::frameOn(){
@@ -236,6 +243,18 @@ namespace Kaleidoscope {
       *max_y = bound.bottomRight().y();
   }
 
+  void TeteNode::timerEvent(QTimerEvent* event){
+    if(event->timerId() != dormant_check_timer_id_)
+      return;
+
+    if(last_active_.elapsed() < dormant_time_)
+      return;
+
+    killTimer(dormant_check_timer_id_);
+    dormant_check_timer_id_ = 0;
+    deactivate();
+  }
+
   QTime* TeteNode::last_active(){
     return &last_active_;
   }
@@ -248,9 +267,35 @@ namespace Kaleidoscope {
     return dormant_;
   }
 
+  void TeteNode::deactivate(){
+    dormant_ = true;
+    d_->chat_controller()->link_system()->run();
+  }
+
+  void TeteNode::activateLinks(){
+    std::vector<Link*> links = tete_->links();
+
+    if(links.empty()){
+      activate();
+      return;
+    }
+
+    for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
+      (*it)->node_1()->tete_node()->activate();
+      (*it)->node_2()->tete_node()->activate();
+    }
+  }
+
   void TeteNode::activate(){
     dormant_ = false;
     last_active_.start();
+
+    if(dormant_check_timer_id_ == 0){
+      dormant_check_timer_id_ = startTimer(dormant_check_rate_);
+    }
+
+    // Update the spring system so things move away
+    d_->chat_controller()->link_system()->run();
   }
 
 

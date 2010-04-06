@@ -133,6 +133,8 @@ namespace Kaleidoscope {
 
     if(event->key() == Qt::Key_Return)
       makeNotActive();
+
+    node_->activate();
   }
 
   void DisplayTextItem::timerEvent(QTimerEvent* event){

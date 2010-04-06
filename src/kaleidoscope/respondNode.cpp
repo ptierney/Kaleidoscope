@@ -39,16 +39,14 @@ namespace Kaleidoscope {
   }
 
   void RespondNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
     selected_ = true;
 
-    //QGraphicsQbject::hoverEnterEvent(event);
+    QGraphicsObject::hoverEnterEvent(event);
 
     //frameOn();
   }
 
   void RespondNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
     selected_ = false;
 
     QGraphicsObject::hoverLeaveEvent(event);

@@ -39,6 +39,8 @@ namespace Kaleidoscope {
 
     bool dormant();
     void activate();
+    void activateLinks();
+    void deactivate();
 
     virtual void placeNode() = 0;
     virtual void setText(std::string) = 0;
@@ -50,11 +52,13 @@ namespace Kaleidoscope {
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+    void timerEvent(QTimerEvent *event);
 
     Tete* tete_;
     QRectF frame_rect_;
 
     void updateFrameSelected();
+    bool dormant_;
     
   private:
     float x_vel_;
@@ -67,8 +71,10 @@ namespace Kaleidoscope {
     bool frame_selected_;
     FrameRect* frame_rect_object_;
     bool mouse_moved_;
-    bool dormant_;
     QTime last_active_;
+    int dormant_check_timer_id_;
+    int dormant_check_rate_;
+    int dormant_time_;
 
   };
 
