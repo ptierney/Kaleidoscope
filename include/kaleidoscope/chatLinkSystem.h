@@ -52,6 +52,7 @@ namespace Kaleidoscope {
     float damping_;
     float total_kinetic_energy_;
     float energy_threshold_;
+    float push_dropoff_;
     bool running_;
   };
 }

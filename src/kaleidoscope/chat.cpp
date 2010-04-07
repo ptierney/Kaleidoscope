@@ -26,7 +26,7 @@ namespace Kaleidoscope {
     chat_id_ = chat_id;
   }
 
-  void Chat::addTete(Tete *tete){
+  void Chat::addTete(Tete* tete){
     tetes_.push_back(tete);
   }
 
@@ -52,7 +52,7 @@ namespace Kaleidoscope {
     return tetes_;
   }
 
-  void Chat::addLink(Link *link){
+  void Chat::addLink(Link* link){
     links_.push_back(link);
   }
 
