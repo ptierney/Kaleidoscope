@@ -16,8 +16,9 @@ namespace Kaleidoscope {
     d_ = d;
     node_1_ = NULL;
     node_2_ = NULL;
-    node_1_id_ = getNode1IDFromAttr(getAttrFromValue(val));
-    node_2_id_ = getNode2IDFromAttr(getAttrFromValue(val));
+    const Grids::Value& attr = getAttrFromValue(*val);
+    node_1_id_ = getNode1IDFromAttr(attr);
+    node_2_id_ = getNode2IDFromAttr(attr);
   }
 
   void Link::init(){
@@ -61,12 +62,12 @@ namespace Kaleidoscope {
     dev->getScene()->addItem(link_node);
   }
 
-  GridsID Link::getNode1IDFromAttr(Grids::Value* attr){
-    return (*attr)["node1"].asString();
+  GridsID Link::getNode1IDFromAttr(const Grids::Value& attr){
+    return attr["node1"].asString();
   }
 
-  GridsID Link::getNode2IDFromAttr(Grids::Value* attr){
-    return (*attr)["node2"].asString();
+  GridsID Link::getNode2IDFromAttr(const Grids::Value& attr){
+    return attr["node2"].asString();
   }
 
   GridsID Link::node_1_id(){

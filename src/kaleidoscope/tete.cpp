@@ -23,7 +23,7 @@ namespace Kaleidoscope {
   Tete::Tete(Device* d, Grids::Value* val) :
       Grids::Object(d, val) {
     d_ = d;
-    Grids::Value* temp_attr = getAttrFromValue(val);
+    const Grids::Value& temp_attr = getAttrFromValue(*val);
 
     text_ = getTextFromAttr(temp_attr);
     chat_id_ = getChatIDFromAttr(temp_attr);
@@ -46,11 +46,11 @@ namespace Kaleidoscope {
     }
 
     if(false && owner_id_ == d_->my_id()){
-      Grids::Value* links = getLinksFromAttr(getAttr());
+      const Grids::Value& links = getLinksFromAttr(getAttr());
 
       GridsID other_node_id;
-      for(unsigned int i = 0u; i < links->size(); ++i){
-        other_node_id = (*links)[i].asString();
+      for(unsigned int i = 0u; i < links.size(); ++i){
+        other_node_id = links[i].asString();
         Link::requestCreate(d_,id(), other_node_id);
       }
     }
@@ -59,6 +59,7 @@ namespace Kaleidoscope {
   GridsID Tete::requestCreate(Device *dev,
                               GridsID parent, GridsID chat,
                               std::string text, Vec3D position){
+
     Grids::Value* create_val = new Grids::Value();
     GridsID new_id;
 
@@ -148,28 +149,28 @@ namespace Kaleidoscope {
     text_ = text;
   }
 
-  std::string Tete::getTextFromAttr(Grids::Value* attr){
-    return (*attr)["text"].asString();
+  std::string Tete::getTextFromAttr(const Grids::Value& attr){
+    return attr["text"].asString();
   }
 
-  GridsID Tete::getChatIDFromAttr(Grids::Value* attr){
-    return (*attr)["chat"].asString();
+  GridsID Tete::getChatIDFromAttr(const Grids::Value& attr){
+    return attr["chat"].asString();
   }
 
-  GridsID Tete::getParentIDFromAttr(Grids::Value* attr) {
-    return (*attr)["parent"].asString();
+  GridsID Tete::getParentIDFromAttr(const Grids::Value& attr) {
+    return attr["parent"].asString();
   }
 
-  GridsID Tete::getOwnerIDFromAttr(Grids::Value* attr) {
-    return (*attr)["owner"].asString();
+  GridsID Tete::getOwnerIDFromAttr(const Grids::Value& attr) {
+    return attr["owner"].asString();
   }
 
-  Grids::Value* Tete::getLinksFromAttr(Grids::Value* attr) {
-    return &((*attr)["links"]);
+  const Grids::Value& Tete::getLinksFromAttr(const Grids::Value& attr) {
+    return attr["links"];
   }
 
-  std::string Tete::getUserNameFromAttr(Grids::Value* attr) {
-    return (*attr)["user_name"].asString();
+  std::string Tete::getUserNameFromAttr(const Grids::Value& attr) {
+    return attr["user_name"].asString();
   }
 
 
@@ -209,15 +210,15 @@ namespace Kaleidoscope {
     return owner_id_;
   }
 
-  std::vector<Tete*> Tete::references(){
+  const std::vector<Tete*>& Tete::references(){
     return references_;
   }
 
-  std::vector<Tete*> Tete::children(){
+  const std::vector<Tete*>& Tete::children(){
     return children_;
   }
 
-  std::vector<Link*> Tete::links(){
+  const std::vector<Link*>& Tete::links(){
     return links_;
   }
 
@@ -237,7 +238,7 @@ namespace Kaleidoscope {
     chat_id_ = chat_id;
   }
 
-  std::vector<Chat*> Tete::referenced_chats(){
+  const std::vector<Chat*>& Tete::referenced_chats(){
     return referenced_chats_;
   }
 

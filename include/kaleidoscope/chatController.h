@@ -42,7 +42,7 @@ namespace Kaleidoscope {
     void updateChatsRect();
     void fixBrokenLinks();
 
-    std::vector<Chat*> chats();
+    const std::vector<Chat*>& chats();
     ChatLinkSystem* link_system();
     QRectF all_chats_rect();
     bool reframing();

@@ -44,8 +44,8 @@ namespace Kaleidoscope {
 		void wheelEvent(QWheelEvent*);
 		
 	private:
-		void parseAttrFromValue( Grids::Value* );
-		void parseAttr( Grids::Value* );
+    void parseAttrFromValue(const Grids::Value&);
+    void parseAttr(const Grids::Value&);
 
 		Device* d;
 

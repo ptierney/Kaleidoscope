@@ -29,12 +29,12 @@ namespace Kaleidoscope {
 
     std::string text();
     void set_text(std::string);
-    static std::string getTextFromAttr(Grids::Value*);
-    static GridsID getChatIDFromAttr(Grids::Value*);
-    static GridsID getParentIDFromAttr(Grids::Value*);
-    static GridsID getOwnerIDFromAttr(Grids::Value*);
-    static Grids::Value* getLinksFromAttr(Grids::Value*);
-    static std::string getUserNameFromAttr(Grids::Value*);
+    static std::string getTextFromAttr(const Grids::Value&);
+    static GridsID getChatIDFromAttr(const Grids::Value&);
+    static GridsID getParentIDFromAttr(const Grids::Value&);
+    static GridsID getOwnerIDFromAttr(const Grids::Value&);
+    static const Grids::Value& getLinksFromAttr(const Grids::Value&);
+    static std::string getUserNameFromAttr(const Grids::Value&);
 
     void set_parent(Tete*);
     void addReference(Tete*);
@@ -44,16 +44,18 @@ namespace Kaleidoscope {
     GridsID parent_id();
     GridsID owner_id();
     std::string user_name();
-    std::vector<Tete*> references();
-    std::vector<Tete*> children();
-    std::vector<Link*> links();
+
+    const std::vector<Tete*>& references();
+    const std::vector<Tete*>& children();
+    const std::vector<Link*>& links();
+
     Chat* chat();
     void set_chat(Chat*);
     GridsID chat_id();
     void set_chat_id(GridsID);
     TeteNode* tete_node();
     void set_tete_node(TeteNode*);
-    std::vector<Chat*> referenced_chats();
+    const std::vector<Chat*>& referenced_chats();
     void updateText(std::string);
 
   private:

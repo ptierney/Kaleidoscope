@@ -48,7 +48,7 @@ namespace Kaleidoscope {
     tetes_.push_back(tete);
   }
 
-  std::vector<Tete*> Chat::tetes(){
+  const std::vector<Tete*>& Chat::tetes(){
     return tetes_;
   }
 
@@ -56,7 +56,7 @@ namespace Kaleidoscope {
     links_.push_back(link);
   }
 
-  std::vector<Link*> Chat::links(){
+  const std::vector<Link*>& Chat::links(){
     return links_;
   }
 

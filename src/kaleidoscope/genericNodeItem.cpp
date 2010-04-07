@@ -70,8 +70,8 @@ namespace Kaleidoscope {
         updateDrawRect();
     }
 
-    std::string GenericNodeItem::getTextFromAttr(Grids::Value* attr){
-        return (*attr)["text"].asString();
+    std::string GenericNodeItem::getTextFromAttr(const Grids::Value& attr){
+        return attr["text"].asString();
     }
 
     void GenericNodeItem::draw(Device* /*d*/) {

@@ -56,9 +56,9 @@ namespace Kaleidoscope {
         QPointF getIntersectionPoint(GenericNodeItem*);
 
     protected:
-        GridsID getNode1FromAttr(Grids::Value*);
-        GridsID getNode2FromAttr(Grids::Value*);
-        GenericLinkItem::LinkType getLinkTypeFromAttr(Grids::Value*);
+        GridsID getNode1FromAttr(const Grids::Value&);
+        GridsID getNode2FromAttr(const Grids::Value&);
+        GenericLinkItem::LinkType getLinkTypeFromAttr(const Grids::Value&);
 
         virtual void loadNodeQPos();
         virtual void loadNodeRects();

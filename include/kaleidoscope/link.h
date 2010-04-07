@@ -29,8 +29,8 @@ namespace Kaleidoscope {
     void set_node_1_id(GridsID);
     void set_node_2_id(GridsID);
 
-    GridsID getNode1IDFromAttr(Grids::Value*);
-    GridsID getNode2IDFromAttr(Grids::Value*);
+    GridsID getNode1IDFromAttr(const Grids::Value&);
+    GridsID getNode2IDFromAttr(const Grids::Value&);
 
     LinkNode* link_node();
     void set_link_node(LinkNode*);

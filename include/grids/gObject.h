@@ -14,13 +14,13 @@ namespace Kaleidoscope {
 }
 
 namespace Grids{
-    class ObjectControler;
-    class Event;
+  class ObjectControler;
+  class Event;
 
 	class Object {
 
 	public:
-		Object( Kal::Device*, Value* );
+    Object( Kaleidoscope::Device*, Value* );
     virtual ~Object();
 		
 		GridsID getID();
@@ -36,34 +36,22 @@ namespace Grids{
 		virtual Vec3D getLocalRotation();
 		virtual Vec3D getLocalScale();		
 		
-		virtual void updatePosition( Kal::Device*, Vec3D );
-		virtual void updateScale( Kal::Device*, Vec3D );
-		virtual void updateRotation( Kal::Device*, Vec3D );
+    virtual void updatePosition( Kaleidoscope::Device*, Vec3D );
+    virtual void updateScale( Kaleidoscope::Device*, Vec3D );
+    virtual void updateRotation( Kaleidoscope::Device*, Vec3D );
 
-                virtual void updateAttr(Event*);
+    virtual void updateAttr(Event*);
 
 		// attr is a Grids::Value that holds all the information
 		// specific to the particular object.
 		// This information should exist in a shared state between the
 		// computers on the network.
-		Value* getAttr();
-		void lockAttr();
-		void unlockAttr();
+    const Value& getAttr();
 		
 		void addChild( Object* obj_ptr );
 
-                //virtual void drawAll( Kal::Device* ) = 0;
-                //virtual bool getVisibility() = 0;
-
-
-
 		friend class ObjectController;
-		friend class Kal::Camera;
-/*
-	signals:
-		void error(int, QString);
-		void notice(int, QString);
-                */
+    friend class Kaleidoscope::Camera;
 
 	protected:
 		Object* getParent();
@@ -71,58 +59,38 @@ namespace Grids{
 		void setRoom( GridsID );
 		void setParent(Object*);
 		void setParentID( GridsID );
-		Value* getAttrFromValue( Value* );
-		GridsID getIDFromValue( Value* );
-                GridsID getParentFromValue( Value* );
+    const Value& getAttrFromValue(const Value&);
+    GridsID getIDFromValue(const Value&);
+    GridsID getParentFromValue(const Value&);
 		
-		std::vector< Object* > getChildren();
-		std::vector< Object* > children;
+    const std::vector<Object*>& getChildren();
+    std::vector<Object*> children;
 
 		Value attr;
 
-                /* These functions are called by the ObjectController
+    /* These functions are called by the ObjectController
                  * When it receives a message GRIDS_UPDATE_OBJECT */
-                virtual void setLocalPosition( Vec3D );
-                virtual void setLocalRotation( Vec3D );
-                virtual void setLocalScale( Vec3D );
+    virtual void setLocalPosition( Vec3D );
+    virtual void setLocalRotation( Vec3D );
+    virtual void setLocalScale( Vec3D );
 
 	private:
-		void setAttr( Value* );
-		void setAttrFromValue( Value* );
-		void setInitialPositions( Value* );
-                Vec3D getVectorFromValue( Value* val, std::string key);
+    void setAttr(const Value&);
+    void setAttrFromValue(const Value&);
+    void setInitialPositions(const Value&);
+    Vec3D getVectorFromValue(const Value& val, std::string key);
 		
 		void setID( GridsID );
 
 		Object* parent;
 		GridsID parent_id;
-	 
+
 		GridsID obj_id;
 		GridsID obj_room;
 		
-		Vec3D position;
-		Vec3D rotation;
-		Vec3D scale;
-		
-		QMutex position_mutex;
-		QMutex rotation_mutex;
-		QMutex scale_mutex;		
-		QMutex children_mutex;		
-		QMutex attr_mutex;
-		QMutex id_mutex;
-		QMutex parent_mutex;
-		QMutex room_mutex;
-
-		////////////////////////
-		// These will be deleted
-		////////////////////////
-		void setAttrPosition( Vec3D );
-		void setAttrRotation( Vec3D );
-		void setAttrScale( Vec3D );
-
-		virtual Vec3D getAttrPosition(  );
-		virtual Vec3D getAttrScale( );
-		virtual Vec3D getAttrRotation( );
+    Vec3D position_;
+    Vec3D rotation_;
+    Vec3D scale_;
 	};
 
 } // end namespace Grids

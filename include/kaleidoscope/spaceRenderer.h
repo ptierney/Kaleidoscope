@@ -10,7 +10,7 @@
 
 namespace Kaleidoscope {
 	class Device;
-        class Camera;
+  class Camera;
 	
 	// Everything that should be drawn should be a child of this object
 	// Maybe this should be split into a placeholder (GridsParent) and 
@@ -22,23 +22,23 @@ namespace Kaleidoscope {
 		
 		void renderAll();
 		
-                void draw(Device*);
+    void draw(Device*);
 		
 		void lockGL();
 		void unlockGL();
 		QMutex* getGLMutex();
 
-                void prepareWindow();
-                void prepareRender1();
-                void prepareRender2();
-                void finishRender();
+    void prepareWindow();
+    void prepareRender1();
+    void prepareRender2();
+    void finishRender();
 
-                void setTextureOn( bool );
-                void setLightOn( bool );
-                void setAlphaAdd( bool );
-                void setBlendOn( bool );
-                void setFilteringOn( bool );
-                void setSmoothOn( bool );
+    void setTextureOn( bool );
+    void setLightOn( bool );
+    void setAlphaAdd( bool );
+    void setBlendOn( bool );
+    void setFilteringOn( bool );
+    void setSmoothOn( bool );
 
 		friend class Camera;
 		friend class Device;
@@ -52,11 +52,11 @@ namespace Kaleidoscope {
 		void loadTextModes();
 
 		bool Texture_On;
-                bool Light_On;
-                bool Alpha_Add;
-                bool Blend_On;
-                bool Filtering_On;
-                bool Smooth_On;
+    bool Light_On;
+    bool Alpha_Add;
+    bool Blend_On;
+    bool Filtering_On;
+    bool Smooth_On;
 		
 		float Light_Ambient[4];
 		float Light_Diffuse[4];
@@ -69,11 +69,11 @@ namespace Kaleidoscope {
 
 		int current_text_mode;
 		std::string text_mode_string[4];
-                GLint text_modes[4];
+    GLint text_modes[4];
 
 		// Debug Functions
-                void prepareText();
-                void finishText();
+    void prepareText();
+    void finishText();
 	};
 
 } // end namespace Kaleidoscope

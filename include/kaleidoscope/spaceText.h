@@ -9,11 +9,11 @@
 namespace Kaleidoscope {
 	class Device;
 
-        //class SpaceText : public SpaceObject, public Text {
-        class SpaceText {
+  //class SpaceText : public SpaceObject, public Text {
+  class SpaceText {
 	public:
-                //SpaceText( Device*, Grids::Value* );
-                /*
+    //SpaceText( Device*, Grids::Value* );
+    /*
 		void draw( Device* );
 		void drawSpaceText( Device* );
 

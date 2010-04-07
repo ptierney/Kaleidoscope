@@ -18,9 +18,9 @@ namespace Kaleidoscope {
     void addTete(Tete*);
     // Add tete and link up parent / child relationships
     void addTeteAsTree(Tete*);
-    std::vector<Tete*> tetes();
     void addLink(Link*);
-    std::vector<Link*> links();
+    const std::vector<Tete*>& tetes();
+    const std::vector<Link*>& links();
 
     GridsID chat_id();
     void set_chat_id(GridsID);

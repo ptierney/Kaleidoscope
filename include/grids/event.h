@@ -23,9 +23,9 @@ namespace Grids
 		void setEvent( std::string );
 		void setArgs( Grids::Value );
 
-		Grids::Value getArgs();
+    const Grids::Value& getArgs();
     Grids::Value* getArgsPtr();
-    Grids::Value getAttr();
+    const Grids::Value& getAttr();
     Grids::Value* getAttrPointer();
 		std::string getEventType();
     std::string getAttrType();

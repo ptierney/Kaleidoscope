@@ -53,8 +53,8 @@ namespace Grids{
     // have been messaged as being created.
     // Server rooms are the rooms on the server,
     // accessed with GRIDS_LIST_ROOMS
-    std::vector< GridsID > getKnownRooms();
-    std::vector< GridsID > getServerRooms();
+    const std::vector<GridsID>& getKnownRooms();
+    const std::vector<GridsID>& getServerRooms();
     void requestAllRooms();
 
     void setMyRoom(GridsID);
@@ -102,11 +102,6 @@ namespace Grids{
     bool connected;
 
     GridsID my_room;
-
-    QMutex my_room_mutex;
-    QMutex known_rooms_mutex;
-    QMutex connected_mutex;
-    QMutex parse_event_mutex;
 
     Kaleidoscope::Device* d;
   };

@@ -63,7 +63,7 @@ namespace Kaleidoscope {
     private:
         bool nodesIntersect(GenericNodeItem*, GenericNodeItem*);
 
-        std::string getTextFromAttr(Grids::Value*);
+        std::string getTextFromAttr(const Grids::Value&);
 
         QRectF draw_rect;
         void updateDrawRect();

@@ -25,8 +25,8 @@ namespace Kaleidoscope {
     void set_text(std::string);
 
   protected:
-    GridsID getChatIDFromAttr(Grids::Value* attr);
-    GridsID getParentIDFromAttr(Grids::Value* attr);
+    GridsID getChatIDFromAttr(const Grids::Value&);
+    GridsID getParentIDFromAttr(const Grids::Value&);
 
   private:
     Device* d_;

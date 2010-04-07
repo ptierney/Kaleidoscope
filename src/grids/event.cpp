@@ -34,7 +34,7 @@ namespace Grids
 		args = value;
 	}
 
-	Grids::Value Event::getArgs()	{
+  const Grids::Value& Event::getArgs()	{
 		return args;
 	}
 
@@ -42,7 +42,7 @@ namespace Grids
 		return &args;
 	}
 
-  Grids::Value Event::getAttr(){
+  const Grids::Value& Event::getAttr(){
     return args["attr"];
   }
 

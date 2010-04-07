@@ -327,7 +327,7 @@ namespace Kaleidoscope {
     default_chat_id_ = default_chat_id;
   }
 
-  std::vector<Chat*> ChatController::chats(){
+  const std::vector<Chat*>& ChatController::chats(){
     return chats_;
   }
 

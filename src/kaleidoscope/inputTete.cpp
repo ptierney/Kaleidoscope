@@ -11,16 +11,17 @@ namespace Kaleidoscope {
   InputTete::InputTete(Device* d, Grids::Value* val) :
       Grids::Object(d, val) {
     d_ = d;
-    chat_id_ = getChatIDFromAttr(getAttrFromValue(val));
-    parent_id_ = getParentIDFromAttr(getAttrFromValue(val));
+    const Grids::Value& attr = getAttrFromValue(*val);
+    chat_id_ = getChatIDFromAttr(attr);
+    parent_id_ = getParentIDFromAttr(attr);
   }
 
-  GridsID InputTete::getChatIDFromAttr(Grids::Value* attr){
-    return (*attr)["chat"].asString();
+  GridsID InputTete::getChatIDFromAttr(const Grids::Value& attr){
+    return attr["chat"].asString();
   }
 
-  GridsID InputTete::getParentIDFromAttr(Grids::Value* attr) {
-    return (*attr)["parent"].asString();
+  GridsID InputTete::getParentIDFromAttr(const Grids::Value& attr) {
+    return attr["parent"].asString();
   }
 
   GridsID InputTete::requestCreate(Device* dev,

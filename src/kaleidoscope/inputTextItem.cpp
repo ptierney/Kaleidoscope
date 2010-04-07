@@ -28,10 +28,12 @@ namespace Kaleidoscope {
 
     //d->getNoticeWindow()->write(0, tr("Creating InputTextItem"));
 
-    text_color = QColor( (*(getAttrFromValue(val)))["text_color"][0u].asInt(),
-                         (*(getAttrFromValue(val)))["text_color"][1u].asInt(),
-                         (*(getAttrFromValue(val)))["text_color"][2u].asInt(),
-                         (*(getAttrFromValue(val)))["text_color"][3u].asInt() );
+    const Grids::Value& temp_val = *val;
+
+    text_color = QColor( getAttrFromValue(temp_val)["text_color"][0u].asInt(),
+                         getAttrFromValue(temp_val)["text_color"][1u].asInt(),
+                         getAttrFromValue(temp_val)["text_color"][2u].asInt(),
+                         getAttrFromValue(temp_val)["text_color"][3u].asInt() );
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);

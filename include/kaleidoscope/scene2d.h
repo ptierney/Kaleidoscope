@@ -50,9 +50,9 @@ namespace Kaleidoscope {
         void set_main_view(View2D*);
         View2D* main_view();
 
-        QList<InputTextItem*> getInputTextItems();
-        QList<GenericNodeItem*> getNodeItems();
-        QList<GenericLinkItem*> getLinkItems();
+        const QList<InputTextItem*>& getInputTextItems();
+        const QList<GenericNodeItem*>& getNodeItems();
+        const QList<GenericLinkItem*>& getLinkItems();
 
     public slots:
         void editorLostFocus(InputTextItem *item);

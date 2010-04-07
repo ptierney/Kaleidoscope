@@ -123,15 +123,15 @@ namespace Kaleidoscope {
     link_items.append(item);
   }
 
-  QList<InputTextItem*> Scene2D::getInputTextItems() {
+  const QList<InputTextItem*>& Scene2D::getInputTextItems() {
     return input_text_items;
   }
 
-  QList<GenericNodeItem*> Scene2D::getNodeItems() {
+  const QList<GenericNodeItem*>& Scene2D::getNodeItems() {
     return node_items;
   }
 
-  QList<GenericLinkItem*> Scene2D::getLinkItems() {
+  const QList<GenericLinkItem*>& Scene2D::getLinkItems() {
     return link_items;
   }
 
