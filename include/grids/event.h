@@ -17,11 +17,11 @@ namespace Grids
 	public:
 		Event( );
 		Event( std::string );
-		Event( std::string, Grids::Value );
+    Event( std::string, const Grids::Value& );
 		Event( Event& );
 
 		void setEvent( std::string );
-		void setArgs( Grids::Value );
+    void setArgs( const Grids::Value& );
 
     const Grids::Value& getArgs();
     Grids::Value* getArgsPtr();

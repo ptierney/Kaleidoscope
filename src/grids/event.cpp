@@ -15,7 +15,7 @@ namespace Grids
 		//event_type = in_event;
 	}
 
-	Event::Event( std::string in_event, Value value )	{
+  Event::Event( std::string in_event, const Value& value )	{
 		event_type = in_event;
 		args = value;
 	}
@@ -30,8 +30,8 @@ namespace Grids
 		event_type = in_event;
 	}
 
-	void Event::setArgs( Value value)	{
-		args = value;
+  void Event::setArgs( const Value& value)	{
+    args = Value(value);
 	}
 
   const Grids::Value& Event::getArgs()	{

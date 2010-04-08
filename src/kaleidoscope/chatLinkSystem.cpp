@@ -27,7 +27,7 @@ namespace Kaleidoscope {
     // For pull, larger is slower
     attract_weight_ = 10.0;
     // For push, smaller is slower
-    repulse_weight_ = 50.0;
+    repulse_weight_ = 60.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
     damping_ = 0.02;
@@ -92,6 +92,7 @@ namespace Kaleidoscope {
     QPointF point_1, point_2;
     QLineF line_between;
     float rest_distance;
+    float repulse_scale = 1.0;
 
     // Sum all the forces pushing this item away
     std::vector<Tete*> tetes = chat->tetes();
@@ -106,7 +107,7 @@ namespace Kaleidoscope {
       if(tete->tete_node()->dormant() ||
          (*it)->tete_node()->dormant() ){
         point_1 = tete->tete_node()->pos();
-        point_2 = tete->tete_node()->pos();
+        point_2 = (*it)->tete_node()->pos();
       } else {
         line_between = LinkNode::getLineBetween(tete->tete_node(),
                                                 (*it)->tete_node());
@@ -114,8 +115,17 @@ namespace Kaleidoscope {
         point_2 = line_between.p2();
       }
 
+      if(tete->tete_node()->boundingRect().intersects((*it)->tete_node()->boundingRect())){
+        repulse_scale = 3.0;
+        (*it)->tete_node()->setPos((*it)->tete_node()->pos() +
+                                  QPointF(1000 - qrand() % 2000, 1000 - qrand() % 2000));
+        std::cerr << "Intersect " << point_1.x() << " " << point_1.y() << std::endl
+            << point_2.x() << " " << point_2.y() << std::endl;
+        continue;
+      }
+
       force += coulombRepulsion(point_1,
-                                point_2);
+                                point_2) * repulse_scale;
     }
 
     std::vector<Link*> links = tete->links();
