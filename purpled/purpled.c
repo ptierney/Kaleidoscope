@@ -342,7 +342,7 @@ purpld_write_conv(PurpleConversation *conv, const char *who, const char *alias,
 
 	n = g_list_index(purple_accounts_get_all(), account);
 	
-	buf = g_strdup_printf("%d (%s) %d %s: %s\n", n, purple_conversation_get_name(conv), mtime,
+	buf = g_strdup_printf("%d^^^%s^^^%s\n", n, 
 										who, message);
 	
 	purpld_inform_client(account, buf);
@@ -892,7 +892,7 @@ gboolean respond_account_list(client* ptr, char *mesg, char **args, gpointer use
 	int n; 
 	char tmp[PD_STRING];
 
-	sprintf(tmp, "Accounts: \n");
+	sprintf(tmp, "Start Account List\n");
 	purpld_client_send(ptr, tmp);
 
 	n = 0;
@@ -900,7 +900,7 @@ gboolean respond_account_list(client* ptr, char *mesg, char **args, gpointer use
 		PurpleAccount *account = iter->data;
 		PurplePresence *pres = purple_account_get_presence(account);
 		PurpleStatus *stat = purple_presence_get_active_status (pres);
-		sprintf(tmp, "%d) %s %s %s [%s]\n", n, purple_account_get_alias(account), 
+		sprintf(tmp, "%d %s %s %s\n", n, 
 						purple_account_get_protocol_name(account), account->username, 
 						( purple_account_is_connected(account) ? purple_status_get_name(stat) : 
 							( purple_account_is_connecting(account) ? "Connecting" :	"Offline" )
@@ -908,6 +908,9 @@ gboolean respond_account_list(client* ptr, char *mesg, char **args, gpointer use
 		purpld_client_send(ptr, tmp);
 		n++;
 	}
+
+	sprintf(tmp, "End Account List\n");
+	purpld_client_send(ptr, tmp);
 	
 	return TRUE;
 }
