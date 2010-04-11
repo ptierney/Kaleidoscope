@@ -223,6 +223,9 @@ sub create_object_cb {
 		return;
 	}
 
+
+  #$con->print(Dumper($evt));
+
 	my $args = $evt->args;
 
 	# Filter out the bounceback confirmation code
@@ -241,23 +244,25 @@ sub create_object_cb {
 		return;
 	}
 
-	#$con->print("Dump from create_object_cb");
-	#$con->print( Dumper($args));
+	$con->print("Dump from create_object_cb");
+	$con->print( Dumper($args));
 
-	if( $evt->args->{attr}->{type} eq "InputText"){
-		my $monolog = find_monolog( $evt->args->{id} );
+  if(0){
+      if( $evt->args->{attr}->{type} eq "InputText"){
+          my $monolog = find_monolog( $evt->args->{id} );
 
-		$monolog->position( $evt->args->{pos}[0],
-							$evt->args->{pos}[1], 
-							$evt->args->{pos}[2] );
-	
-		#$monolog->position( 123.0, 456, 678.0);
+          $monolog->position( $evt->args->{pos}[0],
+                              $evt->args->{pos}[1], 
+                              $evt->args->{pos}[2] );
+          
+          #$monolog->position( 123.0, 456, 678.0);
 
-	
-		if( $evt->args->{attr}->{text} ){
-			$monolog->parse_text_input( $evt->args->{attr}->{text} );		
-		}
-	}
+          
+          if( $evt->args->{attr}->{text} ){
+              $monolog->parse_text_input( $evt->args->{attr}->{text} );		
+          }
+      }
+  }
 }
 
 sub update_object_cb {
@@ -283,26 +288,32 @@ sub update_object_cb {
 		return;
 	}
 
-	if( $monologs->{$evt->args->{id}} ) {
-		
-		my $monolog = $monologs->{ $evt->args->{id} };
-		
-		if( $evt->args->{pos} ) {
-			$monolog->position( $evt->args->{pos}[0],
-								$evt->args->{pos}[1], 
-								$evt->args->{pos}[2] );
-		}
+	$con->print("Dump from update_object_cb");
+	$con->print( Dumper($args));
 
-		if( $evt->args->{attr}->{text} ){
-			$monolog->parse_text_input( $evt->args->{attr}->{text} );		
-		}
-		
-		foreach my $phrase ($monolog->phrases) {
-			if( $phrase->node_generated == 0){
-				create_node_from_phrase($monolog, $phrase);
-			}
-		}
-	}
+  if(0){
+
+      if( $monologs->{$evt->args->{id}} ) {
+          
+          my $monolog = $monologs->{ $evt->args->{id} };
+          
+          if( $evt->args->{pos} ) {
+              $monolog->position( $evt->args->{pos}[0],
+                                  $evt->args->{pos}[1], 
+                                  $evt->args->{pos}[2] );
+          }
+
+          if( $evt->args->{attr}->{text} ){
+              $monolog->parse_text_input( $evt->args->{attr}->{text} );		
+          }
+          
+          foreach my $phrase ($monolog->phrases) {
+              if( $phrase->node_generated == 0){
+                  create_node_from_phrase($monolog, $phrase);
+              }
+          }
+      }
+  }
 }
 
 sub list_objects_cb {

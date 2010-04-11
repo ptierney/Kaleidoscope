@@ -19,12 +19,14 @@ use Data::Dumper;
 
 my $server_address = '127.0.0.1';
 #my $server_address = 'elcerrito.ath.cx';
-my $num_messages = 5;
+my $num_messages = 3;
+my $message_number = 2;
 # This is the pause between each message
 my $millis_pause = 0.1;
 
 my $is_sender;
 my $messages_received = 0;
+my $bot_name = 'Perl Test Bot';
 
 my $sender_id = Grids::Identity->new();
 my $received_id = Grids::Identity->new();
@@ -94,11 +96,27 @@ sub list_rooms_cb {
   select(undef, undef, undef, 0.5);
 	
 	$con->print( "About to create nodes");
+
+  my $parent_id = Grids::UUID->new_id();
+  my $pos_x = 500 - int(rand(1000));
+  my $pos_y = 500 - int(rand(1000));
+
+	my $node_value = { '_broadcast' => 1, 
+                     pos => [$pos_x, $pos_y, 0], 
+                     rot => [0,0,0], 
+                     scl => [1,1,1], 
+                     id => $parent_id, 
+                     room_id => $room, 
+                     attr => { type => 'Tete', 
+                               chat => $chat_id, 
+                               text => "Parent", user_name => $bot_name,
+                               parent => Grids::UUID->new_id(), 
+                               owner => $id->{name} } };
+	$client->dispatch_event('Room.CreateObject', $node_value);
+  select(undef, undef, undef, $millis_pause);
+
 	
-	for(my $i = 0; $i < $num_messages; $i++){
-		send_test_text($i);
-		select(undef, undef, undef, $millis_pause);
-	}
+	send_test_text($parent_id, $num_messages);
 
 	exit();
 	#$con->print("Your room now set to $room");
@@ -111,7 +129,7 @@ sub room_create_cb {
 sub create_object_cb {
 	my($c, $evt) = @_;
 
-	$con->print( "CREATE ROOM CB");
+	$con->print( "CREATE OBJECT CB");
 
 	return unless($evt);
 
@@ -150,20 +168,98 @@ sub create_object_cb {
 
  
 sub send_test_text {
-	my( $text_num) = @_;
+	my( $parent, $text_num) = @_;
 
-	my $test_node_id = Grids::UUID->new_id();
+  if( $parent eq "head"){
+      $parent = Grids::UUID->new_id();
+  }
+
+	my $test_node_id_1 = Grids::UUID->new_id();
+	my $test_node_id_2 = Grids::UUID->new_id();
+  my $test_link_id_1 = Grids::UUID->new_id();
+  my $test_link_id_2 = Grids::UUID->new_id();
 	
-	my $node_text = "Node Num $text_num";
+	my $node_text = "Node Num $message_number";
+  $message_number++;
 
   my $pos_x = 500 - int(rand(1000));
   my $pos_y = 500 - int(rand(1000));
 
-	my $node_value = { '_broadcast' => 1, pos => [$pos_x, $pos_y, 0], rot => [0,0,0], scl => [1,1,1], id => $test_node_id, room_id => $room, attr => { type => 'Tete', chat => $chat_id, text => $node_text, owner => $id->{name} } };
-
-	#$con->print( Dumper($node_value));
+	my $node_value = { '_broadcast' => 1, 
+                     pos => [$pos_x, $pos_y, 0], 
+                     rot => [0,0,0], scl => [1,1,1], 
+                     id => $test_node_id_1, 
+                     room_id => $room, 
+                     attr => { type => 'Tete', 
+                               chat => $chat_id, 
+                               text => $node_text, 
+                               parent => $parent, 
+                               user_name => $bot_name,
+                               owner => $id->{name} } };
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
+  select(undef, undef, undef, $millis_pause);
+
+	$node_value = { '_broadcast' => 1, 
+                  pos => [0,0,0], 
+                  rot => [0,0,0], 
+                  scl => [1,1,1], 
+                  id => $test_link_id_1, 
+                  room_id => $room, 
+                  attr => { type => 'Link',
+                            node1 => $test_node_id_1,
+                            node2 => $parent, 
+                            owner => $id->{name} } };
+
+	$client->dispatch_event('Room.CreateObject', $node_value);
+  select(undef, undef, undef, $millis_pause);
+
+  if( $message_number % 2 == 0){ 
+      $pos_x = 500 - int(rand(1000));
+      $pos_y = 500 - int(rand(1000));
+
+      $node_text = "Node Num $message_number";
+      $message_number++;
+
+      $node_value = { '_broadcast' => 1, 
+                      pos => [$pos_x, $pos_y, 0], 
+                      rot => [0,0,0], 
+                      scl => [1,1,1], 
+                      id => $test_node_id_2, 
+                      room_id => $room, 
+                      attr => { type => 'Tete', 
+                                chat => $chat_id, 
+                                text => $node_text, 
+                                parent => $parent, 
+                                user_name => $bot_name,
+                                owner => $id->{name} } };
+
+      $client->dispatch_event('Room.CreateObject', $node_value);
+      select(undef, undef, undef, $millis_pause);
+
+      $node_value = { '_broadcast' => 1, 
+                      pos => [0,0,0], 
+                      rot => [0,0,0], 
+                      scl => [1,1,1], 
+                      id => $test_link_id_2, 
+                      room_id => $room, 
+                      attr => { type => 'Link',
+                                node1 => $test_node_id_2,
+                                node2 => $parent, 
+                                owner => $id->{name} } };
+
+      $client->dispatch_event('Room.CreateObject', $node_value);
+      select(undef, undef, undef, $millis_pause);
+
+
+  }
+
+  if($text_num > 0){
+      send_test_text($test_node_id_1, $text_num - 1);
+      if($message_number % 2 == 0){
+          send_test_text($test_node_id_2, $text_num - 1);
+      }
+  }
 }
 
 sub send_create {
