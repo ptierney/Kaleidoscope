@@ -21,7 +21,11 @@ namespace Kaleidoscope {
     connect(input_line_, SIGNAL(done()),
             parent, SLOT(close()));
 
+    QLabel* screen_name_label = new QLabel(this);
+    screen_name_label->setText(tr("Your name:"));
+
     QVBoxLayout* main_layout = new QVBoxLayout;
+    main_layout->addWidget(screen_name_label);
     main_layout->addWidget(input_line_);
     main_layout->addWidget(button_box_);
     main_layout->setSizeConstraint(QLayout::SetFixedSize);

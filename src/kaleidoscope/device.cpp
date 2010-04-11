@@ -21,6 +21,7 @@
 #include <kaleidoscope/user.h>
 #include <kaleidoscope/userNameInputBox.h>
 #include <kaleidoscope/userNameBox.h>
+#include <kaleidoscope/addUsernameBox.h>
 
 #include <grids/interface.h>
 #include <grids/objectController.h>
@@ -198,6 +199,16 @@ namespace Kaleidoscope {
     dock->setAllowedAreas(Qt::NoDockWidgetArea);
     main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
     //box->setFocus(Qt::PopupFocusReason);
+  }
+
+  void Device::createAddUserWindow(){
+    QDockWidget *dock = new QDockWidget(tr("Add Account"), main_window);
+    dock->setFloating(1);
+    AddUsernameBox* box = new AddUsernameBox(this, dock);
+    dock->setWidget(box);
+    dock->setAllowedAreas(Qt::NoDockWidgetArea);
+    main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+
   }
 
   void Device::createScene() {

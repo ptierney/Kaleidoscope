@@ -69,6 +69,7 @@ namespace Kaleidoscope {
         void registerError(QObject*);
         void createSpaceRenderer();
         void createUserInputWindow();
+        void createAddUserWindow();
 
 
         QMainWindow* main_window;

@@ -11,7 +11,7 @@ namespace Kaleidoscope {
     d_ = d;
     connect(this, SIGNAL( returnPressed() ),
             this, SLOT( userInput() ));
-    setAlignment(Qt::AlignCenter);
+    setAlignment(Qt::AlignLeft);
     parent_ = parent;
   }
 

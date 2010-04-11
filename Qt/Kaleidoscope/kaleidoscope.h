@@ -2,19 +2,20 @@
 #define KALEIDOSCOPE_H
 
 #include <QtGui/QMainWindow>
-#include <kaleidoscope/device.h>
+
 
 namespace Ui
 {
-    class Kaleidoscope;
+  class Kaleidoscope;
 }
 
 namespace Kaleidoscope {
+  class Device;
 
-class Kaleidoscope : public QMainWindow {
+  class Kaleidoscope : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     Kaleidoscope(QApplication* ap, QWidget *parent = 0);
     ~Kaleidoscope();
 
@@ -23,19 +24,21 @@ public:
     void createMenus();
 
 
-   private slots:
+  private slots:
     void init();
     void createUserInputWindow();
+    void createAddUserWindow();
+    void createNewChatWindow();
 
-private:
+  private:
     Ui::Kaleidoscope *ui;
-    Kal::Device* d;
+    Device* d;
 
-    //QAction* initAct;
     QAction* set_name_act_;
-    //QMenu* gridsMenu;
+    QAction* register_username_;
+    QAction* new_chat_;
     QMenu* start_menu_;
-};
+  };
 
 } // end namespace Kaleidoscope
 
