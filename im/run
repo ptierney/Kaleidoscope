@@ -1,0 +1,1 @@
+/opt/bin/perl -I../../crypt-otr/lib -I../../crypt-otr/blib/arch  -I../../crypt-otr/blib/lib $1

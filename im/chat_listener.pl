@@ -19,17 +19,32 @@ use Carp qw (croak);
 use Getopt::Long;
 use Data::Dumper;
 
-use Monolog;
-use Phrase;
+use Net::Telnet;
 
 my $id = Grids::Identity->new();
 my $client;
 my $room;
+my $network_pause = 0.1;
 
 my $con = Grids::Console->new(
                               title => "Chat Listener",
                               prompt => "Chat Listener>",
                               );
+
+# Disable the Errmode, default is die
+# This is used to talk to Purpled
+my $telnet = new Net::Telnet( Host => 'localhost',
+                              Port => '32000',
+                              Errmode => sub { } );
+
+my $screen_id = { };
+
+run();
+
+sub connect {
+    my $address = Grids::Address::IPv4->new( address => '127.0.0.1' );
+    $client->connect($address);
+}
 
 sub connected_cb {
 	my($c, $evt) = @_;
@@ -39,7 +54,6 @@ sub connected_cb {
 
 	$client->dispatch_event('Room.List');
 }
-
 
 sub broadcast_cb { } # I don't know what this method is supposed to do
 sub request_list_rooms { $client->dispatch_event('Room.List'); }
@@ -74,6 +88,14 @@ sub create_object_cb {
 	return unless( $evt->args->{attr}->{type} );
 
   if( $evt->args->{attr}->{type} eq "AddOutsideAccount"){
+      #$con->print(Dumper($args));
+      my $screen_name = $evt->args->{attr}->{screen_name}; 
+      my $grids_id = $evt->args->{attr}->{owner}; 
+      # Set the hash so we can reference it later
+      $screen_id->{$screen_name} = $grids_id;
+      my $protocol = $evt->args->{attr}->{protocol}; 
+      my $password = $evt->args->{attr}->{password}; 
+      
 
   } elsif( $evt->args->{attr}->{type} eq "OutsideChat" ){
 
@@ -83,13 +105,27 @@ sub create_object_cb {
 
 sub create_node_from_chat {
     #my($protocol, $sender_screen_name, $receiver_screen_name
+}
 
+
+sub purpled_check {
+    my $response = $telnet->getline(Timeout => 1);
+
+    while($response){
+        print $response;
+        $response = $telnet->getline(Timeout => 1);
+    }
 
 }
+
 
 sub run {
     # main loop condition
     my $main = AnyEvent->condvar;
+
+    my $w = AnyEvent->timer( after => 3.0, 
+                             interval => 3.0y, 
+                             cb => \&purpled_check);
 
     $client = Grids::Client->new(id => $id, use_encryption => 0, debug => 1, auto_flush_queue => 1);
 
@@ -112,4 +148,4 @@ sub run {
     $main->recv;
 }
 
-run();
+
