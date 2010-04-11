@@ -51,9 +51,9 @@ namespace Kaleidoscope {
     QString password = password_text_box_->text();
     QString protocol = protocol_combo_box_->currentText();
     if(protocol == tr("AIM")){
-      protocol = tr("aim");
+      protocol = tr("AIM");
     } else if (protocol == tr("Google Talk")){
-      protocol = tr("xmpp");
+      protocol = tr("XMPP");
     }
 
     if(screen_name.toStdString().empty() ||

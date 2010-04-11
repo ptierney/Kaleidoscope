@@ -79,7 +79,7 @@ namespace Kaleidoscope {
 
 
   void Tete::gridsCreate(Device* dev, Grids::Event* evt){
-    Grids::Value *val = evt->getArgsPtr();
+    Grids::Value* val = evt->getArgsPtr();
 
     Tete* tete = new Tete(dev, val);
     tete->init();

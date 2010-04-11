@@ -20,6 +20,8 @@
 #include <kaleidoscope/spaceText.h>
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/link.h>
+#include <kaleidoscope/outsideChat.h>
+#include <kaleidoscope/outsideChatController.h>
 #include <kaleidoscope/device.h>
 
 
@@ -105,6 +107,8 @@ namespace Grids {
     } else if(type == "Link") {
       Kaleidoscope::Link::gridsCreate(d, evt);
       found = 1;
+    }  else if(type == "OutsideChat"){
+      Kaleidoscope::OutsideChatController::gridsCreateOutsideChat(d, evt);
     }
 
     return found;

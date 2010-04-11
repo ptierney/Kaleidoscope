@@ -34,7 +34,8 @@ namespace Kaleidoscope {
       return;
 
     // Is the user framed on a node?
-    if(d_->chat_controller()->reframing()){
+    // if d_->chat_controller()->reframing()
+    if(d_->chat_controller()->last_selected()){
       key_queue_.clear();
       key_queue_ += event->text().toStdString();
 
@@ -68,7 +69,6 @@ namespace Kaleidoscope {
 
       GridsID new_node_id = Tete::requestCreate(d_, parent_id, chat_id,
                                                 "", Vec3D() );
-
     }
 
 	}

@@ -4,6 +4,7 @@
 #include <grids/event.h>
 #include <kaleidoscope/user.h>
 #include <grids/interface.h>
+#include <kaleidoscope/tete.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -25,7 +26,7 @@ namespace Kaleidoscope {
     (*create_val)["protocol"] = protocol;
     (*create_val)["screen_name"] = screen_name;
     (*create_val)["password"] = password;
-    (*create_val)["id"] = dev->my_id();
+    (*create_val)["owner"] = dev->my_id();
     if(dev->user()->hasSetName())
       (*create_val)["user_name"] = dev->user()->name();
 
@@ -56,12 +57,22 @@ namespace Kaleidoscope {
     new_id = dev->getInterface()->requestCreateObject(create_val);
     delete create_val;
     return new_id;
-
   }
 
-  void OutsideChatController::gridsCreateOutsideChat(Device* /*d*/,
-                                                     Grids::Event* /*evt*/) {
+  void OutsideChatController::gridsCreateOutsideChat(Device* d,
+                                                     Grids::Event* evt) {
+    Grids::Value* val = evt->getArgsPtr();
 
+    // Extract out approapriate parent node
+    // Extract out approapriate chat node
+
+    Tete* framed_node = d_->chat_controller()->last_selected();
+    GridsID node_id = framed_node->id();
+    GridsID chat_id = framed_node->chat_id();
+
+    GridsID new_node_id = Tete::requestCreate(d_, node_id, chat_id,
+                                              "", Vec3D() );
+    Link::requestCreate(d_, new_node_id, node_id);
   }
 
 }
