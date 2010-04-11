@@ -17,7 +17,11 @@ namespace Kaleidoscope {
     Tete(Device*, Grids::Value*);
     void init();
 
-    static GridsID requestCreate(Device* dev, GridsID parent, GridsID chat,
+    static GridsID requestCreate(Device* dev, std::string owner_name,
+                                 GridsID parent, GridsID chat,
+                                 std::string text, Vec3D position);
+    static GridsID requestCreate(Device* dev,
+                                 GridsID parent, GridsID chat,
                                  std::string text, Vec3D position);
     static void gridsCreate(Device* dev, Grids::Event* evt);
     static void requestUpdate(Device* dev, GridsID tete_id, std::string new_text);

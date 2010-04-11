@@ -22,7 +22,7 @@
 #include <kaleidoscope/userNameInputBox.h>
 #include <kaleidoscope/userNameBox.h>
 #include <kaleidoscope/addUsernameBox.h>
-
+#include <kaleidoscope/outsideChatController.h>
 #include <grids/interface.h>
 #include <grids/objectController.h>
 #include <grids/utility.h>
@@ -48,9 +48,11 @@ namespace Kaleidoscope {
     user_ = new User(this, my_id_);
     chat_controller_ = new ChatController(this);
     chat_controller_->init();
+    outside_chat_controller_ = new OutsideChatController(this);
+    outside_chat_controller_->init();
 
     // Derived from QWidget, handles misc. key presses
-    event_controller_ = new Kal::EventController(this);
+    event_controller_ = new EventController(this);
     object_controller = new Grids::ObjectController(this, main_window);
     g_utility = new Grids::Utility();
 
@@ -129,6 +131,7 @@ namespace Kaleidoscope {
   Camera* Device::getCamera() { return main_camera; }
   ChatController* Device::getChatController() { return chat_controller_; }
   ChatController* Device::chat_controller() { return chat_controller_; }
+  OutsideChatController* Device::outside_chat_controller() { return outside_chat_controller_; }
   User* Device::user() { return user_; }
 
   void Device::loadRoom(){

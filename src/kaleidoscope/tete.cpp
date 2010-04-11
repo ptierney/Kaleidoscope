@@ -59,7 +59,14 @@ namespace Kaleidoscope {
   GridsID Tete::requestCreate(Device *dev,
                               GridsID parent, GridsID chat,
                               std::string text, Vec3D position){
+    return Tete::requestCreate(dev, dev->user()->name(),
+                               parent, chat,
+                               text, position);
+  }
 
+  GridsID Tete::requestCreate(Device* dev, std::string owner_name,
+                              GridsID parent, GridsID chat,
+                              std::string text, Vec3D position){
     Grids::Value* create_val = new Grids::Value();
     GridsID new_id;
 
@@ -68,6 +75,7 @@ namespace Kaleidoscope {
     (*create_val)["links"][0u] = parent;
     (*create_val)["parent"] = parent;
     (*create_val)["owner"] = dev->my_id();
+    (*create_val)["owner_name"] = owner_name;
     if(dev->user()->hasSetName())
       (*create_val)["user_name"] = dev->user()->name();
     (*create_val)["chat"] = chat;
@@ -76,7 +84,6 @@ namespace Kaleidoscope {
     delete create_val;
     return new_id;
   }
-
 
   void Tete::gridsCreate(Device* dev, Grids::Event* evt){
     Grids::Value* val = evt->getArgsPtr();
