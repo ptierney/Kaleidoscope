@@ -21,18 +21,18 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
-    rest_distance_ = 125.0;
-    dormant_rest_distance_ = 50.0;
+    rest_distance_ = 200.0;
+    dormant_rest_distance_ = 200.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
     // For pull, larger is slower
-    attract_weight_ = 10.0;
+    attract_weight_ = 5.0;
     // For push, smaller is slower
-    repulse_weight_ = 60.0;
+    repulse_weight_ = 50.0;
     min_velocity_ = 0.1;
     max_velocity_ = 10.0;
     damping_ = 0.02;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.01;
+    energy_threshold_ = 0.1;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
     running_ = false;
@@ -114,7 +114,7 @@ namespace Kaleidoscope {
         point_1 = line_between.p1();
         point_2 = line_between.p2();
       }
-
+      /*
       if(tete->tete_node()->boundingRect().intersects((*it)->tete_node()->boundingRect())){
         repulse_scale = 3.0;
         (*it)->tete_node()->setPos((*it)->tete_node()->pos() +
@@ -123,6 +123,7 @@ namespace Kaleidoscope {
             << point_2.x() << " " << point_2.y() << std::endl;
         continue;
       }
+      */
 
       force += coulombRepulsion(point_1,
                                 point_2) * repulse_scale;

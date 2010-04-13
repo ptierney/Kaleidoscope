@@ -76,7 +76,7 @@ namespace Kaleidoscope {
         }
       }
       //painter->drawRect(frame_rect().translated(pos() * -1.0));
-      painter->drawRect(draw_rect_);
+      //painter->drawRect(draw_rect_);
     }
   }
 
