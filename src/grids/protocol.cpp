@@ -12,7 +12,6 @@ namespace Grids {
 
   Protocol::Protocol(std::string name, QObject* parent)
     : QObject(parent) {
-    last_event = 0;
     my_name = name;
     /* Limit outbound traffic to with this variable. */
     outbound_limit = 50;
@@ -137,38 +136,37 @@ namespace Grids {
     return writer->write(*val);
   }
 
-  void Protocol::sendRequest(std::string evt, int broadcast) {
-    sendRequest(evt, NULL, broadcast);
+  void Protocol::sendRequest(std::string event, int broadcast) {
+    sendRequest(event, NULL, broadcast);
   }
 
-  void Protocol::sendRequest(std::string evt, Value *args, int broadcast) {
+  void Protocol::sendRequest(std::string event, Value *args, int broadcast) {
 
     /* Debugging loopback */
-    //sendRequestLoopback( evt, args);
-    //return;
 
-    if (evt.empty())
+    if (event.empty())
       return;
 
-    bool createdVal = 0;
+    bool created_value = 0;
 
     if (args == NULL) {
       args = new Value();
 
-      createdVal = 1;
+      created_value = 1;
     }
 
     const static std::string methodkey = "_method";
-    (*args)[methodkey] = evt;
+    (*args)[methodkey] = event;
 
     const static std::string broadcastkey = "_broadcast";
     (*args)[broadcastkey] = broadcast;
 
-    std::string valueStr = stringifyValue(args);
+    std::string value_string = stringifyValue(args);
 
-    pushOutboundRequest(valueStr);
+    //pushOutboundRequest(value_string);
+    protocolWrite(value_string);
 
-    if (createdVal)
+    if (created_value)
       delete args;
   }
 
@@ -189,8 +187,6 @@ namespace Grids {
     (*args)[methodkey] = evt;
 
     std::string valueStr = stringifyValue(args);
-
-
 
     handleMessage(valueStr);
   }
@@ -327,12 +323,14 @@ namespace Grids {
 
       Event *evt = new Event(root["_method"].asString(), root);
 
+      /*
       if( last_event){
         delete last_event;
         last_event = new Event(*evt);
       } else {
         last_event = new Event(*evt);
       }
+      */
 
       //std::cout << evt->getStyledString() << std::endl;
 
@@ -381,27 +379,15 @@ namespace Grids {
 
   /* Lock the queue mutex, copy the event queue,
        delete the original queue, return the copy, unlock. */
-  EventQueue Protocol::getEvents() {
-    //QMutexLocker lock(&event_queue_mutex);
-
-    EventQueue temp_queue(event_queue);
-
-    while(!event_queue.empty()) {
-      event_queue.pop();
-    }
-
-    return temp_queue;
+  EventQueue& Protocol::getEvents() {
+    return event_queue;
   }
 
   void Protocol::pushEvent(Event *new_event) {
-    //QMutexLocker lock(&event_queue_mutex);
-
     event_queue.push(new_event);
   }
 
   void Protocol::pushOutboundRequest(std::string str){
-    //QMutexLocker lock(&outbound_queue_mutex);
-
     outbound_queue.push(str);
   }
 

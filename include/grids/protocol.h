@@ -40,11 +40,11 @@ namespace Grids {
     bool sockConnected();
 
     // last_event is mainly used for testing
-    Event* last_event;
+    //Event* last_event;
 
     /* Lock the queue mutex, copy the event queue,
            delete the original queue, return the copy, unlock. */
-    EventQueue getEvents();
+    EventQueue& getEvents();
 
     int getReceivedQueueLength();
     int getOutboundQueueLength();

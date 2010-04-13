@@ -76,10 +76,10 @@ namespace Grids {
 
   void Interface::collectEvents() {
 
-    EventQueue temp_queue = proto->getEvents();
+    EventQueue& temp_queue = proto->getEvents();
 
     while(!temp_queue.empty()){
-      Event *temp_event = temp_queue.front();
+      Event* temp_event = temp_queue.front();
 
       //d->getNoticeWindow()->write(1, tr("rec>> ") + tr(temp_event->getStyledString().c_str()));
       //d->getNoticeWindow()->write(0, tr("Collected event"));
