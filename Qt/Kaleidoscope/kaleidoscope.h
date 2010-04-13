@@ -29,6 +29,10 @@ namespace Kaleidoscope {
     void createUserInputWindow();
     void createAddUserWindow();
     void createNewChatWindow();
+    void setSpringType1();
+    void setSpringType2();
+    void setGraphicsType1();
+    void setGraphicsType2();
 
   private:
     Ui::Kaleidoscope *ui;
@@ -38,6 +42,14 @@ namespace Kaleidoscope {
     QAction* register_username_;
     QAction* new_chat_;
     QMenu* start_menu_;
+    QMenu* explore_menu_;
+    QMenu* spring_menu_;
+    QMenu* graphics_menu_;
+    QAction* spring_type_1_;
+    QAction* spring_type_2_;
+    QAction* graphics_type_1_;
+    QAction* graphics_type_2_;
+
   };
 
 } // end namespace Kaleidoscope
