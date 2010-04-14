@@ -246,7 +246,7 @@ namespace Kaleidoscope {
           (*it)->tete_node()->frameOn();
           }
         //std::cerr << "Checking" << std::endl;
-        (*it)->tete_node()->updateGeometry();
+        //(*it)->tete_node()->updateGeometry();
       }
     }
 
