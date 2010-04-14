@@ -36,9 +36,9 @@ namespace Kaleidoscope {
     repulse_weight_ = 50.0;
     min_velocity_ = 0.1;
     max_velocity_ = 1000.0;
-    damping_ = 0.00002;
+    damping_ = 0.02;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.01;
+    energy_threshold_ = 0.0001;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
   }

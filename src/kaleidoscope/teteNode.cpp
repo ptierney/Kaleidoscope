@@ -45,13 +45,13 @@ namespace Kaleidoscope {
     tete_ = tete;
   }
 
-  void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
+  void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* /*event*/){
+    //Q_UNUSED(event)
     beginFraming();
   }
 
-  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
-    Q_UNUSED(event)
+  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* /*event*/){
+    //Q_UNUSED(event)
     selected_ = false;
   }
 
@@ -170,7 +170,6 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updateFrameRect(){
-
     // First set the initial min max values to this object's bounding
     // box
     QRectF local_bound = boundingRect();
@@ -249,7 +248,6 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::activate(){
-    return;
     dormant_ = false;
     last_active_.start();
   }

@@ -75,21 +75,23 @@ namespace Kaleidoscope {
           painter->drawLine(child_line);
         }
       }
-      //painter->drawRect(frame_rect().translated(pos() * -1.0));
-      //painter->drawRect(draw_rect_);
+      painter->setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      painter->drawRect(frame_rect().translated(pos() * -1.0));
+      painter->setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      painter->drawRect(draw_rect_);
     }
   }
 
   /* Is there a more efficient way to do this, so that I don't have to access .x(), y(), etc.
      This function is called every loop. */
   void TextNode::updateDrawRect(){
-    /*
+
     draw_rect_ = QRectF(text_item_->pos().x() + text_item_->boundingRect().left() - rect_boarder_width_ ,
                        text_item_->pos().y() + text_item_->boundingRect().top() - rect_boarder_height_ - name_item_->boundingRect().height() ,
                        text_item_->boundingRect().width() + 2*rect_boarder_width_,
                        text_item_->boundingRect().height() + name_item_->boundingRect().height() + 2*rect_boarder_height_);
-                       */
-    draw_rect_ = text_item_->boundingRect().united(name_item_->boundingRect()).translated(pos());
+
+    //draw_rect_ = text_item_->boundingRect().united(name_item_->boundingRect());
   }
 
   void TextNode::centerTextItem(){
