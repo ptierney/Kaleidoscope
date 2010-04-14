@@ -17,6 +17,7 @@ namespace Kaleidoscope {
 
     virtual bool frameOn() = 0;
 
+
     bool selected();
 
   protected:

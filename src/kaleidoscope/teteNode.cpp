@@ -241,8 +241,8 @@ namespace Kaleidoscope {
       *max_y = bound.bottomRight().y();
   }
 
-  QTime* TeteNode::last_active(){
-    return &last_active_;
+  QTime& TeteNode::last_active(){
+    return last_active_;
   }
 
   int TeteNode::activeElapsed(){

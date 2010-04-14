@@ -1,5 +1,6 @@
 
 #include <vector>
+#include <iostream>
 
 #include <QPointF>
 #include <QPainter>
@@ -25,6 +26,11 @@ namespace Kaleidoscope {
     rect_boarder_width_ = 0;
     rect_boarder_height_ = 0;
     name_scale_ = 0.75;
+    text_active_scale_ = 3.0;
+    text_dormant_scale_ = 0.5;
+    text_scale_difference_ = text_active_scale_ - text_dormant_scale_;
+    // This is the time from full size to smallest size
+    time_cutoff_ = 10000;
   }
 
   TextNode::~TextNode(){
@@ -58,6 +64,7 @@ namespace Kaleidoscope {
 
   void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
     updateDrawRect();
+    //updateTextSize();
 
     if(selected_){
       painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
@@ -109,6 +116,20 @@ namespace Kaleidoscope {
 
   }
 
+  void TextNode::updateTextSize(){
+    //std::cerr << "Updating text size" << std::endl;
+    float current_scale;
+    int time_diff = time_cutoff_ - activeElapsed();
+    if( time_diff < 0){
+      current_scale = text_dormant_scale_;
+    } else {
+      current_scale = (time_diff / time_cutoff_)*text_scale_difference_ +
+                      text_dormant_scale_;
+    }
+
+    text_item_->setScale(current_scale);
+  }
+
   void TextNode::setText(std::string text){
     text_item_->setText(text);
     centerTextItem();
@@ -117,6 +138,10 @@ namespace Kaleidoscope {
 
   void TextNode::setActiveText(std::string text){
     text_item_->setActiveText(text);
+  }
+
+  void TextNode::updateGeometry(){
+    updateTextSize();
   }
 
 

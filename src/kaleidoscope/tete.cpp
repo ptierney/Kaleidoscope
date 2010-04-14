@@ -146,6 +146,8 @@ namespace Kaleidoscope {
       tete->tete_node()->setText(text);
     }
 
+    tete->tete_node()->activate();
+
   }
 
   std::string Tete::text(){

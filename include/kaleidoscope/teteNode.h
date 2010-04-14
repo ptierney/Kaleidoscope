@@ -34,7 +34,7 @@ namespace Kaleidoscope {
     void addVelocity(Vec3D);
     QRectF frame_rect();
     void updateFrameRect();
-    QTime* last_active();
+    QTime& last_active();
     int activeElapsed();
 
     bool dormant();
@@ -43,6 +43,7 @@ namespace Kaleidoscope {
     virtual void placeNode() = 0;
     virtual void setText(std::string) = 0;
     virtual void setActiveText(std::string) = 0;
+    virtual void updateGeometry() = 0;
     virtual void frameLeave(FrameRect*);
     bool frame_selected();
     void beginFraming();

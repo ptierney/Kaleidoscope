@@ -21,6 +21,8 @@ namespace Kaleidoscope {
 
     void setText(std::string);
     void setActiveText(std::string);
+    void updateGeometry();
+    void updateTextSize();
 
     void hoverEnter();
     void hoverLeave();
@@ -34,6 +36,10 @@ namespace Kaleidoscope {
     QColor text_color_;
     QColor name_color_;
     float name_scale_;
+    float text_active_scale_;
+    float text_dormant_scale_;
+    float text_scale_difference_;
+    int time_cutoff_;
     QRectF draw_rect_;
 
     int rect_boarder_width_;

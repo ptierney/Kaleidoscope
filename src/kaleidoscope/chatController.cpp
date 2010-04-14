@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <iostream>
 
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/tete.h>
@@ -244,6 +245,8 @@ namespace Kaleidoscope {
           last_selected_ = (*it);
           (*it)->tete_node()->frameOn();
           }
+        //std::cerr << "Checking" << std::endl;
+        (*it)->tete_node()->updateGeometry();
       }
     }
 
