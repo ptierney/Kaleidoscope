@@ -27,18 +27,18 @@ namespace Kaleidoscope {
   }
 
   void ChatLinkSystem::setType1(){
-    rest_distance_ = 200.0;
-    dormant_rest_distance_ = 200.0;
+    rest_distance_ = 175.0;
+    dormant_rest_distance_ = 100.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
-    // For pull, larger is slower
-    attract_weight_ = 5.0;
-    // For push, smaller is slower
+    // For attract_weight_, larger is larger, faster, stronger
+    attract_weight_ = 10.0;
+    // For repulse_weight_, larger is larger, faster, stronger
     repulse_weight_ = 50.0;
     min_velocity_ = 0.1;
-    max_velocity_ = 10.0;
-    damping_ = 0.02;
+    max_velocity_ = 1000.0;
+    damping_ = 0.00002;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.1;
+    energy_threshold_ = 0.01;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
   }
@@ -56,7 +56,6 @@ namespace Kaleidoscope {
   }
 
   void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
-    //d_->getNoticeWindow()->write(7, "update");
     if(running_){
       update(d_->chat_controller()->chats());
       running_ = total_kinetic_energy_ > energy_threshold_;
@@ -67,7 +66,7 @@ namespace Kaleidoscope {
     total_kinetic_energy_ = 0.0;
 
     /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
-       though it has something to do with "temporaries". */
+       though it has something to do with "temporaries".  You can't tae the start from one array, and the end from it's copy. */
     std::vector<Tete*> tetes;
 
     // For every tete in every that, calculate forces
@@ -116,22 +115,30 @@ namespace Kaleidoscope {
          (*it)->tete_node()->dormant() ){
         point_1 = tete->tete_node()->pos();
         point_2 = (*it)->tete_node()->pos();
+        repulse_scale = 0.5;
       } else {
         line_between = LinkNode::getLineBetween(tete->tete_node(),
                                                 (*it)->tete_node());
         point_1 = line_between.p1();
         point_2 = line_between.p2();
-      }
-      /*
-      if(tete->tete_node()->boundingRect().intersects((*it)->tete_node()->boundingRect())){
-        repulse_scale = 3.0;
+
+        /*
+        if(tete->tete_node()->boundingRect().intersects((*it)->tete_node()->boundingRect())){
+          repulse_scale = 3.0;
+          point_1 = tete->tete_node()->pos();
+          point_2 = (*it)->tete_node()->pos();
+          */
+          /*
         (*it)->tete_node()->setPos((*it)->tete_node()->pos() +
                                   QPointF(1000 - qrand() % 2000, 1000 - qrand() % 2000));
         std::cerr << "Intersect " << point_1.x() << " " << point_1.y() << std::endl
             << point_2.x() << " " << point_2.y() << std::endl;
         continue;
+        */
+        /*
+        }
+        */
       }
-      */
 
       force += coulombRepulsion(point_1,
                                 point_2) * repulse_scale;
@@ -164,9 +171,10 @@ namespace Kaleidoscope {
         (*it)->link_node()->updateLinkLine();
         point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
         point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);
-        average = (tete->tete_node()->activeElapsed() + other_node->tete_node()->activeElapsed()) / 2.0;
-        rest_distance = dormant_rest_distance_ + rest_difference_ * (1/average);
+        //average = (tete->tete_node()->activeElapsed() + other_node->tete_node()->activeElapsed()) / 2.0;
+        //rest_distance = dormant_rest_distance_ + rest_difference_ * (1/average);
       }
+      rest_distance = rest_distance_;
 
       // Use points from an line intersection, to take into account the size of the
       // boxes.
@@ -176,7 +184,7 @@ namespace Kaleidoscope {
 
     //tete->tete_node()->addVelocity(force*damping_);
     //if(force.getLength() > max_velocity_)
-    //  force = Vec3D();
+    //   force = Vec3D();
 
     // Check for floating point NaNs
     if( force != force ){
@@ -216,8 +224,8 @@ namespace Kaleidoscope {
     float r = sqrt(dx*dx + dy*dy);
     float displacement = r - rest_distance;
 
-    return Vec3D(dx/r*displacement*attract_weight_,
-                 dy/r*displacement*attract_weight_,
+    return Vec3D((dx/r)*displacement*attract_weight_,
+                 (dy/r)*displacement*attract_weight_,
                  0.0);               
   }
 

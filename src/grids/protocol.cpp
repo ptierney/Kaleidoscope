@@ -56,12 +56,9 @@ namespace Grids {
     /* If enough time has elapsed. */
     /* Pop a string off the queue. */
     /* Send it on its merry way. */
-    //QMutexLocker locker(&outbound_queue_mutex);
 
-    if(sock->bytesAvailable()){
-      //std::cerr << "You got bytes" << std::endl;
+    if(sock->bytesAvailable())
       gridsRead();
-    }
 
     if(!outbound_queue.empty() &&
        outbound_timer.elapsed() > outbound_limit){
@@ -163,7 +160,8 @@ namespace Grids {
 
     std::string value_string = stringifyValue(args);
 
-    std::cerr << value_string << std::endl;
+    //std::cerr << "OUTGOING" << std::endl;
+    //std::cerr << value_string << std::endl;
 
     //pushOutboundRequest(value_string);
     protocolWrite(value_string);
@@ -248,8 +246,6 @@ namespace Grids {
       return;
     }
 
-    // TODO: run in seperate thread
-
     // allocate space for incoming message + null byte
     buf = (char *)malloc(incomingLength + 1);
 
@@ -288,17 +284,14 @@ namespace Grids {
       return;
     }
 
-    // TODO: run in seperate thread
     std::string msg = buf;
 
+    //std::cerr << "INCOMING" << std::endl;
     //std::cerr << msg << std::endl;
 
     handleMessage(msg);
 
-    /*std::cerr << "Freeing buff\n";*/
     free(buf);
-    /*std::cerr << "Freed buff\n"; */
-
   }
 
   void Protocol::handleMessage(std::string &msg) {

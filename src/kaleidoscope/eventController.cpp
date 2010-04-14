@@ -22,6 +22,8 @@ namespace Kaleidoscope {
     recording_keys_ = false;
 	}
 
+  // EventController isn't derived from a QObject, this function
+  // is called by Scene2D, not the Qt stack.
   void EventController::keyPressEvent(QKeyEvent* event){
     if(event->key() == Qt::Key_Escape){
       d_->app->quit();

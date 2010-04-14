@@ -44,7 +44,6 @@ namespace Kaleidoscope {
     node_->tete()->updateText(toPlainText().toStdString());
   }
 
-
   void DisplayTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     makeActive();
     //text_item_->mouseDoubleClickEvent(event);

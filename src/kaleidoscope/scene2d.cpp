@@ -69,7 +69,6 @@ namespace Kaleidoscope {
   }
 
   void Scene2D::keyPressEvent(QKeyEvent *event) {
-
     // If we are not in a text box
     if(focusItem() == 0){
       d->event_controller()->keyPressEvent(event);

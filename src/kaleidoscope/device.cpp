@@ -49,7 +49,7 @@ namespace Kaleidoscope {
     startTimer(100);
 
     /* NoticeWindow & ErrorWindow must be created before any Grids::Objects,
-         * as all Grids::Objects require them to be created. */
+     * as all Grids::Objects require them to be created. */
     createNoticeWindow();
     createErrorWindow();
     createConsole();
@@ -57,15 +57,12 @@ namespace Kaleidoscope {
     /* Show the main window so we can read notices as the program connects. */
     main_window->show();
 
-    //noticeWindow->addNotice(tr("Set up windows"));
     setMyID( getGridsUtility()->getNewUUID() );
 
     createObjects();
 
-    //getNoticeWindow()->write(0, tr("Initializing..."));
     // Creates the protocol, connects to the server
     g_interface = new Grids::Interface(this, main_window);
-    //getNoticeWindow()->write(0, tr("Created Interface"));
   }
 
   void Device::createObjects(){
@@ -97,8 +94,6 @@ namespace Kaleidoscope {
 
     if(connected == false && getInterface()->isConnected() == true) {
       connected = true;
-      //getNoticeWindow()->write(tr("Connected!"));
-      //getNoticeWindow()->write(0, tr("Loading room / creating room"));
       loadRoom();
     }
 
@@ -112,10 +107,6 @@ namespace Kaleidoscope {
 
   Device::~Device() {
     /* Any Qt derived object is destroyed by Qt */
-    /*
-         */
-    /* If I delete the interface here, it closes down the
-           protocol thread. */
     delete g_interface;
     delete g_utility;
     delete settings;

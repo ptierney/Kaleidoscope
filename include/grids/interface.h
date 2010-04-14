@@ -97,6 +97,8 @@ namespace Grids{
     std::vector< GridsID > known_rooms;
     std::vector< GridsID > server_rooms;
 
+    std::map<GridsID, int> duplicate_map_;
+
     std::string server_address;
     Protocol* proto;
     bool connected;
