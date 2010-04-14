@@ -1,3 +1,4 @@
+#include <iostream>
 
 #include <QPainter>
 
@@ -33,13 +34,13 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void ChatNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
+  void ChatNode::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
 
     updateDrawRect();
 
-    //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-    //painter->drawRect(all_tetes_rect_);
+    painter->drawRect(draw_rect_);
   }
 
   void ChatNode::updateDrawRect(){
@@ -56,7 +57,7 @@ namespace Kaleidoscope {
     }
 
     TeteNode* first_node = NULL;
-
+    // Find the first non-null node
     for(unsigned int i = 0u; first_node == NULL; i++){
       first_node = tetes[i]->tete_node();
     }
@@ -72,8 +73,8 @@ namespace Kaleidoscope {
     float max_x = bound.bottomRight().x();
     float max_y = bound.bottomRight().y();
 
-    for(unsigned int i = 0u; i < tetes.size(); i++){
-      addTeteToMinMax(tetes[i], &min_x, &min_x, &max_x, &max_y);
+    for(std::vector<Tete*>::const_iterator it = tetes.begin(); it != tetes.end(); ++it){
+      addTeteToMinMax(*it, &min_x, &min_y, &max_x, &max_y);
     }
 
     all_tetes_rect_ = QRectF(QPointF(min_x, min_y),
@@ -93,6 +94,8 @@ namespace Kaleidoscope {
     QRectF bound = local_bound;
     bound.moveTo(tete->tete_node()->pos());
     bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    //std::cerr << bound.topLeft().y() << " " << *min_y << std::endl;
 
     if(bound.topLeft().x() < *min_x)
       *min_x = bound.topLeft().x();
@@ -186,6 +189,22 @@ namespace Kaleidoscope {
     for(unsigned int i = 0u; i < children.size(); i++){
       placeNodes(children[i]);
     }
+  }
+
+  Vec3D ChatNode::velocity(){
+    return velocity_;
+  }
+
+  void ChatNode::set_velocity(Vec3D velocity){
+    velocity_ = velocity;
+  }
+
+  void ChatNode::addVelocity(Vec3D addition){
+    velocity_ += addition;
+  }
+
+  void ChatNode::updatePosition(){
+    setPos(x() + velocity_.X, y() + velocity_.Y);
   }
 
 }

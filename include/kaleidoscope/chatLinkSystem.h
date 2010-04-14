@@ -29,6 +29,7 @@ namespace Kaleidoscope {
 
     void update(std::vector<Chat*> chats);
     void doForces(Tete* tete, Chat* chat);
+    void doChatForces(std::vector<Chat*> chats);
 
     bool running();
     void set_running(bool);
@@ -48,11 +49,13 @@ namespace Kaleidoscope {
     float rest_distance_;
     float dormant_rest_distance_;
     float rest_difference_;
+    float chat_rest_distance_;
     float repulse_weight_;
     float attract_weight_;
     float min_velocity_;
     float max_velocity_;
     float damping_;
+    float chat_damping_;
     float total_kinetic_energy_;
     float energy_threshold_;
     float push_dropoff_;

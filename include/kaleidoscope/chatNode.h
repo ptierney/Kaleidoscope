@@ -35,6 +35,11 @@ namespace Kaleidoscope {
     void placeNodes();
     void placeNodes(Tete* tete);
 
+    Vec3D velocity();
+    void set_velocity(Vec3D);
+    void addVelocity(Vec3D);
+    void updatePosition();
+
   private:
     Chat* chat_;
     ChatLinkSystem* link_system_;
@@ -45,6 +50,8 @@ namespace Kaleidoscope {
 
     void addTeteToMinMax(Tete*,
                          float*, float*, float*, float*);
+
+    Vec3D velocity_;
 
   };
 }

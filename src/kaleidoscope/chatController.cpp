@@ -64,8 +64,6 @@ namespace Kaleidoscope {
   }
 
   void ChatController::addTete(Tete* tete){
-    //d_->getNoticeWindow()->write(7, "Adding Tete");
-
     // Extract Chat
     Chat* chat = tete->chat();
 

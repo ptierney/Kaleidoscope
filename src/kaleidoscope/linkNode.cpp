@@ -73,7 +73,7 @@ namespace Kaleidoscope {
     return link_line_;
   }
 
-  QLineF LinkNode::getLineBetween(TeteNode* node_1, TeteNode* node_2){
+  QLineF LinkNode::getLineBetween(QGraphicsObject* node_1, QGraphicsObject* node_2){
     if(node_1 == NULL || node_2 == NULL)
       return QLineF();
 

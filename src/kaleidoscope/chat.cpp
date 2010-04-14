@@ -4,6 +4,7 @@
 #include <grids/objectController.h>
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/chatNode.h>
+#include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/device.h>
 
 
@@ -30,6 +31,7 @@ namespace Kaleidoscope {
     tetes_.push_back(tete);
   }
 
+
   void Chat::addTeteAsTree(Tete* tete){
 
     Tete* parent = d_->chat_controller()->getTeteFromID(tete->parent_id());
@@ -45,7 +47,15 @@ namespace Kaleidoscope {
       parent->addChild(tete);
     }
 
+    // Have the first node of the chat drive the position
+    //if(tetes_.empty() && tete->tete_node()){
+    //  chat_node_->setPos(tete->tete_node()->pos());
+    //}
+
     tetes_.push_back(tete);
+
+    // By this time, the chat_node_ should have been initialized
+    //tete->tete_node()->setParent(chat_node_);
   }
 
   const std::vector<Tete*>& Chat::tetes(){

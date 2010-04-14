@@ -9,6 +9,7 @@
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/chat.h>
+#include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/chatController.h>
@@ -30,13 +31,17 @@ namespace Kaleidoscope {
     rest_distance_ = 175.0;
     dormant_rest_distance_ = 100.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
+    chat_rest_distance_ = 700.0;
+
     // For attract_weight_, larger is larger, faster, stronger
     attract_weight_ = 10.0;
     // For repulse_weight_, larger is larger, faster, stronger
     repulse_weight_ = 50.0;
+    // I'm not using min/max at the moment.
     min_velocity_ = 0.1;
     max_velocity_ = 1000.0;
     damping_ = 0.02;
+    chat_damping_ = 0.008;
     total_kinetic_energy_ = 0.0;
     energy_threshold_ = 0.0001;
     // After this distance away, the nodes don't push this node.
@@ -77,6 +82,8 @@ namespace Kaleidoscope {
       }
     }
 
+    doChatForces(chats);
+
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       tetes = (*chat_it)->tetes();
       for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
@@ -84,6 +91,7 @@ namespace Kaleidoscope {
           (*tete_it)->tete_node()->updatePosition();
         }
       }
+      //(*chat_it)->chat_node()->updatePosition();
     }
 
     d_->getScene()->update(d_->getScene()->sceneRect());
@@ -229,5 +237,43 @@ namespace Kaleidoscope {
                  0.0);               
   }
 
+  void ChatLinkSystem::doChatForces(std::vector<Chat*> chats){
+    Vec3D force = Vec3D();
+    ChatNode* chat_node;
+    QPointF point_1, point_2;
+    QLineF between_line;
+    QRectF bound_1, bound_2;
 
+    for(std::vector<Chat*>::const_iterator it = chats.begin(); it != chats.end(); ++it){
+      force = Vec3D();
+      chat_node = (*it)->chat_node();
+      for(std::vector<Chat*>::const_iterator inner = chats.begin(); inner != chats.end(); ++inner){
+        if(chat_node == (*inner)->chat_node())
+          continue;
+
+        //between_line = LinkNode::getLineBetween(chat_node,
+        //                                        (*inner)->chat_node());
+
+        bound_1 = chat_node->boundingRect();
+        bound_2 = (*inner)->chat_node()->boundingRect();
+
+        point_1 = bound_1.center();
+        point_2 = bound_2.center();
+
+        force += coulombRepulsion(point_1,
+                                  point_2);
+
+        force += hookeAttraction(point_1, point_2,
+                                 chat_rest_distance_);
+
+        // Check for floating point NaNs
+        if( force != force ){
+          force = Vec3D();
+        }
+
+        chat_node->set_velocity(force*chat_damping_);
+        total_kinetic_energy_ += chat_node->velocity().getLengthSQ();
+      }
+    }
+  }
 }
