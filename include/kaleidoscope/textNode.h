@@ -39,6 +39,8 @@ namespace Kaleidoscope {
     float text_active_scale_;
     float text_dormant_scale_;
     float text_scale_difference_;
+    float scale_velocity_;
+    float scale_damping_;
     int time_cutoff_;
     QRectF draw_rect_;
 

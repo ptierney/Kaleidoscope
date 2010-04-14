@@ -71,6 +71,7 @@ namespace Kaleidoscope {
   }
 
   bool TeteNode::frameOn(){
+    activate();
     // Get the rects of parent, referenced, and children nodes
     updateFrameRect();
     float total_object_width = frame_rect_.width();

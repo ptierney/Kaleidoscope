@@ -26,11 +26,13 @@ namespace Kaleidoscope {
     rect_boarder_width_ = 0;
     rect_boarder_height_ = 0;
     name_scale_ = 0.75;
-    text_active_scale_ = 3.0;
-    text_dormant_scale_ = 0.5;
+    text_active_scale_ = 2.0;
+    text_dormant_scale_ = 0.75;
     text_scale_difference_ = text_active_scale_ - text_dormant_scale_;
     // This is the time from full size to smallest size
     time_cutoff_ = 10000;
+    scale_velocity_ = 0.0;
+    scale_damping_ = 0.01;
   }
 
   TextNode::~TextNode(){
@@ -123,17 +125,23 @@ namespace Kaleidoscope {
     if( time_diff < 0){
       current_scale = text_dormant_scale_;
     } else {
-      current_scale = (time_diff / time_cutoff_)*text_scale_difference_ +
+      current_scale = ((float)time_diff / (float)time_cutoff_)*text_scale_difference_ +
                       text_dormant_scale_;
     }
+   // std::cerr << ((float)time_diff / (float)time_cutoff_) << std::endl;
 
-    text_item_->setScale(current_scale);
+    scale_velocity_ = current_scale - text_item_->matrix().m11();
+
+    setScale(matrix().m11() + scale_velocity_ * scale_damping_);
+    setScale(current_scale);
+    update();
+    //centerTextItem();
   }
 
   void TextNode::setText(std::string text){
     text_item_->setText(text);
     centerTextItem();
-    //activate();
+    activate();
   }
 
   void TextNode::setActiveText(std::string text){
