@@ -1,6 +1,8 @@
 #include "kaleidoscope.h"
 #include "ui_kaleidoscope.h"
 
+#include <kaleidoscope/chatLinkSystem.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -68,14 +70,17 @@ void Kaleidoscope::createActions() {
 }
 
 void Kaleidoscope::setSpringType1(){
-
+  d->chat_controller()->link_system()->setType1();
 }
+
 void Kaleidoscope::setSpringType2(){
 
 }
+
 void Kaleidoscope::setGraphicsType1(){
 
 }
+
 void Kaleidoscope::setGraphicsType2(){
 
 }

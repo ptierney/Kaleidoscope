@@ -163,6 +163,8 @@ namespace Grids {
 
     std::string value_string = stringifyValue(args);
 
+    std::cerr << value_string << std::endl;
+
     //pushOutboundRequest(value_string);
     protocolWrite(value_string);
 

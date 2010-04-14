@@ -40,25 +40,6 @@ namespace Kaleidoscope {
     init();
   }
 
-  void Device::createObjects(){
-    noticeWindow->addNotice(tr("Creating objects"));
-
-    // Settings stores / loads the user data
-    settings = new Settings();
-    user_ = new User(this, my_id_);
-    chat_controller_ = new ChatController(this);
-    chat_controller_->init();
-    outside_chat_controller_ = new OutsideChatController(this);
-    outside_chat_controller_->init();
-
-    // Derived from QWidget, handles misc. key presses
-    event_controller_ = new EventController(this);
-    object_controller = new Grids::ObjectController(this, main_window);
-    g_utility = new Grids::Utility();
-
-    // Make sure that the main window has focus
-    getScene()->main_view()->setFocus(Qt::NoFocusReason);
-  }
 
   void Device::init() {
     qtime.start();
@@ -86,6 +67,27 @@ namespace Kaleidoscope {
     g_interface = new Grids::Interface(this, main_window);
     //getNoticeWindow()->write(0, tr("Created Interface"));
   }
+
+  void Device::createObjects(){
+    noticeWindow->addNotice(tr("Creating objects"));
+
+    // Settings stores / loads the user data
+    settings = new Settings();
+    user_ = new User(this, my_id_);
+    chat_controller_ = new ChatController(this);
+    chat_controller_->init();
+    outside_chat_controller_ = new OutsideChatController(this);
+    outside_chat_controller_->init();
+
+    // Derived from QWidget, handles misc. key presses
+    event_controller_ = new EventController(this);
+    object_controller = new Grids::ObjectController(this, main_window);
+    g_utility = new Grids::Utility();
+
+    // Make sure that the main window has focus
+    getScene()->main_view()->setFocus(Qt::NoFocusReason);
+  }
+
   void Device::quit() {
     app->exit(0);
   }

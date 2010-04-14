@@ -21,6 +21,12 @@ namespace Kaleidoscope {
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
     QObject(parent) {
     d_ = d;
+    setType1();
+    running_ = false;
+    startTimer(50);
+  }
+
+  void ChatLinkSystem::setType1(){
     rest_distance_ = 200.0;
     dormant_rest_distance_ = 200.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
@@ -35,8 +41,10 @@ namespace Kaleidoscope {
     energy_threshold_ = 0.1;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
-    running_ = false;
-    startTimer(50);
+  }
+
+  void ChatLinkSystem::setType2(){
+
   }
 
   bool ChatLinkSystem::running(){

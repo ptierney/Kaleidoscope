@@ -343,4 +343,8 @@ namespace Kaleidoscope {
     return last_selected_;
   }
 
+  ChatLinkSystem* ChatController::link_system(){
+    return link_system_;
+  }
+
 } // end namespace
