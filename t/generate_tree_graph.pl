@@ -22,7 +22,7 @@ my $server_address = '127.0.0.1';
 my $num_messages = 3;
 my $message_number = 2;
 # This is the pause between each message
-my $millis_pause = 0.1;
+my $millis_pause = 2.0;
 
 my $is_sender;
 my $messages_received = 0;

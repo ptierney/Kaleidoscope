@@ -20,6 +20,7 @@ use Getopt::Long;
 use Data::Dumper;
 
 use Net::Telnet;
+use HTML::Strip;
 
 use OutsideChat;
 
@@ -38,6 +39,8 @@ my $con = Grids::Console->new(
 my $telnet = new Net::Telnet( Host => 'localhost',
                               Port => '32000',
                               Errmode => sub { } );
+
+my $stripper = HTML::Strip->new();
 
 # Both these hashrefs are indexed by protocol-screenneame
 # eg MrBob-AIM or patrick-xmpp
@@ -86,6 +89,8 @@ sub list_rooms_cb {
 sub create_object_cb {
 	my($c, $evt) = @_;
 
+  #$con->print(Dumper($evt));
+
 	return unless($evt);
 	my $args = $evt->args;
 	return if( $args->{success});  # Filter out the bounceback confirmation code
@@ -101,7 +106,7 @@ sub create_object_cb {
       $screen_id->{"$protocol-$screen_name"} = $grids_id;
       my $password = $evt->args->{attr}->{password}; 
       purpled_add_account($protocol, $screen_name, $password);
-      sleep(1);
+      #sleep(1);
       purpled_refresh_account_list();
   } elsif( $evt->args->{attr}->{type} eq "OutsideChat" ){
       # Get the name: protocol-screenname
@@ -109,8 +114,8 @@ sub create_object_cb {
       # get the index
       # Send message using index
       my $protocol = $args->{attr}->{protocol};
-      my $send_screen_name = $args->{attr}->{send_screen_name};
-      my $receive_screen_name = $args->{attr}->{receive_screen_name};
+      my $send_screen_name = $args->{attr}->{sender_screen_name};
+      my $receive_screen_name = $args->{attr}->{receiver_screen_name};
       my $message = $args->{attr}->{message};
       my $hash_index = "$protocol-$send_screen_name";
       my $chat_object = $outside_chats->{$hash_index};
@@ -135,18 +140,20 @@ sub purpled_add_account {
 }
 
 sub purpled_check {
-    my $response = $telnet->getline(Timeout => 1);
+    #print STDERR "Lolhi\n";
+    
+    my $response = $telnet->getline(Timeout => 0);
 
     return unless($response);
     chomp($response);
     # If we are getting the account list, update our account 
     if($response eq "Start Account List"){
         my @account_list;
-        $response = $telnet->getline(Timeout => 1);
+        $response = $telnet->getline(Timeout => 0);
         chomp($response);
         until( $response eq "End Account List"){
             push(@account_list, $response);
-            $response = $telnet->getline(Timeout => 1);
+            $response = $telnet->getline(Timeout => 0);
             chomp($response);
         }
         parse_account_list(@account_list);
@@ -162,12 +169,26 @@ sub purpled_send_im {
 sub parse_purpled_im {
     my($message) = @_;
 
+    #$con->print("Received $message");
     # $parse[0] is the index
     # $parse[1] is name of the person who sent it
     # $parse[2] is the message
     my @parse = split(/\^\^\^/, $message);
     my ($key, $object) = find_outside_chat_by_index($parse[0]);
-    return unless($object);
+    return unless($object);    
+    #$con->print("Received known IM: $parse[2]");
+
+    my $protocol =  $object->protocol();
+    my $im_message = $parse[2];
+    
+    chomp($protocol);
+    if($protocol eq "AIM" || 
+       $protocol eq "XMPP" ){ # remove the <html> tags
+        $im_message = $stripper->parse( $parse[2] );
+    } else {
+        $im_message = $parse[2];
+    }
+
 
     my $send_value = { '_broadcast' => 1, 
                        pos => [0,0,0], 
@@ -176,10 +197,10 @@ sub parse_purpled_im {
                        id => Grids::UUID->new_id,
                        room_id => $room, 
                        attr => { type => 'OutsideChat',
-                                 protocol => $object->protocol(),
-                                 send_screen_name => $parse[1],
-                                 receive_screen_name => $object->screen_name,
-                                 message => $parse[2],
+                                 protocol => $protocol,
+                                 sender_screen_name => $parse[1],
+                                 receiver_screen_name => $object->screen_name,
+                                 message => $im_message,
                              } };
 
     $client->dispatch_event('Room.CreateObject', $send_value);
@@ -206,8 +227,8 @@ sub parse_account_list {
 
 sub find_outside_chat_by_index {
     my($index) = @_;
-    
-    while( my ($key, $value) = each %$outside_chats ){
+    for my $key ( keys %$outside_chats)  {
+        my $value = $outside_chats->{$key};
         if( $value->index() == $index ){
             return ($key, $value);
         }
@@ -220,9 +241,9 @@ sub run {
     # main loop condition
     my $main = AnyEvent->condvar;
 
-    my $w = AnyEvent->timer( after => 3.0, 
-                             interval => 3.0, 
-                             cb => \&purpled_check);
+    my $w = AnyEvent->timer( after => 3.0,
+                             interval => 2.0,
+                             cb => \&purpled_check );
 
     $client = Grids::Client->new(id => $id, use_encryption => 0, debug => 1, auto_flush_queue => 1);
 
@@ -241,6 +262,13 @@ sub run {
     ::connect();
 
     $con->listen_for_input;
+
+    # This code block the client from receiving messages from the server
+    #my $w = AnyEvent->timer( after => 3.0, 
+    #                         interval => 2.0, 
+    #                         cb => \&purpled_check);
+    # This code doesn't get called
+    #AnyEvent->idle( cb => \&purpled_check);
 
     $main->recv;
 }

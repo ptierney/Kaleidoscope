@@ -19,12 +19,13 @@ use Data::Dumper;
 
 my $server_address = '127.0.0.1';
 #my $server_address = 'elcerrito.ath.cx';
-my $num_messages = 300;
+my $num_messages = 10;
 # This is the pause between each message
 my $millis_pause = 0.1;
 
 my $is_sender;
 my $messages_received = 0;
+my $update_received = 0;
 
 my $sender_id = Grids::Identity->new();
 my $received_id = Grids::Identity->new();
@@ -135,17 +136,69 @@ sub create_object_cb {
 	#$con->print( Dumper( $evt->args->{attr}));	
 
 	if( $evt->args->{attr}->{type} eq "GenericNode"){
-#		if( $evt->args->{attr}->{owner} eq $sender_id->{name}){
-		if( $evt->args->{attr}->{text} eq "Node Num $messages_received"){
-			$messages_received++;
-			$con->print( $messages_received);
-			if($messages_received == $num_messages){
-				$con->print("Passed");
-				exit();
-			}
-		}
-#		}
-	}
+      if( $evt->args->{attr}->{text} eq "Node Num $messages_received"){
+          $messages_received++;
+          $con->print("Message: " . $messages_received);
+      }
+
+      if( $evt->args->{attr}->{text} eq "Node Update $update_received"){
+          $update_received++;
+          $con->print("Update: " . $update_received);
+      }
+
+      if($update_received == $num_messages){
+          if($messages_received == $update_received){
+              $con->print("PASSED");
+          } else {
+              $con->print("FAILED");
+          }
+          exit;
+      }
+  }
+}
+
+sub update_object_cb {
+	my($c, $evt) = @_;
+
+	$con->print( "CREATE ROOM CB");
+
+	return unless($evt);
+
+	return if($is_sender == 1);
+
+	my $args = $evt->args;
+
+	# Filter out the bounceback confirmation code
+	return if( $args->{success});
+	
+	# Problem with Grids
+	# It seems to be the case that error / success messages get sent back
+	# but since I only use broadcast, it's fine
+	return if( $args->{error});
+
+	# Discard other messages
+	return unless( $evt->args->{attr}->{type} );
+	return unless( $evt->args->{attr}->{owner} );
+
+	#$con->print( Dumper( $sender_id));
+	#$con->print( Dumper( $evt->args->{attr}));	
+
+	if( $evt->args->{attr}->{type} eq "GenericNode"){
+
+      if( $evt->args->{attr}->{text} eq "Node Update $update_received"){
+          $update_received++;
+          $con->print("Update: " . $update_received);
+      }
+
+      if($update_received == $num_messages){
+          if($messages_received == $update_received){
+              $con->print("PASSED");
+          } else {
+              $con->print("FAILED");
+          }
+          exit;
+      }
+  }
 }
 
  
@@ -156,11 +209,37 @@ sub send_test_text {
 	
 	my $node_text = "Node Num $text_num";
 
-	my $node_value = { '_broadcast' => 1, pos => [0,0,0], rot => [0,0,0], scl => [1,1,1], id => $test_node_id, room_id => $room, attr => { type => 'GenericNode', text => $node_text, owner => $id->{name} } };
+	my $node_value = { '_broadcast' => 1, 
+                     pos => [0,0,0], 
+                     rot => [0,0,0], 
+                     scl => [1,1,1], 
+                     id => $test_node_id, 
+                     room_id => $room, 
+                     attr => { 
+                         type => 'GenericNode', 
+                         text => $node_text, 
+                         owner => $id->{name} } };
 
 	#$con->print( Dumper($node_value));
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
+
+  select(undef, undef, undef, $millis_pause);
+
+	$node_text = "Node Update $text_num";
+
+	$node_value = { '_broadcast' => 1, 
+                  id => $test_node_id, 
+                  room_id => $room, 
+                  attr => { 
+                      type => 'GenericNode', 
+                      text => $node_text, 
+                      owner => $id->{name} } };
+
+	#$con->print( Dumper($node_value));
+
+	$client->dispatch_event('Room.UpdateObject', $node_value);
+
 }
 
 sub send_create {
@@ -205,7 +284,7 @@ sub run {
 							'Room.Create' => \&room_create_cb,
 							'Room.List' => \&list_rooms_cb,
 							'Room.CreateObject' => \&create_object_cb,
-							#'Room.UpdateObject' => \&update_object_cb,
+							'Room.UpdateObject' => \&update_object_cb,
 							#'Room.ListObjects' => \&list_objects_cb,
 							);
 
