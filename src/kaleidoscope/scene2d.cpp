@@ -134,13 +134,14 @@ namespace Kaleidoscope {
     return link_items;
   }
 
-  void Scene2D::timerEvent(QTimerEvent *event) {
+  void Scene2D::timerEvent(QTimerEvent* event) {
     Q_UNUSED(event);
 
     /* Don't caluculate while dragging. */
     if(mouseGrabberItem() )
       return;
 
+    /*
     foreach(GenericNodeItem* item, node_items) {
       item->calculateForces();
     }
@@ -148,6 +149,7 @@ namespace Kaleidoscope {
     foreach(GenericNodeItem* item, node_items) {
       item->advance();
     }
+    */
   }
 
   View2D* Scene2D::main_view(){

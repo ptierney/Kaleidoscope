@@ -237,6 +237,7 @@ namespace Kaleidoscope {
 
   void ChatController::checkReframe(){
     reframing_ = false;
+    bool reframe_exception_ = false;
 
     for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
       if( (*it) && (*it)->tete_node() ){

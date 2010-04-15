@@ -27,7 +27,7 @@ namespace Kaleidoscope {
   public:
     ChatLinkSystem(Device*, QObject* parent = 0);
 
-    void update(std::vector<Chat*> chats);
+    void update(std::vector<Chat*> chats, QTimerEvent*);
     void doForces(Tete* tete, Chat* chat);
     void doChatForces(std::vector<Chat*> chats);
 
@@ -60,6 +60,9 @@ namespace Kaleidoscope {
     float energy_threshold_;
     float push_dropoff_;
     bool running_;
+
+    int force_timer_id_;
+    int position_timer_id_;
   };
 }
 

@@ -24,7 +24,8 @@ namespace Kaleidoscope {
     d_ = d;
     setType1();
     running_ = false;
-    startTimer(50);
+    position_timer_id_ = startTimer(50);
+    //force_timer_id_ = startTimer(150);
   }
 
   void ChatLinkSystem::setType1(){
@@ -60,20 +61,21 @@ namespace Kaleidoscope {
     running_ = running;
   }
 
-  void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
+  void ChatLinkSystem::timerEvent(QTimerEvent* event){
     if(running_){
-      update(d_->chat_controller()->chats());
+      update(d_->chat_controller()->chats(), event);
       running_ = total_kinetic_energy_ > energy_threshold_;
     }
   }
 
-  void ChatLinkSystem::update(std::vector<Chat*> chats){
+  void ChatLinkSystem::update(std::vector<Chat*> chats, QTimerEvent* event){
     total_kinetic_energy_ = 0.0;
 
     /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
        though it has something to do with "temporaries".  You can't tae the start from one array, and the end from it's copy. */
     std::vector<Tete*> tetes;
 
+    //std::cerr << "Force" << std::endl;
     // For every tete in every that, calculate forces
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       tetes = (*chat_it)->tetes();
@@ -84,6 +86,8 @@ namespace Kaleidoscope {
 
     doChatForces(chats);
 
+
+    //std::cerr << "Position" << std::endl;
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       tetes = (*chat_it)->tetes();
       for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
@@ -92,9 +96,10 @@ namespace Kaleidoscope {
         }
       }
       //(*chat_it)->chat_node()->updatePosition();
-    }
 
-    d_->getScene()->update(d_->getScene()->sceneRect());
+
+      d_->getScene()->update(d_->getScene()->sceneRect());
+    }
   }
 
   void ChatLinkSystem::doForces(Tete* tete, Chat* chat){
