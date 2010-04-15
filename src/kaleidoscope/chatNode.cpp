@@ -16,6 +16,7 @@ namespace Kaleidoscope {
     RespondNode(d, parent, scene) {
     chat_ = chat;
     node_y_space_ = 100;
+    velocity_ = Vec3D();
   }
 
   void ChatNode::init(){
@@ -191,7 +192,7 @@ namespace Kaleidoscope {
     }
   }
 
-  Vec3D ChatNode::velocity(){
+  Vec3D& ChatNode::velocity(){
     return velocity_;
   }
 

@@ -13,6 +13,12 @@
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/device.h>
 
+/* For each screen name you register, it creates a new chat, chat ID, chat node.
+   Each protocol / screen name Alice@AIM gets its own chat id.
+   In the future, every time it receives a message from a person, it
+   goes into that chat.
+ */
+
 namespace Kaleidoscope {
 
   OutsideChatController::OutsideChatController(Device* d, QObject* parent)
@@ -89,7 +95,10 @@ namespace Kaleidoscope {
     const Grids::Value& attr = evt->getAttr();
     std::string protocol = attr["protocol"].asString();
     std::string receiver = attr["receiver_screen_name"].asString();
+    std::string parent_id = "";
+    Tete* parent_tete = NULL;
     std::map<std::string, std::string>::iterator proto_iter;
+
     proto_iter = screen_names.find(protocol);
     // If this message isn't for us, return.
     if(proto_iter == screen_names.end()){
@@ -103,11 +112,18 @@ namespace Kaleidoscope {
 
     std::string sender = attr["send_screen_name"].asString();
     GridsID chat_id = chat_ids[protocol];
+    std::cerr << "Chat id = " << chat_id << std::endl;
     Chat* chat = dev->chat_controller()->getChatFromID(chat_id);
-    Tete* parent_tete = chat->tetes().back();
-    std::string parent_id = "";
-    if(parent_tete)
-      parent_id = parent_tete->id();
+    if(chat){
+      if(!chat->tetes().empty()){
+        parent_tete = chat->tetes().back();
+        if(parent_tete)
+          parent_id = parent_tete->id();
+      }
+    } else { // This is probably a new conversation, create a new chat for it
+
+
+    }
 
     std::string message = attr["message"].asString();
 

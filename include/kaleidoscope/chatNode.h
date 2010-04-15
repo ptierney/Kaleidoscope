@@ -35,7 +35,7 @@ namespace Kaleidoscope {
     void placeNodes();
     void placeNodes(Tete* tete);
 
-    Vec3D velocity();
+    Vec3D& velocity();
     void set_velocity(Vec3D);
     void addVelocity(Vec3D);
     void updatePosition();
