@@ -13,6 +13,11 @@ namespace Grids{
 
 namespace Kaleidoscope {
   class Device;
+  class Chat;
+
+  // This map hold chats, indexed [protocol][screen_name]
+  //typedef std::map<std::string, std::map<std::string, Chat*> > ProtocolChatPointerMap;
+  typedef std::map<std::string, std::map<std::string, GridsID> > ProtocolChatIDMap;
 
   class OutsideChatController : public QObject {
     Q_OBJECT
@@ -34,14 +39,21 @@ namespace Kaleidoscope {
     // This create a node from a message from an outside chat protocol
     static void gridsCreateOutsideChat(Device* d, Grids::Event* event);
 
-    std::map<std::string, std::string>& screen_names();
-    std::map<std::string, GridsID>& chat_ids();
+    //std::map<std::string, std::string>& screen_names();
+    //std::map<std::string, GridsID>& chat_ids();
+    //ProtocolChatPointerMap& chat_pointers();
+    ProtocolChatIDMap& chat_ids();
 
   private:
     Device* d_;
     // Maps protocol to screen name
-    std::map<std::string, std::string> screen_names_;
-    std::map<std::string, GridsID> chat_ids_;
+    //std::map<std::string, std::string> screen_names_;
+    //std::map<std::string, GridsID> chat_ids_;
+
+
+    //ProtocolChatPointerMap chat_pointers_;
+    ProtocolChatIDMap chat_ids_;
+
 
   };
 }

@@ -35,17 +35,8 @@ namespace Kaleidoscope {
                                                    std::string protocol,
                                                    std::string screen_name,
                                                    std::string password) {
-    std::map<std::string, std::string>& screen_names = dev->outside_chat_controller()->screen_names();
-    std::map<std::string, GridsID>& chat_ids = dev->outside_chat_controller()->chat_ids();
-
-    screen_names[protocol] = screen_name;
-    chat_ids[protocol] = dev->getGridsUtility()->getNewUUID();
-
-    Chat* chat = new Chat(dev, chat_ids[protocol]);
-    dev->chat_controller()->addChat(chat);
-
     Grids::Value* create_val = new Grids::Value();
-    GridsID new_id;
+    GridsID new_id; // The ID of the request object
 
     (*create_val)["type"] = "AddOutsideAccount";
     (*create_val)["protocol"] = protocol;
@@ -65,17 +56,22 @@ namespace Kaleidoscope {
                                                     std::string your_screen_name,
                                                     std::string other_screen_name,
                                                     std::string message) {
-    std::map<std::string, GridsID>& chat_ids = dev->outside_chat_controller()->chat_ids();
-
+    GridsID chat_id; // The ID of the newly created chat
+    GridsID new_id; // The ID of the request object (yes, requests are objects)
     Grids::Value* create_val = new Grids::Value();
-    GridsID new_id;
+
+    if( dev->outside_chat_controller()->chat_ids()[protocol][other_screen_name].empty() ){
+      chat_id = dev->getGridsUtility()->getNewUUID();
+    } else {
+      chat_id = dev->outside_chat_controller()->chat_ids()[protocol][other_screen_name];
+    }
 
     (*create_val)["type"] = "OutsideChat";
     (*create_val)["protocol"] = protocol;
     (*create_val)["send_screen_name"] = your_screen_name;
     (*create_val)["receive_screen_name"] = other_screen_name;
     (*create_val)["message"] = message;
-    (*create_val)["chat"] = chat_ids[protocol];
+    (*create_val)["chat"] = chat_id;
     (*create_val)["id"] = dev->my_id();
     if(dev->user()->hasSetName())
       (*create_val)["user_name"] = dev->user()->name();
@@ -87,42 +83,28 @@ namespace Kaleidoscope {
 
   void OutsideChatController::gridsCreateOutsideChat(Device* dev,
                                                      Grids::Event* evt) {
-    std::cerr << "Creating outside chat" << std::endl;
-
-    std::map<std::string, std::string>& screen_names = dev->outside_chat_controller()->screen_names();
-    std::map<std::string, GridsID>& chat_ids = dev->outside_chat_controller()->chat_ids();
 
     const Grids::Value& attr = evt->getAttr();
     std::string protocol = attr["protocol"].asString();
     std::string receiver = attr["receiver_screen_name"].asString();
+    std::string sender_name = attr["sender_screen_name"].asString();
     std::string parent_id = "";
     Tete* parent_tete = NULL;
-    std::map<std::string, std::string>::iterator proto_iter;
+    Chat* chat = NULL;
+    GridsID chat_id;
 
-    proto_iter = screen_names.find(protocol);
-    // If this message isn't for us, return.
-    if(proto_iter == screen_names.end()){
-      std::cerr << "Not for us 1" << std::endl;
-      return;
-    }
-    else if(screen_names[protocol] != receiver){
-      std::cerr << "Not for us 2: " << screen_names[protocol] << " -- " << receiver << std::endl;
-      return;
+    if( dev->outside_chat_controller()->chat_ids()[protocol][sender_name].empty()){
+      chat_id = dev->getGridsUtility()->getNewUUID();
+      dev->outside_chat_controller()->chat_ids()[protocol][sender_name] = chat_id;
+    } else {
+      chat_id = dev->outside_chat_controller()->chat_ids()[protocol][sender_name];
+      chat = dev->chat_controller()->getChatFromID(chat_id);
     }
 
-    std::string sender = attr["send_screen_name"].asString();
-    GridsID chat_id = chat_ids[protocol];
-    std::cerr << "Chat id = " << chat_id << std::endl;
-    Chat* chat = dev->chat_controller()->getChatFromID(chat_id);
-    if(chat){
-      if(!chat->tetes().empty()){
-        parent_tete = chat->tetes().back();
-        if(parent_tete)
-          parent_id = parent_tete->id();
-      }
-    } else { // This is probably a new conversation, create a new chat for it
-
-
+    if(chat && !chat->tetes().empty()){
+      parent_tete = chat->tetes().back();
+      if(parent_tete)
+        parent_id = parent_tete->id();
     }
 
     std::string message = attr["message"].asString();
@@ -135,6 +117,7 @@ namespace Kaleidoscope {
       Link::requestCreate(dev, new_node_id, parent_id);
   }
 
+  /*
   std::map<std::string, std::string>& OutsideChatController::screen_names(){
     return screen_names_;
   }
@@ -142,7 +125,16 @@ namespace Kaleidoscope {
   std::map<std::string, GridsID>& OutsideChatController::chat_ids(){
     return chat_ids_;
   }
+  */
+  /*
+  ProtocolChatPointerMap& OutsideChatController::chat_pointers(){
+    return chat_pointers_;
+  }
+  */
 
+  ProtocolChatIDMap& OutsideChatController::chat_ids(){
+    return chat_ids_;
+  }
 
 
 }
