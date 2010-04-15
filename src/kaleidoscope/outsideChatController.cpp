@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <kaleidoscope/outsideChatController.h>
 #include <grids/define.h>
 #include <grids/event.h>
@@ -79,6 +81,8 @@ namespace Kaleidoscope {
 
   void OutsideChatController::gridsCreateOutsideChat(Device* dev,
                                                      Grids::Event* evt) {
+    std::cerr << "Creating outside chat" << std::endl;
+
     std::map<std::string, std::string>& screen_names = dev->outside_chat_controller()->screen_names();
     std::map<std::string, GridsID>& chat_ids = dev->outside_chat_controller()->chat_ids();
 
@@ -88,10 +92,14 @@ namespace Kaleidoscope {
     std::map<std::string, std::string>::iterator proto_iter;
     proto_iter = screen_names.find(protocol);
     // If this message isn't for us, return.
-    if(proto_iter == screen_names.end())
+    if(proto_iter == screen_names.end()){
+      std::cerr << "Not for us 1" << std::endl;
       return;
-    else if(screen_names[protocol] != receiver)
+    }
+    else if(screen_names[protocol] != receiver){
+      std::cerr << "Not for us 2: " << screen_names[protocol] << " -- " << receiver << std::endl;
       return;
+    }
 
     std::string sender = attr["send_screen_name"].asString();
     GridsID chat_id = chat_ids[protocol];
