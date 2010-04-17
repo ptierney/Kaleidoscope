@@ -58,7 +58,8 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/userNameBox.cpp \
     ../../src/kaleidoscope/activityCircle.cpp \
     ../../src/kaleidoscope/addUsernameBox.cpp \
-    ../../src/kaleidoscope/outsideChatController.cpp
+    ../../src/kaleidoscope/outsideChatController.cpp \
+    ../../src/kaleidoscope/nodeGradient.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -136,5 +137,6 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/registerUsernameBox.h \
     ../../include/kaleidoscope/addUsernameBox.h \
     ../../include/kaleidoscope/outsideChatController.h \
-    ../../include/kaleidoscope/outsideChat.h
+    ../../include/kaleidoscope/outsideChat.h \
+    ../../include/kaleidoscope/nodeGradient.h
 FORMS += kaleidoscope.ui

@@ -11,6 +11,7 @@ namespace Kaleidoscope {
   class Tete;
 
   class DisplayTextNode : public TextNode {
+    Q_OBJECT
 
   public:
     DisplayTextNode(Device*, Tete*, QGraphicsItem* parent = 0,
@@ -23,7 +24,10 @@ namespace Kaleidoscope {
     // entire tree.
     void placeNode();
     void makeActive();
-    
+
+  public slots:
+    void replaceTextItem();
+
   protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void focusInEvent(QFocusEvent *event);

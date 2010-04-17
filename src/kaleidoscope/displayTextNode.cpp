@@ -37,6 +37,22 @@ namespace Kaleidoscope {
     updateDrawRect();
   }
 
+  void DisplayTextNode::replaceTextItem(){
+    if(text_item_ == NULL)
+      return;
+
+    QString old_text = text_item_->toPlainText();
+    delete text_item_;
+
+    text_item_ = new DisplayTextItem(d_, this, this);
+    text_item_->init();
+    text_item_->setPlainText(old_text);
+    text_item_->setDefaultTextColor(text_color_);
+
+    centerTextItem();
+    updateDrawRect();
+  }
+
   // Don't use this!
   // Call the ChatNode to place the entire tree
   void DisplayTextNode::placeNode(){

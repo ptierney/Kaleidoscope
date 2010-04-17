@@ -13,6 +13,7 @@
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/linkNode.h>
+#include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -47,6 +48,7 @@ namespace Kaleidoscope {
     name_item_->setDefaultTextColor(name_color_);
     name_item_->setScale(name_scale_);
 
+    node_gradient_ = new NodeGradient(this, this);
   }
 
   DisplayTextItem* TextNode::text_item() {
@@ -68,7 +70,7 @@ namespace Kaleidoscope {
     updateDrawRect();
     //updateTextSize();
 
-    if(selected_){
+    if(false && selected_){
       painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
       if(tete_->parent() && tete_->parent()->tete_node() ){
@@ -89,6 +91,9 @@ namespace Kaleidoscope {
       painter->setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
       painter->drawRect(draw_rect_);
     }
+
+
+    //painter->drawRect(draw_rect_);
   }
 
   /* Is there a more efficient way to do this, so that I don't have to access .x(), y(), etc.

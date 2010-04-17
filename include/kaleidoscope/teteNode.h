@@ -71,6 +71,7 @@ namespace Kaleidoscope {
     bool dormant_;
     QTime last_active_;
 
+
   };
 
 

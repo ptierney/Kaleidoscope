@@ -254,6 +254,7 @@ namespace Kaleidoscope {
     return dormant_;
   }
 
+  // Removed for performance debugging
   void TeteNode::activate(){
     dormant_ = false;
     last_active_.start();

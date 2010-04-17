@@ -101,6 +101,7 @@ namespace Kaleidoscope {
 
     dev->getScene()->addItem(display_node);
 
+    // Something here is causing the items to become process-intensive
     GridsID owner_id = tete->owner_id();
     if(owner_id == dev->my_id()){
       // Request an update with any cached keys
@@ -109,9 +110,9 @@ namespace Kaleidoscope {
       // Center item,
       display_node->beginFraming();
       // Select / focus item
-      //display_node->makeActive();
+      // 3 Lines remmoved for performance debugging
       display_node->text_item()->appendActiveText(append);
-      display_node->text_item()->makeActive();
+      display_node->text_item()->makeActive(); // <-- CAUSES NODES TO BOTTLENECK
       display_node->text_item()->textCursor().movePosition(QTextCursor::End);
     }
   }
@@ -147,7 +148,6 @@ namespace Kaleidoscope {
     }
 
     tete->tete_node()->activate();
-
   }
 
   std::string Tete::text(){

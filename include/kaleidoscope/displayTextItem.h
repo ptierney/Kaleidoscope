@@ -21,7 +21,7 @@ namespace Kaleidoscope {
     void init();
     void makeActive();
     void makeNotActive();
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    //void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void focusInEvent(QFocusEvent*);
     void focusOutEvent(QFocusEvent*);
     void setText(std::string);
@@ -51,6 +51,11 @@ namespace Kaleidoscope {
     bool input_unsent_;
     int key_delay_;
     int input_time_;
+    // When a text item looses focus (when it goes from being
+    // an editable text box to a text display), this item
+    // should be deleted, and replaced with a simple text
+    // display with the same text.
+    bool replace_me_;
   };
 
 }

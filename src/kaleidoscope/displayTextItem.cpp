@@ -1,7 +1,10 @@
 
+#include <iostream>
+
 #include <QTextCursor>
 #include <QTimerEvent>
 #include <QKeyEvent>
+#include <QTimer>
 
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/tete.h>
@@ -22,6 +25,7 @@ namespace Kaleidoscope {
     input_time_ = 15000;
     keys_unsent_ = false;
     input_unsent_ = false;
+    replace_me_ = false;
   }
 
   void DisplayTextItem::init(){
@@ -38,17 +42,26 @@ namespace Kaleidoscope {
     setFocus(Qt::OtherFocusReason);
   }
 
+  // This is REALLY IMPORTANT
   void DisplayTextItem::makeNotActive(){
     node_->centerTextItem();
     setTextInteractionFlags(Qt::NoTextInteraction);
+    setFlag(QGraphicsItem::ItemIsFocusable, false);
+    setFlag(QGraphicsItem::ItemIsSelectable, false);
     node_->tete()->updateText(toPlainText().toStdString());
+    // Does this cause a focusOutEvent?
+    clearFocus();
+    // Replace the item with a more efficient version in 1 second
+    QTimer::singleShot(1000, node_, SLOT(replaceTextItem()));
   }
 
+  /*
   void DisplayTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     makeActive();
     //text_item_->mouseDoubleClickEvent(event);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
   }
+  */
 
   void DisplayTextItem::focusInEvent(QFocusEvent* /*event*/) {
     //setTextInteractionFlags(Qt::TextEditorInteraction);

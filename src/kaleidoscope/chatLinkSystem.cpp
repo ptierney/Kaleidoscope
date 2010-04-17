@@ -44,7 +44,7 @@ namespace Kaleidoscope {
     damping_ = 0.02;
     chat_damping_ = 0.008;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.0001;
+    energy_threshold_ = 0.01;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
   }

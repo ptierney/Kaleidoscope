@@ -17,13 +17,11 @@ namespace Kaleidoscope {
 
     virtual bool frameOn() = 0;
 
-
     bool selected();
 
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
-    //void timerEvent(QTimerEvent *);
 
     bool selected_;
     // Used for keeping track of reframing
