@@ -67,7 +67,7 @@ namespace Kaleidoscope {
   }
 
   void ChatLinkSystem::timerEvent(QTimerEvent* event){
-    if(running_){
+    if(false && running_){
       update(d_->chat_controller()->chats());
 
       running_ = false;
