@@ -47,19 +47,19 @@ namespace Kaleidoscope {
     tete_ = tete;
   }
 
-  void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* /*event*/){
-    //Q_UNUSED(event)
+  void TeteNode::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
+    selected_ = true;
     beginFraming();
+    QGraphicsObject::hoverEnterEvent(event);
   }
 
-  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* /*event*/){
-    //Q_UNUSED(event)
+  void TeteNode::hoverLeaveEvent(QGraphicsSceneHoverEvent* event){
     selected_ = false;
+    QGraphicsObject::hoverLeaveEvent(event);
   }
 
   void TeteNode::beginFraming(){
     updateFrameRect();
-    selected_ = true;
     frame_selected_ = true;
     mouse_moved_ = false;
     if(frame_rect_object_){
@@ -254,10 +254,19 @@ namespace Kaleidoscope {
     return dormant_;
   }
 
-  // Removed for performance debugging
   void TeteNode::activate(){
+    sendActivate();
     dormant_ = false;
     last_active_.start();
+  }
+
+  void TeteNode::receiveActivate(double amount){
+    dormant_ = false;
+    last_active_.start();
+  }
+
+  void TeteNode::sendActivate(){
+    Tete::requestUpdate(d_, tete_->id(), 1.0);
   }
 
 

@@ -31,19 +31,23 @@ namespace Kaleidoscope {
     rest_distance_ = 150.0;
     dormant_rest_distance_ = 100.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
-    chat_rest_distance_ = 1000.0;
+    chat_rest_distance_ = 4000.0;
 
     // For attract_weight_, larger is larger, faster, stronger
     attract_weight_ = 10.0;
+    // Scale for the all chats system
+    all_chats_attract_scale_ = 1.0;
     // For repulse_weight_, larger is larger, faster, stronger
     repulse_weight_ = 55.0;
+    all_chats_repulse_scale_ = 2.0;
     // I'm not using min/max at the moment.
     min_velocity_ = 0.1;
     max_velocity_ = 1000.0;
     damping_ = 0.02;
     chat_damping_ = 0.008;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.4;
+    energy_threshold_ = 0.6;
+    all_chats_energy_threshold_ = 0.1;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
   }
@@ -67,7 +71,7 @@ namespace Kaleidoscope {
   }
 
   void ChatLinkSystem::timerEvent(QTimerEvent* event){
-    if(false && running_){
+    if(running_){
       update(d_->chat_controller()->chats());
 
       running_ = false;
@@ -76,7 +80,7 @@ namespace Kaleidoscope {
           chat_running_[it->first] = true;
           running_ = true;
         }
-        if(chats_kinetic_energy_ > energy_threshold_){
+        if(chats_kinetic_energy_ > all_chats_energy_threshold_){
           chats_running_ = true;
           running_ = true;
         }
@@ -283,10 +287,11 @@ namespace Kaleidoscope {
         point_2 = bound_2.center();
 
         force += coulombRepulsion(point_1,
-                                  point_2);
+                                  point_2) * all_chats_repulse_scale_;
 
+        //point_2 = QPointF();
         force += hookeAttraction(point_1, point_2,
-                                 chat_rest_distance_);
+                                 chat_rest_distance_) * all_chats_attract_scale_;
 
         // Check for floating point NaNs
         if( force != force ){
@@ -294,8 +299,11 @@ namespace Kaleidoscope {
         }
 
         chat_node->set_velocity(force*chat_damping_);
-        chats_kinetic_energy_ += chat_node->velocity().getLengthSQ();
+        chats_kinetic_energy_ += chat_node->velocity().getLength();
       }
+
+      //force += coulombRepulsion(point_1,
+      //                          QPointF()) * all_chats_repulse_scale_;
     }
   }
 }

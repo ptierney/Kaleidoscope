@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'kaleidoscope.ui'
 **
-** Created: Sat Apr 17 18:53:35 2010
+** Created: Sat Apr 17 23:04:24 2010
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

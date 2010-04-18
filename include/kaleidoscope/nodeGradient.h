@@ -1,18 +1,23 @@
 #ifndef NODEGRADIENT_H
 #define NODEGRADIENT_H
 
-#include <QGraphicsItem>
+#include <QGraphicsObject>
+#include <QRadialGradient>
 #include <QRectF>
 
 namespace Kaleidoscope {
   class TeteNode;
 
-  class NodeGradient : public QGraphicsItem {
+  class NodeGradient : public QGraphicsObject {
+    Q_OBJECT
 
   public:
     NodeGradient(TeteNode* parent_node, QGraphicsItem* parent = 0);
 
+    void init();
     void updateDrawRect();
+    void activate();
+    void timerEvent(QTimerEvent *);
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -24,6 +29,9 @@ namespace Kaleidoscope {
     QRectF draw_rect_;
     int rect_width_;
     int rect_height_;
+    float time_dropoff_;
+    int update_timer_;
+    int alpha_refresh_;
 
   };
 }

@@ -25,6 +25,7 @@ namespace Kaleidoscope {
                                  std::string text, Vec3D position);
     static void gridsCreate(Device* dev, Grids::Event* evt);
     static void requestUpdate(Device* dev, GridsID tete_id, std::string new_text);
+    static void requestUpdate(Device *dev, GridsID tete_id, float activate_amount);
     static void gridsUpdate(Device* dev, Grids::Event* evt);
 
     enum { TEXT_TETE,

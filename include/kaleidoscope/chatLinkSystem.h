@@ -53,6 +53,8 @@ namespace Kaleidoscope {
     float chat_rest_distance_;
     float repulse_weight_;
     float attract_weight_;
+    float all_chats_repulse_scale_;
+    float all_chats_attract_scale_;
     float min_velocity_;
     float max_velocity_;
     float damping_;
@@ -63,6 +65,7 @@ namespace Kaleidoscope {
     float chats_kinetic_energy_;
     bool chats_running_;
     float energy_threshold_;
+    float all_chats_energy_threshold_;
     float push_dropoff_;
     bool running_;
 

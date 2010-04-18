@@ -51,7 +51,7 @@ namespace Kaleidoscope {
     Q_UNUSED(event)
     selected_ = false;
 
-    QGraphicsObject::hoverLeaveEvent(event);
+    //QGraphicsObject::hoverLeaveEvent(event);
 
     //NothingHere
   }

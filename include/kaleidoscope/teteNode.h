@@ -39,6 +39,8 @@ namespace Kaleidoscope {
 
     bool dormant();
     void activate();
+    void receiveActivate(double amount = 1.0);
+    void sendActivate();
 
     virtual void placeNode() = 0;
     virtual void setText(std::string) = 0;

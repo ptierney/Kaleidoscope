@@ -132,6 +132,21 @@ namespace Kaleidoscope {
     delete val;
   }
 
+  void Tete::requestUpdate(Device* dev,
+                           GridsID tete_id,
+                           float activate_amount){
+    Grids::Value* val = new Grids::Value();
+
+    (*val)["type"] = "Tete";
+    (*val)["activate"] = activate_amount;
+    (*val)["owner"] = dev->my_id();
+    (*val)["id"] = tete_id;
+
+    dev->getInterface()->requestUpdateAttr(tete_id, val);
+
+    delete val;
+  }
+
   void Tete::gridsUpdate(Device* dev, Grids::Event* event){
     GridsID id = event->getID();
     Tete* tete = dev->chat_controller()->getTeteFromID(id);
@@ -144,10 +159,14 @@ namespace Kaleidoscope {
       // This doesn't work...
       //tete->tete_node()->setActiveText(text);
     } else {
-      tete->tete_node()->setText(text);
+      if( !((*attr)["text"].empty()) )
+        tete->tete_node()->setText(text);
     }
 
-    tete->tete_node()->activate();
+    if((*attr)["activate"].empty())
+      tete->tete_node()->receiveActivate();
+    else
+      tete->tete_node()->receiveActivate( (*attr)["activate"].asDouble() );
   }
 
   std::string Tete::text(){
