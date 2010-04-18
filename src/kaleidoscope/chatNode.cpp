@@ -36,12 +36,10 @@ namespace Kaleidoscope {
   }
 
   void ChatNode::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
-
     updateDrawRect();
 
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-    painter->drawRect(draw_rect_);
+    //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    //painter->drawRect(draw_rect_);
   }
 
   void ChatNode::updateDrawRect(){
