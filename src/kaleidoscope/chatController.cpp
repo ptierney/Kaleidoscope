@@ -128,7 +128,9 @@ namespace Kaleidoscope {
     node_1->addLink(link);
     node_2->addLink(link);
 
-    link_system_->set_running(true);
+    //link_system_->set_running(true);
+    link_system_->setChatRunning(node_1->chat_id());
+    link_system_->setChatRunning(node_2->chat_id());
 
     return true;
   }
@@ -237,7 +239,7 @@ namespace Kaleidoscope {
 
   void ChatController::checkReframe(){
     reframing_ = false;
-    bool reframe_exception_ = false;
+    //bool reframe_exception_ = false;
 
     for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
       if( (*it) && (*it)->tete_node() ){
@@ -247,6 +249,7 @@ namespace Kaleidoscope {
           (*it)->tete_node()->frameOn();
           }
         //std::cerr << "Checking" << std::endl;
+        // This is for increasing the size of the fonts
         //(*it)->tete_node()->updateGeometry();
       }
     }

@@ -25,26 +25,25 @@ namespace Kaleidoscope {
     setType1();
     running_ = false;
     position_timer_id_ = startTimer(50);
-    //force_timer_id_ = startTimer(150);
   }
 
   void ChatLinkSystem::setType1(){
-    rest_distance_ = 175.0;
+    rest_distance_ = 150.0;
     dormant_rest_distance_ = 100.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
-    chat_rest_distance_ = 700.0;
+    chat_rest_distance_ = 1000.0;
 
     // For attract_weight_, larger is larger, faster, stronger
     attract_weight_ = 10.0;
     // For repulse_weight_, larger is larger, faster, stronger
-    repulse_weight_ = 50.0;
+    repulse_weight_ = 55.0;
     // I'm not using min/max at the moment.
     min_velocity_ = 0.1;
     max_velocity_ = 1000.0;
     damping_ = 0.02;
     chat_damping_ = 0.008;
     total_kinetic_energy_ = 0.0;
-    energy_threshold_ = 0.01;
+    energy_threshold_ = 0.4;
     // After this distance away, the nodes don't push this node.
     push_dropoff_ = 800.0;
   }
@@ -61,45 +60,63 @@ namespace Kaleidoscope {
     running_ = running;
   }
 
+  void ChatLinkSystem::setChatRunning(GridsID chat_id){
+    running_ = true;
+    chat_running_[chat_id] = true;
+    chats_running_ = true;
+  }
+
   void ChatLinkSystem::timerEvent(QTimerEvent* event){
     if(running_){
-      update(d_->chat_controller()->chats(), event);
-      running_ = total_kinetic_energy_ > energy_threshold_;
+      update(d_->chat_controller()->chats());
+
+      running_ = false;
+      for(std::map<GridsID, float>::const_iterator it = chat_kinetic_energy_.begin(); it != chat_kinetic_energy_.end(); ++it){
+        if(it->second > energy_threshold_){
+          chat_running_[it->first] = true;
+          running_ = true;
+        }
+        if(chats_kinetic_energy_ > energy_threshold_){
+          chats_running_ = true;
+          running_ = true;
+        }
+      }
+    } else {
+      //std::cerr << "Stop" << std::endl;
     }
   }
 
-  void ChatLinkSystem::update(std::vector<Chat*> chats, QTimerEvent* event){
-    total_kinetic_energy_ = 0.0;
+  void ChatLinkSystem::update(std::vector<Chat*> chats){
+    chats_kinetic_energy_ = 0.0;
+    for(std::map<GridsID, float>::iterator it = chat_kinetic_energy_.begin(); it != chat_kinetic_energy_.end(); ++it){
+      it->second = 0.0;
+    }
 
     /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
        though it has something to do with "temporaries".  You can't tae the start from one array, and the end from it's copy. */
     std::vector<Tete*> tetes;
 
-    //std::cerr << "Force" << std::endl;
-    // For every tete in every that, calculate forces
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
+      if(chat_running_[(*chat_it)->chat_id()] == false)
+        continue;
+
       tetes = (*chat_it)->tetes();
       for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         doForces((*tete_it), (*chat_it));
       }
-    }
 
-    doChatForces(chats);
-
-
-    //std::cerr << "Position" << std::endl;
-    for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
-      tetes = (*chat_it)->tetes();
       for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         if( (*tete_it)->tete_node() != NULL ){
           (*tete_it)->tete_node()->updatePosition();
         }
       }
       //(*chat_it)->chat_node()->updatePosition();
-
-
+      // Todo change this to tete_node()->update( tete_node()->boundingRect()
       d_->getScene()->update(d_->getScene()->sceneRect());
     }
+
+    if(chats_running_)
+      doChatForces(chats);
   }
 
   void ChatLinkSystem::doForces(Tete* tete, Chat* chat){
@@ -205,7 +222,7 @@ namespace Kaleidoscope {
     }
 
     tete->tete_node()->set_velocity(force*damping_);
-    total_kinetic_energy_ += tete->tete_node()->velocity().getLengthSQ();
+    chat_kinetic_energy_[chat->chat_id()] += tete->tete_node()->velocity().getLength();
   }
 
 
@@ -277,7 +294,7 @@ namespace Kaleidoscope {
         }
 
         chat_node->set_velocity(force*chat_damping_);
-        total_kinetic_energy_ += chat_node->velocity().getLengthSQ();
+        chats_kinetic_energy_ += chat_node->velocity().getLengthSQ();
       }
     }
   }

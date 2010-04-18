@@ -27,12 +27,13 @@ namespace Kaleidoscope {
   public:
     ChatLinkSystem(Device*, QObject* parent = 0);
 
-    void update(std::vector<Chat*> chats, QTimerEvent*);
+    void update(std::vector<Chat*> chats);
     void doForces(Tete* tete, Chat* chat);
     void doChatForces(std::vector<Chat*> chats);
 
     bool running();
     void set_running(bool);
+    void setChatRunning(GridsID chat_id);
 
     void setType1();
     void setType2();
@@ -57,6 +58,10 @@ namespace Kaleidoscope {
     float damping_;
     float chat_damping_;
     float total_kinetic_energy_;
+    std::map<GridsID, float> chat_kinetic_energy_;
+    std::map<GridsID, bool> chat_running_;
+    float chats_kinetic_energy_;
+    bool chats_running_;
     float energy_threshold_;
     float push_dropoff_;
     bool running_;
