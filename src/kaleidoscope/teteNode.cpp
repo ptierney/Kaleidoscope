@@ -267,7 +267,8 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::sendActivate(){
-    Tete::requestUpdate(d_, tete_->id(), 1.0);
+    if(last_active_.elapsed() > 1000)
+      Tete::requestUpdate(d_, tete_->id(), 1.0);
   }
 
   void TeteNode::activateLinkedNodes(){
