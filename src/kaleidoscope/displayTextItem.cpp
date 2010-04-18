@@ -55,13 +55,10 @@ namespace Kaleidoscope {
     QTimer::singleShot(1000, node_, SLOT(replaceTextItem()));
   }
 
-  /*
   void DisplayTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     makeActive();
-    //text_item_->mouseDoubleClickEvent(event);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
   }
-  */
 
   void DisplayTextItem::focusInEvent(QFocusEvent* /*event*/) {
     //setTextInteractionFlags(Qt::TextEditorInteraction);

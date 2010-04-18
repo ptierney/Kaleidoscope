@@ -5,6 +5,7 @@
 
 #include <QDockWidget>
 #include <QGraphicsView>
+#include <QGLWidget>
 
 #include <kaleidoscope/device.h>
 #include <kaleidoscope/settings.h>
@@ -208,9 +209,11 @@ namespace Kaleidoscope {
   }
 
   void Device::createScene() {
-
-    scene = new Scene2D(this, main_window);
-    view2D = new View2D(this, scene);
+    QGLWidget* gl_widget = new QGLWidget(main_window);
+    //scene = new Scene2D(this, main_window);
+    //view2D = new View2D(this, scene);
+    scene = new Scene2D(this, gl_widget);
+    view2D = new View2D(this, scene, gl_widget);
 
     main_window->setCentralWidget(view2D);
   }

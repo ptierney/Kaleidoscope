@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QWheelEvent>
+#include <QGLWidget>
 
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
@@ -11,9 +12,12 @@
 
 namespace Kaleidoscope {
 
-  View2D::View2D(Device* d, Scene2D *scene)
-    : QGraphicsView(scene) {
+  View2D::View2D(Device* d, Scene2D* scene, QGLWidget* parent)
+    : QGraphicsView(scene, parent) {
     d_ = d;
+
+    QGLWidget* gl_widget = new QGLWidget();
+    setViewport(gl_widget);
 
     /* "Use this if your scene has many moving elements." */
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -23,7 +27,7 @@ namespace Kaleidoscope {
 
     setCacheMode(CacheBackground);
     //setViewportUpdateMode(BoundingRectViewportUpdate);
-    setRenderHint(QPainter::Antialiasing);
+    //setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorViewCenter);
 

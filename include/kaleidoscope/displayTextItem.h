@@ -37,6 +37,7 @@ namespace Kaleidoscope {
     QVariant itemChange(GraphicsItemChange change,
                         const QVariant &value);
     void keyPressEvent(QKeyEvent* event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
   private:
     Device* d_;
