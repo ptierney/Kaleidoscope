@@ -16,6 +16,7 @@ namespace Kaleidoscope {
     : QGraphicsView(scene) {
     d_ = d;
 
+    // This is how you force the View to draw everything in OpenGL
     QGLWidget* gl_widget = new QGLWidget();
     setViewport(gl_widget);
 
