@@ -2,7 +2,6 @@
 #define VIEW2D_H
 
 #include <QtGui/QGraphicsView>
-#include <QGLWidget>
 
 namespace Kaleidoscope {
     class Scene2D;
@@ -12,7 +11,7 @@ namespace Kaleidoscope {
         Q_OBJECT
 
     public:
-        View2D(Device* device, Scene2D* scene, QGLWidget* parent);
+        View2D(Device* device, Scene2D* scene);
 
         void scaleView(qreal scaleFactor);
 

@@ -12,8 +12,8 @@
 
 namespace Kaleidoscope {
 
-  View2D::View2D(Device* d, Scene2D* scene, QGLWidget* parent)
-    : QGraphicsView(scene, parent) {
+  View2D::View2D(Device* d, Scene2D* scene)
+    : QGraphicsView(scene) {
     d_ = d;
 
     QGLWidget* gl_widget = new QGLWidget();
