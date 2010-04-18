@@ -43,6 +43,7 @@ namespace Kaleidoscope {
     QLineF link_line_;
     QColor line_color_;
     float line_weight_;
+    QLinearGradient* linear_gradient_;
   };
 
 }

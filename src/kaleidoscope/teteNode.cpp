@@ -68,6 +68,7 @@ namespace Kaleidoscope {
     }
     frame_rect_object_ = new FrameRect(d_, frame_rect_, this);
     d_->getScene()->addItem(frame_rect_object_);
+    activateLinkedNodes();
   }
 
   bool TeteNode::frameOn(){
@@ -267,6 +268,18 @@ namespace Kaleidoscope {
 
   void TeteNode::sendActivate(){
     Tete::requestUpdate(d_, tete_->id(), 1.0);
+  }
+
+  void TeteNode::activateLinkedNodes(){
+    const std::vector<Link*>& links = tete_->links();
+
+    for(std::vector<Link*>::const_iterator it = links.begin(); it != links.end(); ++it){
+      if((*it)->node_1()->tete_node() != this)
+        (*it)->node_1()->tete_node()->activate();
+
+      if((*it)->node_2()->tete_node() != this)
+        (*it)->node_2()->tete_node()->activate();
+    }
   }
 
 

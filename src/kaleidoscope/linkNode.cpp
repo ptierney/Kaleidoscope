@@ -1,5 +1,6 @@
 
 #include <QPainter>
+#include <QLinearGradient>
 
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/link.h>
@@ -40,8 +41,10 @@ namespace Kaleidoscope {
     // This gets called in ChatLinkSystem when something changes,
     // so this probably doesn't need to be update
     // updateLinkLine();
-    painter->setPen(QPen(line_color_, line_weight_, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    painter->drawLine(link_line_);
+    //painter->setPen(QPen(line_color_, line_weight_, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    //painter->drawLine(link_line_);
+    //linear_gradient_ = new QLinearGradient()
+
   }
 
   void LinkNode::updateBoundingRect(){

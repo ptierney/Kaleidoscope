@@ -12,7 +12,7 @@ namespace Kaleidoscope {
   NodeGradient::NodeGradient(TeteNode* parent_node, QGraphicsItem* parent) :
       QGraphicsObject(parent) {
     parent_node_ = parent_node;
-    rect_width_ = 300;
+    rect_width_ = 500;
     rect_height_ = rect_width_;
     time_dropoff_ = 10 * 1000;
     alpha_refresh_ = 150;
@@ -59,7 +59,7 @@ namespace Kaleidoscope {
     // Update colors based on activity time
     radial_gradient_ = new QRadialGradient(QPointF(), rect_width_);
     radial_gradient_->setColorAt(0, QColor(0, 0, 0, 100.0 * alpha_scale));
-    radial_gradient_->setColorAt(0.4, QColor(255, 255, 255, 0));
+    radial_gradient_->setColorAt(0.5, QColor(255, 255, 255, 0));
     painter->setBrush(*radial_gradient_);
     painter->setPen(Qt::NoPen);
     painter->drawRect(draw_rect_);
