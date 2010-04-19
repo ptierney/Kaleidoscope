@@ -29,15 +29,20 @@ namespace Kaleidoscope {
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
     void updateBoundingRect();
     void updateLinkLine();
     void updateLinkValues();
+    void activate();
 
     QPointF getNodeIntersectPosition(Tete*);
 
-    float attract_scale();
+    float attract_scale();  
+
+  protected:
+    void timerEvent(QTimerEvent *);
+
 
   private:
     Device* d_;
@@ -52,6 +57,8 @@ namespace Kaleidoscope {
     float attract_scale_max_;
     int scale_dropoff_;
     QLinearGradient* linear_gradient_;
+    int update_timer_id_;
+    int update_time_;
   };
 
 }

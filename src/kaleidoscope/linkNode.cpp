@@ -1,6 +1,9 @@
 
+#include <iostream>
+
 #include <QPainter>
 #include <QLinearGradient>
+#include <QTimerEvent>
 
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/link.h>
@@ -16,19 +19,30 @@ namespace Kaleidoscope {
                      QGraphicsScene* /*scene*/) :
   QGraphicsObject(parent) {
     d_ = d;
-    line_color_ = Qt::black;
-    line_weight_ = 0.15;
+    line_color_ = QColor(0, 0, 0, 50);
+    line_weight_ = 0.5;
     link_strength_ = 1.0;
     link_speed_ = 1.0;
     attract_scale_ = 1.0;
     attract_scale_max_ = 8.0;
     // 10 seconds to total attraction
     scale_dropoff_ = 10 * 1000;
+    update_timer_id_ = 0;
+    update_time_ = 100;
     link_ = NULL;
   }
 
   void LinkNode::init(){
     // Nothing here
+    activate();
+  }
+
+  void LinkNode::timerEvent(QTimerEvent* /*event*/){
+    updateLinkValues();
+
+    if(attract_scale_ > attract_scale_max_ * 7.0 / 8.0){
+      killTimer(update_timer_id_);
+    }
   }
 
   QRectF LinkNode::boundingRect() const {
@@ -42,13 +56,15 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void LinkNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
+  void LinkNode::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
     updateBoundingRect();
     // This gets called in ChatLinkSystem when something changes,
     // so this probably doesn't need to be update
     // updateLinkLine();
-    //painter->setPen(QPen(line_color_, line_weight_, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    //painter->drawLine(link_line_);
+    //painter->setRenderHint(QPainter::Antialiasing, true);
+    // Any weight below 1 on OpenGL antialiasing looks bad.
+    painter->setPen(QPen(line_color_, 1, Qt::SolidLine ));
+    painter->drawLine(link_line_);
     /*
       Failure
 
@@ -189,6 +205,13 @@ namespace Kaleidoscope {
     else {
       return QPointF();
     }
+  }
+
+  void LinkNode::activate(){
+    if(update_timer_id_ != 0)
+      killTimer(update_timer_id_);
+
+    update_timer_id_ = startTimer(update_time_);
   }
 
   void LinkNode::updateLinkValues(){

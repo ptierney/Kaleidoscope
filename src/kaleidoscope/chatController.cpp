@@ -260,6 +260,10 @@ namespace Kaleidoscope {
   }
 
   void ChatController::checkReframe(){
+    // Don't check if there's no tetes, it just messes up the scale for when tetes are actually added.
+    if(tetes_.empty())
+      return;
+
     reframing_ = false;
     //bool reframe_exception_ = false;
 

@@ -39,34 +39,14 @@ namespace Kaleidoscope {
     }
   }
 
-
   void Scene2D::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if(false && event->button() == Qt::RightButton)
-      InputTextItem::requestCreate(d, Vec3D( event->scenePos().x(),
-                                             event->scenePos().y(),
-                                             1000.0) );
-
     if(event->button() == Qt::LeftButton)
       down_pos = event->scenePos();
-
 
     QGraphicsScene::mousePressEvent(event);
   }
 
-  void Scene2D::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    QGraphicsScene::mouseMoveEvent(event);
-  }
 
-  void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    QGraphicsScene::mouseReleaseEvent(event);
-
-    if(false && event->button() == Qt::LeftButton &&
-       focusItem() == 0 &&
-       selectedItems().length() == 0 &&
-       down_pos == event->scenePos() ){
-      InputTextItem::requestCreate(d,Vec3D(event->scenePos().x(), event->scenePos().y(), 1000.0));
-    }
-  }
 
   void Scene2D::keyPressEvent(QKeyEvent *event) {
     // If we are not in a text box
@@ -84,13 +64,7 @@ namespace Kaleidoscope {
   }
 
   void Scene2D::scaleView(qreal /*scale_factor*/) {
-    /* TODO: swich display from a QGraphicsScene to a QGraphicsView
-        qreal factor = matrix().scale(scale_factor, scale_factor).mapRect(QRectF(0, 0, 1, 1)).width();
-        if (factor < 0.07 || factor > 100)
-            return;
 
-        scale(scale_factor, scale_factor);
-        */
   }
 
   void Scene2D::setFont(const QFont &font) {

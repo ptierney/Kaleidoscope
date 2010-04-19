@@ -71,8 +71,8 @@ namespace Kaleidoscope {
   }
 
   // Todo: this needs to be looked at, the true || should be replaced
-  void ChatLinkSystem::timerEvent(QTimerEvent* event){
-    if(true || running_){
+  void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
+    if(running_){
       update(d_->chat_controller()->chats());
 
       running_ = false;
@@ -133,7 +133,7 @@ namespace Kaleidoscope {
     Vec3D force = Vec3D();
     QPointF point_1, point_2;
     QLineF line_between;
-    float rest_distance;
+    //float rest_distance;
     float repulse_scale = 1.0;
 
     // Sum all the forces pushing this item away
@@ -181,7 +181,7 @@ namespace Kaleidoscope {
 
     std::vector<Link*> links = tete->links();
     Tete* other_node;
-    float average;
+    //float average;
 
     for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
 

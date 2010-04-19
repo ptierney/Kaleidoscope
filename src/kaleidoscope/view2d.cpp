@@ -16,8 +16,12 @@ namespace Kaleidoscope {
     : QGraphicsView(scene) {
     d_ = d;
 
+    // Turn antialiasing on
+    QGLFormat format;
+    format.setSampleBuffers(true);
+
     // This is how you force the View to draw everything in OpenGL
-    QGLWidget* gl_widget = new QGLWidget();
+    QGLWidget* gl_widget = new QGLWidget(format);
     setViewport(gl_widget);
 
     /* "Use this if your scene has many moving elements." */
@@ -34,8 +38,12 @@ namespace Kaleidoscope {
 
     setDragMode( QGraphicsView::ScrollHandDrag);
 
-    scale(qreal(1.2), qreal(1.2));
-    setMinimumSize(400, 400);
+    //scale(qreal(0.5), qreal(0.5));
+    QMatrix temp_matrix;
+    temp_matrix.scale(1.5, 1.5);
+    setMatrix(temp_matrix);
+
+    setMinimumSize(600, 400);
     //centerOn(10000.0, 10000.0);
   }
 

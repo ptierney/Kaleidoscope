@@ -63,8 +63,6 @@ namespace Kaleidoscope {
 
     protected:
         void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
         void keyPressEvent(QKeyEvent *event);
 
         void wheelEvent(QWheelEvent *event);

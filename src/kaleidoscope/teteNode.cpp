@@ -12,6 +12,7 @@
 #include <kaleidoscope/frameRect.h>
 #include <kaleidoscope/chat.h>
 #include <kaleidoscope/chatNode.h>
+#include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -261,7 +262,7 @@ namespace Kaleidoscope {
     last_active_.start();
   }
 
-  void TeteNode::receiveActivate(double amount){
+  void TeteNode::receiveActivate(double /*amount*/){
     dormant_ = false;
     last_active_.start();
   }
@@ -280,6 +281,8 @@ namespace Kaleidoscope {
 
       if((*it)->node_2()->tete_node() != this)
         (*it)->node_2()->tete_node()->activate();
+
+      (*it)->link_node()->activate();
     }
   }
 
