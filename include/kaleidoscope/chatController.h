@@ -37,6 +37,7 @@ namespace Kaleidoscope {
     void deleteTeteNodeTree(Tete* tete);
 
 
+
     void checkReframe();
     void zoomOut();
     void updateChatsRect();
@@ -50,6 +51,9 @@ namespace Kaleidoscope {
 
   protected:
     void timerEvent(QTimerEvent*);
+    void addTeteToMinMax(Tete* tete,
+                         float& min_x, float& min_y,
+                         float& max_x, float& max_y);
 
   private:
     Device* d_;

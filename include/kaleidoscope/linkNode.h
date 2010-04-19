@@ -33,8 +33,11 @@ namespace Kaleidoscope {
 
     void updateBoundingRect();
     void updateLinkLine();
+    void updateLinkValues();
 
     QPointF getNodeIntersectPosition(Tete*);
+
+    float attract_scale();
 
   private:
     Device* d_;
@@ -43,6 +46,11 @@ namespace Kaleidoscope {
     QLineF link_line_;
     QColor line_color_;
     float line_weight_;
+    float link_strength_;
+    float link_speed_;
+    float attract_scale_;
+    float attract_scale_max_;
+    int scale_dropoff_;
     QLinearGradient* linear_gradient_;
   };
 

@@ -63,6 +63,8 @@ namespace Kaleidoscope {
     painter->setBrush(*radial_gradient_);
     painter->setPen(Qt::NoPen);
     painter->drawRect(draw_rect_);
+    delete radial_gradient_;
+    radial_gradient_ = NULL;
   }
 
   void NodeGradient::updateDrawRect() {

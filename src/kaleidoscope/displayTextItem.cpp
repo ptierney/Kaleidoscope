@@ -43,6 +43,9 @@ namespace Kaleidoscope {
   }
 
   // This is REALLY IMPORTANT
+  // Note: not anymore, active text items are swapped out for non-active ones, rather
+  // than deactivating previously active boxes.  This was due to a performance bug
+  // regarding deactivated text boxes.
   void DisplayTextItem::makeNotActive(){
     node_->centerTextItem();
     setTextInteractionFlags(Qt::NoTextInteraction);

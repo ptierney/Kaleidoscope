@@ -70,8 +70,9 @@ namespace Kaleidoscope {
     chats_running_ = true;
   }
 
+  // Todo: this needs to be looked at, the true || should be replaced
   void ChatLinkSystem::timerEvent(QTimerEvent* event){
-    if(running_){
+    if(true || running_){
       update(d_->chat_controller()->chats());
 
       running_ = false;
@@ -196,24 +197,30 @@ namespace Kaleidoscope {
          other_node->tete_node() == NULL)
         return;
 
-      if( tete->tete_node()->dormant() ||
-          other_node->tete_node()->dormant() ){
+      (*it)->link_node()->updateLinkValues();
+
+      float attract_scale = 1.0;
+      if((*it)->link_node()){
+        attract_scale = (*it)->link_node()->attract_scale();
+        //std::cerr << attract_scale << " " << qrand() << std::endl;
+      }
+
+      // This code is needed because as the nodes collapse together the check
+      // should just look at center positions.
+      if( false && attract_scale > 2.0 ){
         point_1 = tete->tete_node()->pos();
         point_2 = other_node->tete_node()->pos();
-        rest_distance = rest_distance_;
       } else {
         (*it)->link_node()->updateLinkLine();
         point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
         point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);
-        //average = (tete->tete_node()->activeElapsed() + other_node->tete_node()->activeElapsed()) / 2.0;
-        //rest_distance = dormant_rest_distance_ + rest_difference_ * (1/average);
       }
-      rest_distance = rest_distance_;
 
       // Use points from an line intersection, to take into account the size of the
       // boxes.
+
       force += hookeAttraction(point_1, point_2,
-                               rest_distance);
+                               rest_distance_ / attract_scale);
     }
 
     //tete->tete_node()->addVelocity(force*damping_);

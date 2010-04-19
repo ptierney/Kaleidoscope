@@ -77,10 +77,10 @@ namespace Kaleidoscope {
     updateFrameRect();
     float total_object_width = frame_rect_.width();
     float total_object_height = frame_rect_.height();
-    QString string;
-    string.setNum(total_object_width);
+    //QString string;
+    //string.setNum(total_object_width);
     //d_->getNoticeWindow()->write(7, tr("width = ")+string);
-    string.setNum(total_object_height);
+    //string.setNum(total_object_height);
     //d_->getNoticeWindow()->write(7, tr("height = ")+string);
 
     float window_width = d_->main_window->centralWidget()->size().width();
@@ -200,8 +200,8 @@ namespace Kaleidoscope {
       else
         other_node = (*it)->node_1();
 
-      addTeteToMinMax(other_node, &min_x, &min_y,
-                      &max_x, &max_y);
+      addTeteToMinMax(other_node, min_x, min_y,
+                      max_x, max_y);
     }
 
     // If nothing was added to one side, double the frame on that side,
@@ -220,8 +220,8 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::addTeteToMinMax(Tete* tete,
-                          float* min_x, float* min_y,
-                          float* max_x, float* max_y) {
+                          float& min_x, float& min_y,
+                          float& max_x, float& max_y) {
       //return;
     if(tete == NULL)
       return;
@@ -233,14 +233,14 @@ namespace Kaleidoscope {
     bound.moveTo(tete->tete_node()->pos());
     bound.translate(-local_bound.width()/2,-local_bound.height()/2);
 
-    if(bound.topLeft().x() < *min_x)
-      *min_x = bound.topLeft().x();
-    if(bound.topLeft().y() < *min_y)
-      *min_y = bound.topLeft().y();
-    if(bound.bottomRight().x() > *max_x)
-      *max_x = bound.bottomRight().x();
-    if(bound.bottomRight().y() > *max_y)
-      *max_y = bound.bottomRight().y();
+    if(bound.topLeft().x() < min_x)
+      min_x = bound.topLeft().x();
+    if(bound.topLeft().y() < min_y)
+      min_y = bound.topLeft().y();
+    if(bound.bottomRight().x() > max_x)
+      max_x = bound.bottomRight().x();
+    if(bound.bottomRight().y() > max_y)
+      max_y = bound.bottomRight().y();
   }
 
   QTime& TeteNode::last_active(){

@@ -19,6 +19,7 @@ namespace Kaleidoscope {
     const Grids::Value& attr = getAttrFromValue(*val);
     node_1_id_ = getNode1IDFromAttr(attr);
     node_2_id_ = getNode2IDFromAttr(attr);
+    link_node_ = NULL;
   }
 
   void Link::init(){

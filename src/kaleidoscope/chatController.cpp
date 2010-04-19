@@ -24,7 +24,7 @@ namespace Kaleidoscope {
     d_ = d;
     chat_refresh_ = 50;
     zoom_out_speed_ = 0.04;
-    zoom_margin_ = 75;
+    zoom_margin_ = 40;
     last_selected_ = NULL;
     reframing_ = false;
     chat_reframing_ = false;
@@ -201,9 +201,9 @@ namespace Kaleidoscope {
     }
 
     TeteNode* first_node = NULL;
-
-    for(unsigned int i = 0u; first_node == NULL; i++){
-      first_node = tetes_[i]->tete_node();
+    // Find the first Tete with a TeteNode
+    for(std::vector<Tete*>::const_iterator it = tetes_.begin(); first_node == NULL; ++it){
+      first_node = (*it)->tete_node();
     }
 
     QRectF local_bound = first_node->boundingRect();
@@ -212,29 +212,51 @@ namespace Kaleidoscope {
     // Translate more due to text
     bound.translate(-local_bound.width()/2,-local_bound.height()/2);
 
-    float min_x = bound.topLeft().x();
-    float min_y = bound.topLeft().y();
-    float max_x = bound.bottomRight().x();
-    float max_y = bound.bottomRight().y();
+    float start_min_x, start_min_y, start_max_x, start_max_y;
+    float min_x = start_min_x = bound.topLeft().x();
+    float min_y = start_min_y = bound.topLeft().y();
+    float max_x = start_max_x = bound.bottomRight().x();
+    float max_y = start_max_y = bound.bottomRight().y();
 
     for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
-      QRectF local_bound = (*it)->tete_node()->boundingRect();
-      QRectF bound = local_bound;
-      bound.moveTo((*it)->tete_node()->pos());
-      bound.translate(-local_bound.width()/2,-local_bound.height()/2);
-
-      if(bound.topLeft().x() < min_x)
-        min_x = bound.topLeft().x();
-      if(bound.topLeft().y() < min_y)
-        min_y = bound.topLeft().y();
-      if(bound.bottomRight().x() > max_x)
-        max_x = bound.bottomRight().x();
-      if(bound.bottomRight().y() > max_y)
-        max_y = bound.bottomRight().y();
+      addTeteToMinMax(*it, min_x, min_y, max_x, max_y);
     }
+
+    if(min_x == start_min_x)
+      min_x -= (max_x - min_x);
+    if(min_y == start_min_y)
+      min_y -= (max_y - min_y);
+    if(max_x == start_max_x)
+      max_x += (max_x - min_x);
+    if(max_y == start_max_y)
+      max_y += (max_y - min_y);
 
     all_chats_rect_ = QRectF(QPointF(min_x, min_y),
                              QPointF(max_x, max_y)).normalized();
+  }
+
+  void ChatController::addTeteToMinMax(Tete* tete,
+                                       float& min_x, float& min_y,
+                                       float& max_x, float& max_y) {
+    //return;
+    if(tete == NULL)
+      return;
+    if(tete->tete_node() == NULL)
+      return;
+
+    QRectF local_bound = tete->tete_node()->boundingRect();
+    QRectF bound = local_bound;
+    bound.moveTo(tete->tete_node()->pos());
+    bound.translate(-local_bound.width()/2,-local_bound.height()/2);
+
+    if(bound.topLeft().x() < min_x)
+      min_x = bound.topLeft().x();
+    if(bound.topLeft().y() < min_y)
+      min_y = bound.topLeft().y();
+    if(bound.bottomRight().x() > max_x)
+      max_x = bound.bottomRight().x();
+    if(bound.bottomRight().y() > max_y)
+      max_y = bound.bottomRight().y();
   }
 
   void ChatController::checkReframe(){
@@ -265,11 +287,13 @@ namespace Kaleidoscope {
     }
     chat_reframing_ = false;
 
+    updateChatsRect();
     // Zoom out
     zoomOut();
   }
 
   void ChatController::zoomOut(){
+    //std::cerr << "zoom out" << qrand() << std::endl;
     View2D* view = d_->getScene()->main_view();
 
     int total_object_width = all_chats_rect_.width();
