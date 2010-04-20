@@ -147,9 +147,13 @@ namespace Kaleidoscope {
     delete val;
   }
 
+
   void Tete::gridsUpdate(Device* dev, Grids::Event* event){
     GridsID id = event->getID();
     Tete* tete = dev->chat_controller()->getTeteFromID(id);
+    // TODO: Maybe this should add a node if it doesn't exist
+    if(tete == NULL || tete->tete_node() == NULL)
+      return;
 
     Grids::Value* attr = event->getAttrPointer();
     std::string text = (*attr)["text"].asString();
