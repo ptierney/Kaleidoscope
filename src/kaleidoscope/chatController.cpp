@@ -112,7 +112,11 @@ namespace Kaleidoscope {
   }
 
   bool ChatController::addLink(Link* link){
-    //d_->getNoticeWindow()->write(7, "Adding Link");
+    if(link == NULL){
+      std::cerr << link << "Returning" << std::endl;
+      return false;
+    }
+
     // If the link is set up already, don't do anything special
     if(link->node_1() && link->node_2()){
       links_.push_back(link);
@@ -126,7 +130,13 @@ namespace Kaleidoscope {
     Tete* node_2 = getTeteFromID(node_2_id);
 
     if(node_1 == NULL || node_2 == NULL){
-      broken_links_.push_back(link);
+      std::vector<Link*>::const_iterator it;
+      it = std::find(broken_links_.begin(),
+                     broken_links_.end(),
+                     link);
+      if(it == broken_links_.end())
+        broken_links_.push_back(link);
+
       return false;
     }
 
@@ -144,6 +154,8 @@ namespace Kaleidoscope {
   }
 
   void ChatController::fixBrokenLinks(){
+    std::cerr << broken_links_.size() << std::endl;
+
     for(std::vector<Link*>::iterator it = broken_links_.begin(); it != broken_links_.end(); ){
       if(addLink(*it)){
         it = broken_links_.erase(it);

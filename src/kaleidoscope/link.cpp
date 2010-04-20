@@ -87,8 +87,12 @@ namespace Kaleidoscope {
     node_2_id_ = id;
   }
 
+  bool Link::node1IsNull(){
+    return node_1_ == NULL;
+  }
+
   Tete* Link::node_1(){
-    return node_1_;
+      return node_1_;
   }
 
   Tete* Link::node_2(){

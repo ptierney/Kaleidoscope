@@ -35,6 +35,8 @@ namespace Kaleidoscope {
     LinkNode* link_node();
     void set_link_node(LinkNode*);
 
+    bool node1IsNull();
+
   private:
     Device* d_;
 
