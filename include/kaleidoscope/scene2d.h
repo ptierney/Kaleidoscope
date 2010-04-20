@@ -62,17 +62,15 @@ namespace Kaleidoscope {
         void itemSelected(QGraphicsItem *item);
 
     protected:
-        void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
-        void keyPressEvent(QKeyEvent *event);
-
-        void wheelEvent(QWheelEvent *event);
-
+        void mousePressEvent(QGraphicsSceneMouseEvent* event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+        void keyPressEvent(QKeyEvent* event);
+        void wheelEvent(QWheelEvent* event);
         void scaleView(qreal scaleFactor);
-
         void timerEvent(QTimerEvent *);
 
     private:
-        Device* d;
+        Device* d_;
         InputTextItem* textItem;
         QColor myTextColor;
         QFont myFont;

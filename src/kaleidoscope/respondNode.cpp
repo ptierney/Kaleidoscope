@@ -25,15 +25,6 @@ namespace Kaleidoscope {
     //startTimer(100);
   }
 
-  /*
-  void RespondNode::timerEvent(QTimerEvent *event) {
-    Q_UNUSED(event)
-
-    if(selected_)
-      frameOn();
-  }
-  */
-
   bool RespondNode::selected(){
     return selected_;
   }
@@ -42,8 +33,7 @@ namespace Kaleidoscope {
     Q_UNUSED(event)
     selected_ = true;
 
-    //QGraphicsQbject::hoverEnterEvent(event);
-
+    QGraphicsObject::hoverEnterEvent(event);
     //frameOn();
   }
 
@@ -51,8 +41,7 @@ namespace Kaleidoscope {
     Q_UNUSED(event)
     selected_ = false;
 
-    //QGraphicsObject::hoverLeaveEvent(event);
-
+    QGraphicsObject::hoverLeaveEvent(event);
     //NothingHere
   }
 

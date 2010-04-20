@@ -28,6 +28,9 @@ namespace Kaleidoscope {
     last_selected_ = NULL;
     reframing_ = false;
     chat_reframing_ = false;
+    zooming_ = true;
+    start_zooming_timer_ = 0;
+    zoom_delay_ = 3 * 1000;
   }
 
   ChatController::~ChatController(){
@@ -56,8 +59,13 @@ namespace Kaleidoscope {
     link_system_ = new ChatLinkSystem(d_);
   }
 
-  void ChatController::timerEvent(QTimerEvent* /*event*/){
+  void ChatController::timerEvent(QTimerEvent* event){
     checkReframe();
+
+    if(event->timerId() == start_zooming_timer_){
+      setStartZooming();
+      killTimer(start_zooming_timer_);
+    }
   }
 
   void ChatController::addChat(Chat* chat){
@@ -260,6 +268,9 @@ namespace Kaleidoscope {
   }
 
   void ChatController::checkReframe(){
+    if(!zooming_)
+      return;
+
     // Don't check if there's no tetes, it just messes up the scale for when tetes are actually added.
     if(tetes_.empty())
       return;
@@ -378,6 +389,49 @@ namespace Kaleidoscope {
 
   ChatLinkSystem* ChatController::link_system(){
     return link_system_;
+  }
+
+  void ChatController::startZooming(){
+    start_zooming_timer_ = startTimer(zoom_delay_);
+  }
+
+  void ChatController::stopZooming(){
+    zooming_ = false;
+  }
+
+  void ChatController::setStartZooming(){
+    zooming_ = true;
+    // Update the last_selected_ to the closest node to the cursor
+    last_selected_ = findClosestTete();
+  }
+
+  Tete* ChatController::findClosestTete(){
+    QPointF mouse_pos = d_->getScene()->main_view()->cursor().pos();
+    QPointF node_global_pos;
+    Tete* closest_node = NULL;
+    float closest_distance;
+    float temp_distance;
+
+    for(std::vector<Tete*>::const_iterator it = tetes_.begin(); it != tetes_.end(); ++it){
+      if((*it)->tete_node() == NULL)
+        continue;
+
+      node_global_pos = (*it)->tete_node()->getGlobalPosition();
+
+      if(closest_node == NULL){
+        closest_distance = QLineF(mouse_pos, node_global_pos).length();
+        closest_node = (*it);
+        continue;
+      }
+      temp_distance = QLineF(mouse_pos, node_global_pos).length();
+      // Compare the distance
+      if(temp_distance < closest_distance){
+        closest_distance = temp_distance;
+        closest_node = (*it);
+      }
+    }
+
+    return closest_node;
   }
 
 } // end namespace

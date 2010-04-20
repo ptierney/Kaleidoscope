@@ -4,28 +4,31 @@
 #include <QtGui/QGraphicsView>
 
 namespace Kaleidoscope {
-    class Scene2D;
-    class Device;
+  class Scene2D;
+  class Device;
 
-    class View2D : public QGraphicsView {
-        Q_OBJECT
+  class View2D : public QGraphicsView {
+    Q_OBJECT
 
-    public:
-        View2D(Device* device, Scene2D* scene);
+  public:
+    View2D(Device* device, Scene2D* scene);
 
-        void scaleView(qreal scaleFactor);
+    void scaleView(qreal scaleFactor);
 
-    protected:
-        void wheelEvent(QWheelEvent *event);
-        void keyPressEvent(QKeyEvent *event);
+  protected:
+    void focusOutEvent(QFocusEvent* event);
+    void wheelEvent(QWheelEvent* event);
+    void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
 
-        void drawBackground(QPainter *painter, const QRectF &rect);
+    void drawBackground(QPainter *painter, const QRectF &rect);
 
-        /* This is set in the constructor. */
-        QRect world_size;
-    private:
-        Device* d_;
-    };
+    /* This is set in the constructor. */
+    QRect world_size;
+  private:
+    Device* d_;
+  };
 }
 
 #endif // VIEW2D_H

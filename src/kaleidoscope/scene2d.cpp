@@ -1,6 +1,8 @@
 
 #include <math.h>
 
+#include <iostream>
+
 #include <QtGui>
 #include <QTextCursor>
 #include <QGraphicsSceneMouseEvent>
@@ -12,15 +14,15 @@
 #include <kaleidoscope/noticeWindow.h>
 #include <kaleidoscope/genericNodeItem.h>
 #include <kaleidoscope/eventController.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
   Scene2D::Scene2D(Device* d, QObject* parent) : QGraphicsScene(parent) {
-    this->d = d;
+    d_ = d;
     myTextColor = Qt::black;
-
-    startTimer(100);
+    //startTimer(100);
   }
 
   QSize Scene2D::sizeHint() const {
@@ -46,12 +48,14 @@ namespace Kaleidoscope {
     QGraphicsScene::mousePressEvent(event);
   }
 
-
+  void Scene2D::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
+    QGraphicsScene::mouseReleaseEvent(event);
+  }
 
   void Scene2D::keyPressEvent(QKeyEvent *event) {
     // If we are not in a text box
     if(focusItem() == 0){
-      d->event_controller()->keyPressEvent(event);
+      d_->event_controller()->keyPressEvent(event);
     }
 
     QGraphicsScene::keyPressEvent(event);
@@ -108,22 +112,7 @@ namespace Kaleidoscope {
     return link_items;
   }
 
-  void Scene2D::timerEvent(QTimerEvent* event) {
-    Q_UNUSED(event);
-
-    /* Don't caluculate while dragging. */
-    if(mouseGrabberItem() )
-      return;
-
-    /*
-    foreach(GenericNodeItem* item, node_items) {
-      item->calculateForces();
-    }
-
-    foreach(GenericNodeItem* item, node_items) {
-      item->advance();
-    }
-    */
+  void Scene2D::timerEvent(QTimerEvent* /*event*/) {
   }
 
   View2D* Scene2D::main_view(){

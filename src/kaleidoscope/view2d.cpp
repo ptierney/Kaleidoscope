@@ -1,6 +1,8 @@
 
 #include <math.h>
 
+#include <iostream>
+
 #include <QGraphicsScene>
 #include <QWheelEvent>
 #include <QGLWidget>
@@ -8,6 +10,7 @@
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/eventController.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -15,7 +18,7 @@ namespace Kaleidoscope {
   View2D::View2D(Device* d, Scene2D* scene)
     : QGraphicsView(scene) {
     d_ = d;
-
+    setMouseTracking(true);
     // Turn antialiasing on
     QGLFormat format;
     format.setSampleBuffers(true);
@@ -63,6 +66,10 @@ namespace Kaleidoscope {
         */
   }
 
+  void View2D::focusOutEvent(QFocusEvent* /*event*/){
+    std::cerr << "Out" << std::endl;
+  }
+
   void View2D::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
   }
@@ -80,6 +87,16 @@ namespace Kaleidoscope {
     //    return;
 
     scale(scale_factor, scale_factor);
+  }
+
+  void View2D::mousePressEvent(QMouseEvent *event) {
+    d_->chat_controller()->stopZooming();
+    QGraphicsView::mousePressEvent(event);
+  }
+
+  void View2D::mouseReleaseEvent(QMouseEvent *event) {
+     d_->chat_controller()->startZooming();
+     QGraphicsView::mouseReleaseEvent(event);
   }
 
 }

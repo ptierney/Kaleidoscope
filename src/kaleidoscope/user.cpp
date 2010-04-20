@@ -1,4 +1,9 @@
 
+#include <string>
+
+#include <QtGlobal>
+#include <QString>
+
 #include <kaleidoscope/user.h>
 
 namespace Kaleidoscope {
@@ -6,7 +11,9 @@ namespace Kaleidoscope {
   User::User(Device* d, GridsID id){
     d_ = d;
     id_ = id;
-    name_ = std::string();
+    QString name_index;
+    name_index.setNum((qrand() % 10 + 1));
+    name_ = std::string("John Doe ") + name_index.toStdString();
   }
 
   std::string User::name(){

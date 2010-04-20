@@ -286,5 +286,9 @@ namespace Kaleidoscope {
     }
   }
 
+  QPointF TeteNode::getGlobalPosition(){
+    return d_->getScene()->main_view()->mapToGlobal(d_->getScene()->main_view()->mapFromScene(pos().toPoint()));
+  }
+
 
 }

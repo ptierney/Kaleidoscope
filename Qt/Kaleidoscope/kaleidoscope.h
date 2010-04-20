@@ -23,7 +23,6 @@ namespace Kaleidoscope {
     void createActions();
     void createMenus();
 
-
   private slots:
     void init();
     void createUserInputWindow();
@@ -49,7 +48,6 @@ namespace Kaleidoscope {
     QAction* spring_type_2_;
     QAction* graphics_type_1_;
     QAction* graphics_type_2_;
-
   };
 
 } // end namespace Kaleidoscope

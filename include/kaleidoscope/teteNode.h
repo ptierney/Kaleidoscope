@@ -51,6 +51,8 @@ namespace Kaleidoscope {
     bool frame_selected();
     void beginFraming();
 
+    QPointF getGlobalPosition();
+
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);

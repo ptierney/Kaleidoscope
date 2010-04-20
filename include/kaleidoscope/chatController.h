@@ -49,11 +49,18 @@ namespace Kaleidoscope {
     bool reframing();
     Tete* last_selected();
 
+    void startZooming();
+    void stopZooming();
+
+
   protected:
     void timerEvent(QTimerEvent*);
     void addTeteToMinMax(Tete* tete,
                          float& min_x, float& min_y,
                          float& max_x, float& max_y);
+
+    Tete* findClosestTete();
+    void setStartZooming();
 
   private:
     Device* d_;
@@ -71,6 +78,10 @@ namespace Kaleidoscope {
     ChatLinkSystem* link_system_;
     bool reframing_;
     bool chat_reframing_;
+    // This is the overall bool to determine if the controller autozooms
+    bool zooming_;
+    int start_zooming_timer_;
+    int zoom_delay_;
   };
 }
 

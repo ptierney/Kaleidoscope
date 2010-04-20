@@ -43,6 +43,7 @@ namespace Kaleidoscope {
     if(attract_scale_ > attract_scale_max_ * 7.0 / 8.0){
       killTimer(update_timer_id_);
     }
+    update();
   }
 
   QRectF LinkNode::boundingRect() const {

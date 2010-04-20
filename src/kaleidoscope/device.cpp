@@ -289,4 +289,6 @@ namespace Kaleidoscope {
   GridsID Device::getMyRoom() {
     return getInterface()->getMyRoom();
   }
+
+
 } // end namespace Kaleidoscope
