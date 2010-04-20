@@ -7,12 +7,13 @@
 
 namespace Kaleidoscope {
   class TeteNode;
+  class Device;
 
   class NodeGradient : public QGraphicsObject {
     Q_OBJECT
 
   public:
-    NodeGradient(TeteNode* parent_node, QGraphicsItem* parent = 0);
+    NodeGradient(Device*, TeteNode* parent_node, QGraphicsItem* parent = 0);
 
     void init();
     void updateDrawRect();
@@ -24,6 +25,7 @@ namespace Kaleidoscope {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
   private:
+    Device* d_;
     TeteNode* parent_node_;
     QRadialGradient* radial_gradient_;
     QRectF draw_rect_;

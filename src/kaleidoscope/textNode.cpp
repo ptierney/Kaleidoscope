@@ -48,7 +48,7 @@ namespace Kaleidoscope {
     name_item_->setDefaultTextColor(name_color_);
     name_item_->setScale(name_scale_);
 
-    node_gradient_ = new NodeGradient(this, this);
+    node_gradient_ = new NodeGradient(d_, this, this);
   }
 
   DisplayTextItem* TextNode::text_item() {

@@ -32,6 +32,9 @@ namespace Kaleidoscope {
     void setSpringType2();
     void setGraphicsType1();
     void setGraphicsType2();
+    void springToggle();
+    void gradientToggle();
+    void zoomToggle();
 
   private:
     Ui::Kaleidoscope *ui;
@@ -48,6 +51,9 @@ namespace Kaleidoscope {
     QAction* spring_type_2_;
     QAction* graphics_type_1_;
     QAction* graphics_type_2_;
+    QAction* spring_on_off_;
+    QAction* gradient_on_off_;
+    QAction* zoom_on_off_;
   };
 
 } // end namespace Kaleidoscope

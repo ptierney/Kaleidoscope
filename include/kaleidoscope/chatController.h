@@ -36,8 +36,6 @@ namespace Kaleidoscope {
     // Deletes all tete nodes in this conversation from this point down
     void deleteTeteNodeTree(Tete* tete);
 
-
-
     void checkReframe();
     void zoomOut();
     void updateChatsRect();
@@ -52,6 +50,12 @@ namespace Kaleidoscope {
     void startZooming();
     void stopZooming();
 
+    bool zooming_toggle();
+    bool gradient_toggle();
+    bool spring_toggle();
+    void toggleZooming();
+    void toggleGradient();
+    void toggleSpring();
 
   protected:
     void timerEvent(QTimerEvent*);
@@ -80,6 +84,9 @@ namespace Kaleidoscope {
     bool chat_reframing_;
     // This is the overall bool to determine if the controller autozooms
     bool zooming_;
+    bool zooming_toggle_;
+    bool gradient_toggle_;
+    bool spring_toggle_;
     int start_zooming_timer_;
     int zoom_delay_;
   };

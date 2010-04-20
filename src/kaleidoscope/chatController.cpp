@@ -31,6 +31,9 @@ namespace Kaleidoscope {
     zooming_ = true;
     start_zooming_timer_ = 0;
     zoom_delay_ = 3 * 1000;
+    spring_toggle_ = true;
+    gradient_toggle_ = true;
+    zooming_toggle_ = true;
   }
 
   ChatController::~ChatController(){
@@ -113,7 +116,7 @@ namespace Kaleidoscope {
 
   bool ChatController::addLink(Link* link){
     if(link == NULL){
-      std::cerr << link << "Returning" << std::endl;
+      //std::cerr << link << "Returning" << std::endl;
       return false;
     }
 
@@ -154,7 +157,7 @@ namespace Kaleidoscope {
   }
 
   void ChatController::fixBrokenLinks(){
-    std::cerr << broken_links_.size() << std::endl;
+    //std::cerr << broken_links_.size() << std::endl;
 
     for(std::vector<Link*>::iterator it = broken_links_.begin(); it != broken_links_.end(); ){
       if(addLink(*it)){
@@ -287,6 +290,9 @@ namespace Kaleidoscope {
     if(tetes_.empty())
       return;
 
+    if(zooming_toggle_ == false)
+      return;
+
     reframing_ = false;
     //bool reframe_exception_ = false;
 
@@ -409,6 +415,30 @@ namespace Kaleidoscope {
 
   void ChatController::stopZooming(){
     zooming_ = false;
+  }
+
+  void ChatController::toggleZooming(){
+    zooming_toggle_ = !zooming_toggle_;
+  }
+
+  void ChatController::toggleGradient(){
+    gradient_toggle_ = !gradient_toggle_;\
+  }
+
+  void ChatController::toggleSpring(){
+    spring_toggle_ = !spring_toggle_;
+  }
+
+  bool ChatController::spring_toggle(){
+    return spring_toggle_;
+  }
+
+  bool ChatController::gradient_toggle(){
+    return gradient_toggle_;
+  }
+
+  bool ChatController::zooming_toggle(){
+    return zooming_toggle_;
   }
 
   void ChatController::setStartZooming(){

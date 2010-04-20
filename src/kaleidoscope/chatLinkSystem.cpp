@@ -31,7 +31,7 @@ namespace Kaleidoscope {
     rest_distance_ = 150.0;
     dormant_rest_distance_ = 100.0;
     rest_difference_ = rest_distance_ - dormant_rest_distance_;
-    chat_rest_distance_ = 4000.0;
+    chat_rest_distance_ = 1000.0;
 
     // For attract_weight_, larger is larger, faster, stronger
     attract_weight_ = 10.0;
@@ -39,7 +39,7 @@ namespace Kaleidoscope {
     all_chats_attract_scale_ = 1.0;
     // For repulse_weight_, larger is larger, faster, stronger
     repulse_weight_ = 55.0;
-    all_chats_repulse_scale_ = 2.0;
+    all_chats_repulse_scale_ = 1.0;
     // I'm not using min/max at the moment.
     min_velocity_ = 0.1;
     max_velocity_ = 1000.0;
@@ -72,7 +72,7 @@ namespace Kaleidoscope {
 
   // Todo: this needs to be looked at, the true || should be replaced
   void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
-    if(running_){
+    if(running_ && d_->chat_controller()->spring_toggle()){
       update(d_->chat_controller()->chats());
 
       running_ = false;

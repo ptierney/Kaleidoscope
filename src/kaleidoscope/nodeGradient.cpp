@@ -6,11 +6,14 @@
 
 #include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/teteNode.h>
+#include <kaleidoscope/chatController.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
-  NodeGradient::NodeGradient(TeteNode* parent_node, QGraphicsItem* parent) :
+  NodeGradient::NodeGradient(Device* d, TeteNode* parent_node, QGraphicsItem* parent) :
       QGraphicsObject(parent) {
+    d_ = d;
     parent_node_ = parent_node;
     rect_width_ = 500;
     rect_height_ = rect_width_;
@@ -52,6 +55,9 @@ namespace Kaleidoscope {
       update_timer_ = 0;
       return;
     }
+
+    if(d_->chat_controller()->gradient_toggle() == false)
+      return;
 
     float alpha_scale = (1.0 - (float)(parent_node_->activeElapsed()) / (float)time_dropoff_);
     //std::cerr << alpha_scale << std::endl;
