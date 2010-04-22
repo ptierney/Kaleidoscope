@@ -28,6 +28,7 @@ namespace Kaleidoscope {
     void createUserInputWindow();
     void createAddUserWindow();
     void createNewChatWindow();
+    void createColorPickWindow();
     void setSpringType1();
     void setSpringType2();
     void setGraphicsType1();
@@ -35,18 +36,22 @@ namespace Kaleidoscope {
     void springToggle();
     void gradientToggle();
     void zoomToggle();
+    void printScene();
 
   private:
     Ui::Kaleidoscope *ui;
     Device* d;
 
-    QAction* set_name_act_;
+    QAction* set_name_;
+    QAction* set_color_;
     QAction* register_username_;
     QAction* new_chat_;
+    QAction* print_;
     QMenu* start_menu_;
     QMenu* explore_menu_;
     QMenu* spring_menu_;
     QMenu* graphics_menu_;
+    QMenu* file_menu_;
     QAction* spring_type_1_;
     QAction* spring_type_2_;
     QAction* graphics_type_1_;

@@ -290,5 +290,13 @@ namespace Kaleidoscope {
     return d_->getScene()->main_view()->mapToGlobal(d_->getScene()->main_view()->mapFromScene(pos().toPoint()));
   }
 
+  QColor TeteNode::gradient_color(){
+    return gradient_color_;
+  }
+
+  void TeteNode::set_gradient_color(QColor new_color){
+    gradient_color_ = new_color;
+  }
+
 
 }

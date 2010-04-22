@@ -52,6 +52,8 @@ namespace Kaleidoscope {
     void beginFraming();
 
     QPointF getGlobalPosition();
+    QColor gradient_color();
+    void set_gradient_color(QColor);
 
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
@@ -75,6 +77,7 @@ namespace Kaleidoscope {
     bool mouse_moved_;
     bool dormant_;
     QTime last_active_;
+    QColor gradient_color_;
 
 
   };

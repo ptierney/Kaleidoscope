@@ -14,6 +14,8 @@ namespace Kaleidoscope {
     View2D(Device* device, Scene2D* scene);
 
     void scaleView(qreal scaleFactor);
+    void print();
+    //void render(QPainter*, const QRectF&, const QRect&, Qt::AspectRatioMode);
 
   protected:
     void focusOutEvent(QFocusEvent* event);

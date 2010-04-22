@@ -79,6 +79,11 @@ namespace Kaleidoscope {
     if(dev->user()->hasSetName())
       (*create_val)["user_name"] = dev->user()->name();
     (*create_val)["chat"] = chat;
+    QColor user_color = dev->user()->color();
+    (*create_val)["owner_color"][0u] = user_color.red();
+    (*create_val)["owner_color"][1u] = user_color.green();
+    (*create_val)["owner_color"][2u] = user_color.blue();
+    (*create_val)["owner_color"][3u] = user_color.alpha();
 
     new_id = dev->getInterface()->requestCreateObject(create_val,position);
     delete create_val;
@@ -92,6 +97,12 @@ namespace Kaleidoscope {
     tete->init();
     DisplayTextNode* display_node = new DisplayTextNode(dev, tete);
     display_node->init();
+    const Grids::Value& attr = evt->getAttr();
+    int r = attr["owner_color"][0u].asInt();
+    int g = attr["owner_color"][1u].asInt();
+    int b = attr["owner_color"][2u].asInt();
+    int a = attr["owner_color"][3u].asInt();
+    display_node->set_gradient_color(QColor(r, g, b, a));
 
     tete->set_tete_node(display_node);
     display_node->set_tete(tete);

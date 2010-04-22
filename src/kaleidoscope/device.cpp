@@ -205,7 +205,21 @@ namespace Kaleidoscope {
     dock->setWidget(box);
     dock->setAllowedAreas(Qt::NoDockWidgetArea);
     main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+  }
 
+  void Device::createColorPickWindow(){
+    QDockWidget *dock = new QDockWidget(tr("Set Color"), main_window);
+    dock->setFloating(1);
+    QColorDialog* color_pick = new QColorDialog(dock);
+    dock->setWidget(color_pick);
+    dock->setAllowedAreas(Qt::NoDockWidgetArea);
+    main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+    connect(color_pick, SIGNAL(colorSelected(QColor)),
+            user(), SLOT(set_color(QColor)));
+
+    connect(color_pick, SIGNAL(colorSelected(QColor)),
+            dock, SLOT(close()));
   }
 
   void Device::createScene() {

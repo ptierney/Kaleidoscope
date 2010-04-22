@@ -6,6 +6,8 @@
 #include <QGraphicsScene>
 #include <QWheelEvent>
 #include <QGLWidget>
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
@@ -98,5 +100,23 @@ namespace Kaleidoscope {
      d_->chat_controller()->startZooming();
      QGraphicsView::mouseReleaseEvent(event);
   }
+
+  void View2D::print(){
+    QPrinter printer;
+    if (QPrintDialog(&printer).exec() == QDialog::Accepted) {
+        QPainter painter(&printer);
+        painter.setRenderHint(QPainter::Antialiasing);
+        render(&painter);
+    }
+
+  }
+
+  /*
+  void View2D::render(QPainter* painter, const QRectF& target, const QRect& source, Qt::AspectRatioMode aspect_ratio_mode) {
+
+
+    QGraphicsView::render(painter, target, source, aspect_ratio_mode);
+  }
+  */
 
 }

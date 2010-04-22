@@ -1,14 +1,17 @@
 
 #include <string>
+#include <iostream>
 
 #include <QtGlobal>
 #include <QString>
+#include <QColor>
 
 #include <kaleidoscope/user.h>
 
 namespace Kaleidoscope {
 
-  User::User(Device* d, GridsID id){
+  User::User(Device* d, GridsID id, QObject* parent) :
+      QObject(parent) {
     d_ = d;
     id_ = id;
     QString name_index;
@@ -34,6 +37,15 @@ namespace Kaleidoscope {
 
   void User::set_id(GridsID id){
     id_ = id;
+  }
+
+  void User::set_color(QColor user_color){
+    std::cerr << "Set color" << std::endl;
+    color_ = user_color;
+  }
+
+  QColor User::color(){
+    return color_;
   }
 
 }

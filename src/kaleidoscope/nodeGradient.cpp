@@ -7,6 +7,7 @@
 #include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/user.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -60,11 +61,14 @@ namespace Kaleidoscope {
       return;
 
     float alpha_scale = (1.0 - (float)(parent_node_->activeElapsed()) / (float)time_dropoff_);
+
+    QColor grad_color = parent_node_->gradient_color();
+    grad_color.setAlpha(100.0 * alpha_scale);
     //std::cerr << alpha_scale << std::endl;
     //updateDrawRect();
     // Update colors based on activity time
     radial_gradient_ = new QRadialGradient(QPointF(), rect_width_);
-    radial_gradient_->setColorAt(0, QColor(0, 0, 0, 100.0 * alpha_scale));
+    radial_gradient_->setColorAt(0, grad_color);
     radial_gradient_->setColorAt(0.5, QColor(255, 255, 255, 0));
     painter->setBrush(*radial_gradient_);
     painter->setPen(Qt::NoPen);

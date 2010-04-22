@@ -1,10 +1,14 @@
 #include <iostream>
 
+#include <QColorDialog>
+
 #include "kaleidoscope.h"
 #include "ui_kaleidoscope.h"
 
 #include <kaleidoscope/chatLinkSystem.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -34,6 +38,10 @@ namespace Kaleidoscope {
     d->createUserInputWindow();
   }
 
+  void Kaleidoscope::createColorPickWindow(){
+    d->createColorPickWindow();
+  }
+
   void Kaleidoscope::createAddUserWindow(){
     d->createAddUserWindow();
   }
@@ -45,9 +53,13 @@ namespace Kaleidoscope {
   void Kaleidoscope::createActions() {
     //initAct = new QAction(tr("&Init"),this);
     //connect(initAct, SIGNAL(triggered()), this, SLOT(init()));
-    set_name_act_ = new QAction(tr("Set name..."),this);
-    connect(set_name_act_, SIGNAL(triggered()),
+    set_name_ = new QAction(tr("Set name..."),this);
+    connect(set_name_, SIGNAL(triggered()),
             this, SLOT(createUserInputWindow()));
+
+    set_color_ = new QAction(tr("Set color..."),this);
+    connect(set_color_, SIGNAL(triggered()),
+            this, SLOT(createColorPickWindow()));
 
     register_username_ = new QAction(tr("&Add account..."), this);
     connect(register_username_, SIGNAL(triggered()),
@@ -89,6 +101,10 @@ namespace Kaleidoscope {
     zoom_on_off_->setChecked(true);
     connect(zoom_on_off_, SIGNAL(triggered()),
             this, SLOT(zoomToggle()));
+
+    print_ = new QAction(tr("Print"), this);
+    connect(print_, SIGNAL(triggered()),
+            this, SLOT(printScene()));
   }
 
   void Kaleidoscope::setSpringType1(){
@@ -119,12 +135,17 @@ namespace Kaleidoscope {
     d->chat_controller()->toggleGradient();
   }
 
+  void Kaleidoscope::printScene(){
+    d->getScene()->main_view()->print();
+  }
+
   void Kaleidoscope::createMenus() {
     //gridsMenu = menuBar()->addMenu(tr("&Grids"));
     //gridsMenu->addAction(initAct);
 
     start_menu_ = menuBar()->addMenu(tr("Start here"));
-    start_menu_->addAction(set_name_act_);
+    start_menu_->addAction(set_name_);
+    start_menu_->addAction(set_color_);
     start_menu_->addSeparator();
     start_menu_->addAction(register_username_);
     start_menu_->addAction(new_chat_);
@@ -141,7 +162,8 @@ namespace Kaleidoscope {
     explore_menu_->addAction(spring_on_off_);
     explore_menu_->addAction(gradient_on_off_);
     explore_menu_->addAction(zoom_on_off_);
-
+    file_menu_ = menuBar()->addMenu(tr("File"));
+    file_menu_->addAction(print_);
   }
 
 
