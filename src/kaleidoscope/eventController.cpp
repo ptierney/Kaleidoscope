@@ -13,6 +13,9 @@
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/chat.h>
+#include <kaleidoscope/view2d.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/linkCreator.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -26,6 +29,10 @@ namespace Kaleidoscope {
   // is called by Scene2D, not the Qt stack.
   void EventController::keyPressEvent(QKeyEvent* event){
     if(event->key() == Qt::Key_Escape){
+      if(d_->getScene()->main_view()->link_creator()->active()){
+        d_->getScene()->main_view()->link_creator()->clear();
+        return;
+      }
       d_->app->quit();
       return;
     }

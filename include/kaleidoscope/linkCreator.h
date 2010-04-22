@@ -19,8 +19,10 @@ namespace Kaleidoscope {
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
     void updateDrawRect();
+    void clear();
+    bool active();
+
   private:
     Device* d_;
     GridsID last_tete_;

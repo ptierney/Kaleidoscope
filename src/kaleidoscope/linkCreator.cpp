@@ -91,6 +91,15 @@ namespace Kaleidoscope {
     draw_rect_ = QRectF(last_node_pos_, last_mouse_pos_).normalized();
   }
 
+  void LinkCreator::clear(){
+    last_tete_ = "";
+    last_tete_node_ = NULL;
+  }
+
+  bool LinkCreator::active(){
+    return last_tete_node_;
+  }
+
 
 
 

@@ -66,6 +66,10 @@ namespace Kaleidoscope {
     }
   }
 
+  void DisplayTextNode::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    TeteNode::mousePressEvent(event);
+  }
+
   void DisplayTextNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
   {
     //text_item_->mouseDoubleClickEvent(event);

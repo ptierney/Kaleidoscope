@@ -301,16 +301,20 @@ namespace Kaleidoscope {
     gradient_color_ = new_color;
   }
 
-  // TODO: Fix Bug
+  // Note: this is not called by the Qt event loop, it is called by whichever
+  // derived class implements mouseDoubleClickEvent
   void TeteNode::mousePressEvent(QGraphicsSceneMouseEvent* event){
-    mouse_down_ = event->pos();
-    mouse_down_vec_ = Vec3D(mouse_down_.x(), mouse_down_.y(), 0.0);
+    mouse_down_ = event->pos() + pos();
+    //mouse_down_vec_ = Vec3D(mouse_down_.x(), mouse_down_.y(), 0.0);
+    //std::cerr << "Press: " << mouse_down_.x() << " : " << mouse_down_.y() << std::endl;
     QGraphicsObject::mousePressEvent(event);
   }
 
   void TeteNode::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
-    Vec3D temp_vec = Vec3D(event->pos().x(), event->pos().y(), 0.0);
-    if(temp_vec == mouse_down_vec_)
+    QPointF scene_pos = event->pos() + pos();
+    //std::cerr << "Release: " << scene_pos.x() << " : " << scene_pos.y() << std::endl;
+    //Vec3D temp_vec = Vec3D(event->pos().x(), event->pos().y(), 0.0);
+    if(mouse_down_ == scene_pos)
       d_->getScene()->main_view()->link_creator()->registerClick(tete_->id());
     QGraphicsObject::mouseReleaseEvent(event);
   }
