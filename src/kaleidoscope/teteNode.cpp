@@ -27,6 +27,7 @@ namespace Kaleidoscope {
     mouse_moved_ = true;
     velocity_ = Vec3D();
     dormant_ = false;
+    setFlag(QGraphicsItem::ItemIsMovable);
   }
 
   TeteNode::~TeteNode(){

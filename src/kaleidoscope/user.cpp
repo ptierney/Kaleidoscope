@@ -40,7 +40,7 @@ namespace Kaleidoscope {
   }
 
   void User::set_color(QColor user_color){
-    std::cerr << "Set color" << std::endl;
+    //std::cerr << "Set color" << std::endl;
     color_ = user_color;
   }
 

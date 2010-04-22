@@ -21,6 +21,7 @@ namespace Kaleidoscope {
     : QGraphicsView(scene) {
     d_ = d;
     setMouseTracking(true);
+    //setDragEnabled(true);
     // Turn antialiasing on
     QGLFormat format;
     format.setSampleBuffers(true);
@@ -69,7 +70,7 @@ namespace Kaleidoscope {
   }
 
   void View2D::focusOutEvent(QFocusEvent* /*event*/){
-    std::cerr << "Out" << std::endl;
+    //std::cerr << "Out" << std::endl;
   }
 
   void View2D::wheelEvent(QWheelEvent *event) {
