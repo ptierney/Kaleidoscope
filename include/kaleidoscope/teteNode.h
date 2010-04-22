@@ -58,6 +58,8 @@ namespace Kaleidoscope {
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
     Tete* tete_;
     QRectF frame_rect_;
@@ -78,6 +80,8 @@ namespace Kaleidoscope {
     bool dormant_;
     QTime last_active_;
     QColor gradient_color_;
+    QPointF mouse_down_;
+    Vec3D mouse_down_vec_;
 
 
   };

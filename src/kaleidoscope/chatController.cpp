@@ -410,7 +410,9 @@ namespace Kaleidoscope {
   }
 
   void ChatController::startZooming(){
-    start_zooming_timer_ = startTimer(zoom_delay_);
+    //start_zooming_timer_ = startTimer(zoom_delay_);
+    //zooming_ = true;
+    setStartZooming();
   }
 
   void ChatController::stopZooming(){

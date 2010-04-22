@@ -6,6 +6,7 @@
 namespace Kaleidoscope {
   class Scene2D;
   class Device;
+  class LinkCreator;
 
   class View2D : public QGraphicsView {
     Q_OBJECT
@@ -16,6 +17,7 @@ namespace Kaleidoscope {
     void scaleView(qreal scaleFactor);
     void print();
     //void render(QPainter*, const QRectF&, const QRect&, Qt::AspectRatioMode);
+    LinkCreator* link_creator();
 
   protected:
     void focusOutEvent(QFocusEvent* event);
@@ -30,6 +32,7 @@ namespace Kaleidoscope {
     QRect world_size;
   private:
     Device* d_;
+    LinkCreator* link_creator_;
   };
 }
 

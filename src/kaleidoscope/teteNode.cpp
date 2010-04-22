@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <QTimer>
+#include <QGraphicsSceneMouseEvent>
 
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
@@ -13,6 +14,7 @@
 #include <kaleidoscope/chat.h>
 #include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/linkNode.h>
+#include <kaleidoscope/linkCreator.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -299,5 +301,18 @@ namespace Kaleidoscope {
     gradient_color_ = new_color;
   }
 
+  // TODO: Fix Bug
+  void TeteNode::mousePressEvent(QGraphicsSceneMouseEvent* event){
+    mouse_down_ = event->pos();
+    mouse_down_vec_ = Vec3D(mouse_down_.x(), mouse_down_.y(), 0.0);
+    QGraphicsObject::mousePressEvent(event);
+  }
+
+  void TeteNode::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
+    Vec3D temp_vec = Vec3D(event->pos().x(), event->pos().y(), 0.0);
+    if(temp_vec == mouse_down_vec_)
+      d_->getScene()->main_view()->link_creator()->registerClick(tete_->id());
+    QGraphicsObject::mouseReleaseEvent(event);
+  }
 
 }

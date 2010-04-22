@@ -13,6 +13,7 @@
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/eventController.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/linkCreator.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -51,6 +52,9 @@ namespace Kaleidoscope {
 
     setMinimumSize(600, 400);
     //centerOn(10000.0, 10000.0);
+
+    link_creator_ = new LinkCreator(d_);
+    scene->addItem(link_creator_);
   }
 
   void View2D::drawBackground(QPainter* /*painter*/, const QRectF &rect)
@@ -109,7 +113,10 @@ namespace Kaleidoscope {
         painter.setRenderHint(QPainter::Antialiasing);
         render(&painter);
     }
+  }
 
+  LinkCreator* View2D::link_creator(){
+    return link_creator_;
   }
 
   /*
