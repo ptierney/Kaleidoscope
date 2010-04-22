@@ -27,6 +27,10 @@ namespace Kaleidoscope {
     position_timer_id_ = startTimer(50);
   }
 
+  ChatLinkSystem::~ChatLinkSystem(){
+
+  }
+
   void ChatLinkSystem::setType1(){
     rest_distance_ = 150.0;
     dormant_rest_distance_ = 100.0;

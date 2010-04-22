@@ -38,6 +38,8 @@ namespace Kaleidoscope {
 
   TextNode::~TextNode(){
     // Nothing here
+    delete node_gradient_;
+    delete name_item_;
   }
 
   void TextNode::init(){

@@ -14,6 +14,7 @@ namespace Kaleidoscope {
   class Chat {
   public:
     Chat(Device*, GridsID);
+    virtual ~Chat();
 
     void addTete(Tete*);
     // Add tete and link up parent / child relationships

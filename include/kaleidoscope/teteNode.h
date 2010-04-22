@@ -49,6 +49,7 @@ namespace Kaleidoscope {
     virtual void updateGeometry() = 0;
     virtual void frameLeave(FrameRect*);
     bool frame_selected();
+    bool get_frame_selected();
     void beginFraming();
 
     QPointF getGlobalPosition();

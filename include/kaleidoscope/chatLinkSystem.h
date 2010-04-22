@@ -26,6 +26,7 @@ namespace Kaleidoscope {
     Q_OBJECT
   public:
     ChatLinkSystem(Device*, QObject* parent = 0);
+    virtual ~ChatLinkSystem();
 
     void update(std::vector<Chat*> chats);
     void doForces(Tete* tete, Chat* chat);

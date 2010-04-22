@@ -140,6 +140,13 @@ namespace Kaleidoscope {
     return frame_selected_;
   }
 
+  // TODO: frame selected should be a pure accessor
+  // method, and put the other code in a more
+  // properly labeled method.
+  bool TeteNode::get_frame_selected(){
+    return frame_selected_;
+  }
+
   void TeteNode::updateFrameSelected(){
     frame_selected_ = frame_rect_object_->isUnderMouse();
 

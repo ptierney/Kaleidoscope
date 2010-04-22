@@ -15,6 +15,12 @@ namespace Kaleidoscope {
     chat_id_ = chat_id;
   }
 
+  Chat::~Chat(){
+    for(std::vector<Tete*>::iterator it = tetes_.begin(); it != tetes_.end(); ++it){
+      delete *it;
+    }
+  }
+
   GridsID Chat::chat_id(){
     return chat_id_;
   }

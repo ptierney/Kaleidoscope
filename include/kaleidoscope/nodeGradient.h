@@ -14,6 +14,7 @@ namespace Kaleidoscope {
 
   public:
     NodeGradient(Device*, TeteNode* parent_node, QGraphicsItem* parent = 0);
+    virtual ~NodeGradient();
 
     void init();
     void updateDrawRect();
@@ -34,6 +35,7 @@ namespace Kaleidoscope {
     float time_dropoff_;
     int update_timer_;
     int alpha_refresh_;
+    float focus_line_weight_;
 
   };
 }

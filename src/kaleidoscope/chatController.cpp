@@ -40,11 +40,18 @@ namespace Kaleidoscope {
     Chat* temp_chat;
     for(std::vector<Chat*>::iterator it = chats_.begin(); it != chats_.end(); ++it){
       temp_chat = *it;
-      delete temp_chat;
+      delete temp_chat; // Each chat deletes all the Tete*s it knows
       // TODO: erase element of vector?
     }
 
+    for(std::vector<Link*>::iterator it = links_.begin(); it != links_.end(); ++it){
+      delete *it;
+    }
+
     delete link_system_;
+
+    // Remember that all Tete / Link / Chat Nodes are deleted by Qt if they are
+    // childs of a Qt object (if they are displayed).
   }
 
   void ChatController::init(){
