@@ -14,6 +14,7 @@
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/nodeGradient.h>
+#include <kaleidoscope/nameTextItem.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -45,7 +46,7 @@ namespace Kaleidoscope {
   void TextNode::init(){
     TeteNode::init();
 
-    name_item_ = new QGraphicsTextItem(this);
+    name_item_ = new NameTextItem(d_, this);
     name_item_->setPlainText(tr(tete_->user_name().c_str()));
     name_item_->setDefaultTextColor(name_color_);
     name_item_->setScale(name_scale_);

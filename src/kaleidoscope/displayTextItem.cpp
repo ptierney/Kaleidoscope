@@ -176,4 +176,8 @@ namespace Kaleidoscope {
     }
   }
 
+  void DisplayTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget){
+    //QGraphicsTextItem::paint(painter, option, widget);
+  }
+
 }
