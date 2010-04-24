@@ -35,14 +35,13 @@ namespace Kaleidoscope {
     void updateLinkLine();
     void updateLinkValues();
     void activate();
+    bool active();
 
     QPointF getNodeIntersectPosition(Tete*);
 
     float attract_scale();  
 
   protected:
-    void timerEvent(QTimerEvent *);
-
 
   private:
     Device* d_;
@@ -59,6 +58,7 @@ namespace Kaleidoscope {
     QLinearGradient* linear_gradient_;
     int update_timer_id_;
     int update_time_;
+    bool active_;
   };
 
 }

@@ -103,25 +103,31 @@ namespace Kaleidoscope {
 
     /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
        though it has something to do with "temporaries".  You can't tae the start from one array, and the end from it's copy. */
-    std::vector<Tete*> tetes;
 
     for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       if(chat_running_[(*chat_it)->chat_id()] == false)
         continue;
 
-      tetes = (*chat_it)->tetes();
-      for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
+      const std::vector<Tete*>& tetes = (*chat_it)->tetes();
+      for(std::vector<Tete*>::const_iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         doForces((*tete_it), (*chat_it));
       }
 
-      for(std::vector<Tete*>::iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
+      for(std::vector<Tete*>::const_iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         if( (*tete_it)->tete_node() != NULL ){
           (*tete_it)->tete_node()->updatePosition();
         }
       }
+
+      const std::vector<Link*>& links = (*chat_it)->links();
+      for(std::vector<Link*>::const_iterator link_it = links.begin(); link_it != links.end(); ++link_it){
+        if((*link_it)->link_node() != NULL && (*link_it)->link_node()->active())
+          (*link_it)->link_node()->updateLinkValues();
+      }
+
       //(*chat_it)->chat_node()->updatePosition();
       // Todo change this to tete_node()->update( tete_node()->boundingRect()
-      d_->getScene()->update(d_->getScene()->sceneRect());
+      //d_->getScene()->update(d_->getScene()->sceneRect());
     }
 
     if(chats_running_)

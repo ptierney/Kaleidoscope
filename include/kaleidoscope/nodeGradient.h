@@ -19,6 +19,7 @@ namespace Kaleidoscope {
     void init();
     void updateDrawRect();
     void activate();
+    bool active();
     void timerEvent(QTimerEvent *);
 
     QRectF boundingRect() const;
@@ -36,6 +37,7 @@ namespace Kaleidoscope {
     int update_timer_;
     int alpha_refresh_;
     float focus_line_weight_;
+    bool active_;
 
   };
 }

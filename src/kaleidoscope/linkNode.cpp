@@ -30,20 +30,12 @@ namespace Kaleidoscope {
     update_timer_id_ = 0;
     update_time_ = 100;
     link_ = NULL;
+    active_ = true;
   }
 
   void LinkNode::init(){
     // Nothing here
     activate();
-  }
-
-  void LinkNode::timerEvent(QTimerEvent* /*event*/){
-    updateLinkValues();
-
-    if(attract_scale_ > attract_scale_max_ * 7.0 / 8.0){
-      killTimer(update_timer_id_);
-    }
-    update();
   }
 
   QRectF LinkNode::boundingRect() const {
@@ -209,10 +201,7 @@ namespace Kaleidoscope {
   }
 
   void LinkNode::activate(){
-    if(update_timer_id_ != 0)
-      killTimer(update_timer_id_);
-
-    update_timer_id_ = startTimer(update_time_);
+    active_ = true;
   }
 
   void LinkNode::updateLinkValues(){
@@ -229,10 +218,18 @@ namespace Kaleidoscope {
     }
 
     attract_scale_ = ((float)active_average / (float)scale_dropoff_) * (attract_scale_max_ - 1.0) + 1.0;
+
+    if(attract_scale_ > attract_scale_max_ * 6.0 / 8.0){
+      active_ = false;
+    }
   }
 
   float LinkNode::attract_scale(){
     return attract_scale_;
+  }
+
+  bool LinkNode::active(){
+    return active_;
   }
 
 }

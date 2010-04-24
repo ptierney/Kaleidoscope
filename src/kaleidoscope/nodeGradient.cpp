@@ -19,10 +19,11 @@ namespace Kaleidoscope {
     parent_node_ = parent_node;
     rect_width_ = 500;
     rect_height_ = rect_width_;
-    time_dropoff_ = 10 * 1000;
+    time_dropoff_ = 3 * 1000;
     alpha_refresh_ = 150;
     focus_line_weight_ = 4.0;
     update_timer_ = 0;
+    active_ = true;
     updateDrawRect();
   }
 
@@ -35,10 +36,16 @@ namespace Kaleidoscope {
   }
 
   void NodeGradient::activate(){
+    //std::cerr << qrand() << " Starting Grad timer" << std::endl;
+    active_ = true;
     update_timer_ = startTimer(alpha_refresh_);
   }
 
-  void NodeGradient::timerEvent(QTimerEvent* /*event*/) {
+  void NodeGradient::timerEvent(QTimerEvent* event) {
+    std::cerr << qrand() << " Grad timer" << std::endl;
+    //std::cerr << parent_node_->activeElapsed() << std::endl;
+    if(active_ == false)
+      killTimer(event->timerId());
     update();
   }
 
@@ -54,8 +61,6 @@ namespace Kaleidoscope {
   }
 
   void NodeGradient::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) {
-    if(update_timer_ == 0)
-      activate();
 
     QColor grad_color = parent_node_->gradient_color();
 
@@ -71,9 +76,11 @@ namespace Kaleidoscope {
       float radius = parent_node_->boundingRect().width() > parent_node_->boundingRect().height() ? parent_node_->boundingRect().width() : parent_node_->boundingRect().height();
       painter->drawEllipse(QPoint(), (int)radius, (int)radius);
 
-      if(parent_node_->activeElapsed() > time_dropoff_){
+      if(active_ && parent_node_->activeElapsed() > time_dropoff_){
+        //std::cerr << "Killing" << std::endl;
         killTimer(update_timer_);
         update_timer_ = 0;
+        active_ = false;
         return;
       }
     }
@@ -100,6 +107,10 @@ namespace Kaleidoscope {
 
   void NodeGradient::updateDrawRect() {
     draw_rect_ = QRectF(-rect_width_/2, -rect_height_/2, rect_width_, rect_height_);
+  }
+
+  bool NodeGradient::active(){
+    return active_;
   }
 
 }

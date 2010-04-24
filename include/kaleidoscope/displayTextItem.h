@@ -57,6 +57,7 @@ namespace Kaleidoscope {
     // should be deleted, and replaced with a simple text
     // display with the same text.
     bool replace_me_;
+    bool active_;
   };
 
 }

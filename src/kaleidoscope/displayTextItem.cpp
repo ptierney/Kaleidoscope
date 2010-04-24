@@ -26,6 +26,7 @@ namespace Kaleidoscope {
     keys_unsent_ = false;
     input_unsent_ = false;
     replace_me_ = false;
+    active_ = false;
   }
 
   void DisplayTextItem::init(){
@@ -56,6 +57,7 @@ namespace Kaleidoscope {
     clearFocus();
     // Replace the item with a more efficient version in 1 second
     QTimer::singleShot(1000, node_, SLOT(replaceTextItem()));
+    killTimer(key_timer_id_);
   }
 
   void DisplayTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
@@ -151,13 +153,18 @@ namespace Kaleidoscope {
   }
 
   void DisplayTextItem::timerEvent(QTimerEvent* event){
+     //std::cerr << qrand() << " TextItem timer" << std::endl;
+
     if(event->timerId() == cursor_timer_id_){
       tryToMoveCursor();
       return;
     }
 
-    if(!hasFocus())
+    if(!hasFocus()){
+      // WTF why is this being called if it's an inactive text item
+      killTimer(event->timerId());
       return;
+    }
 
     if(keys_unsent_ && key_timer_.elapsed() > key_delay_){
       keys_unsent_ = false;
