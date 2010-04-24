@@ -21,7 +21,7 @@ namespace Kaleidoscope {
              QGraphicsScene* scene = 0);
     void init();
 
-    static QLineF getLineBetween(QGraphicsObject*, QGraphicsObject*);
+    static QLineF getLineBetween(TeteNode*, TeteNode*);
 
     Link* link();
     void set_link(Link*);

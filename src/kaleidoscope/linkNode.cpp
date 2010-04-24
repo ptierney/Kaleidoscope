@@ -117,8 +117,8 @@ namespace Kaleidoscope {
       return;
     }
 
-    link_line_ = QLineF(link_->node_1()->tete_node()->pos(),
-                        link_->node_2()->tete_node()->pos());
+    //link_line_ = QLineF(link_->node_1()->tete_node()->pos(),
+    //                    link_->node_2()->tete_node()->pos());
 
     bounding_rect_ = QRectF(link_line().p1(),
                             link_line().p2()).normalized();
@@ -136,7 +136,7 @@ namespace Kaleidoscope {
     return link_line_;
   }
 
-  QLineF LinkNode::getLineBetween(QGraphicsObject* node_1, QGraphicsObject* node_2){
+  QLineF LinkNode::getLineBetween(TeteNode* node_1, TeteNode* node_2){
     if(node_1 == NULL || node_2 == NULL)
       return QLineF();
 

@@ -101,10 +101,7 @@ namespace Kaleidoscope {
       it->second = 0.0;
     }
 
-    /* Node: the variable tetes is REQUIRED. Qt segfaults otherwise. I do not know the reason,
-       though it has something to do with "temporaries".  You can't tae the start from one array, and the end from it's copy. */
-
-    for(std::vector<Chat*>::iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
+    for(std::vector<Chat*>::const_iterator chat_it = chats.begin(); chat_it != chats.end(); ++chat_it){
       if(chat_running_[(*chat_it)->chat_id()] == false)
         continue;
 
@@ -143,57 +140,29 @@ namespace Kaleidoscope {
     Vec3D force = Vec3D();
     QPointF point_1, point_2;
     QLineF line_between;
-    //float rest_distance;
-    float repulse_scale = 1.0;
 
     // Sum all the forces pushing this item away
     std::vector<Tete*> tetes = chat->tetes();
 
-    // Should this be a const_iterator?
     for(std::vector<Tete*>::const_iterator it = tetes.begin(); it !=  tetes.end(); ++it){
       if((*it) == tete)
         continue;
       if((*it)->tete_node() == NULL)
         continue;
 
-      if(tete->tete_node()->dormant() ||
-         (*it)->tete_node()->dormant() ){
-        point_1 = tete->tete_node()->pos();
-        point_2 = (*it)->tete_node()->pos();
-        repulse_scale = 0.5;
-      } else {
-        line_between = LinkNode::getLineBetween(tete->tete_node(),
-                                                (*it)->tete_node());
-        point_1 = line_between.p1();
-        point_2 = line_between.p2();
-
-        /*
-        if(tete->tete_node()->boundingRect().intersects((*it)->tete_node()->boundingRect())){
-          repulse_scale = 3.0;
-          point_1 = tete->tete_node()->pos();
-          point_2 = (*it)->tete_node()->pos();
-          */
-          /*
-        (*it)->tete_node()->setPos((*it)->tete_node()->pos() +
-                                  QPointF(1000 - qrand() % 2000, 1000 - qrand() % 2000));
-        std::cerr << "Intersect " << point_1.x() << " " << point_1.y() << std::endl
-            << point_2.x() << " " << point_2.y() << std::endl;
-        continue;
-        */
-        /*
-        }
-        */
-      }
+      line_between = LinkNode::getLineBetween(tete->tete_node(),
+                                              (*it)->tete_node());
+      point_1 = line_between.p1();
+      point_2 = line_between.p2();
 
       force += coulombRepulsion(point_1,
-                                point_2) * repulse_scale;
+                                point_2);
     }
 
     std::vector<Link*> links = tete->links();
     Tete* other_node;
-    //float average;
 
-    for(std::vector<Link*>::iterator it = links.begin(); it != links.end(); ++it){
+    for(std::vector<Link*>::const_iterator it = links.begin(); it != links.end(); ++it){
 
       if((*it)->node_1() == tete)
         other_node = (*it)->node_2();
@@ -212,22 +181,13 @@ namespace Kaleidoscope {
       float attract_scale = 1.0;
       if((*it)->link_node()){
         attract_scale = (*it)->link_node()->attract_scale();
-        //std::cerr << attract_scale << " " << qrand() << std::endl;
-      }
-
-      // This code is needed because as the nodes collapse together the check
-      // should just look at center positions.
-      if( false && attract_scale > 2.0 ){
-        point_1 = tete->tete_node()->pos();
-        point_2 = other_node->tete_node()->pos();
-      } else {
-        (*it)->link_node()->updateLinkLine();
-        point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
-        point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);
       }
 
       // Use points from an line intersection, to take into account the size of the
       // boxes.
+      (*it)->link_node()->updateLinkLine();
+      point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
+      point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);
 
       force += hookeAttraction(point_1, point_2,
                                rest_distance_ / attract_scale);
@@ -293,9 +253,6 @@ namespace Kaleidoscope {
       for(std::vector<Chat*>::const_iterator inner = chats.begin(); inner != chats.end(); ++inner){
         if(chat_node == (*inner)->chat_node())
           continue;
-
-        //between_line = LinkNode::getLineBetween(chat_node,
-        //                                        (*inner)->chat_node());
 
         bound_1 = chat_node->boundingRect();
         bound_2 = (*inner)->chat_node()->boundingRect();
