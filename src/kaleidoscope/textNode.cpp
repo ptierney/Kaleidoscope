@@ -46,10 +46,11 @@ namespace Kaleidoscope {
   void TextNode::init(){
     TeteNode::init();
 
-    name_item_ = new NameTextItem(d_, this);
+    name_item_ = new NameTextItem(d_, this, this);
     name_item_->setPlainText(tr(tete_->user_name().c_str()));
     name_item_->setDefaultTextColor(name_color_);
     name_item_->setScale(name_scale_);
+    //name_item_->update();
 
     node_gradient_ = new NodeGradient(d_, this, this);
   }

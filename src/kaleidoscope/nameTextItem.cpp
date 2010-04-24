@@ -1,4 +1,6 @@
 
+#include <QPainter>
+
 #include <kaleidoscope/nameTextItem.h>
 
 namespace Kaleidoscope {
@@ -11,11 +13,13 @@ namespace Kaleidoscope {
   }
 
   void NameTextItem::init(){
-
   }
 
   void NameTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget){
-    //QGraphicsTextItem::paint(painter, option, widget);
-  }
+    //QPainter temp_painter = QPainter(*painter);
+    //painter->setPen(Qt::SolidLine);
+    //painter->drawEllipse(QPoint(), 10, 10);
 
+    QGraphicsTextItem::paint(painter, option, widget);
+  }
 }

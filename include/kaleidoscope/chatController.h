@@ -89,6 +89,8 @@ namespace Kaleidoscope {
     bool spring_toggle_;
     int start_zooming_timer_;
     int zoom_delay_;
+    bool zoom_out_needed_;
+    float zoom_threshold_;
   };
 }
 

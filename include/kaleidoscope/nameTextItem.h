@@ -21,7 +21,6 @@ namespace Kaleidoscope {
     Device* d_;
     TextNode* node_;
   };
-
 }
 
 #endif // NAMETEXTITEM_H

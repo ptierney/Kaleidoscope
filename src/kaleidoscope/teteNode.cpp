@@ -29,6 +29,8 @@ namespace Kaleidoscope {
     mouse_moved_ = true;
     velocity_ = Vec3D();
     dormant_ = false;
+    frame_on_needed_ = false;
+    frame_on_threshold_ = 1.001;
     setFlag(QGraphicsItem::ItemIsMovable);
   }
 
@@ -66,6 +68,7 @@ namespace Kaleidoscope {
     updateFrameRect();
     frame_selected_ = true;
     mouse_moved_ = false;
+    frame_on_needed_ = true;
     if(frame_rect_object_){
       delete frame_rect_object_;
       frame_rect_object_ = NULL;
@@ -76,6 +79,9 @@ namespace Kaleidoscope {
   }
 
   bool TeteNode::frameOn(){
+    if(frame_on_needed_ == false)
+      return selected_;
+
     activate();
     // Get the rects of parent, referenced, and children nodes
     updateFrameRect();
@@ -104,8 +110,10 @@ namespace Kaleidoscope {
     // Note: m11 and m22 hold the horizontal and vertical scale.
     // They should be the same.
     float current_scale = current_matrix.m11();
-
     float new_scale = current_scale + (view_scale - current_scale) * zoom_speed_;
+
+    if(new_scale / current_scale < frame_on_threshold_)
+      frame_on_needed_ = false;
 
     QMatrix temp_matrix;
     temp_matrix.scale(new_scale, new_scale);

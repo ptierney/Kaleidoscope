@@ -83,6 +83,8 @@ namespace Kaleidoscope {
     QColor gradient_color_;
     QPointF mouse_down_;
     Vec3D mouse_down_vec_;
+    bool frame_on_needed_;
+    float frame_on_threshold_;
 
 
   };

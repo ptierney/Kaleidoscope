@@ -50,6 +50,7 @@ namespace Kaleidoscope {
   }
 
   void LinkNode::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
+    //return;
     updateBoundingRect();
     // This gets called in ChatLinkSystem when something changes,
     // so this probably doesn't need to be update

@@ -34,6 +34,9 @@ namespace Kaleidoscope {
     spring_toggle_ = true;
     gradient_toggle_ = true;
     zooming_toggle_ = true;
+    zoom_out_needed_ = false;
+    // The closer to 1, the more likely
+    zoom_threshold_ = 1.001;
   }
 
   ChatController::~ChatController(){
@@ -70,6 +73,9 @@ namespace Kaleidoscope {
   }
 
   void ChatController::timerEvent(QTimerEvent* event){
+    //return;
+
+    // Check reframe blocks
     checkReframe();
 
     if(event->timerId() == start_zooming_timer_){
@@ -119,6 +125,7 @@ namespace Kaleidoscope {
     // Update the node placements
     //chat->chat_node()->placeNodes();
     updateChatsRect();
+    zoom_out_needed_ = true;
   }
 
   bool ChatController::addLink(Link* link){
@@ -309,6 +316,7 @@ namespace Kaleidoscope {
           reframing_ = true;
           last_selected_ = (*it);
           (*it)->tete_node()->frameOn();
+          zoom_out_needed_ = true;
           }
         //std::cerr << "Checking" << std::endl;
         // This is for increasing the size of the fonts
@@ -328,8 +336,12 @@ namespace Kaleidoscope {
     chat_reframing_ = false;
 
     updateChatsRect();
-    // Zoom out
-    zoomOut();
+
+    //return;
+
+    // Zoom out locks
+    if(zoom_out_needed_)
+      zoomOut();
   }
 
   void ChatController::zoomOut(){
@@ -359,6 +371,11 @@ namespace Kaleidoscope {
 
     float new_scale = current_scale + (view_scale - current_scale) * zoom_out_speed_;
    
+    if(current_scale / new_scale < zoom_threshold_){
+      //std::cerr << "Zoom out : " << current_scale / new_scale << std::endl;
+      zoom_out_needed_ = false;
+    }
+
     QMatrix temp_matrix;
     temp_matrix.scale(new_scale, new_scale);
     view->setMatrix(temp_matrix);

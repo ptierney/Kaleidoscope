@@ -9,6 +9,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
+#include <kaleidoscope/define.h>
 #include <kaleidoscope/view2d.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/eventController.h>
@@ -24,12 +25,14 @@ namespace Kaleidoscope {
     setMouseTracking(true);
     //setDragEnabled(true);
     // Turn antialiasing on
-    QGLFormat format;
-    format.setSampleBuffers(true);
+    if(KALEIDOSCOPE_USE_OPENGL){
+      QGLFormat format;
+      format.setSampleBuffers(true);
 
-    // This is how you force the View to draw everything in OpenGL
-    QGLWidget* gl_widget = new QGLWidget(format);
-    setViewport(gl_widget);
+      // This is how you force the View to draw everything in OpenGL
+      QGLWidget* gl_widget = new QGLWidget(format);
+      setViewport(gl_widget);
+    }
 
     /* "Use this if your scene has many moving elements." */
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);

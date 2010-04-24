@@ -19,6 +19,8 @@
 #define DEFAULT_WINDOW_HEIGHT 550
 #define DEFAULT_SIDEBAR_WIDTH 200
 
+//#define KALEIDOSCOPE_USE_OPENGL false
+
 namespace Kaleidoscope
 {
 
@@ -45,6 +47,8 @@ namespace Kaleidoscope
 	
 	const int ZOOM_FORWARD = 1;
 	const int ZOOM_CENTER = 2;
+
+  const bool KALEIDOSCOPE_USE_OPENGL = true;
 }
 
 namespace Kal = Kaleidoscope;
