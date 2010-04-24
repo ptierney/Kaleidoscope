@@ -6,6 +6,7 @@
 
 #include <QGraphicsTextItem>
 #include <QTime>
+#include <QTextLayout>
 
 namespace Kaleidoscope {
   class Device;
@@ -30,6 +31,8 @@ namespace Kaleidoscope {
     void appendActiveText(std::string);
     bool initial_cursor_moved();
     bool moveCursorToEnd();
+
+    void setPlainText(const QString& text);
 
   protected:
     void timerEvent(QTimerEvent *);
@@ -59,6 +62,8 @@ namespace Kaleidoscope {
     // display with the same text.
     bool replace_me_;
     bool active_;
+    bool text_updated_;
+    QTextLayout* layout_;
   };
 
 }

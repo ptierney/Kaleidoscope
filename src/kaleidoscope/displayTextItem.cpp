@@ -5,6 +5,7 @@
 #include <QTimerEvent>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QPainter>
 
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/tete.h>
@@ -27,6 +28,8 @@ namespace Kaleidoscope {
     input_unsent_ = false;
     replace_me_ = false;
     active_ = false;
+    text_updated_ = true;
+    layout_ = NULL;
   }
 
   void DisplayTextItem::init(){
@@ -92,6 +95,7 @@ namespace Kaleidoscope {
 
   void DisplayTextItem::setText(std::string text){
     setPlainText(tr(text.c_str()));
+    text_updated_ = true;
   }
 
   void DisplayTextItem::setActiveText(std::string text){
@@ -99,6 +103,7 @@ namespace Kaleidoscope {
     QTextCursor temp_cursor = textCursor();
     initial_cursor_moved_ = temp_cursor.movePosition(QTextCursor::End);
     setTextCursor( temp_cursor );
+    text_updated_ = true;
   }
 
   bool DisplayTextItem::initial_cursor_moved(){
@@ -136,6 +141,8 @@ namespace Kaleidoscope {
 
     if(!hasFocus())
       return;
+
+    text_updated_ = true;
 
     if(keys_unsent_ == false){
       keys_unsent_ = true;
@@ -177,7 +184,31 @@ namespace Kaleidoscope {
   }
 
   void DisplayTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget){
-    QGraphicsTextItem::paint(painter, option, widget);
+    if(layout_ && !hasFocus())
+      layout_->draw(painter, QPointF());
+    else
+      QGraphicsTextItem::paint(painter, option, widget);
   }
+
+  void DisplayTextItem::setPlainText(const QString& text){
+    if(layout_)
+      delete layout_;
+
+    layout_ = new QTextLayout(text, font());
+    QFontMetricsF fm(font());
+    layout_->beginLayout();
+    QTextLine line = layout_->createLine();
+    //line.setNumColumns(1);
+    QSizeF s = fm.boundingRect(text).size();
+    // TODO: Figure out what these numbers are all about, why width/4, height/4
+    line.setPosition(QPointF(s.width()/4.0, -s.height()/4.0));
+
+    layout_->endLayout();
+    layout_->setCacheEnabled(true);
+
+    QGraphicsTextItem::setPlainText(text);
+  }
+
+
 
 }

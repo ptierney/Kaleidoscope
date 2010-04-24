@@ -8,6 +8,7 @@ namespace Kaleidoscope {
   class Tete;
   class DisplayTextItem;
   class NodeGradient;
+  class NameTextItem;
 
   class TextNode : public TeteNode {
     
@@ -33,7 +34,7 @@ namespace Kaleidoscope {
     void centerTextItem();
   protected:
     DisplayTextItem* text_item_;
-    QGraphicsTextItem* name_item_;
+    NameTextItem* name_item_;
     NodeGradient* node_gradient_;
     QColor text_color_;
     QColor name_color_;
