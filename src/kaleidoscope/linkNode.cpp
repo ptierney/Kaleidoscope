@@ -117,9 +117,6 @@ namespace Kaleidoscope {
       return;
     }
 
-    //link_line_ = QLineF(link_->node_1()->tete_node()->pos(),
-    //                    link_->node_2()->tete_node()->pos());
-
     bounding_rect_ = QRectF(link_line().p1(),
                             link_line().p2()).normalized();
   }

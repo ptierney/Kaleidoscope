@@ -15,6 +15,7 @@
 #include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/linkNode.h>
+#include <kaleidoscope/user.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -98,7 +99,6 @@ namespace Kaleidoscope {
       // This should be the only place I make a new Chat
       GridsID chat_id = tete->chat_id();
 
-      // Should this be a const_iterator?
       for(std::vector<Chat*>::const_iterator i = chats_.begin(); i != chats_.end(); i++){
         if((*i)->chat_id() == chat_id)
           chat = (*i);
@@ -126,6 +126,9 @@ namespace Kaleidoscope {
     //chat->chat_node()->placeNodes();
     updateChatsRect();
     zoom_out_needed_ = true;
+
+    if(tete->owner_id() == d_->user()->id())
+      last_selected_ = tete;
   }
 
   bool ChatController::addLink(Link* link){
