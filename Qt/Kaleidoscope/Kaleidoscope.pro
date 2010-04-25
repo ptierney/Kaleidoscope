@@ -7,6 +7,7 @@ QT += network \
     opengl
 TARGET = Kaleidoscope
 TEMPLATE = app
+ICON = kaleidoscope.icns
 RC_FILE = kaleidoscope.rc
 SOURCES += main.cpp \
     kaleidoscope.cpp \
