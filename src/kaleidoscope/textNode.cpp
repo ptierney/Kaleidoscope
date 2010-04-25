@@ -16,6 +16,7 @@
 #include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/nameTextItem.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -55,6 +56,7 @@ namespace Kaleidoscope {
     //name_item_->update();
 
     node_gradient_ = new NodeGradient(d_, this, this);
+    update();
   }
 
   DisplayTextItem* TextNode::text_item() {
@@ -76,7 +78,9 @@ namespace Kaleidoscope {
     updateDrawRect();
     //updateTextSize();
 
-    if(false && selected_){
+    if(selected_ || (d_->chat_controller()->last_selected() &&
+                     d_->chat_controller()->last_selected()->tete_node() == this)){
+      /*
       painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
       if(tete_->parent() && tete_->parent()->tete_node() ){
@@ -96,23 +100,35 @@ namespace Kaleidoscope {
       painter->drawRect(frame_rect().translated(pos() * -1.0));
       painter->setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
       painter->drawRect(draw_rect_);
+      */
+
+      QPointF ellipse_position;
+      painter->setPen(QPen(gradient_color(), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      painter->setBrush(QBrush(gradient_color()));
+      //std::cerr << gradient_color().alpha() << std::endl;
+      ellipse_position = QPointF( text_item_->pos().x() - 3.0*dot_radius_/2.0, text_item_->pos().y() + text_item_->boundingRect().height()/2);
+      painter->drawEllipse(ellipse_position, dot_radius_, dot_radius_);
     }
 
     //painter->setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     //painter->drawRect(text_item_->boundingRect().translated(text_item_->pos()));
 
-    if(d_->chat_controller()->last_selected() &&
-       d_->chat_controller()->last_selected()->tete_node() == this){
-      painter->setPen(Qt::NoPen);
-      painter->setBrush(QBrush(gradient_color()));
+    if(false && (d_->chat_controller()->last_selected() &&
+       d_->chat_controller()->last_selected()->tete_node() == this)){
+      //std::cerr << qrand() << " Draw dot" << std::endl;
+      //painter->setPen(Qt::NoPen);
+      //painter->setPen(QPen(gradient_color(), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      //painter->setBrush(QBrush(gradient_color()));
       QPointF ellipse_position;
 
+      //std::cerr << text_item_->pos().x() << " : " << text_item_->pos().y() << std::endl;
       // 5 is for spacing
       ellipse_position = QPointF( text_item_->pos().x() - 3.0*dot_radius_/2.0, text_item_->pos().y() + text_item_->boundingRect().height()/2);
 
       painter->drawEllipse(ellipse_position, dot_radius_, dot_radius_);
 
     }
+    //painter->setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     //painter->drawRect(draw_rect_);
   }
 

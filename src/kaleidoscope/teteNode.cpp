@@ -15,6 +15,7 @@
 #include <kaleidoscope/chatNode.h>
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/linkCreator.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -69,6 +70,7 @@ namespace Kaleidoscope {
     frame_selected_ = true;
     mouse_moved_ = false;
     frame_on_needed_ = true;
+    //d_->chat_controller()->set_last_selected(tete_);
     if(frame_rect_object_){
       delete frame_rect_object_;
       frame_rect_object_ = NULL;
@@ -331,6 +333,14 @@ namespace Kaleidoscope {
     //Vec3D temp_vec = Vec3D(event->pos().x(), event->pos().y(), 0.0);
     if(mouse_down_ == scene_pos)
       d_->getScene()->main_view()->link_creator()->registerClick(tete_->id());
+    else {
+      //std::cerr << "Probably drag" << std::endl;
+      for(std::vector<Link*>::const_iterator it = tete_->links().begin(); it != tete_->links().end(); ++it){
+        if((*it)->link_node() != NULL)
+          (*it)->link_node()->update();
+      }
+      update();
+    }
     QGraphicsObject::mouseReleaseEvent(event);
   }
 

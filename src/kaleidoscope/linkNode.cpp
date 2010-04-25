@@ -34,8 +34,9 @@ namespace Kaleidoscope {
   }
 
   void LinkNode::init(){
-    // Nothing here
     activate();
+    updateLinkValues();
+    updateLinkLine();
   }
 
   QRectF LinkNode::boundingRect() const {
@@ -104,7 +105,6 @@ namespace Kaleidoscope {
     delete linear_gradient_;
     lineal_gradient_ = NULL;
     */
-
   }
 
   void LinkNode::updateBoundingRect(){
@@ -117,6 +117,7 @@ namespace Kaleidoscope {
       return;
     }
 
+    updateLinkLine();
     bounding_rect_ = QRectF(link_line().p1(),
                             link_line().p2()).normalized();
   }

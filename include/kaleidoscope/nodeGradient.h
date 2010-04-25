@@ -38,7 +38,6 @@ namespace Kaleidoscope {
     int alpha_refresh_;
     float focus_line_weight_;
     bool active_;
-
   };
 }
 

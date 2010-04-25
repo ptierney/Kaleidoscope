@@ -35,6 +35,7 @@ namespace Kaleidoscope {
   void DisplayTextItem::init(){
     last_key_press_.start();
     key_timer_id_ = startTimer((int)(key_delay_ * 0.8));
+    //setScale(10.0);
   }
 
   void DisplayTextItem::makeActive(){

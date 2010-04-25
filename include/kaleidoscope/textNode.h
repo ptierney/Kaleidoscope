@@ -32,6 +32,7 @@ namespace Kaleidoscope {
     DisplayTextItem* text_item();
 
     void centerTextItem();
+    void updateDrawRect();
   protected:
     DisplayTextItem* text_item_;
     NameTextItem* name_item_;
@@ -50,8 +51,7 @@ namespace Kaleidoscope {
     int rect_boarder_width_;
     int rect_boarder_height_;
     float text_width_;
-    
-    void updateDrawRect();
+
     bool frame_selected_;
     float dot_radius_;
   };

@@ -46,6 +46,7 @@ namespace Kaleidoscope {
     QRectF all_chats_rect();
     bool reframing();
     Tete* last_selected();
+    void set_last_selected(Tete*);
 
     void startZooming();
     void stopZooming();

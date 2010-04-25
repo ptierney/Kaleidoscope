@@ -102,14 +102,13 @@ namespace Kaleidoscope {
     int g = attr["owner_color"][1u].asInt();
     int b = attr["owner_color"][2u].asInt();
     int a = attr["owner_color"][3u].asInt();
-    display_node->set_gradient_color(QColor(r, g, b, a));
+    display_node->set_gradient_color(QColor(r, g, b, 255));
 
     tete->set_tete_node(display_node);
     display_node->set_tete(tete);
 
     dev->chat_controller()->addTete(tete);
     display_node->placeNode();
-
     dev->getScene()->addItem(display_node);
 
     // Something here is causing the items to become process-intensive
@@ -125,6 +124,8 @@ namespace Kaleidoscope {
       display_node->text_item()->appendActiveText(append);
       display_node->text_item()->makeActive(); // <-- CAUSES NODES TO BOTTLENECK
       display_node->text_item()->textCursor().movePosition(QTextCursor::End);
+      if(dev->chat_controller()->reframing())
+        display_node->frameOn();
     }
   }
 

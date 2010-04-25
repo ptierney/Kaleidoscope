@@ -113,13 +113,16 @@ namespace Kaleidoscope {
       for(std::vector<Tete*>::const_iterator tete_it = tetes.begin(); tete_it != tetes.end(); ++tete_it){
         if( (*tete_it)->tete_node() != NULL ){
           (*tete_it)->tete_node()->updatePosition();
+          //(*tete_it)->tete_node()->update();
         }
       }
 
       const std::vector<Link*>& links = (*chat_it)->links();
       for(std::vector<Link*>::const_iterator link_it = links.begin(); link_it != links.end(); ++link_it){
-        if((*link_it)->link_node() != NULL && (*link_it)->link_node()->active())
+        if((*link_it)->link_node() != NULL && (*link_it)->link_node()->active()){
           (*link_it)->link_node()->updateLinkValues();
+          //(*link_it)->link_node()->update();
+        }
       }
 
       //(*chat_it)->chat_node()->updatePosition();
@@ -174,7 +177,11 @@ namespace Kaleidoscope {
 
       if(tete->tete_node() == NULL ||
          other_node->tete_node() == NULL)
-        return;
+        continue;
+
+      if(tete->chat() != other_node->chat())
+        continue;
+
 
       (*it)->link_node()->updateLinkValues();
 

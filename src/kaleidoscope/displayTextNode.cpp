@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <QObject>
 #include <QGraphicsTextItem>
 
@@ -74,6 +76,11 @@ namespace Kaleidoscope {
   {
     //text_item_->mouseDoubleClickEvent(event);
     QGraphicsObject::mouseDoubleClickEvent(event);
+  }
+
+  void DisplayTextNode::dragLeaveEvent(QGraphicsSceneDragDropEvent *event){
+    std::cerr << "Leave" << std::endl;
+    QGraphicsObject::dragLeaveEvent(event);
   }
 
   void DisplayTextNode::makeActive(){

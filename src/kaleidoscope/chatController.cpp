@@ -432,6 +432,10 @@ namespace Kaleidoscope {
     return last_selected_;
   }
 
+  void ChatController::set_last_selected(Tete* tete){
+    last_selected_ = tete;
+  }
+
   ChatLinkSystem* ChatController::link_system(){
     return link_system_;
   }
@@ -504,5 +508,7 @@ namespace Kaleidoscope {
 
     return closest_node;
   }
+
+
 
 } // end namespace
