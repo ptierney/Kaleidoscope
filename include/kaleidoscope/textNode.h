@@ -53,6 +53,7 @@ namespace Kaleidoscope {
     
     void updateDrawRect();
     bool frame_selected_;
+    float dot_radius_;
   };
 }
 

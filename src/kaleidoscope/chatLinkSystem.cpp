@@ -183,8 +183,7 @@ namespace Kaleidoscope {
         attract_scale = (*it)->link_node()->attract_scale();
       }
 
-      // Use points from an line intersection, to take into account the size of the
-      // boxes.
+      // Use points from a line intersection, to take into account the size of the text boxes.
       (*it)->link_node()->updateLinkLine();
       point_1 = (*it)->link_node()->getNodeIntersectPosition(tete);
       point_2 = (*it)->link_node()->getNodeIntersectPosition(other_node);

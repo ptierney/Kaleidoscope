@@ -65,16 +65,17 @@ namespace Kaleidoscope {
     QColor grad_color = parent_node_->gradient_color();
 
     // TODO: Maybe there's a better way to do this?
-    if(d_->chat_controller()->last_selected() &&
+    if(false && d_->chat_controller()->last_selected() &&
        d_->chat_controller()->last_selected()->tete_node() == parent_node_){
       // Check if the node is selected, if so draw an (ellipse, circle, box, dot...) to show that it is.
       // TODO: Move this somewhere more logical
-      painter->setPen(QPen(grad_color, focus_line_weight_, Qt::DotLine));
+      painter->setPen(QPen(grad_color, 0.3, Qt::SolidLine));
       // Check out Qt::BrushStyles for more info
       //painter->setBrush(Qt::SolidPattern);
       painter->setBrush(Qt::NoBrush);
-      float radius = parent_node_->boundingRect().width() > parent_node_->boundingRect().height() ? parent_node_->boundingRect().width() : parent_node_->boundingRect().height();
-      painter->drawEllipse(QPoint(), (int)radius, (int)radius);
+      //float radius = parent_node_->boundingRect().width() > parent_node_->boundingRect().height() ? parent_node_->boundingRect().width() : parent_node_->boundingRect().height();
+      //painter->drawEllipse(QPoint(), (int)radius, (int)radius);
+      painter->drawRect(parent_node_->boundingRect());
 
       if(active_ && parent_node_->activeElapsed() > time_dropoff_){
         //std::cerr << "Killing" << std::endl;

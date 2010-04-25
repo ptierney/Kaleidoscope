@@ -15,6 +15,7 @@
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/nameTextItem.h>
+#include <kaleidoscope/chatController.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -35,6 +36,7 @@ namespace Kaleidoscope {
     time_cutoff_ = 10000;
     scale_velocity_ = 0.0;
     scale_damping_ = 0.01;
+    dot_radius_ = 6;
   }
 
   TextNode::~TextNode(){
@@ -48,7 +50,7 @@ namespace Kaleidoscope {
 
     name_item_ = new NameTextItem(d_, this, this);
     name_item_->setPlainText(tr(tete_->user_name().c_str()));
-    name_item_->setDefaultTextColor(name_color_);
+    name_item_->setDefaultTextColor(gradient_color());
     name_item_->setScale(name_scale_);
     //name_item_->update();
 
@@ -96,7 +98,21 @@ namespace Kaleidoscope {
       painter->drawRect(draw_rect_);
     }
 
+    //painter->setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    //painter->drawRect(text_item_->boundingRect().translated(text_item_->pos()));
 
+    if(d_->chat_controller()->last_selected() &&
+       d_->chat_controller()->last_selected()->tete_node() == this){
+      painter->setPen(Qt::NoPen);
+      painter->setBrush(QBrush(gradient_color()));
+      QPointF ellipse_position;
+
+      // 5 is for spacing
+      ellipse_position = QPointF( text_item_->pos().x() - 3.0*dot_radius_/2.0, text_item_->pos().y() + text_item_->boundingRect().height()/2);
+
+      painter->drawEllipse(ellipse_position, dot_radius_, dot_radius_);
+
+    }
     //painter->drawRect(draw_rect_);
   }
 

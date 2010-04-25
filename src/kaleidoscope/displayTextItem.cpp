@@ -152,11 +152,14 @@ namespace Kaleidoscope {
     input_unsent_ = true;
     last_key_press_.start();
 
-    if(event->key() == Qt::Key_Return)
+    if(event->key() == Qt::Key_Return){
+      // I use this to set the layout cache
+      QString text = toPlainText();
+      // Remove the trailing newline
+      text.chop(1);
+      setPlainText(text);
       makeNotActive();
-
-    //node_->activate();
-
+    }
   }
 
   void DisplayTextItem::timerEvent(QTimerEvent* event){
@@ -201,7 +204,8 @@ namespace Kaleidoscope {
     //line.setNumColumns(1);
     QSizeF s = fm.boundingRect(text).size();
     // TODO: Figure out what these numbers are all about, why width/4, height/4
-    line.setPosition(QPointF(s.width()/4.0, -s.height()/4.0));
+    //line.setPosition(QPointF(s.width()/4.0, -s.height()/4.0));
+    //line.setPosition(QPointF(0.0, s.height()));
 
     layout_->endLayout();
     layout_->setCacheEnabled(true);
