@@ -31,6 +31,7 @@ namespace Kaleidoscope {
     User* user_;
     QRectF draw_rect_;
     QTextLayout* layout_;
+    QSizeF text_size_;
   };
 
 }

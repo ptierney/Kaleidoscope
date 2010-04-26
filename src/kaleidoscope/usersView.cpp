@@ -13,7 +13,7 @@ namespace Kaleidoscope {
   UsersView::UsersView(Device* d, UsersScene* scene) :
       QGraphicsView(scene) {
     d_ = d;
-    setMouseTracking(true);
+    //setMouseTracking(true);
 
     if(KALEIDOSCOPE_USE_OPENGL){
       QGLFormat format;
@@ -35,7 +35,7 @@ namespace Kaleidoscope {
     setResizeAnchor(AnchorViewCenter);
 
     QMatrix temp_matrix;
-    temp_matrix.scale(1.5, 1.5);
+    temp_matrix.scale(0.75, 0.75);
     setMatrix(temp_matrix);
 
     setMinimumSize(200, 200);
@@ -51,7 +51,6 @@ namespace Kaleidoscope {
   }
 
   void UsersView::wheelEvent(QWheelEvent* event) {
-    std::cerr << "Wheel" << std::endl;
     scaleView(pow((double)2, event->delta() / 240.0));
   }
 

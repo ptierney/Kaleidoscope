@@ -29,7 +29,7 @@ namespace Kaleidoscope {
   private:
     Device* d_;
     TeteNode* parent_node_;
-    QRadialGradient* radial_gradient_;
+    QRadialGradient radial_gradient_;
     QRectF draw_rect_;
     int rect_width_;
     int rect_height_;

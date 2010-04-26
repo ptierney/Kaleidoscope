@@ -16,9 +16,9 @@ namespace Kaleidoscope {
     User(Device*, GridsID, QObject* parent = 0);
 
     GridsID id();
-    void set_id(GridsID);
     std::string name();
     void set_name(std::string); 
+    void set_id(GridsID);
     bool hasSetName();
     QColor color();
 

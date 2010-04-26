@@ -16,6 +16,7 @@ namespace Kaleidoscope {
     d_ = d;
     user_ = user;
     layout_ = NULL;
+    text_size_;
   }
 
   void UserIcon::init(){
@@ -26,13 +27,15 @@ namespace Kaleidoscope {
     layout_->beginLayout();
     QTextLine line = layout_->createLine();
     //line.setNumColumns(1);
-    QSizeF s = fm.boundingRect(text).size();
+    QSizeF text_size_ = fm.boundingRect(text).size();
     // TODO: Figure out what these numbers are all about, why width/4, height/4
-    line.setPosition(QPointF(s.width()/4.0,
-                             -s.height()/4.0));
+    //line.setPosition(QPointF(s.width()/4.0,
+                            // -s.height()/4.0));
+    line.setPosition(QPointF());
 
     layout_->endLayout();
     layout_->setCacheEnabled(true);
+    updateDrawRect();
   }
 
   QRectF UserIcon::boundingRect() const {
@@ -49,10 +52,18 @@ namespace Kaleidoscope {
   void UserIcon::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) {
     if(layout_)
       layout_->draw(painter, QPointF());
+
+    painter->setPen(QPen(user_->color()));
+    painter->setBrush(QBrush(user_->color()));
+    QRectF color_box = QRectF( -draw_rect_.height() * 2.0,
+                               0.0,
+                               draw_rect_.height(),
+                               draw_rect_.height());
+    painter->drawRect(color_box);
   }
 
   void UserIcon::updateDrawRect(){
-
+    draw_rect_ = layout_->boundingRect();
   }
 
   User* UserIcon::user(){

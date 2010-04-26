@@ -16,6 +16,8 @@
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/link.h>
 #include <kaleidoscope/user.h>
+#include <kaleidoscope/usersScene.h>
+#include <kaleidoscope/otherUsersNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -124,6 +126,8 @@ namespace Kaleidoscope {
       if(dev->chat_controller()->reframing())
         display_node->frameOn();
     }
+
+    dev->users_scene()->other_users_node()->digestTete(tete);
   }
 
   void Tete::requestUpdate(Device* dev,

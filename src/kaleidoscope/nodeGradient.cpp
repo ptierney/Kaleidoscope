@@ -96,14 +96,12 @@ namespace Kaleidoscope {
     //std::cerr << alpha_scale << std::endl;
     //updateDrawRect();
     // Update colors based on activity time
-    radial_gradient_ = new QRadialGradient(QPointF(), rect_width_);
-    radial_gradient_->setColorAt(0, grad_color);
-    radial_gradient_->setColorAt(0.5, QColor(255, 255, 255, 0));
-    painter->setBrush(*radial_gradient_);
+    radial_gradient_ =  QRadialGradient(QPointF(), rect_width_);
+    radial_gradient_.setColorAt(0, grad_color);
+    radial_gradient_.setColorAt(0.5, QColor(255, 255, 255, 0));
+    painter->setBrush(radial_gradient_);
     painter->setPen(Qt::NoPen);
     painter->drawRect(draw_rect_);
-    delete radial_gradient_;
-    radial_gradient_ = NULL;
   }
 
   void NodeGradient::updateDrawRect() {

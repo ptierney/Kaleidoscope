@@ -6,6 +6,7 @@
 #include <kaleidoscope/otherUsersNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/userIcon.h>
+#include <kaleidoscope/user.h>
 
 namespace Kaleidoscope {
 
@@ -31,12 +32,8 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void OtherUsersNode::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
-    painter->setPen(QPen(Qt::blue, Qt::SolidLine));
-    painter->setBrush(QBrush(Qt::blue));
-    painter->drawRect(draw_rect_);
-    //std::cerr << "draw" << std::endl;
-    //QGraphicsItem::paint(painter, option, widget);
+  void OtherUsersNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+
   }
 
   void OtherUsersNode::updateDrawRect() {
@@ -47,10 +44,18 @@ namespace Kaleidoscope {
     // Check to see if we know the user
     // if not, create a new UserIcon, attatch it somewhere
     //
-    users_iterator_ = known_users_.find(tete->owner_id());
+    GridsID owner_id = tete->owner_id();
+    users_iterator_ = known_users_.find(owner_id);
     if(users_iterator_ == known_users_.end()){
       // We haven't seen this user
-
+      User* user = new User(d_, owner_id, this);
+      user->set_color(tete->user_color());
+      user->set_name(tete->user_name());
+      UserIcon* icon = new UserIcon(d_, user, this);
+      icon->init();
+      icon->setPos(0.0,
+                   icon->boundingRect().height() * known_users_.size() * 2);
+      known_users_[owner_id] = icon;
     } else {
       // If we've seen this user, but don't know some piece of
       // information about them, such as color, etc

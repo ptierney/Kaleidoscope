@@ -203,6 +203,7 @@ namespace Kaleidoscope {
     users_view_ = new UsersView(this, users_scene_);
     users_view_->init();
     dock->setWidget(users_view_);
+    //dock->setAllowedAreas(Qt::NoDockWidgetArea);
     main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
   }
 

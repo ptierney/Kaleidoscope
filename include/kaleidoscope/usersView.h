@@ -2,6 +2,7 @@
 #define USERSVIEW_H
 
 #include <QGraphicsView>
+#include <QFrame>
 
 namespace Kaleidoscope {
   class UsersScene;
