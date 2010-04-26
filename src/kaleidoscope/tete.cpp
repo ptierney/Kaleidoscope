@@ -37,6 +37,8 @@ namespace Kaleidoscope {
     } else {
       // push user name onto userControllerStack
     }
+    user_color_ = getUserColorFromAttr(temp_attr);
+
     tete_node_ = NULL;
   }
 
@@ -97,12 +99,7 @@ namespace Kaleidoscope {
     tete->init();
     DisplayTextNode* display_node = new DisplayTextNode(dev, tete);
     display_node->init();
-    const Grids::Value& attr = evt->getAttr();
-    int r = attr["owner_color"][0u].asInt();
-    int g = attr["owner_color"][1u].asInt();
-    int b = attr["owner_color"][2u].asInt();
-    int a = attr["owner_color"][3u].asInt();
-    display_node->set_gradient_color(QColor(r, g, b, 255));
+    display_node->set_gradient_color(tete->user_color());
 
     tete->set_tete_node(display_node);
     display_node->set_tete(tete);
@@ -217,6 +214,16 @@ namespace Kaleidoscope {
     return attr["user_name"].asString();
   }
 
+  QColor Tete::getUserColorFromAttr(const Grids::Value& attr) {
+    if(attr["owner_color"].empty())
+      return QColor(255,255,255,0); // return transparent
+
+    int r = attr["owner_color"][0u].asInt();
+    int g = attr["owner_color"][1u].asInt();
+    int b = attr["owner_color"][2u].asInt();
+
+    return QColor(r, g, b);
+  }
 
   void Tete::addReference(Tete* tete){
     // Check to make sure the pointer isn't already in the vector
@@ -300,6 +307,10 @@ namespace Kaleidoscope {
 
   void Tete::updateText(std::string text) {
     requestUpdate(d_, id(), text);
+  }
+
+  QColor Tete::user_color(){
+    return user_color_;
   }
 
 }

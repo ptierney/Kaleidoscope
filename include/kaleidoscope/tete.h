@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <QColor>
+
 #include <grids/gObject.h>
 #include <kaleidoscope/teteInterface.h>
 
@@ -40,6 +42,7 @@ namespace Kaleidoscope {
     static GridsID getOwnerIDFromAttr(const Grids::Value&);
     static const Grids::Value& getLinksFromAttr(const Grids::Value&);
     static std::string getUserNameFromAttr(const Grids::Value&);
+    static QColor getUserColorFromAttr(const Grids::Value&);
 
     void set_parent(Tete*);
     void addReference(Tete*);
@@ -62,6 +65,7 @@ namespace Kaleidoscope {
     void set_tete_node(TeteNode*);
     const std::vector<Chat*>& referenced_chats();
     void updateText(std::string);
+    QColor user_color();
 
   private:
     std::string text_;
@@ -78,7 +82,7 @@ namespace Kaleidoscope {
     GridsID chat_id_;
     // This is more for cacheing purposes
     std::vector<Chat*> referenced_chats_;
-
+    QColor user_color_;
   };
 
 }

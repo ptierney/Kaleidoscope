@@ -1,7 +1,7 @@
 #ifndef VIEW2D_H
 #define VIEW2D_H
 
-#include <QtGui/QGraphicsView>
+#include <QGraphicsView>
 
 namespace Kaleidoscope {
   class Scene2D;

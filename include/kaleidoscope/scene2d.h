@@ -6,7 +6,6 @@
 #include <grids/define.h>
 #include <kaleidoscope/define.h>
 
-
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 class QMenu;
@@ -17,7 +16,6 @@ class QGraphicsTextItem;
 class QColor;
 class QWheelEvent;
 QT_END_NAMESPACE
-
 
 namespace Kaleidoscope {
     class InputTextItem;

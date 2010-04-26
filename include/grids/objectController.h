@@ -35,7 +35,7 @@ namespace Grids {
 		void updateObjectPosition( GridsID, Vec3D );
 		void updateObjectRotation( GridsID, Vec3D );
 		void updateObjectScale( GridsID, Vec3D );
-		void updateObjectAttr( GridsID, Event* );		
+    void updateObjectAttr( GridsID, Event* );
 
     void deleteObjectFromID( GridsID );
 

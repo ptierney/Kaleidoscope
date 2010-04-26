@@ -28,6 +28,9 @@
 #include <grids/objectController.h>
 #include <grids/utility.h>
 #include <grids/event.h>
+#include <kaleidoscope/otherUsersNode.h>
+#include <kaleidoscope/usersScene.h>
+#include <kaleidoscope/usersView.h>
 
 namespace Kaleidoscope {
   Device::Device(QApplication* in_app, QMainWindow* m_win)
@@ -54,6 +57,7 @@ namespace Kaleidoscope {
     createNoticeWindow();
     createErrorWindow();
     createConsole();
+    createUsersInfoWindow();
     createScene();
     /* Show the main window so we can read notices as the program connects. */
     main_window->show();
@@ -127,6 +131,8 @@ namespace Kaleidoscope {
   ChatController* Device::chat_controller() { return chat_controller_; }
   OutsideChatController* Device::outside_chat_controller() { return outside_chat_controller_; }
   User* Device::user() { return user_; }
+  UsersScene* Device::users_scene() { return users_scene_; }
+  UsersView* Device::users_view() { return users_view_; }
 
   void Device::loadRoom(){
     getInterface()->requestAllRooms();
@@ -186,6 +192,18 @@ namespace Kaleidoscope {
     main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
     if(!debug_display_)
       dock->close();
+  }
+
+  void Device::createUsersInfoWindow() {
+    QDockWidget *dock = new QDockWidget(tr("Other People"), main_window);
+    dock->setFloating(0);
+    dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
+    users_scene_ = new UsersScene(this, dock);
+    users_scene_->init();
+    users_view_ = new UsersView(this, users_scene_);
+    users_view_->init();
+    dock->setWidget(users_view_);
+    main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
   }
 
   void Device::createUserInputWindow(){

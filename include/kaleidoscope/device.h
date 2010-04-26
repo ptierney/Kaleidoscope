@@ -33,6 +33,8 @@ namespace Kaleidoscope {
     class ChatController;
     class OutsideChatController;
     class User;
+    class UsersView;
+    class UsersScene;
 
     class Device : public QObject {
         Q_OBJECT
@@ -54,6 +56,8 @@ namespace Kaleidoscope {
         ChatController* chat_controller();
         OutsideChatController* outside_chat_controller();
         User* user();
+        UsersScene* users_scene();
+        UsersView* users_view();
 
         void quit();
         bool getRunning();
@@ -73,7 +77,7 @@ namespace Kaleidoscope {
         void createUserInputWindow();
         void createAddUserWindow();
         void createColorPickWindow();
-
+        void createUsersInfoWindow();
 
         QMainWindow* main_window;
         // Cameras vs Renderers:
@@ -114,6 +118,8 @@ namespace Kaleidoscope {
         ChatController* chat_controller_;
         OutsideChatController* outside_chat_controller_;
         User* user_;
+        UsersScene* users_scene_;
+        UsersView* users_view_;
 
         void createObjects();
 

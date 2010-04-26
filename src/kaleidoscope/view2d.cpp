@@ -24,7 +24,7 @@ namespace Kaleidoscope {
     d_ = d;
     setMouseTracking(true);
     //setDragEnabled(true);
-    // Turn antialiasing on
+
     if(KALEIDOSCOPE_USE_OPENGL){
       QGLFormat format;
       format.setSampleBuffers(true);
@@ -32,6 +32,8 @@ namespace Kaleidoscope {
       // This is how you force the View to draw everything in OpenGL
       QGLWidget* gl_widget = new QGLWidget(format);
       setViewport(gl_widget);
+    } else {
+      setRenderHint(QPainter::Antialiasing);
     }
 
     /* "Use this if your scene has many moving elements." */
