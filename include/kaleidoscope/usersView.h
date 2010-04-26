@@ -14,7 +14,6 @@ namespace Kaleidoscope {
   public:
     UsersView(Device* d, UsersScene* scene);
     virtual ~UsersView();
-
     void init();
 
     void drawBackground(QPainter* painter, const QRectF &rect);

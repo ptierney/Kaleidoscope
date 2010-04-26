@@ -35,6 +35,7 @@ namespace Kaleidoscope {
     class User;
     class UsersView;
     class UsersScene;
+    class UserView;
 
     class Device : public QObject {
         Q_OBJECT
@@ -78,6 +79,7 @@ namespace Kaleidoscope {
         void createAddUserWindow();
         void createColorPickWindow();
         void createUsersInfoWindow();
+        void createUserViewWindow(UserView* view);
 
         QMainWindow* main_window;
         // Cameras vs Renderers:

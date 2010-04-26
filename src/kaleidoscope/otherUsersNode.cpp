@@ -11,6 +11,7 @@
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/scene2d.h>
 #include <kaleidoscope/view2d.h>
+#include <kaleidoscope/userView.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -68,15 +69,36 @@ namespace Kaleidoscope {
       icon->setPos(0.0,
                    icon->boundingRect().height() * known_users_.size() * 2);
       known_users_[owner_id] = icon;
+
+      std::vector<UserIcon*>::iterator it = user_order_.begin();
+      user_order_.insert(it, icon);
+
+      UserView* view = new UserView(d_, user, d_->getScene());
+      view->init();
+      user_views_[owner_id] = view;
+      d_->createUserViewWindow(view);
+
     } else {
+      UserIcon* icon = known_users_[owner_id];
       // If we've seen this user, but don't know some piece of
       // information about them, such as color, etc
       // Update that information
+
+      // Also, find the location in user_order_, delete it,
+      // Push it to the front
+      std::vector<UserIcon*>::iterator it = find(user_order_.begin(),
+                                                 user_order_.end(),
+                                                 icon);
+
+      user_order_.erase(it);
+      it = user_order_.begin();
+      user_order_.insert(it, icon);
     }
 
     last_tetes_[owner_id] = tete;
-
     reorderList();
+
+    user_views_[owner_id]->digestTete(tete);
   }
 
   void OtherUsersNode::iconPressed(GridsID owner_id){
@@ -102,7 +124,20 @@ namespace Kaleidoscope {
   }
 
   void OtherUsersNode::reorderList(){
+    if(user_order_.empty())
+      return;
 
+    float height_module = user_order_.front()->boundingRect().height();
+    float total_height = height_module
+                         * 2.0
+                         * user_order_.size();
+
+    float counter = 0.0;
+    for(std::vector<UserIcon*>::const_iterator it = user_order_.begin(); it != user_order_.end(); ++it){
+      (*it)->setPos(0.0,
+                    -total_height / 2.0 + height_module * 2 * counter);
+      counter += 1.0;
+    }
   }
 
 }

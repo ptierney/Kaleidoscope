@@ -79,7 +79,7 @@ namespace Kaleidoscope {
     QRectF node_rect = last_tete_node_->boundingRect();
     last_node_pos_ = node_rect.center() + last_tete_node_->pos();
     View2D* view = d_->getScene()->main_view();
-    Scene2D* scene = d_->getScene();
+    //Scene2D* scene = d_->getScene();
 
     //last_mouse_pos_ = view->cursor().pos(); // The global mouse position
     //last_mouse_pos_ = view->mapFromGlobal(last_mouse_pos_.toPoint()); // Get the position in the window

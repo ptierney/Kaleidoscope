@@ -17,6 +17,7 @@ namespace Kaleidoscope {
   class Device;
   class Tete;
   class UserIcon;
+  class UserView;
 
   class OtherUsersNode : public QGraphicsObject {
   public:
@@ -42,7 +43,8 @@ namespace Kaleidoscope {
     std::map<GridsID, UserIcon*> known_users_;
     std::map<GridsID, UserIcon*>::iterator users_iterator_;
     std::map<GridsID, Tete*> last_tetes_;
-
+    std::vector<UserIcon*> user_order_;
+    std::map<GridsID, UserView*> user_views_;
   };
 }
 

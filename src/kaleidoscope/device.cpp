@@ -32,6 +32,7 @@
 #include <kaleidoscope/usersScene.h>
 #include <kaleidoscope/usersView.h>
 #include <kaleidoscope/usersWidget.h>
+#include <kaleidoscope/userView.h>
 
 namespace Kaleidoscope {
   Device::Device(QApplication* in_app, QMainWindow* m_win)
@@ -203,6 +204,15 @@ namespace Kaleidoscope {
     users_view_ = new UsersView(this, users_scene_);
     users_view_->init();
     dock->setWidget(users_view_);
+    //dock->setAllowedAreas(Qt::NoDockWidgetArea);
+    main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
+  }
+
+  void Device::createUserViewWindow(UserView* view){
+    QDockWidget *dock = new QDockWidget(tr(view->user()->name().c_str()), main_window);
+    dock->setFloating(0);
+    dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
+    dock->setWidget(view);
     //dock->setAllowedAreas(Qt::NoDockWidgetArea);
     main_window->addDockWidget(Qt::RightDockWidgetArea, dock);
   }
