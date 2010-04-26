@@ -31,12 +31,18 @@ namespace Kaleidoscope {
     void updateDrawRect();
     void digestTete(Tete*);
 
+    void iconPressed(GridsID owner_id);
+    void iconDoubleClicked(GridsID owner_id);
+    void reorderList();
+
   private:
     Device* d_;
     QRectF draw_rect_;
 
     std::map<GridsID, UserIcon*> known_users_;
     std::map<GridsID, UserIcon*>::iterator users_iterator_;
+    std::map<GridsID, Tete*> last_tetes_;
+
   };
 }
 

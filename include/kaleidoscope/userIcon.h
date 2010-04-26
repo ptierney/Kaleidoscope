@@ -27,6 +27,9 @@ namespace Kaleidoscope {
     User* user();
     void set_user(User*);
 
+    void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
+
   private:
     Device* d_;
     User* user_;

@@ -8,6 +8,9 @@
 #include <kaleidoscope/userIcon.h>
 #include <kaleidoscope/user.h>
 #include <kaleidoscope/usersScene.h>
+#include <kaleidoscope/teteNode.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -70,6 +73,36 @@ namespace Kaleidoscope {
       // information about them, such as color, etc
       // Update that information
     }
+
+    last_tetes_[owner_id] = tete;
+
+    reorderList();
+  }
+
+  void OtherUsersNode::iconPressed(GridsID owner_id){
+    // Find the last tete / tete node we received from them
+    std::map<GridsID, Tete*>::iterator it;
+    it = last_tetes_.find(owner_id);
+    if(it != last_tetes_.end()){
+      Tete* last_tete = last_tetes_[owner_id];
+      last_tete->tete_node()->beginFraming();
+    }
+  }
+
+  void OtherUsersNode::iconDoubleClicked(GridsID owner_id){
+    std::map<GridsID, Tete*>::iterator it;
+    it = last_tetes_.find(owner_id);
+    if(it != last_tetes_.end()){
+      Tete* last_tete = last_tetes_[owner_id];
+      last_tete->tete_node()->set_mouse_moved(false);
+      last_tete->tete_node()->beginFraming();
+      last_tete->tete_node()->frameOn();
+      d_->getScene()->main_view()->setFocus(Qt::NoFocusReason);
+    }
+  }
+
+  void OtherUsersNode::reorderList(){
+
   }
 
 }

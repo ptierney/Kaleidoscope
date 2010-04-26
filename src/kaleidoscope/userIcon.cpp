@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include <QFontMetricsF>
 #include <QTextLayout>
 
@@ -7,6 +9,7 @@
 #include <kaleidoscope/usersScene.h>
 #include <kaleidoscope/usersView.h>
 #include <kaleidoscope/user.h>
+#include <kaleidoscope/otherUsersNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -75,6 +78,15 @@ namespace Kaleidoscope {
 
   void UserIcon::set_user(User* user){
     user_ = user;
+  }
+
+  void UserIcon::mousePressEvent(QGraphicsSceneMouseEvent* event){
+    //std::cerr << user_->name() << std::endl;
+    d_->users_scene()->other_users_node()->iconPressed(user_->id());
+  }
+
+  void UserIcon::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
+    d_->users_scene()->other_users_node()->iconDoubleClicked(user_->id());
   }
 
 }

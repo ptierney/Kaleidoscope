@@ -344,4 +344,8 @@ namespace Kaleidoscope {
     QGraphicsObject::mouseReleaseEvent(event);
   }
 
+  void TeteNode::set_mouse_moved(bool mouse){
+    mouse_moved_ = mouse;
+  }
+
 }
