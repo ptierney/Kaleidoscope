@@ -34,9 +34,6 @@ namespace Kaleidoscope {
   }
 
   void FrameRect::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/){
-
-    //painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    //painter->drawRect(frame_rect_);
   }
 
 

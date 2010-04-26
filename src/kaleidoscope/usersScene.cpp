@@ -9,14 +9,18 @@ namespace Kaleidoscope {
     d_ = d;
   }
 
-  QSize UsersScene::sizeHint() const {
-    return QSize(200, 200);
+  UsersScene::~UsersScene(){
+    delete other_users_node_;
   }
 
   void UsersScene::init(){
     other_users_node_ = new OtherUsersNode(d_);
     other_users_node_->init();
     addItem(other_users_node_);
+  }
+
+  QSize UsersScene::sizeHint() const {
+    return QSize(200, 200);
   }
 
   UsersView* UsersScene::users_view(){

@@ -21,6 +21,7 @@ namespace Kaleidoscope {
   class OtherUsersNode : public QGraphicsObject {
   public:
     OtherUsersNode(Device* d, QGraphicsItem* parent = 0);
+    virtual ~OtherUsersNode();
     void init();
 
     QRectF boundingRect() const;

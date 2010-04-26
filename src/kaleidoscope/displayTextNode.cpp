@@ -7,6 +7,7 @@
 #include <kaleidoscope/displayTextNode.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/displayTextItem.h>
+#include <kaleidoscope/nodeGradient.h>
 
 namespace Kaleidoscope {
 

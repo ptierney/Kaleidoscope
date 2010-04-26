@@ -41,6 +41,10 @@ namespace Kaleidoscope {
     setMinimumSize(200, 200);
   }
 
+  UsersView::~UsersView(){
+
+  }
+
   void UsersView::init(){
    // Hella more shit should go in here not in the con
   }

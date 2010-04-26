@@ -17,9 +17,9 @@ namespace Kaleidoscope {
       QGraphicsObject(parent) {
     d_ = d;
     parent_node_ = parent_node;
-    rect_width_ = 500;
+    rect_width_ = 100;
     rect_height_ = rect_width_;
-    time_dropoff_ = 3 * 1000;
+    time_dropoff_ = 2 * 1000;
     alpha_refresh_ = 150;
     focus_line_weight_ = 4.0;
     update_timer_ = 0;
@@ -65,6 +65,7 @@ namespace Kaleidoscope {
     QColor grad_color = parent_node_->gradient_color();
 
     // TODO: Maybe there's a better way to do this?
+    /*
     if(false && d_->chat_controller()->last_selected() &&
        d_->chat_controller()->last_selected()->tete_node() == parent_node_){
       // Check if the node is selected, if so draw an (ellipse, circle, box, dot...) to show that it is.
@@ -85,6 +86,7 @@ namespace Kaleidoscope {
         return;
       }
     }
+    */
 
     if(d_->chat_controller()->gradient_toggle() == false)
       return;
@@ -96,12 +98,14 @@ namespace Kaleidoscope {
     //std::cerr << alpha_scale << std::endl;
     //updateDrawRect();
     // Update colors based on activity time
-    radial_gradient_ =  QRadialGradient(QPointF(), rect_width_);
-    radial_gradient_.setColorAt(0, grad_color);
-    radial_gradient_.setColorAt(0.5, QColor(255, 255, 255, 0));
-    painter->setBrush(radial_gradient_);
+    //radial_gradient_ =  QRadialGradient(QPointF(), rect_width_);
+    //radial_gradient_.setColorAt(0, grad_color);
+    //radial_gradient_.setColorAt(0.5, QColor(255, 255, 255, 0));
+    //painter->setBrush(radial_gradient_);
+    painter->setBrush(QBrush(grad_color));
     painter->setPen(Qt::NoPen);
-    painter->drawRect(draw_rect_);
+    qreal rad = rect_width_*alpha_scale;
+    painter->drawEllipse(QPointF(), rad, rad);
   }
 
   void NodeGradient::updateDrawRect() {

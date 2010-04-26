@@ -16,6 +16,7 @@ namespace Kaleidoscope {
   public:
     UserIcon(Device* d, User* user,
              QGraphicsItem* parent = 0);
+    virtual ~UserIcon();
     void init();
 
     void updateDrawRect();

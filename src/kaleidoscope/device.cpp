@@ -31,6 +31,7 @@
 #include <kaleidoscope/otherUsersNode.h>
 #include <kaleidoscope/usersScene.h>
 #include <kaleidoscope/usersView.h>
+#include <kaleidoscope/usersWidget.h>
 
 namespace Kaleidoscope {
   Device::Device(QApplication* in_app, QMainWindow* m_win)
@@ -43,7 +44,6 @@ namespace Kaleidoscope {
 
     init();
   }
-
 
   void Device::init() {
     qtime.start();

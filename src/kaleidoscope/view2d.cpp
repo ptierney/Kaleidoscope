@@ -43,7 +43,7 @@ namespace Kaleidoscope {
     scene->set_main_view(this);
 
     setCacheMode(CacheBackground);
-    //setViewportUpdateMode(BoundingRectViewportUpdate);
+    setViewportUpdateMode(BoundingRectViewportUpdate);
     //setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorViewCenter);

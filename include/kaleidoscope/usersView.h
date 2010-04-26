@@ -13,6 +13,7 @@ namespace Kaleidoscope {
 
   public:
     UsersView(Device* d, UsersScene* scene);
+    virtual ~UsersView();
 
     void init();
 

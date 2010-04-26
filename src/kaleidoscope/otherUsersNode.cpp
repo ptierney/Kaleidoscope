@@ -7,6 +7,8 @@
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/userIcon.h>
 #include <kaleidoscope/user.h>
+#include <kaleidoscope/usersScene.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
@@ -15,6 +17,12 @@ namespace Kaleidoscope {
     d_ = d;
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
+  }
+
+  OtherUsersNode::~OtherUsersNode(){
+    for(users_iterator_ = known_users_.begin(); users_iterator_ != known_users_.end(); ++users_iterator_){
+      delete users_iterator_->second;
+    }
   }
 
   void OtherUsersNode::init(){
@@ -48,11 +56,12 @@ namespace Kaleidoscope {
     users_iterator_ = known_users_.find(owner_id);
     if(users_iterator_ == known_users_.end()){
       // We haven't seen this user
-      User* user = new User(d_, owner_id, this);
+      User* user = new User(d_, owner_id);
       user->set_color(tete->user_color());
       user->set_name(tete->user_name());
-      UserIcon* icon = new UserIcon(d_, user, this);
+      UserIcon* icon = new UserIcon(d_, user);
       icon->init();
+      d_->users_scene()->addItem(icon);
       icon->setPos(0.0,
                    icon->boundingRect().height() * known_users_.size() * 2);
       known_users_[owner_id] = icon;

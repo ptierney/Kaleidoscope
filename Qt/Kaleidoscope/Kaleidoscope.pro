@@ -67,7 +67,8 @@ SOURCES += main.cpp \
     ../../src/kaleidoscope/otherUsersNode.cpp \
     ../../src/kaleidoscope/usersScene.cpp \
     ../../src/kaleidoscope/usersView.cpp \
-    ../../src/kaleidoscope/userIcon.cpp
+    ../../src/kaleidoscope/userIcon.cpp \
+    ../../src/kaleidoscope/usersWidget.cpp
 INCLUDEPATH += ../../include
 HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/settings.h \
@@ -152,5 +153,6 @@ HEADERS += kaleidoscope.h \
     ../../include/kaleidoscope/otherUsersNode.h \
     ../../include/kaleidoscope/usersScene.h \
     ../../include/kaleidoscope/usersView.h \
-    ../../include/kaleidoscope/userIcon.h
+    ../../include/kaleidoscope/userIcon.h \
+    ../../include/kaleidoscope/usersWidget.h
 FORMS += kaleidoscope.ui

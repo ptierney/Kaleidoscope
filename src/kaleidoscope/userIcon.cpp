@@ -16,7 +16,10 @@ namespace Kaleidoscope {
     d_ = d;
     user_ = user;
     layout_ = NULL;
-    text_size_;
+  }
+
+  UserIcon::~UserIcon(){
+    delete user_;
   }
 
   void UserIcon::init(){

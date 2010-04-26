@@ -13,6 +13,7 @@ namespace Kaleidoscope {
 
   public:
     UsersScene(Device*, QObject* parent = 0);
+    virtual ~UsersScene();
     void init();
 
     QSize sizeHint() const;
