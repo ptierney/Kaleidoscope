@@ -3,6 +3,10 @@
 
 #include <QFontMetricsF>
 #include <QTextLayout>
+#include <QMenu>
+#include <QTimer>
+#include <QAction>
+#include <QCursor>
 
 #include <kaleidoscope/userIcon.h>
 #include <kaleidoscope/userIcon.h>
@@ -10,6 +14,8 @@
 #include <kaleidoscope/usersView.h>
 #include <kaleidoscope/user.h>
 #include <kaleidoscope/otherUsersNode.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -19,6 +25,8 @@ namespace Kaleidoscope {
     d_ = d;
     user_ = user;
     layout_ = NULL;
+    menu_ = NULL;
+    mouse_released_ = true;
   }
 
   UserIcon::~UserIcon(){
@@ -41,6 +49,19 @@ namespace Kaleidoscope {
 
     layout_->endLayout();
     layout_->setCacheEnabled(true);
+
+    menu_ = new QMenu(tr(user_->name().c_str()));
+    show_on_map_ = new QAction(tr("Show on map"), this);
+    menu_->addAction(show_on_map_);
+    connect(show_on_map_, SIGNAL(triggered()),
+            this,
+            SLOT(activateLastNode()));
+    focus_on_ = new QAction(tr("Focus on"), this);
+    menu_->addAction(focus_on_);
+    connect(focus_on_, SIGNAL(triggered()),
+            this,
+            SLOT(focusOnLastNode()));
+
     updateDrawRect();
   }
 
@@ -80,13 +101,38 @@ namespace Kaleidoscope {
     user_ = user;
   }
 
+  void UserIcon::createMenuCallback(){
+    if(mouse_released_)
+      return;
+    //std::cerr << "Creating menu" << std::endl;
+
+    QPoint mouse_global = d_->getScene()->main_view()->cursor().pos();
+    menu_->popup(mouse_global);
+  }
+
   void UserIcon::mousePressEvent(QGraphicsSceneMouseEvent* event){
+    mouse_released_ = false;
     //std::cerr << user_->name() << std::endl;
-    d_->users_scene()->other_users_node()->iconPressed(user_->id());
+    activateLastNode();
+    QTimer::singleShot(700, this, SLOT(createMenuCallback()));
   }
 
   void UserIcon::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
-    d_->users_scene()->other_users_node()->iconDoubleClicked(user_->id());
+    focusOnLastNode();
   }
+
+  void UserIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
+    mouse_released_ = true;
+  }
+
+  void UserIcon::activateLastNode(){
+    d_->users_scene()->other_users_node()->activateLastNode(user_->id());
+  }
+
+  void UserIcon::focusOnLastNode(){
+    d_->users_scene()->other_users_node()->focusOnLastNode(user_->id());
+  }
+
+
 
 }

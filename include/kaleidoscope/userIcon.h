@@ -5,6 +5,7 @@
 
 QT_BEGIN_NAMESPACE
 class QTextLayout;
+class QAction;
 QT_END_NAMESPACE
 
 namespace Kaleidoscope {
@@ -29,6 +30,12 @@ namespace Kaleidoscope {
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+
+  public slots:
+    void createMenuCallback();
+    void activateLastNode();
+    void focusOnLastNode();
 
   private:
     Device* d_;
@@ -36,6 +43,10 @@ namespace Kaleidoscope {
     QRectF draw_rect_;
     QTextLayout* layout_;
     QSizeF text_size_;
+    QMenu* menu_;
+    QAction* show_on_map_;
+    QAction* focus_on_;
+    bool mouse_released_;
   };
 
 }

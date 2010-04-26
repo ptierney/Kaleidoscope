@@ -44,7 +44,7 @@ namespace Kaleidoscope {
     return path;
   }
 
-  void OtherUsersNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+  void OtherUsersNode::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) {
 
   }
 
@@ -73,11 +73,12 @@ namespace Kaleidoscope {
       std::vector<UserIcon*>::iterator it = user_order_.begin();
       user_order_.insert(it, icon);
 
+      /*
       UserView* view = new UserView(d_, user, d_->getScene());
       view->init();
       user_views_[owner_id] = view;
       d_->createUserViewWindow(view);
-
+      */
     } else {
       UserIcon* icon = known_users_[owner_id];
       // If we've seen this user, but don't know some piece of
@@ -98,20 +99,20 @@ namespace Kaleidoscope {
     last_tetes_[owner_id] = tete;
     reorderList();
 
-    user_views_[owner_id]->digestTete(tete);
+    //user_views_[owner_id]->digestTete(tete);
   }
 
-  void OtherUsersNode::iconPressed(GridsID owner_id){
+  void OtherUsersNode::activateLastNode(GridsID owner_id){
     // Find the last tete / tete node we received from them
     std::map<GridsID, Tete*>::iterator it;
     it = last_tetes_.find(owner_id);
     if(it != last_tetes_.end()){
       Tete* last_tete = last_tetes_[owner_id];
-      last_tete->tete_node()->beginFraming();
+      last_tete->tete_node()->activate();
     }
   }
 
-  void OtherUsersNode::iconDoubleClicked(GridsID owner_id){
+  void OtherUsersNode::focusOnLastNode(GridsID owner_id){
     std::map<GridsID, Tete*>::iterator it;
     it = last_tetes_.find(owner_id);
     if(it != last_tetes_.end()){
@@ -139,5 +140,4 @@ namespace Kaleidoscope {
       counter += 1.0;
     }
   }
-
 }

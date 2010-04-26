@@ -20,6 +20,7 @@ namespace Kaleidoscope {
   class UserView;
 
   class OtherUsersNode : public QGraphicsObject {
+    Q_OBJECT
   public:
     OtherUsersNode(Device* d, QGraphicsItem* parent = 0);
     virtual ~OtherUsersNode();
@@ -31,10 +32,11 @@ namespace Kaleidoscope {
 
     void updateDrawRect();
     void digestTete(Tete*);
-
-    void iconPressed(GridsID owner_id);
-    void iconDoubleClicked(GridsID owner_id);
     void reorderList();
+
+  public slots:
+    void activateLastNode(GridsID owner_id);
+    void focusOnLastNode(GridsID owner_id);
 
   private:
     Device* d_;
