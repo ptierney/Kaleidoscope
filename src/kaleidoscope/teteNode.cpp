@@ -18,6 +18,8 @@
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/linkCreator.h>
 #include <kaleidoscope/chatController.h>
+#include <kaleidoscope/usersScene.h>
+#include <kaleidoscope/otherUsersNode.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -387,11 +389,16 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::focusOnUser(){
-
+    //std::cerr << "Focus On User" << std::endl;
+    focusOnLastUserTete();
   }
 
   void TeteNode::focusOnLastUserTete(){
-
+    //std::cerr << "Focus on Last User Tete" << std::endl;
+    // Fuck I fucked up. This is not a good way to structure a
+    // program, the UsersScene is not a dumping ground for Tete data.
+    // Oh well.
+    d_->users_scene()->other_users_node()->focusOnLastNode(tete_->owner_id());
   }
 
   void TeteNode::playbackFromHere(){
