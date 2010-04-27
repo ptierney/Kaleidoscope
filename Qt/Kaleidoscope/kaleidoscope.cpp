@@ -86,16 +86,19 @@ namespace Kaleidoscope {
     spring_on_off_ = new QAction(tr("Spring System On"), this);
     spring_on_off_->setCheckable(true);
     spring_on_off_->setStatusTip(tr("Turns the spring system on and off"));
+    spring_on_off_->setChecked(true);
     connect(spring_on_off_, SIGNAL(triggered()),
             this, SLOT(springToggle()));
     gradient_on_off_ = new QAction(tr("Gradient On"), this);
     gradient_on_off_->setCheckable(true);
     gradient_on_off_->setStatusTip(tr("Turns the gradient circles on and off"));
+    gradient_on_off_->setChecked(true);
     connect(gradient_on_off_, SIGNAL(triggered()),
             this, SLOT(gradientToggle()));
     zoom_on_off_ = new QAction(tr("Zoom On"), this);
     zoom_on_off_->setCheckable(true);
     zoom_on_off_->setStatusTip(tr("Turns automating zooming in and out on and off"));
+    zoom_on_off_->setChecked(true);
     connect(zoom_on_off_, SIGNAL(triggered()),
             this, SLOT(zoomToggle()));
     background_off_ = new QAction(tr("Turn background off"), this);
@@ -168,7 +171,7 @@ namespace Kaleidoscope {
     explore_menu_->addAction(gradient_on_off_);
     explore_menu_->addAction(zoom_on_off_);
     explore_menu_->addAction(background_off_);
-    file_menu_ = menuBar()->addMenu(tr("File"));
+    file_menu_ = menuBar()->addMenu(tr("Export"));
     file_menu_->addAction(print_);
   }
 
