@@ -23,6 +23,11 @@ namespace Kaleidoscope {
     d_ = d;
     myTextColor = Qt::black;
     //startTimer(100);
+
+    QLinearGradient gradient = QLinearGradient(QPointF(), QPointF(5000, 5000));
+    gradient.setColorAt(0, QColor(45, 197, 255, 76));
+    gradient.setColorAt(1.0, QColor(0, 0, 0, 76));
+    setBackgroundBrush(gradient);
   }
 
   QSize Scene2D::sizeHint() const {

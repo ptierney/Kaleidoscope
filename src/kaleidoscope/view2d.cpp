@@ -61,11 +61,11 @@ namespace Kaleidoscope {
     link_creator_ = new LinkCreator(d_);
     scene->addItem(link_creator_);
   }
-
-  void View2D::drawBackground(QPainter* /*painter*/, const QRectF &rect)
+/*
+  void View2D::drawBackground(QPainter* painter, const QRectF &rect)
   {
     Q_UNUSED(rect);
-    /*
+
         QRectF sceneRect = this->sceneRect();
 
         // Fill
@@ -75,8 +75,9 @@ namespace Kaleidoscope {
         painter->fillRect(rect.intersect(sceneRect), gradient);
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(sceneRect);
-        */
+
   }
+*/
 
   void View2D::focusOutEvent(QFocusEvent* /*event*/){
     //std::cerr << "Out" << std::endl;

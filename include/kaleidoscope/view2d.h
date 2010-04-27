@@ -26,7 +26,7 @@ namespace Kaleidoscope {
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
 
-    void drawBackground(QPainter *painter, const QRectF &rect);
+    //void drawBackground(QPainter *painter, const QRectF &rect);
 
     /* This is set in the constructor. */
     QRect world_size;

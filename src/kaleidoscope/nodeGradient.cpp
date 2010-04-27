@@ -103,7 +103,7 @@ namespace Kaleidoscope {
     //radial_gradient_.setColorAt(0.5, QColor(255, 255, 255, 0));
     //painter->setBrush(radial_gradient_);
     painter->setBrush(QBrush(grad_color));
-    painter->setPen(Qt::NoPen);
+    painter->setPen(QPen(QColor(0, 0, 0, 100), 1));
     qreal rad = rect_width_*alpha_scale;
     painter->drawEllipse(QPointF(), rad, rad);
   }
