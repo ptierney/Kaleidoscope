@@ -17,6 +17,7 @@ namespace Kaleidoscope {
     QString name_index;
     name_index.setNum((qrand() % 10 + 1));
     name_ = std::string("John Doe ") + name_index.toStdString();
+    color_ = QColor(qrand() % 255, qrand() % 255, qrand() % 255);
   }
 
   std::string User::name(){

@@ -27,6 +27,7 @@ namespace Kaleidoscope {
 
   public slots:
     void replaceTextItem();
+    void editText();
 
   protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -34,6 +35,9 @@ namespace Kaleidoscope {
     void focusInEvent(QFocusEvent* event);
     void focusOutEvent(QFocusEvent* event);
     void dragLeaveEvent(QGraphicsSceneDragDropEvent* event);
+
+  private:
+    QAction* edit_text_;
 
   };
 }

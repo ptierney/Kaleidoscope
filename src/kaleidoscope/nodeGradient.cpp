@@ -42,7 +42,7 @@ namespace Kaleidoscope {
   }
 
   void NodeGradient::timerEvent(QTimerEvent* event) {
-    std::cerr << qrand() << " Grad timer" << std::endl;
+    ///std::cerr << qrand() << " Grad timer" << std::endl;
     //std::cerr << parent_node_->activeElapsed() << std::endl;
     if(active_ == false)
       killTimer(event->timerId());
@@ -62,6 +62,15 @@ namespace Kaleidoscope {
 
   void NodeGradient::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) {
 
+    if(active_ && parent_node_->activeElapsed() > time_dropoff_){
+      //std::cerr << "Killing" << std::endl;
+      killTimer(update_timer_);
+      update_timer_ = 0;
+      active_ = false;
+      return;
+    }
+
+
     QColor grad_color = parent_node_->gradient_color();
 
     // TODO: Maybe there's a better way to do this?
@@ -78,13 +87,7 @@ namespace Kaleidoscope {
       //painter->drawEllipse(QPoint(), (int)radius, (int)radius);
       painter->drawRect(parent_node_->boundingRect());
 
-      if(active_ && parent_node_->activeElapsed() > time_dropoff_){
-        //std::cerr << "Killing" << std::endl;
-        killTimer(update_timer_);
-        update_timer_ = 0;
-        active_ = false;
-        return;
-      }
+
     }
     */
 

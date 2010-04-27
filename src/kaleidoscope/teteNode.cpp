@@ -405,4 +405,9 @@ namespace Kaleidoscope {
 
   }
 
+
+  NodeGradient* TeteNode::node_gradient(){
+    return node_gradient_;
+  }
+
 }

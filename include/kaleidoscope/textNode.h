@@ -36,7 +36,7 @@ namespace Kaleidoscope {
   protected:
     DisplayTextItem* text_item_;
     NameTextItem* name_item_;
-    NodeGradient* node_gradient_;
+
     QColor text_color_;
     QColor name_color_;
     float name_scale_;

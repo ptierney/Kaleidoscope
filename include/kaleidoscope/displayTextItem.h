@@ -34,6 +34,7 @@ namespace Kaleidoscope {
 
     void setPlainText(const QString& text);
 
+
   protected:
     void timerEvent(QTimerEvent *);
     void tryToMoveCursor();
@@ -64,6 +65,7 @@ namespace Kaleidoscope {
     bool active_;
     bool text_updated_;
     QTextLayout* layout_;
+
   };
 
 }

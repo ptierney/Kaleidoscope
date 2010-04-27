@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QGraphicsTextItem>
+#include <QAction>
+#include <QMenu>
 
 #include <kaleidoscope/displayTextNode.h>
 #include <kaleidoscope/tete.h>
@@ -38,6 +40,11 @@ namespace Kaleidoscope {
 
     centerTextItem();
     updateDrawRect();
+
+    edit_text_ = new QAction(tr("Edit text"), this);
+    connect(edit_text_, SIGNAL(triggered()),
+            this, SLOT(editText()));
+    menu_->addAction(edit_text_);
   }
 
   void DisplayTextNode::replaceTextItem(){
@@ -101,6 +108,10 @@ namespace Kaleidoscope {
     text_item_->setTextInteractionFlags(Qt::NoTextInteraction);
     //emit lostFocus(this);
     QGraphicsObject::focusOutEvent(event);
+  }
+
+  void DisplayTextNode::editText(){
+    text_item_->makeActive();
   }
 
 }

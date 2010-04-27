@@ -17,6 +17,7 @@ QT_END_NAMESPACE
 namespace Kaleidoscope {
   class Tete;
   class FrameRect;
+  class NodeGradient;
 
   class TeteNode : public RespondNode {
     Q_OBJECT
@@ -64,6 +65,8 @@ namespace Kaleidoscope {
     void set_mouse_moved(bool);
     void popupMenu();
 
+    NodeGradient* node_gradient();
+
   public slots:
     void registerLinkCreate();
     void cancelLinkCreate();
@@ -81,6 +84,15 @@ namespace Kaleidoscope {
     QRectF frame_rect_;
 
     void updateFrameSelected();
+
+    NodeGradient* node_gradient_;
+
+    QMenu* menu_;
+    QAction* create_new_link_;
+    QAction* cancel_link_create_;
+    QAction* focus_on_user_;
+    QAction* user_last_tete_;
+    QAction* playback_;
     
   private:
     float x_vel_;
@@ -101,12 +113,7 @@ namespace Kaleidoscope {
     bool frame_on_needed_;
     float frame_on_threshold_;
 
-    QMenu* menu_;
-    QAction* create_new_link_;
-    QAction* cancel_link_create_;
-    QAction* focus_on_user_;
-    QAction* user_last_tete_;
-    QAction* playback_;
+
   };
 
 

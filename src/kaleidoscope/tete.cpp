@@ -18,6 +18,7 @@
 #include <kaleidoscope/user.h>
 #include <kaleidoscope/usersScene.h>
 #include <kaleidoscope/otherUsersNode.h>
+#include <kaleidoscope/nodeGradient.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -184,6 +185,8 @@ namespace Kaleidoscope {
       tete->tete_node()->receiveActivate();
     else
       tete->tete_node()->receiveActivate( (*attr)["activate"].asDouble() );
+
+    tete->tete_node()->node_gradient()->activate();
   }
 
   std::string Tete::text(){
