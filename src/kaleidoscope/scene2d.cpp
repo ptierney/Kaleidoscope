@@ -128,4 +128,8 @@ namespace Kaleidoscope {
     main_view_ = main_view;
   }
 
+  void Scene2D::turnBackgroundOff(){
+    setBackgroundBrush(Qt::white);
+  }
+
 }

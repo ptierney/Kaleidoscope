@@ -20,7 +20,7 @@ namespace Kaleidoscope {
     rect_width_ = 100;
     rect_height_ = rect_width_;
     time_dropoff_ = 2 * 1000;
-    alpha_refresh_ = 150;
+    alpha_refresh_ = 200;
     focus_line_weight_ = 4.0;
     update_timer_ = 0;
     active_ = true;

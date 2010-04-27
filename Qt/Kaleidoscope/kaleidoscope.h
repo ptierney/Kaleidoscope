@@ -36,6 +36,7 @@ namespace Kaleidoscope {
     void springToggle();
     void gradientToggle();
     void zoomToggle();
+    void backgroundOff();
     void printScene();
 
   private:
@@ -59,6 +60,7 @@ namespace Kaleidoscope {
     QAction* spring_on_off_;
     QAction* gradient_on_off_;
     QAction* zoom_on_off_;
+    QAction* background_off_;
   };
 
 } // end namespace Kaleidoscope

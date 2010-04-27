@@ -52,6 +52,8 @@ namespace Kaleidoscope {
         const QList<GenericNodeItem*>& getNodeItems();
         const QList<GenericLinkItem*>& getLinkItems();
 
+        void turnBackgroundOff();
+
     public slots:
         void editorLostFocus(InputTextItem *item);
 
