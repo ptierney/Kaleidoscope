@@ -49,7 +49,7 @@ namespace Kaleidoscope {
    // Hella more shit should go in here not in the con
   }
 
-  void UsersView::drawBackground(QPainter* painter, const QRectF &rect) {
+  void UsersView::drawBackground(QPainter* painter, const QRectF& /*rect*/) {
     painter->setBrush(QBrush(Qt::black));
     //painter->drawRect(rect);
   }

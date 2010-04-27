@@ -3,6 +3,8 @@
 
 #include <QTimer>
 #include <QGraphicsSceneMouseEvent>
+#include <QMenu>
+#include <QAction>
 
 #include <kaleidoscope/teteNode.h>
 #include <kaleidoscope/tete.h>
@@ -38,12 +40,35 @@ namespace Kaleidoscope {
   TeteNode::~TeteNode(){
     if(tete_)
       tete_->set_tete_node(NULL);
+    delete menu_;
   }
 
   void TeteNode::init(){
     RespondNode::init();
 
     last_active_.start();
+
+    menu_ = new QMenu(tr("Popup"));
+    create_new_link_ = new QAction(tr("Create new link"), this);
+    connect(create_new_link_, SIGNAL(triggered()),
+            this, SLOT(registerLinkCreate()));
+    menu_->addAction(create_new_link_);
+    cancel_link_create_ = new QAction(tr("Cancel link creation"), this);
+    connect(cancel_link_create_, SIGNAL(triggered()),
+            this, SLOT(cancelLinkCreate()));
+    menu_->addAction(cancel_link_create_);
+    focus_on_user_ = new QAction(tr("Focus on this person"), this);
+    connect(focus_on_user_, SIGNAL(triggered()),
+            this, SLOT(focusOnUser()));
+    menu_->addAction(focus_on_user_);
+    user_last_tete_ = new QAction(tr("See person's last message"), this);
+    connect(user_last_tete_, SIGNAL(triggered()),
+            this, SLOT(focusOnLastUserTete()));
+    menu_->addAction(user_last_tete_);
+    playback_ = new QAction(tr("Playback chat from here"), this);
+    connect(playback_, SIGNAL(triggered()),
+            this, SLOT(playbackFromHere()));
+    menu_->addAction(playback_);
   }
 
   Tete* TeteNode::tete(){
@@ -331,9 +356,9 @@ namespace Kaleidoscope {
     QPointF scene_pos = event->pos() + pos();
     //std::cerr << "Release: " << scene_pos.x() << " : " << scene_pos.y() << std::endl;
     //Vec3D temp_vec = Vec3D(event->pos().x(), event->pos().y(), 0.0);
-    if(mouse_down_ == scene_pos)
-      d_->getScene()->main_view()->link_creator()->registerClick(tete_->id());
-    else {
+    if(mouse_down_ == scene_pos) {
+      popupMenu();
+    } else {
       //std::cerr << "Probably drag" << std::endl;
       for(std::vector<Link*>::const_iterator it = tete_->links().begin(); it != tete_->links().end(); ++it){
         if((*it)->link_node() != NULL)
@@ -346,6 +371,31 @@ namespace Kaleidoscope {
 
   void TeteNode::set_mouse_moved(bool mouse){
     mouse_moved_ = mouse;
+  }
+
+  void TeteNode::popupMenu() {
+    QPoint mouse_global = d_->getScene()->main_view()->cursor().pos();
+    menu_->popup(mouse_global);
+  }
+
+  void TeteNode::registerLinkCreate(){
+    d_->getScene()->main_view()->link_creator()->registerClick(tete_->id());
+  }
+
+  void TeteNode::cancelLinkCreate(){
+    d_->getScene()->main_view()->link_creator()->clear();
+  }
+
+  void TeteNode::focusOnUser(){
+
+  }
+
+  void TeteNode::focusOnLastUserTete(){
+
+  }
+
+  void TeteNode::playbackFromHere(){
+
   }
 
 }

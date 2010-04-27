@@ -31,6 +31,7 @@ namespace Kaleidoscope {
 
   UserIcon::~UserIcon(){
     delete user_;
+    delete menu_;
   }
 
   void UserIcon::init(){
@@ -110,18 +111,18 @@ namespace Kaleidoscope {
     menu_->popup(mouse_global);
   }
 
-  void UserIcon::mousePressEvent(QGraphicsSceneMouseEvent* event){
+  void UserIcon::mousePressEvent(QGraphicsSceneMouseEvent* /*event*/){
     mouse_released_ = false;
     //std::cerr << user_->name() << std::endl;
     activateLastNode();
     QTimer::singleShot(700, this, SLOT(createMenuCallback()));
   }
 
-  void UserIcon::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
+  void UserIcon::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* /*event*/){
     focusOnLastNode();
   }
 
-  void UserIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
+  void UserIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent* /*event*/){
     mouse_released_ = true;
   }
 

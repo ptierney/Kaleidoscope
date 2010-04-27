@@ -53,12 +53,12 @@ namespace Kaleidoscope {
   }
 
   // Highlight the focused node
-  void UserView::mousePressEvent(QMouseEvent* event){
+  void UserView::mousePressEvent(QMouseEvent* /*event*/){
 
   }
 
   // Zoom in on the focused node
-  void UserView::mouseDoubleClickEvent(QMouseEvent* event){
+  void UserView::mouseDoubleClickEvent(QMouseEvent* /*event*/){
 
   }
 

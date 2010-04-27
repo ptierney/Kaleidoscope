@@ -6,6 +6,11 @@
 #include <QGraphicsScene>
 #include <QTime>
 
+QT_BEGIN_NAMESPACE
+class QMenu;
+class QAction;
+QT_END_NAMESPACE
+
 #include <kaleidoscope/respondNode.h>
 #include <kaleidoscope/define.h>
 
@@ -14,6 +19,7 @@ namespace Kaleidoscope {
   class FrameRect;
 
   class TeteNode : public RespondNode {
+    Q_OBJECT
 
   public:
     TeteNode(Device*, QGraphicsItem* parent = 0,
@@ -56,6 +62,14 @@ namespace Kaleidoscope {
     QColor gradient_color();
     void set_gradient_color(QColor);
     void set_mouse_moved(bool);
+    void popupMenu();
+
+  public slots:
+    void registerLinkCreate();
+    void cancelLinkCreate();
+    void focusOnUser();
+    void focusOnLastUserTete();
+    void playbackFromHere();
 
   protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
@@ -87,7 +101,12 @@ namespace Kaleidoscope {
     bool frame_on_needed_;
     float frame_on_threshold_;
 
-
+    QMenu* menu_;
+    QAction* create_new_link_;
+    QAction* cancel_link_create_;
+    QAction* focus_on_user_;
+    QAction* user_last_tete_;
+    QAction* playback_;
   };
 
 
