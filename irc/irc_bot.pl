@@ -15,6 +15,9 @@ use Grids::Identity;
 use Grids::Console;
 use Grids::Conf;
 
+use AnyEvent::IRC;
+use AnyEvent::IRC::Client;
+
 use Data::Dumper;
 
 my $server_address = '127.0.0.1';
@@ -29,16 +32,30 @@ my $bot_color = [rand()*10000 % 255,
 
 my $is_sender;
 my $messages_received = 0;
-my $bot_name = 'Perl Test Bot';
 
 my $sender_id = Grids::Identity->new();
 my $received_id = Grids::Identity->new();
-my $id;
+my $id = Grids::Identity->new();;
 my $chat_id = Grids::UUID->new_id();
 my $client;
 my $room;
+my $parent_id = Grids::UUID->new_id();
+my $last_irc_id;
 
 my $con;
+
+my $bot_nick = "WaltherG";
+my $c = AnyEvent->condvar;
+my $irc_client = new AnyEvent::IRC::Client;
+my $irc_server = "irc.blessed.net";
+my $channel = "#stocks";
+#my $irc_server = "mmmii.net";
+#my $channel = "#chattest";
+
+
+my $bot_name = $channel;
+
+$irc_client->reg_cb( publicmsg => \&public_irc_message );
 
 run();
 
@@ -73,6 +90,8 @@ sub connected_cb {
 
   select(undef, undef, undef, 0.1);
 
+	$irc_client->send_srv("JOIN", $channel);
+
 	request_list_rooms;
 }
 
@@ -89,16 +108,6 @@ sub list_rooms_cb {
 		create_room;
 		return; 
 	}
-	
-	# You are now in a room,
-	# if sender, sleep, then send a bunch of messages
-	return if( $is_sender == 0);
-
-	# Sleep for a bit to make sure the other client is connected
-	# to the node.
-  select(undef, undef, undef, 0.5);
-	
-	$con->print( "About to create nodes");
 
   my $parent_id = Grids::UUID->new_id();
   my $pos_x = 500 - int(rand(1000));
@@ -130,165 +139,69 @@ sub room_create_cb {
 }
 
 sub create_object_cb {
-	my($c, $evt) = @_;
 
-	$con->print( "CREATE OBJECT CB");
-
-	return unless($evt);
-
-	return if($is_sender == 1);
-
-	my $args = $evt->args;
-
-	# Filter out the bounceback confirmation code
-	return if( $args->{success});
-	
-	# Problem with Grids
-	# It seems to be the case that error / success messages get sent back
-	# but since I only use broadcast, it's fine
-	return if( $args->{error});
-
-	# Discard other messages
-	return unless( $evt->args->{attr}->{type} );
-	return unless( $evt->args->{attr}->{owner} );
-
-	#$con->print( Dumper( $sender_id));
-	#$con->print( Dumper( $evt->args->{attr}));	
-
-	if( $evt->args->{attr}->{type} eq "GenericNode"){
-#		if( $evt->args->{attr}->{owner} eq $sender_id->{name}){
-		if( $evt->args->{attr}->{text} eq "Node Num $messages_received"){
-			$messages_received++;
-			$con->print( $messages_received);
-			if($messages_received == $num_messages){
-				$con->print("Passed");
-				exit();
-			}
-		}
-#		}
-	}
 }
 
- 
-sub send_test_text {
-	my( $parent, $text_num) = @_;
 
-  if( $parent eq "head"){
-      $parent = Grids::UUID->new_id();
-  }
+sub public_irc_message {
+	my ($self, $channel, $message) = @_;
 
-	my $test_node_id_1 = Grids::UUID->new_id();
-	my $test_node_id_2 = Grids::UUID->new_id();
-  my $test_link_id_1 = Grids::UUID->new_id();
-  my $test_link_id_2 = Grids::UUID->new_id();
-	
-	my $node_text = "Node Num $message_number";
-  $message_number++;
+	my $pub_text = $message->{params}[1]; 
 
-  my $pos_x = 500 - int(rand(1000));
-  my $pos_y = 500 - int(rand(1000));
+  my $new_id = Grids::UUID->new_id();
+
+  my @user_split = split(/\!/, $message->{prefix});
+  my $user_name = $user_split[0];
+
+  my $long_text = $user_name . "> " . $pub_text ;
 
 	my $node_value = { '_broadcast' => 1, 
-                     pos => [$pos_x, $pos_y, 0], 
-                     rot => [0,0,0], scl => [1,1,1], 
-                     id => $test_node_id_1, 
+                     pos => [0, 0, 0], 
+                     rot => [0,0,0], 
+                     scl => [1,1,1], 
+                     id => $new_id, 
                      room_id => $room, 
                      attr => { type => 'Tete', 
                                chat => $chat_id, 
-                               text => $node_text, 
-                               owner_color => $bot_color,
-                               parent => $parent, 
+                               text => $long_text, 
                                user_name => $bot_name,
+                               owner_color => $bot_color,
+                               parent => Grids::UUID->new_id(), 
                                owner => $id->{name} } };
 
 	$client->dispatch_event('Room.CreateObject', $node_value);
-  select(undef, undef, undef, $millis_pause);
 
-	$node_value = { '_broadcast' => 1, 
-                  pos => [0,0,0], 
-                  rot => [0,0,0], 
-                  scl => [1,1,1], 
-                  id => $test_link_id_1, 
-                  room_id => $room, 
-                  attr => { type => 'Link',
-                            node1 => $test_node_id_1,
-                            node2 => $parent, 
-                            owner => $id->{name} } };
-
-	$client->dispatch_event('Room.CreateObject', $node_value);
-  select(undef, undef, undef, $millis_pause);
-
-  if(  $message_number % 2 == 0){ 
-      $pos_x = 500 - int(rand(1000));
-      $pos_y = 500 - int(rand(1000));
-
-      $node_text = "Node Num $message_number";
-      $message_number++;
-
-      $node_value = { '_broadcast' => 1, 
-                      pos => [$pos_x, $pos_y, 0], 
-                      rot => [0,0,0], 
-                      scl => [1,1,1], 
-                      id => $test_node_id_2, 
-                      room_id => $room, 
-                      attr => { type => 'Tete', 
-                                chat => $chat_id, 
-                                text => $node_text, 
-                                parent => $parent, 
-                               owner_color => $bot_color,
-                                user_name => $bot_name,
-                                owner => $id->{name} } };
-
-      $client->dispatch_event('Room.CreateObject', $node_value);
+  if($last_irc_id) {
       select(undef, undef, undef, $millis_pause);
 
       $node_value = { '_broadcast' => 1, 
                       pos => [0,0,0], 
                       rot => [0,0,0], 
                       scl => [1,1,1], 
-                      id => $test_link_id_2, 
+                      id => Grids::UUID->new_id(), 
                       room_id => $room, 
                       attr => { type => 'Link',
-                                node1 => $test_node_id_2,
-                                node2 => $parent, 
+                                node1 => $last_irc_id,
+                                node2 => $new_id, 
                                 owner => $id->{name} } };
 
       $client->dispatch_event('Room.CreateObject', $node_value);
-      select(undef, undef, undef, $millis_pause);
   }
 
-  if($text_num > 0){
-      send_test_text($test_node_id_1, $text_num - 1);
-      if($message_number % 2 == 0){
-          send_test_text($test_node_id_2, $text_num - 1);
-      }
-  }
+
+
+  $last_irc_id = $new_id;
 }
 
 sub send_create {
-	send_test_text(-1.0);
-}
+ # nothing here
+} 
 
 sub run {
-	my $pid = fork();
-	
-	unless( defined($pid) ) {
-		print "Oh snap!";
-		# Return fail
-	} elsif( $pid == 0) {
-		# This is the child
-		$is_sender = 0;
-		$id = $received_id;
-		sleep 3;
-	} else {
-		# This is the parent
-		$is_sender = 1;
-		$id = $sender_id;
-
 
 	$con = Grids::Console->new(
-							   title => "Parser",
-							   prompt => "Parser>",
+							   title => "IRC BOT",
+							   prompt => "IRC BOT>",
 							   handlers => {
 								   send => \&send_create,
 							   },
@@ -306,15 +219,17 @@ sub run {
 							'Connected' => \&connected_cb,
 							'Room.Create' => \&room_create_cb,
 							'Room.List' => \&list_rooms_cb,
-							'Room.CreateObject' => \&create_object_cb,
+							#'Room.CreateObject' => \&create_object_cb,
 							#'Room.UpdateObject' => \&update_object_cb,
 							#'Room.ListObjects' => \&list_objects_cb,
 							);
 
 	::connect();
 
+	$irc_client->connect( $irc_server, 6667, { nick => $bot_nick } );
+
 	$con->listen_for_input;
 
 	$main->recv;
 }
-}
+
