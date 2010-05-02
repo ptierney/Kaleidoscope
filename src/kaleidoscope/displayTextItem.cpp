@@ -21,9 +21,9 @@ namespace Kaleidoscope {
     node_ = node;
     initial_cursor_moved_ = false;
     // Send update messages at this rate
-    key_delay_ = 250;
+    key_delay_ = 1000;
     // After this time focus is lost.
-    input_time_ = 15000;
+    input_time_ = 6000;
     keys_unsent_ = false;
     input_unsent_ = false;
     replace_me_ = false;

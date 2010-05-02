@@ -60,6 +60,8 @@ namespace Kaleidoscope {
 
     link_creator_ = new LinkCreator(d_);
     scene->addItem(link_creator_);
+
+    zoom_pause_ = 3000;
   }
 /*
   void View2D::drawBackground(QPainter* painter, const QRectF &rect)
@@ -85,11 +87,14 @@ namespace Kaleidoscope {
 
   void View2D::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
+    //
   }
 
   void View2D::keyPressEvent(QKeyEvent* event){
     //d_->event_controller()->keyPressEvent(event);
     QGraphicsView::keyPressEvent(event);
+    d_->chat_controller()->stopZooming();
+    QTimer::singleShot(zoom_pause_, this, SLOT(resumeZooming()));
   }
 
   /* Scales the view by the fraction passed in.
@@ -123,6 +128,10 @@ namespace Kaleidoscope {
 
   LinkCreator* View2D::link_creator(){
     return link_creator_;
+  }
+
+  void View2D::resumeZooming(){
+    d_->chat_controller()->startZooming();
   }
 
   /*

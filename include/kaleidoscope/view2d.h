@@ -19,6 +19,10 @@ namespace Kaleidoscope {
     //void render(QPainter*, const QRectF&, const QRect&, Qt::AspectRatioMode);
     LinkCreator* link_creator();
 
+  public slots:
+    void resumeZooming();
+
+
   protected:
     void focusOutEvent(QFocusEvent* event);
     void wheelEvent(QWheelEvent* event);
@@ -33,6 +37,7 @@ namespace Kaleidoscope {
   private:
     Device* d_;
     LinkCreator* link_creator_;
+    int zoom_pause_;
   };
 }
 
