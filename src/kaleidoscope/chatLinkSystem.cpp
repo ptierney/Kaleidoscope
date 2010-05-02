@@ -54,7 +54,7 @@ namespace Kaleidoscope {
     energy_threshold_ = 0.6;
     all_chats_energy_threshold_ = 0.1;
     // After this distance away, the nodes don't push this node.
-    push_dropoff_ = 500.0;
+    push_dropoff_ = 800.0;
     max_position_ = 1000;
   }
 

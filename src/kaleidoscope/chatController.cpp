@@ -320,6 +320,8 @@ namespace Kaleidoscope {
           (*it)->tete_node()->frameOn();
           zoom_out_needed_ = true;
           }
+
+        //std::cerr << qrand() << " Has focus" << std::endl;
         //std::cerr << "Checking" << std::endl;
         // This is for increasing the size of the fonts
         //(*it)->tete_node()->updateGeometry();

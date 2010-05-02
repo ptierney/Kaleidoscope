@@ -10,6 +10,9 @@
 #include <kaleidoscope/displayTextItem.h>
 #include <kaleidoscope/tete.h>
 #include <kaleidoscope/displayTextNode.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/device.h>
+
 
 namespace Kaleidoscope {
 
@@ -78,7 +81,7 @@ namespace Kaleidoscope {
     }
   }
 
-  void DisplayTextItem::focusOutEvent(QFocusEvent *event) {
+  void DisplayTextItem::focusOutEvent(QFocusEvent *event){
     makeNotActive();
     QGraphicsTextItem::focusOutEvent(event);
   }
@@ -161,6 +164,12 @@ namespace Kaleidoscope {
       setPlainText(text);
       makeNotActive();
     }
+
+    //std::cerr << qrand() << " KeyPress" << std::endl;
+    // This is needed if a new node is created while the item
+    // has focus. For some reason Qt stops redrawing this
+    // when a new item is added to the scene.
+    d_->getScene()->update();
   }
 
   void DisplayTextItem::timerEvent(QTimerEvent* event){
