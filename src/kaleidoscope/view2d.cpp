@@ -87,14 +87,13 @@ namespace Kaleidoscope {
 
   void View2D::wheelEvent(QWheelEvent *event) {
     scaleView(pow((double)2, event->delta() / 240.0));
-    //
+    d_->chat_controller()->stopZooming();
+    QTimer::singleShot(zoom_pause_, this, SLOT(resumeZooming()));
   }
 
   void View2D::keyPressEvent(QKeyEvent* event){
     //d_->event_controller()->keyPressEvent(event);
     QGraphicsView::keyPressEvent(event);
-    d_->chat_controller()->stopZooming();
-    QTimer::singleShot(zoom_pause_, this, SLOT(resumeZooming()));
   }
 
   /* Scales the view by the fraction passed in.
@@ -131,6 +130,7 @@ namespace Kaleidoscope {
   }
 
   void View2D::resumeZooming(){
+    std::cerr << qrand() << " Resume zooming" << std::endl;
     d_->chat_controller()->startZooming();
   }
 

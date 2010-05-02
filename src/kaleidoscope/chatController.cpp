@@ -512,7 +512,7 @@ namespace Kaleidoscope {
     if(!link_system_->isRunning()){
       link_system_->set_chats_cache(chats_);
       link_system_->set_spring_toggle_cache_(spring_toggle());
-      link_system_->start();
+      link_system_->start(QThread::LowestPriority);
     }
   }
 

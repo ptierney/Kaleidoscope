@@ -61,6 +61,7 @@ namespace Kaleidoscope {
 
     //dev->getNoticeWindow()->write(7, "Adding link node to scene");
     dev->getScene()->addItem(link_node);
+    link_node->updateBoundingRect();
     link_node->update();
   }
 
