@@ -86,11 +86,6 @@ namespace Kaleidoscope {
     QGraphicsObject::mouseDoubleClickEvent(event);
   }
 
-  void DisplayTextNode::dragLeaveEvent(QGraphicsSceneDragDropEvent *event){
-    std::cerr << "Leave" << std::endl;
-    QGraphicsObject::dragLeaveEvent(event);
-  }
-
   void DisplayTextNode::makeActive(){
     if (text_item_->textInteractionFlags() == Qt::NoTextInteraction){
       text_item_->setFlag(QGraphicsItem::ItemIsFocusable);

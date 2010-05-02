@@ -37,6 +37,7 @@ namespace Kaleidoscope {
     frame_on_needed_ = false;
     frame_on_threshold_ = 1.001;
     setFlag(QGraphicsItem::ItemIsMovable);
+    //setAcceptDrops(true); // Needed for drag and drop events (like dragEnterEvent)
   }
 
   TeteNode::~TeteNode(){
@@ -369,6 +370,19 @@ namespace Kaleidoscope {
       update();
     }
     QGraphicsObject::mouseReleaseEvent(event);
+  }
+
+  // These two function don't get called. I don't know why.
+  void TeteNode::dragEnterEvent(QGraphicsSceneDragDropEvent* event){
+    std::cerr << qrand() << " Drag Enter" << std::endl;
+    QGraphicsObject::dragEnterEvent(event);
+  }
+
+  void TeteNode::dragMoveEvent(QGraphicsSceneDragDropEvent* event){
+    d_->getScene()->update();
+    update();
+    std::cerr << qrand() << " Drag Move" << std::endl;
+    QGraphicsObject::dragMoveEvent(event);
   }
 
   void TeteNode::set_mouse_moved(bool mouse){

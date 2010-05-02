@@ -34,7 +34,6 @@ namespace Kaleidoscope {
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event);
     void focusInEvent(QFocusEvent* event);
     void focusOutEvent(QFocusEvent* event);
-    void dragLeaveEvent(QGraphicsSceneDragDropEvent* event);
 
   private:
     QAction* edit_text_;

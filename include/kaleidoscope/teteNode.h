@@ -79,6 +79,8 @@ namespace Kaleidoscope {
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
 
     Tete* tete_;
     QRectF frame_rect_;
