@@ -130,7 +130,7 @@ namespace Kaleidoscope {
   }
 
   void View2D::resumeZooming(){
-    std::cerr << qrand() << " Resume zooming" << std::endl;
+    //std::cerr << qrand() << " Resume zooming" << std::endl;
     d_->chat_controller()->startZooming();
   }
 

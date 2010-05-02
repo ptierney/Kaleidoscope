@@ -25,6 +25,7 @@ namespace Kaleidoscope {
     setType1();
     running_ = false;
     position_timer_id_ = startTimer(50);
+
   }
 
   ChatLinkSystem::~ChatLinkSystem(){
@@ -46,14 +47,15 @@ namespace Kaleidoscope {
     all_chats_repulse_scale_ = 1.0;
     // I'm not using min/max at the moment.
     min_velocity_ = 0.1;
-    max_velocity_ = 1000.0;
+    max_velocity_ = 10.0;
     damping_ = 0.02;
     chat_damping_ = 0.008;
     total_kinetic_energy_ = 0.0;
     energy_threshold_ = 0.6;
     all_chats_energy_threshold_ = 0.1;
     // After this distance away, the nodes don't push this node.
-    push_dropoff_ = 800.0;
+    push_dropoff_ = 500.0;
+    max_position_ = 1000;
   }
 
   void ChatLinkSystem::setType2(){
@@ -142,6 +144,37 @@ namespace Kaleidoscope {
     if(tete->tete_node() == NULL)
       return;
 
+    // Note: Don't do position checking.
+    // Why?  Who knows what position these nodes are created, they
+    // may be created far away from a deviant client / user.
+    // Check velocity and correct velocity instead.
+    /*
+    bool pos_check = false;
+    QPointF node_pos = tete->tete_node()->pos();
+    if(node_pos.x() > max_position_){
+      tete->tete_node()->setPos(QPointF(max_position_, node_pos.y()));
+      pos_check = true;
+    } else if(node_pos.x() < -max_position_) {
+      tete->tete_node()->setPos(QPointF(-max_position_, node_pos.y()));
+      pos_check = true;
+    }
+
+    node_pos = tete->tete_node()->pos();
+
+    if(node_pos.y() > max_position_){
+      tete->tete_node()->setPos(QPointF(node_pos.x(), max_position_));
+      pos_check = true;
+    } else if(node_pos.y() < -max_position_){
+      tete->tete_node()->setPos(QPointF(node_pos.x(), -max_position_));
+      pos_check = true;
+    }
+
+    if(pos_check){
+      tete->tete_node()->set_velocity(Vec3D());
+      return;
+    }
+    */
+
     Vec3D force = Vec3D();
     QPointF point_1, point_2;
     QLineF line_between;
@@ -184,7 +217,6 @@ namespace Kaleidoscope {
       if(tete->chat() != other_node->chat())
         continue;
 
-
       (*it)->link_node()->updateLinkValues();
 
       float attract_scale = 1.0;
@@ -209,6 +241,15 @@ namespace Kaleidoscope {
     if( force != force ){
       force = Vec3D();
     }
+
+    if(force.X > max_velocity_)
+      force.X = max_velocity_;
+    else if(force.X < -max_velocity_)
+      force.X = -max_velocity_;
+    if(force.Y > max_velocity_)
+      force.Y = max_velocity_;
+    else if(force.Y < -max_velocity_)
+      force.Y = -max_velocity_;
 
     tete->tete_node()->set_velocity(force*damping_);
     chat_kinetic_energy_[chat->chat_id()] += tete->tete_node()->velocity().getLength();
@@ -268,6 +309,23 @@ namespace Kaleidoscope {
         point_1 = bound_1.center();
         point_2 = bound_2.center();
 
+        /*
+        if(QLineF(point_1, point_2).length() > push_dropoff_){
+          Vec3D temp_vel = Vec3D(-point_1.x(), -point_1.y(), 0.0);
+          temp_vel /= 10.0;
+          chat_node->set_velocity(temp_vel);
+          return;
+        }
+        */
+
+        /*
+        if(abs(point_1.x()) > max_position_ ||
+           abs(point_1.y()) > max_position_ ||
+           abs(point_2.x()) > max_position_ ||
+           abs(point_2.y()) > max_position_)
+          return;
+          */
+
         force += coulombRepulsion(point_1,
                                   point_2) * all_chats_repulse_scale_;
 
@@ -279,6 +337,16 @@ namespace Kaleidoscope {
         if( force != force ){
           force = Vec3D();
         }
+
+        if(force.X > max_velocity_)
+          force.X = max_velocity_;
+        else if(force.X < -max_velocity_)
+          force.X = -max_velocity_;
+        if(force.Y > max_velocity_)
+          force.Y = max_velocity_;
+        else if(force.Y < -max_velocity_)
+          force.Y = -max_velocity_;
+
 
         chat_node->set_velocity(force*chat_damping_);
         chats_kinetic_energy_ += chat_node->velocity().getLength();

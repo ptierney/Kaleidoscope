@@ -61,6 +61,7 @@ namespace Kaleidoscope {
     float all_chats_attract_scale_;
     float min_velocity_;
     float max_velocity_;
+    float max_position_;
     float damping_;
     float chat_damping_;
     float total_kinetic_energy_;
@@ -78,6 +79,7 @@ namespace Kaleidoscope {
 
     std::vector<Chat*> chats_cache_;
     bool spring_toggle_cache_;
+
   };
 }
 
