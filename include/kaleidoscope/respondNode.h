@@ -3,6 +3,7 @@
 
 #include <QGraphicsObject>
 #include <QGraphicsScene>
+#include <QMutex>
 
 namespace Kaleidoscope {
   class Device;
@@ -19,6 +20,9 @@ namespace Kaleidoscope {
 
     bool selected();
 
+    QPointF pos() const;
+    void setPos(const QPointF& pos);
+
   protected:
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
@@ -33,6 +37,9 @@ namespace Kaleidoscope {
     int loop_period_;
     
     Device* d_;
+
+  private:
+    QMutex* position_mutex_;
   };
 
 

@@ -20,7 +20,7 @@
 namespace Kaleidoscope {
 
   ChatLinkSystem::ChatLinkSystem(Device* d, QObject* parent) :
-    QObject(parent) {
+    QThread(parent) {
     d_ = d;
     setType1();
     running_ = false;
@@ -75,9 +75,11 @@ namespace Kaleidoscope {
   }
 
   // Todo: this needs to be looked at, the true || should be replaced
-  void ChatLinkSystem::timerEvent(QTimerEvent* /*event*/){
-    if(running_ && d_->chat_controller()->spring_toggle()){
-      update(d_->chat_controller()->chats());
+  void ChatLinkSystem::run(){
+    //if(running_ && d_->chat_controller()->spring_toggle()){
+    if(running_ && spring_toggle_cache_) {
+      //update(d_->chat_controller()->chats());
+      update(chats_cache_);
 
       running_ = false;
       for(std::map<GridsID, float>::const_iterator it = chat_kinetic_energy_.begin(); it != chat_kinetic_energy_.end(); ++it){
@@ -95,7 +97,7 @@ namespace Kaleidoscope {
     }
   }
 
-  void ChatLinkSystem::update(std::vector<Chat*> chats){
+  void ChatLinkSystem::update(const std::vector<Chat*>& chats){
     chats_kinetic_energy_ = 0.0;
     for(std::map<GridsID, float>::iterator it = chat_kinetic_energy_.begin(); it != chat_kinetic_energy_.end(); ++it){
       it->second = 0.0;
@@ -246,7 +248,7 @@ namespace Kaleidoscope {
                  0.0);               
   }
 
-  void ChatLinkSystem::doChatForces(std::vector<Chat*> chats){
+  void ChatLinkSystem::doChatForces(const std::vector<Chat*>& chats){
     Vec3D force = Vec3D();
     ChatNode* chat_node;
     QPointF point_1, point_2;
@@ -285,5 +287,15 @@ namespace Kaleidoscope {
       //force += coulombRepulsion(point_1,
       //                          QPointF()) * all_chats_repulse_scale_;
     }
+  }
+
+  // New chats may be added while this is running, therefore we should only act on
+  // a copy of the current chats.
+  void ChatLinkSystem::set_chats_cache(const std::vector<Chat*>& chats){
+    chats_cache_ = chats;
+  }
+
+  void ChatLinkSystem::set_spring_toggle_cache_(bool spring){
+    spring_toggle_cache_ = spring;
   }
 }

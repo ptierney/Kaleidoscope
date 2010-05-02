@@ -5,6 +5,7 @@
 
 #include <QObject>
 #include <QGraphicsItem>
+#include <QThread>
 
 #include <kaleidoscope/define.h>
 
@@ -22,15 +23,17 @@ namespace Kaleidoscope {
   class Chat;
   class Link;
 
-  class ChatLinkSystem : public QObject {
+  class ChatLinkSystem : public QThread {
     Q_OBJECT
   public:
     ChatLinkSystem(Device*, QObject* parent = 0);
     virtual ~ChatLinkSystem();
 
-    void update(std::vector<Chat*> chats);
+    void update(const std::vector<Chat*>& chats);
     void doForces(Tete* tete, Chat* chat);
-    void doChatForces(std::vector<Chat*> chats);
+    void doChatForces(const std::vector<Chat*>& chats);
+    void set_chats_cache(const std::vector<Chat*>& chats);
+    void set_spring_toggle_cache_(bool);
 
     bool running();
     void set_running(bool);
@@ -40,7 +43,7 @@ namespace Kaleidoscope {
     void setType2();
 
   protected:
-    void timerEvent(QTimerEvent*);
+    void run();
 
     Vec3D coulombRepulsion(QPointF, QPointF);
     Vec3D hookeAttraction(QPointF, QPointF,
@@ -72,6 +75,9 @@ namespace Kaleidoscope {
 
     int force_timer_id_;
     int position_timer_id_;
+
+    std::vector<Chat*> chats_cache_;
+    bool spring_toggle_cache_;
   };
 }
 

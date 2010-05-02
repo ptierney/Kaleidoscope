@@ -37,6 +37,7 @@ namespace Kaleidoscope {
     void deleteTeteNodeTree(Tete* tete);
 
     void checkReframe();
+    void checkLinkThread();
     void zoomOut();
     void updateChatsRect();
     void fixBrokenLinks();

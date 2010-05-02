@@ -74,15 +74,14 @@ namespace Kaleidoscope {
   }
 
   void ChatController::timerEvent(QTimerEvent* event){
-    //return;
-
-    // Check reframe blocks
     checkReframe();
 
     if(event->timerId() == start_zooming_timer_){
       setStartZooming();
       killTimer(start_zooming_timer_);
     }
+
+    checkLinkThread();
   }
 
   void ChatController::addChat(Chat* chat){
@@ -507,6 +506,14 @@ namespace Kaleidoscope {
     }
 
     return closest_node;
+  }
+
+  void ChatController::checkLinkThread(){
+    if(!link_system_->isRunning()){
+      link_system_->set_chats_cache(chats_);
+      link_system_->set_spring_toggle_cache_(spring_toggle());
+      link_system_->start();
+    }
   }
 
 

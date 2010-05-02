@@ -16,7 +16,7 @@ namespace Kaleidoscope {
   DisplayTextNode::DisplayTextNode(Device* d, Tete* tete, QGraphicsItem* parent, QGraphicsScene* scene) :
       TextNode(d, parent, scene) {
     set_tete(tete);
-    setPos( tete->getPosition().X, tete->getPosition().Y);
+    setPos(QPointF(tete->getPosition().X, tete->getPosition().Y));
     //setFlag(QGraphicsItem::ItemIsFocusable);
     text_width_ = 200.0;
   }
@@ -67,12 +67,12 @@ namespace Kaleidoscope {
   // Call the ChatNode to place the entire tree
   void DisplayTextNode::placeNode(){
     if(tete_->parent() && tete_->parent()->tete_node() ){
-      setPos(tete_->parent()->tete_node()->pos().x() +
-             text_item_->boundingRect().width() +
-             tete_->parent()->tete_node()->boundingRect().width(),
-             tete_->parent()->tete_node()->pos().y() +
-             -4.0 * (text_item_->boundingRect().height()) +
-             tete_->parent()->links().size()  * 2.0 * (text_item_->boundingRect().height() ) );
+      setPos(QPointF(tete_->parent()->tete_node()->pos().x() +
+                     text_item_->boundingRect().width() +
+                     tete_->parent()->tete_node()->boundingRect().width(),
+                     tete_->parent()->tete_node()->pos().y() +
+                     -4.0 * (text_item_->boundingRect().height()) +
+                     tete_->parent()->links().size()  * 2.0 * (text_item_->boundingRect().height() )));
     }
   }
 

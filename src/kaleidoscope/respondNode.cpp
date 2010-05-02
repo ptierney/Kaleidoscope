@@ -1,5 +1,6 @@
 
 #include <QGraphicsObject>
+#include <QMutexLocker>
 
 #include <kaleidoscope/respondNode.h>
 
@@ -15,6 +16,7 @@ namespace Kaleidoscope {
     // Set up a 100 ms loop to check
     loop_period_ = 100;
     selected_ = false;
+    position_mutex_ = new QMutex();
   }
 
   RespondNode::~RespondNode(){
@@ -45,5 +47,13 @@ namespace Kaleidoscope {
     //NothingHere
   }
 
+  QPointF RespondNode::pos() const {
+    QMutexLocker locker(position_mutex_);
+    return QGraphicsObject::pos();
+  }
 
+  void RespondNode::setPos(const QPointF& position) {
+    QMutexLocker locker(position_mutex_);
+    QGraphicsObject::setPos(position);
+  }
 }

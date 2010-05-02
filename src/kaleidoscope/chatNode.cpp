@@ -182,7 +182,7 @@ namespace Kaleidoscope {
           (children[i]->tete_node()->boundingRect().height() +
           node_y_space_) * (float)i;
 
-      children[i]->tete_node()->setPos(x, y);
+      children[i]->tete_node()->setPos(QPointF(x, y));
     }
 
     for(unsigned int i = 0u; i < children.size(); i++){
@@ -203,7 +203,7 @@ namespace Kaleidoscope {
   }
 
   void ChatNode::updatePosition(){
-    setPos(x() + velocity_.X, y() + velocity_.Y);
+    setPos(QPointF(x() + velocity_.X, y() + velocity_.Y));
   }
 
 }

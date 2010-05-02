@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QLinearGradient>
 #include <QTimerEvent>
+#include <QMutexLocker>
 
 #include <kaleidoscope/linkNode.h>
 #include <kaleidoscope/link.h>
@@ -31,6 +32,7 @@ namespace Kaleidoscope {
     update_time_ = 100;
     link_ = NULL;
     active_ = true;
+    position_mutex_ = new QMutex();
   }
 
   void LinkNode::init(){
@@ -229,6 +231,16 @@ namespace Kaleidoscope {
 
   bool LinkNode::active(){
     return active_;
+  }
+
+  QPointF LinkNode::pos() const {
+    QMutexLocker locker(position_mutex_);
+    return QGraphicsObject::pos();
+  }
+
+  void LinkNode::setPos(const QPointF& position) {
+    QMutexLocker locker(position_mutex_);
+    QGraphicsObject::setPos(position);
   }
 
 }

@@ -194,8 +194,8 @@ namespace Kaleidoscope {
   }
 
   void TeteNode::updatePosition(){
-    setPos(x() + velocity_.X + tete_->chat()->chat_node()->velocity().X,
-           y() + velocity_.Y + tete_->chat()->chat_node()->velocity().Y);
+    setPos(QPointF( x() + velocity_.X + tete_->chat()->chat_node()->velocity().X,
+                    y() + velocity_.Y + tete_->chat()->chat_node()->velocity().Y) );
 
     //setPos(x() + velocity_.X + tete_->chat()->chat_node()->pos().x(),
     //       y() + velocity_.Y + tete_->chat()->chat_node()->pos().y() );

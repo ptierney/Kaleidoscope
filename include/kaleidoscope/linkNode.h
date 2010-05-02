@@ -7,6 +7,7 @@
 
 #include <QGraphicsObject>
 #include <QGraphicsScene>
+#include <QMutex>
 
 namespace Kaleidoscope {
   class Link;
@@ -39,7 +40,10 @@ namespace Kaleidoscope {
 
     QPointF getNodeIntersectPosition(Tete*);
 
-    float attract_scale();  
+    float attract_scale();
+
+    QPointF pos() const;
+    void setPos(const QPointF& pos);
 
   protected:
 
@@ -59,6 +63,8 @@ namespace Kaleidoscope {
     int update_timer_id_;
     int update_time_;
     bool active_;
+
+    QMutex* position_mutex_;
   };
 
 }
