@@ -144,7 +144,7 @@ namespace Kaleidoscope {
     float current_scale = current_matrix.m11();
     float new_scale = current_scale + (view_scale - current_scale) * zoom_speed_;
 
-    /* Removed to force a refresh of the screen
+    /* Removed to force a refresh of the scene
     if(new_scale / current_scale < frame_on_threshold_)
       frame_on_needed_ = false;
       */

@@ -22,6 +22,9 @@ namespace Kaleidoscope {
     bool hasSetName();
     QColor color();
 
+    bool has_set_name();
+    bool has_set_color();
+
   public slots:
     void set_color(QColor);
 
@@ -30,6 +33,8 @@ namespace Kaleidoscope {
     GridsID id_;
     std::string name_;
     QColor color_;
+    bool has_set_color_;
+    bool has_set_name_;
   };
 }
 

@@ -69,6 +69,8 @@ namespace Kaleidoscope {
 
     // Creates the protocol, connects to the server
     g_interface = new Grids::Interface(this, main_window);
+
+    createUserInputWindow();
   }
 
   void Device::createObjects(){

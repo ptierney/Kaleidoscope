@@ -4,6 +4,8 @@
 
 #include <kaleidoscope/userNameBox.h>
 #include <kaleidoscope/userNameInputBox.h>
+#include <kaleidoscope/user.h>
+#include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
 
@@ -20,6 +22,8 @@ namespace Kaleidoscope {
             parent, SLOT(close()));
     connect(input_line_, SIGNAL(done()),
             parent, SLOT(close()));
+    connect(input_line_, SIGNAL(done()),
+            this, SLOT(createColorBox()));
 
     QLabel* screen_name_label = new QLabel(this);
     screen_name_label->setText(tr("Your name:"));
@@ -33,6 +37,11 @@ namespace Kaleidoscope {
     setLayout(main_layout);
 
     input_line_->setFocus(Qt::PopupFocusReason);
+  }
+
+  void UserNameBox::createColorBox(){
+    if(d_->user()->has_set_color() == false)
+      d_->createColorPickWindow();
   }
 
 }

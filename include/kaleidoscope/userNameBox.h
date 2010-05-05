@@ -13,6 +13,9 @@ namespace Kaleidoscope {
   public:
     UserNameBox(Device* d, QWidget* parent = 0);
 
+  public slots:
+    void createColorBox();
+
   private:
     Device* d_;
     UserNameInputBox* input_line_;
