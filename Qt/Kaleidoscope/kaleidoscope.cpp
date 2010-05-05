@@ -151,13 +151,13 @@ namespace Kaleidoscope {
     //gridsMenu = menuBar()->addMenu(tr("&Grids"));
     //gridsMenu->addAction(initAct);
 
-    start_menu_ = menuBar()->addMenu(tr("Start here"));
+    start_menu_ = menuBar()->addMenu(tr("Account"));
     start_menu_->addAction(set_name_);
     start_menu_->addAction(set_color_);
     start_menu_->addSeparator();
-    start_menu_->addAction(register_username_);
-    start_menu_->addAction(new_chat_);
-    explore_menu_ = menuBar()->addMenu(tr("Explore"));
+    //start_menu_->addAction(register_username_);
+    //start_menu_->addAction(new_chat_);
+    explore_menu_ = menuBar()->addMenu(tr("Settings"));
     /*
     spring_menu_ = explore_menu_->addMenu(tr("Spring Types"));
     explore_menu_->addSeparator();
@@ -170,7 +170,7 @@ namespace Kaleidoscope {
     explore_menu_->addAction(spring_on_off_);
     explore_menu_->addAction(gradient_on_off_);
     explore_menu_->addAction(zoom_on_off_);
-    explore_menu_->addAction(background_off_);
+    //explore_menu_->addAction(background_off_);
     file_menu_ = menuBar()->addMenu(tr("Export"));
     file_menu_->addAction(print_);
   }
