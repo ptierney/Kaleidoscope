@@ -145,15 +145,17 @@ namespace Kaleidoscope {
   }
 
   void TextNode::centerTextItem(){
+    //return;
+
     if(text_item_ == NULL)
       return;
 
-    text_item_->setPos(text_item_->boundingRect().width() / -2.0,
+    text_item_->setPos(0.0,//text_item_->boundingRect().width() / -2.0,
                       text_item_->boundingRect().height() / -2.0);
 
-    name_item_->setPos(text_item_->pos().x() +
-                       text_item_->boundingRect().width() / 2.0 -
-                       name_item_->boundingRect().width() / 2.0,
+    name_item_->setPos(0.0,//text_item_->pos().x() +
+                       //text_item_->boundingRect().width() / 2.0 -
+                       //name_item_->boundingRect().width() / 2.0,
                        text_item_->pos().y() -
                        name_item_->boundingRect().height() );
 

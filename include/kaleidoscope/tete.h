@@ -67,6 +67,8 @@ namespace Kaleidoscope {
     void updateText(std::string);
     QColor user_color();
 
+    void registerFinished(std::string text);
+
   private:
     std::string text_;
     std::string user_name_;

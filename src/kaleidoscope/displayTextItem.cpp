@@ -162,6 +162,9 @@ namespace Kaleidoscope {
       // Remove the trailing newline
       text.chop(1);
       setPlainText(text);
+
+      node_->tete()->registerFinished(text.toStdString());
+
       makeNotActive();
     }
 
@@ -211,14 +214,45 @@ namespace Kaleidoscope {
     QFontMetricsF fm(font());
     layout_->beginLayout();
     QTextLine line = layout_->createLine();
-    //line.setNumColumns(1);
+    float y = 0.0;
     QSizeF s = fm.boundingRect(text).size();
+
+    while(line.isValid()){
+      line.setPosition(QPointF(0.0, y));
+      line.setLineWidth(100);
+      y += s.height();
+      line = layout_->createLine();
+    }
+
+
+    //line.setNumColumns(1);
+
     // TODO: Figure out what these numbers are all about, why width/4, height/4
     //line.setPosition(QPointF(s.width()/4.0, -s.height()/4.0));
     //line.setPosition(QPointF(0.0, s.height()));
 
     layout_->endLayout();
     layout_->setCacheEnabled(true);
+
+    layout_->setPosition(QPointF(0.0,//layout_->boundingRect().width()/2,
+                                 //0.0));
+                                 0.0));//layout_->boundingRect().height()/2));
+
+
+    /*
+    layout = QTextLayout(text, font, parent)
+    layout.beginLayout()
+    y = 0
+    line = layout.createLine()
+
+    while line.isValid():
+        line.setPosition(leftMargin, y)
+        line.setLineWidth(rightMargin - leftMargin)
+        y += lineHeight
+        line = layout.createLine()
+    layout.endLayout()
+    */
+
 
     QGraphicsTextItem::setPlainText(text);
   }

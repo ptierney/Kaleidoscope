@@ -172,6 +172,9 @@ namespace Kaleidoscope {
     Grids::Value* attr = event->getAttrPointer();
     std::string text = (*attr)["text"].asString();
 
+    if( !((*attr)["finished"].empty()) )
+      return;
+
     // This probably means I'm updating the text
     if((*attr)["owner"].asString() == dev->my_id() ){
       // This doesn't work...
@@ -188,6 +191,22 @@ namespace Kaleidoscope {
 
     tete->tete_node()->node_gradient()->activate();
   }
+
+  void Tete::registerFinished(std::string text){
+    Grids::Value* val = new Grids::Value();
+
+    (*val)["type"] = "Tete";
+    (*val)["finished"] = 1;
+    (*val)["owner"] = d_->my_id();
+    (*val)["id"] = id();
+    (*val)["text"] = text;
+    (*val)["chat_id"] = chat_id_;
+
+    d_->getInterface()->requestUpdateAttr(id(), val);
+
+    delete val;
+  }
+
 
   std::string Tete::text(){
     return text_;
@@ -315,6 +334,7 @@ namespace Kaleidoscope {
   void Tete::updateText(std::string text) {
     requestUpdate(d_, id(), text);
   }
+
 
   QColor Tete::user_color(){
     return user_color_;
