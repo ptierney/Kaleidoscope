@@ -142,4 +142,8 @@ namespace Kaleidoscope {
   }
   */
 
+  void View2D::giveFocus(){
+    setFocus(Qt::NoFocusReason);
+  }
+
 }

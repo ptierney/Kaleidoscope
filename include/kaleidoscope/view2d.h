@@ -21,6 +21,7 @@ namespace Kaleidoscope {
 
   public slots:
     void resumeZooming();
+    void giveFocus();
 
 
   protected:

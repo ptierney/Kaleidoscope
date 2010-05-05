@@ -90,7 +90,8 @@ namespace Kaleidoscope {
     g_utility = new Grids::Utility();
 
     // Make sure that the main window has focus
-    getScene()->main_view()->setFocus(Qt::NoFocusReason);
+    //getScene()->main_view()->setFocus(Qt::NoFocusReason);
+
   }
 
   void Device::quit() {
@@ -198,7 +199,7 @@ namespace Kaleidoscope {
   }
 
   void Device::createUsersInfoWindow() {
-    QDockWidget *dock = new QDockWidget(tr("Other People"), main_window);
+    QDockWidget *dock = new QDockWidget(tr("People in Chat"), main_window);
     dock->setFloating(0);
     dock->resize(DEFAULT_SIDEBAR_WIDTH, DEFAULT_WINDOW_HEIGHT/2.f);
     users_scene_ = new UsersScene(this, dock);
@@ -226,6 +227,7 @@ namespace Kaleidoscope {
     dock->setWidget(box);
     dock->setAllowedAreas(Qt::NoDockWidgetArea);
     main_window->addDockWidget(Qt::LeftDockWidgetArea, dock);
+    box->input_line()->setFocus(Qt::NoFocusReason);
     //box->setFocus(Qt::PopupFocusReason);
   }
 
@@ -251,6 +253,9 @@ namespace Kaleidoscope {
 
     connect(color_pick, SIGNAL(colorSelected(QColor)),
             dock, SLOT(close()));
+
+    connect(color_pick, SIGNAL(finished(int)),
+            view2D, SLOT(giveFocus()));
   }
 
   void Device::createScene() {

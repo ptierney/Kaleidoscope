@@ -44,4 +44,10 @@ namespace Kaleidoscope {
       d_->createColorPickWindow();
   }
 
+  UserNameInputBox* UserNameBox::input_line(){
+    return input_line_;
+  }
+
+
+
 }
