@@ -344,7 +344,8 @@ namespace Kaleidoscope {
     //return;
 
     // Zoom out locks
-    if(zoom_out_needed_)
+    // forces refresh of the screen
+    if(true || zoom_out_needed_)
       zoomOut();
   }
 

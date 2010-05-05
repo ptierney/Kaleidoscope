@@ -9,6 +9,8 @@
 #include <kaleidoscope/chatController.h>
 #include <kaleidoscope/user.h>
 #include <kaleidoscope/tete.h>
+#include <kaleidoscope/scene2d.h>
+#include <kaleidoscope/view2d.h>
 #include <kaleidoscope/device.h>
 
 namespace Kaleidoscope {
@@ -32,7 +34,8 @@ namespace Kaleidoscope {
   }
 
   void NodeGradient::init() {
-    update_timer_ = startTimer(alpha_refresh_);
+    //update_timer_ = startTimer(alpha_refresh_);
+    activate();
   }
 
   void NodeGradient::activate(){
@@ -44,9 +47,24 @@ namespace Kaleidoscope {
   void NodeGradient::timerEvent(QTimerEvent* event) {
     ///std::cerr << qrand() << " Grad timer" << std::endl;
     //std::cerr << parent_node_->activeElapsed() << std::endl;
-    if(active_ == false)
+    //std::cerr << qrand() << " hi" << std::endl;
+    if(active_ == false) {
       killTimer(event->timerId());
+    } else if(parent_node_->activeElapsed() > time_dropoff_){
+      killTimer(update_timer_);
+      update_timer_ = 0;
+      active_ = false;
+    }
+
     update();
+    //d_->getScene()->main_view()->repaint();
+    //d_->getScene()->update(boundingRect());
+    //QGraphicsView* view = d_->getScene()->main_view();
+    //QMatrix current_matrix = view->matrix();
+    // Note: m11 and m22 hold the horizontal and vertical scale.
+    // They should be the same.
+    //float current_scale = current_matrix.m11();
+    //view->setMatrix(current_matrix);
   }
 
   QRectF NodeGradient::boundingRect() const {
