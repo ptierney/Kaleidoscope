@@ -19,10 +19,10 @@ use Data::Dumper;
 
 my $server_address = '127.0.0.1';
 #my $server_address = 'elcerrito.ath.cx';
-my $num_messages = 3;
+my $num_messages = 20;
 my $message_number = 2;
 # This is the pause between each message
-my $millis_pause = 0.01;
+my $millis_pause = 1.5;
 my $bot_color = [rand()*10000 % 255,
                  rand()*10000 % 255,
                  rand()*10000 % 255 ];
