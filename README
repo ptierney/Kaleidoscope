@@ -1,27 +1,46 @@
+Install Notes:
 
-Installing Grids Node
+I. Setting up the system:
 
-Note: run lib/GridsMem, lib/GridsReg before running the main make make install
+A. Set up the Grids server
+   1. Download grids-platform from Google code: 
+      homepage: http://code.google.com/p/grids-platform/ 
+      svn: svn co http://grids-platform.googlecode.com/svn/trunk/ grids-platform-read-only
+   2. Set up grids-platform as per instructions
+      a. Install VM components in lib/Grids/VM/Memory and lib/Grids/VM/Register with command:
+         perl Makefile.PL ; make ; make test; make install
+      b. Install main components in the base directory with:
+         perl Makefile.PL ; make ; make test; make install
+   3. Start the server. The kaleidoscope directory has a folder called "sh" that contains a file called "start_node". This script can assist you in starting a node. Be sure to update several parts of the command, including the location of perl 5.10, and the location of grids-platform. In my case, kaleidoscope and grids-platform are in the same directory. 
 
+B. Compile the Qt C++ client
+   1. Download the Qt SDK from:
+      homepage: http://qt.nokia.com/products
+   2. Install SDK
+   3. Open the Kaleidoscope project, found in Qt/Kaleidoscope/Kaleidoscope.pro
+   4. Update the server location in include/kaleidoscope/define.h, by changing the values of:
+      #define GRIDS_SERVER "mmmii.net"
+      #define DEFAULT_SERVER "mmmii.net"
+      replacing mmmii.net with the location of your server. Of course, you're more than free to use mine. :)
+   5. Compile and run
+   NOTE: If you want to build a static version of the app, one that will run without the Qt framework installed on the machine, different steps must be taken depending on the platform.
+         a. OS X: Build the application as usual, then run the python scrypt sh/package in the base of the Kaleidoscope directory. All necesarry libraries should be included into the .app folder.
+         b. Windows: The easiest way to build a static app is to build Qt statically. Instructions can be found here: 
+            http://doc.trolltech.com/4.1/deployment.html
 
-Required Libraries
+II. Included libraries / files from other authors:
 
-** Available as Debian packages ** 
-SDL
-SDL_net
-SDL_ttf
-SDL_image
-GL
-GLU
-
-** Required Downloads ** 
-
-Makepp
-http://makepp.sourceforge.net/
-
-
-** Included but not built libraries **
 Jsoncpp
 homepage: http://jsoncpp.sourceforge.net/
-svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsoncpp
+svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsonpp-read-only
+Used in Qt C++ client for JSON parsing.
 
+Purpled
+homepage: http://code.google.com/p/purpled/
+svn: svn co https://purpled.svn.sourceforge.net/svnroot/purpled/trunk purpled-read-only
+Runs in background on server to provide an interface with libpurple.
+
+Irrlich
+homepage: http://irrlicht.sourceforge.net/
+download: http://irrlicht.sourceforge.net/downloads.html
+Used for its vector library.
