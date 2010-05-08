@@ -39,6 +39,7 @@ Purpled
 homepage: http://code.google.com/p/purpled/
 svn: svn co https://purpled.svn.sourceforge.net/svnroot/purpled/trunk purpled-read-only
 Runs in background on server to provide an interface with libpurple.
+NOTE: I had to make slight but significant 
 
 Irrlich
 homepage: http://irrlicht.sourceforge.net/
