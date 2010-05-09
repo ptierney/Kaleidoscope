@@ -24,9 +24,10 @@ B. Compile the Qt C++ client
       replacing mmmii.net with the location of your server. Of course, you're more than free to use mine. :)
    5. Compile and run
    NOTE: If you want to build a static version of the app, one that will run without the Qt framework installed on the machine, different steps must be taken depending on the platform.
-         a. OS X: Build the application as usual, then run the python scrypt sh/package in the base of the Kaleidoscope directory. All necesarry libraries should be included into the .app folder.
+         a. OS X: Build the application as usual, then run the python script sh/package in the base of the Kaleidoscope directory. All necessary libraries should be included into the .app folder.
          b. Windows: The easiest way to build a static app is to build Qt statically. Instructions can be found here: 
             http://doc.trolltech.com/4.1/deployment.html
+
 
 II. Included libraries / files from other authors:
 
@@ -34,14 +35,17 @@ Jsoncpp
 homepage: http://jsoncpp.sourceforge.net/
 svn: svn co https://jsoncpp.svn.sourceforge.net/svnroot/jsoncpp jsonpp-read-only
 Used in Qt C++ client for JSON parsing.
+NOTE: I had to make slight changes to this library so that it would work with Qt, namely 
+removing all exceptions (statically built Qt apps built on Windows don't like exceptions).
 
 Purpled
 homepage: http://code.google.com/p/purpled/
 svn: svn co https://purpled.svn.sourceforge.net/svnroot/purpled/trunk purpled-read-only
 Runs in background on server to provide an interface with libpurple.
-NOTE: I had to make slight but significant 
+NOTE: I had to make slight but significant changes to this code, that is why it is included
+in the Kaleidoscope directory. 
 
 Irrlich
 homepage: http://irrlicht.sourceforge.net/
 download: http://irrlicht.sourceforge.net/downloads.html
-Used for its vector library.
+Used for its vector, matrix, and fast math libraries.
