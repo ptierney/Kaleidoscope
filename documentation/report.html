@@ -1,0 +1,127 @@
+<html>
+<head>
+<style type="text/css">
+p {max-width:500px}
+ul {max-width:500px}
+ol {max-width:500px}
+body {max-width:500px}
+</style>
+<title>Report</title>
+</head>
+
+<h1>Report</h1>
+
+<ol>
+	<li><b>Planning</b></li>
+Looking back on my original goals, proposed timeline, and milestones, I mostly stayed on track, 
+though I completely failed to predict how much time I would loose fixing small bugs.
+This could have been due to the fact I was working alone, with no one to point out
+completely obvious things I overlooked, or my lack of formal training
+in CS, or an inevitable part of the process. 
+I also completely failed to predict 
+how long it would take to develop the non-standard UI. 
+Besides being hard to get right, it was also completely untestable. I enjoyed 
+and benefited from test-driven development in the first half of the class,
+and would have liked to used TDD on this project. Unfortunately, it's hard to test
+for erratic spring systems, illegible fonts, or the GUI grabbing the mouse 
+at the wrong time. I spent a lot of time getting things to look and
+feel right, only for that to change when I update some other part of the GUI.
+Unfortunately, I don't see any solution to this problem.<br><br>
+If I were to attempt this project again, I would probably spend a fraction of 
+the time I spent on the  zooming mechanism
+and spring system, and focus more time on features that can be tested, such as interacting with
+other protocols or saving and restoring chat states. I think that an 
+innovative and attractive interface is crucial to the success of this program,
+though trying to perfect aesthetics and animations can't generate
+as good feedback or guidance from the TAs.<br><br>
+
+My first design document by and large turned out to be a waste of time and effort. 
+Part of the reason was that usually described what classes <em>were going to be</em>,
+rather than describing <em>what they needed to do</em>. I began interviewing for
+internships throughout the semester, and the company I've decided to work for (founded
+by a Princeton graduate '90),
+ mentioned
+their design document <a href="http://trac.yorba.org/wiki/ShotwellArchitectureOverview">in an email</a>.
+After I read their design document, a light went on, and I began to better under the purpose
+of a design document. 
+
+
+<br><br>
+	<li><b>Implementation</b></li>
+I learned a lot about C++, Qt, Perl, and networking programming, 
+as well as about all the bugs that pop up when you distribute an application to multiple machines
+on several platforms. 
+I also feel that I have a much deeper understanding of OOP ofter using such an 
+completely object oriented GUI framework. I can confidently state when to use virtual destructors,
+and understand that inheritance is <em>not</em> for code reuse, as mentioned in the <a href="http://www.parashift.com/c++-faq-lite/smalltalk.html#faq-30.4">C++ FAQ Lite</a>.
+Despite some regret near the middle of the project over using Qt rather than Java/Swing or running it in a browser,
+I still feel Qt was the right decision for several reasons.  Qt has much finer control over UI
+aesthetics, such as line weights, line types (dash, solid, etc), and background gradients.
+By using an executable, I had control over the cursor position (something I've had trouble
+ with in web browsers). Qt also has several neat features like cursor-centered menus, and made
+it really easy to change the rendering engine for a faster one halfway through development.
+Finally, 2 weeks before the presentation, performance started to become a major issue. 
+Having C++ tools such as Shark was a huge bonus, and allowed me to identify
+several completely unpredictable bottlenecks (for instance that non-active
+text boxes can use the same resources as an active text box with a cursor blinking, under
+certain circumstances). <br><br>
+
+That being said, I've already started looking for alternatives to Qt if I were to continue developing
+this code. One very strong candidate is <a href="http://libcinder.org">Cinder</a>, which was just released
+late April. It's put out by the Barbarian Group, a graphic design firm that's been very active in 
+the Media Arts and creative coding communities. It has built in support for high quality, fast physics 
+(for the spring system), and ever better control over aesthetics. Most importantly
+it supports iPhone development, something I've wanted to explore for some time. Cinder clearly
+isn't as powerful in terms of window management, threads (though threading is built in 
+to C++ with C++Ox), callbacks and timer events. I will likely have to take a lot of what 
+I learned from Qt and extend 
+it into Cinder.<br><br> 
+
+To keep my interest up, I split my time
+working on the project into two parts: most of my time was spent keeping to the 
+timeline, and working out the inevitable bugs, and the required features, though I set
+apart at least one afternoon a week to work on anything I wanted: adding fun features, or 
+to making things look better, or learning about some aspect of CS I was interested 
+in at the time. Some of these developments turned out to be novel solutions to problems, 
+others things produced during this time didn't make it into the final project.  All in all, I think
+that it's a useful way to structure your time if you are working alone and need something
+to shift your perspective on your code.<br><br>
+	<li><b>Final Product</b></li>
+I would have liked my final product to have a more solid feel overall, and a richer chat experience
+in terms of what you could include. I spent a lot of time working on the 
+networking code so that it could accept many different data types or activities, such as placing
+images, drawing, or sounds. I honestly feel that I could have done more given the amount of time
+I had. One of 
+my biggest goals as I embark on more program projects is to code faster.<br><br>
+	<li><b>Final Thoughts</b></li><br>
+	<ol>
+		<li>Grad Student / Working Alone</li>
+I would have preferred to work in a group, though the pressures of my department would have 
+made it difficult to work with people in other departments. I'm glad I didn't try to work with
+undergraduates. 
+I would recommend this class to graduate students who have a moderate background in CS, since
+it does give "real world" knowledge of computer science, and definitely gives you a leg up
+when applying for internships.
+If any future graduate student wants to take this class, I would <em>highly recommend</em> that 
+he or she get at least two other people <em>in their department</em> 
+to take it as well. 
+It's not that you won't be able to make a final project working alone, it's just that you
+won't learn nearly as much and probably won't make the project you dreamed of without
+other people. As a graduate student, different fields have different requirements for 
+GPA and time allotted for non-major courses.  I couldn't imagine working with anyone 
+outside architecture, due to the specific varying work load and scheduling demands
+of my department.<br><br>
+		<li>Architecture Background</li>
+I tried to straddle both disciplines as much as possible with this project, something that
+stays within the context of this class, without being relevant only to architects, 
+while at the same time being something that I would be proud to show to my architecture
+teachers.  For the most part I can stand behind my work, though having larger data spaces
+and more users would give the program a spatial feel that I had imagined would relate 
+to architecture.<br><br>
+		<li>To Future Students:</li>
+<em>Do</em> correct Brian Kernighan in class, and <em>do</em> cite those corrections 
+in job interviews.<br><br>
+</ol>
+<em>Thanks a bunch, it's been really fun!</em>
+</head>
+</html>

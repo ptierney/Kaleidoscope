@@ -1,0 +1,76 @@
+
+<html>
+<head>
+
+<script type="text/javascript" src="jquery-1.2.6.pack.js"></script>
+
+<style type="text/css">
+
+/*Make sure your page contains a valid doctype at the top*/
+#simplegallery1{ //CSS for Simple Gallery Example 1
+position: relative; /*keep this intact*/
+visibility: hidden; /*keep this intact*/
+border: 3px solid darkred;
+}
+
+#simplegallery1 .gallerydesctext{ //CSS for description DIV of Example 1 (if defined)
+text-align: left;
+padding: 2px 5px;
+}
+
+</style>
+
+<script type="text/javascript" src="simplegallery.js">
+
+/***********************************************
+* Simple Controls Gallery- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for this script and 100s more
+***********************************************/
+
+</script>
+
+<script type="text/javascript">
+
+var mygallery=new simpleGallery({
+	wrapperid: "simplegallery1", //ID of main gallery container,
+	dimensions: [640, 480], //width/height of gallery in pixels. Should reflect dimensions of the images exactly
+	imagearray: [
+		["product/slide0.5.jpg", "", "_new", "Welcome to my presentation on an exciting new chat program."],
+		["product/slide1.jpg", "", "", "Traditional chat programs work fine for short conversations."],
+		["product/slide2.jpg", "", "", "Unfortunately, things can get confusing over a longer period of time."],
+		["product/slide3.jpg", "", "", "It's hard to separate multiple conversations in the same chat room."],
+		["product/slide4.jpg", "", "", "Additionally, while people read chats, they have little presence in the room."],
+		["product/slide5.jpg", "", "", "Old chat logs are dead objects due to their lack of organization and structure."],
+		["product/slide6.jpg", "", "", ""],
+		["product/slide7.jpg", "", "", "The 2D layout supports multiple conversation zones, separating distinct threads, and freeing you from interlaced conversations."],
+		["product/slide8.jpg", "", "", "The conversation is organized automatically, allowing you to see treads, branches, and important nodes at a glance."]
+		["product/slide9.jpg", "", "", "The conversation is organized automatically, allowing you to see treads, branches, and important nodes at a glance."]
+		["product/slide10.jpg", "", "", "The conversation is organized automatically, allowing you to see treads, branches, and important nodes at a glance."]
+		["product/slide11.jpg", "", "", "The conversation is organized automatically, allowing you to see treads, branches, and important nodes at a glance."]
+		["product/slide12.jpg", "", "", "The conversation is organized automatically, allowing you to see treads, branches, and important nodes at a glance."]
+
+
+	],
+	autoplay: [false, 6000, 0], //[auto_play_boolean, delay_btw_slide_millisec, cycles_before_stopping_int]
+	persist: false, //remember last viewed slide and recall within same session?
+	fadeduration: 250, //transition duration (milliseconds)
+	oninit:function(){ //event that fires when gallery has initialized/ ready to run
+		//Keyword "this": references current gallery instance (ie: try this.navigate("play/pause"))
+	},
+	onslide:function(curslide, i){ //event that fires after each slide is shown
+		//Keyword "this": references current gallery instance
+		//curslide: returns DOM reference to current slide's DIV (ie: try alert(curslide.innerHTML)
+		//i: integer reflecting current image within collection being shown (0=1st image, 1=2nd etc)
+	}
+})
+
+</script>
+
+</head>
+<body>
+<h3>Introduction</h3>
+<div id="simplegallery1"></div>
+<h3>Tutorial</h3>
+</body>
+</html>

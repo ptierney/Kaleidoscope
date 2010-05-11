@@ -1,0 +1,166 @@
+
+
+<html>
+<head>
+
+<style type="text/css">
+p {max-width:500px}
+ul {max-width:500px}
+ol {max-width:500px}
+body {max-width:500px}
+</style>
+
+
+<title> Timeline </title>
+</head>
+
+<body>
+<h1> Timeline </h1>
+
+
+<p><b>February 21, 2010</b><br>
+Set up Qt program, with a network listener. I am able to connect to the server
+and receive data from it.<br>
+
+<p><b>February 27, 2010</b><br>
+First tests with the client and server. I created several nodes, and broadcasted
+changes in their position and text, so that when one client types something or 
+moves a node, the other client sees it.<br>
+
+<p><b>March 1, 2010</b><br>
+Wrote a parser that interprets what people have typed, and generates a graph
+based on what was typed.<br>
+
+<p><b>March 5, 2010</b><br>
+Removed threads from the network listener. My program was segfaulting for unknown reasons,
+and removing the threads seems to have fixed things.<br>
+
+<p><b>March 6, 2010</b><br>
+Added spring system. Nodes now crudely rearrange themselves to form a 
+least energy state.<br>
+
+<p><b>March 14, 2010</b><br>
+Fixed a bunch of bugs in the server communication. I spent a lot of time
+coordinating with Mischa so that the server sends things reliably, and 
+without duplicate messages.<br>
+
+<p><b>March 30, 2010</b><br>
+Added zooming system. One of the harder parts of this system was to reposition 
+both the view of the graph and the cursor.  Getting the proper positions of
+thins is complicated when widgets are inside of widgets, inside of windows, 
+each with its own coordinate system. It's mainly working as I had hoped, though
+the zooming is a bit aggressive at times. <br>
+
+<p><b>April 1, 2010</b><br>
+I put a lot of work into the spring system, and now it seems to work as I would like.<br>
+
+<p><b>April 2, 2010</b><br>
+Replaced for loops accessing data by indices (my_vectore[0]) with iterators ((*it)->data()), after reading Accelerated
+C++, a very good book.<br>
+
+<p><b>April 4, 2010</b><br>
+Added names to the nodes, so that people know who made each node. Brilliant!<br>
+
+<p><b>April 6, 2010</b><br>
+I broke my code. Bad. I had to revert to a previous subversion commit. 
+Things were segfaulting everywhere.<br>
+
+<p><b>April 7, 2010</b><br>
+Fixed the mystery segfaults. It turns out they were caused because I was 
+returning my std::vectors
+as copies, not as const refs (const &). This meant that when I was iterating 
+over a vector, I would set up the iterators using <em>different</em> vectors!
+In other words for(std::vector<Tete*>::const_iterator it = getVect().begin();
+it != getVect().end(); ++it), .begin() and .end() belonged to DIFFERENT
+vectors!y<br>
+
+<p><b>April 9, 2010</b><br>
+First tests with accessing outside chats (AIM, Google Talk, Facebook)  with my client.  
+It seems too hard 
+to wrap the libpurple library in Perl, so I'm using a script called Purpled, 
+and talking to it over telnet. I can receive messages from AIM, Google Chat, 
+and Facebook, though I still need to write more code for the client to use
+this feature.<br>
+
+<p><b>April 11, 2010</b><br>
+More work on ChatListener and outside chat system.<br>
+
+<p><b>April 13, 2010</b><br>
+Removed some code I had put in place to limit the amount of traffic I sent to the server,
+in an effort to improve performance.<br>
+
+<p><b>April 15, 2010</b><br>
+Added ChatListener box, and associated menu and protocol expansions. In a test I was
+able to connect to AIM and Google Chat through my client, and receive new messages.<br>
+
+<p><b>April 17, 2010</b><br>
+Fixed longstanding performance bug. It was caused when I would convert a 
+text display box to a text edit box (with blinking cursor, cut and paste). When 
+I would convert that same box <em>back</em> to a text display box, resources were
+still being hogged. My solution involves deleting the text edit box, and creating a new
+text display box in its place.
+Also tweaked the spring system.  It still doesn't work perfectly<br>
+
+<p><b>April 18, 2010</b><br>
+Changed renderer to OpenGL, this makes things run considerably faster, though
+text looks worse, especially on Windows.<br>
+
+<p><b>April 19, 2010</b><br>
+User name now defaults to John Doe<br>
+
+<p><b>April 20, 2010</b><br>
+Added settings menu, so that users can disable the background gradient, the 
+spring system, and the zooming if they find things annoying or if it runs 
+too slowly.<br>
+
+<p><b>April 21, 2010</b><br>
+Added node dragging, and added ability to print the display for (my?) future reference.<br> 
+
+<p><b>April 22, 2010</b><br>
+User can now create a link by clicking on a node, then clicking on a second node.<br>
+
+<p><b>April 24, 2010</b><br>
+Created icons for both OS X and Windows. Windows proved to be more difficult
+since I was limited to 32x32 pixels. Added an activity marker, that indicates where
+the next node you create will be connected to.  Without the marker it seems like
+your node gets added to an arbitrary node.
+Removed TimerEvents from my code. This was causing a major performance bug: with 50 - 100
+on screen, that's 50-100 separate event callbacks 20 times per second, which was causing things to run very 
+slowly. <br>
+
+<p><b>April 26, 2010</b><br>
+Added a background gradient to make the application look less stark and white.
+Fixed a bug on the Windows client where text looked really blurry, thanks 
+to a post on the Qt forum.
+Added UsersView side bar. At the moment it's like a buddy list, but I set it 
+up so that it can display connections between people, or other neat looking
+visualizations.
+I also got rid of the blurry gradient showing activity, and replaced it with a
+circle.<br>
+
+<p><b>April 27, 2010</b><br>
+Each user is assigned a random color on startup, so that if they neglect 
+to choose a color it's black. <br>
+
+<p><b>May 2, 2010</b><br>
+Put the physics system in its own thread. Things now run a lot smoother. Now that the
+spring system doesn't have to run in 1/20th of a second, I tweaked the spring system
+so that it runs smoother and explodes less often. Fixed a bug where the link
+wasn't drawing: it was due to not setting the correct bounding box size for the 
+item.<br>
+
+
+<p><b>May 5, 2010</b><br>
+Made the "Set Color" and "Set Name" windows pop up automatically when the application starts
+up.
+Fixed a few bugs involving the keyboard focus not being on the main window when
+the application stats up, meaning you don't have to click on the window first.
+Also made the screen continuously refresh (bad for performance, but looks better), items not redrawing at the right time
+was a longstanding bug.
+Created Eliza in Perl using a module from CPAN, and a generic DOCTOR script found on the
+web. This allowed me to rapidly test several issues that pop up while people
+are talking. Added word wrapping to chat lines, 25 minutes before starting 
+my presentation. <br>
+</body>
+</html>
+
