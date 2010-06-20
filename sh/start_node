@@ -1,1 +1,1 @@
-/opt/bin/perl -I../../crypt-otr/lib -I../../crypt-otr/blib/arch -I../../crypt-otr/blib/lib -I../../grids-platform/lib ../../grids-platform/tools/node/gridsnode.pl -d
+perl -I../../crypt-otr/lib -I../../crypt-otr/blib/arch -I../../crypt-otr/blib/lib -I../../grids/lib ../../grids/tools/node/gridsnode.pl -d
