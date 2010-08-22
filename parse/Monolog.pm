@@ -1,7 +1,5 @@
 package Monolog;
 
-# My first POOP :)
-
 use strict;
 use warnings;
 

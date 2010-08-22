@@ -9,4 +9,4 @@ perl \
 -I../../grids/lib/Grids/VM/blib/arch/auto \
 -I../../grids/lib/Grids/VM/blib/arch/auto/Grids/VM/Memory \
 -I../../grids/lib/Grids/VM/blib/arch/auto/Grids/VM/Register \
-$1
+../../grids/tools/node/gridsnode.pl -d
